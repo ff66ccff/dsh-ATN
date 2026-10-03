@@ -1,9 +1,9 @@
 # dsh-ATN
 
-面向 **DeepSeek Harness** 的自适应拓扑网络插件：让同能力、独立执行的 agent，通过局部信息和按需协作完成共同目标。
+面向 **DeepSeek Harness** 的自适应拓扑网络插件，在 **“Agent 预设”页以独立的 ATN 模式**出现：让同能力、独立执行的 agent，通过局部信息和按需协作完成共同目标。
 
-> **当前阶段：0.1.0 开发者预览版。**
-> 本轮 review 修复已通过 133 项测试；支持 npm 安装、本地构建和 tarball 安装。完整验收尚未通过：受限权限执行路径（AUTH-01/02/03）、Agent preset 绑定、真实 profile 内 ATN 纵向运行（PROFILE-03）仍缺证据，见[最新修复记录](docs/REPAIR_IMPLEMENTATION_REPORT.md)。不应把本版本用作权限隔离已经验证的正式版本。
+> **当前版本：0.2.0 开发者预览版，npm 标签 `next`。**
+> 已通过 139 项测试，以及真实 Web profile 的 tarball 安装、ATN 预设注册、工具隔离和模型工具调用创建子节点检查。完整验收仍未完成：受限权限执行路径（AUTH-01/02/03）和 PROFILE-03 的完整消息、投票、退休与交付链路仍待验证，见[实施与验证记录](https://github.com/ff66ccff/dsh-ATN/blob/v0.2.0/docs/REPAIR_IMPLEMENTATION_REPORT.md)。
 
 ## 核心设计
 
@@ -19,52 +19,53 @@
 
 ## 安装与启用
 
-### 从 npm 安装（推荐）
+### 从 npm 安装
 
-npm 包：[dsh-atn](https://www.npmjs.com/package/dsh-atn)。
-
-需要已安装的 **DeepSeek Harness `0.2.0-rc.2`**、Node.js 24，以及可用的模型配置。先确认 `dsh --version` 能正常运行，然后在终端执行：
+需要已安装的 **DeepSeek Harness `0.2.0-rc.2`**、Node.js 24，以及可用的模型配置。先确认 `dsh --version` 能正常运行，然后执行：
 
 ```bash
-dsh plugin --profile headless add dsh-atn@0.1.0
-dsh --profile headless --dump-config
+dsh plugin --profile web add dsh-atn@0.2.0
+dsh --profile web --dump-config
 ```
 
-第一行从 npm 下载并把 ATN 加入 `headless` profile；第二行检查配置，输出中应有 `# == dsh-atn`、`atn` 和 `atn-tools`。不需要克隆源码或编译，也不需要单独执行 `npm install -g dsh-atn`。
+输出应包含宿主服务 `atn`、预设声明 `preset-atn`，以及该预设内部的 `atn-tools`。桌面端若使用其他 profile，将 `web` 换成桌面端实际运行的 profile 名称。安装后重新启动该 profile。
 
-配置好模型后即可运行一个任务：
+1. 打开 **设置 → Agent 预设 → 自定义 → ATN**，可查看它的插件组成，并点击“设为新任务默认”。
+2. 新建任务；开启 Harness 的“开发者工具”时，也可在新任务页的预设选择器里直接选择 **ATN**。
+3. 输入任务，例如“核对当前项目 README，拆分给节点核查并汇总证据”。ATN 提示词会引导入口模型先调用 `atn_start`，再按需创建节点；用户不必手写工具调用。
+
+安装不会自动切换默认模式。Standard、PTC、Minimal 和 Creator 等已有模式不增加 ATN 工具或提示词；已经开始的任务保持其原有预设。仅选择 ATN 或发送问候也不会由插件自动创建网络，网络仍由模型调用 `atn_start` 创建。
+
+也可安装 [npm 包 dsh-atn](https://www.npmjs.com/package/dsh-atn) 的 `next` 标签，但固定 `0.2.0` 更便于复现。预览版沿用 `next` 发布，不自动移动原有 `latest` 标签，请明确指定版本或标签。
+
+### 从 0.1.0 升级
+
+`0.1.0` 将 ATN 工具全局加载；`0.2.0` 默认将它们放入独立 ATN 预设。对实际使用的 Web/桌面 profile 执行上述安装命令，重启后选择 ATN 并新建任务。仅升级旧 `headless` profile 不会得到独立模式。已有会话不会自动迁移；升级前先完成或停止旧版本的网络。
+
+### 从源码构建
 
 ```bash
-dsh --profile headless "请使用 ATN，将核对当前项目 README 的工作拆分给节点，汇总核对结果。"
-```
-
-`headless` 是 Harness 自带的命令行 profile；已有其他 profile 时，把命令中的 `headless` 换成自己的名称。安装后重新启动对应 profile。若出现 `MISSING_CREDENTIAL`，需要先在 Harness 中配置模型凭据。
-
-当前版本属于开发者预览版，发布到 npm 的 `next` 标签；上面的命令固定 `0.1.0`，便于复现。安装本身不会启动网络，只有模型调用 `atn_start` 后才会创建 ATN 状态。
-
-### 从源码构建（开发者）
-
-```bash
-git clone https://github.com/ff66ccff/dsh-ATN.git
+git clone --branch v0.2.0 https://github.com/ff66ccff/dsh-ATN.git
 cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-
-dsh plugin --profile headless add ./.artifacts/dsh-atn-0.1.0.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.2.0.tgz
 ```
 
-直接用 `dsh plugin add github:...` 安装的构建授权行为尚未完成端到端验证；推荐 npm 包或本地构建的 tarball。
+直接用 `dsh plugin add github:...` 安装的构建流程尚未验证，推荐 npm 包或构建后的 tarball。
 
 ### 前置服务
 
-ATN 依赖 profile 里已有的 Harness 服务：`agents`、`tools`、`sessions`，以及共享存储 `storageDomain` 加一个 KV backend（例如 `@deepseek-ai/dsh-storage-json`）。前三个缺失时 bundle 不会激活；`storageDomain` 缺失时 bundle 仍会加载，但 `atn_start` 会以 `storage-unavailable` 明确失败，而不是静默降级。
+独立模式面向完整的 Harness Web/桌面 profile，需要 `agentPresets` 注册表、`systemPrompt`、`agents`、`tools`、`sessions`，以及 `storageDomain` 和 KV backend（例如 `@deepseek-ai/dsh-storage-json`）。预设复用宿主提供的 persona、工作区指令、文件/搜索、终端、技能、询问用户、待办、Web、展示和上下文压缩插件。缺少依赖时预设会显示不可用；缺少存储时 `atn_start` 会以 `storage-unavailable` 明确失败。
 
-安装 ATN 不会改变其他 Session 的权限、模型或原有行：bundle patch 只插入自己的两行。见[实施报告](docs/MINIMAL_BUNDLE_IMPLEMENTATION_REPORT.md)中的 `--dump-config` 对比。
+Bundle 只新增 `atn` 和 `preset-atn` 两条宿主行；九个 ATN 工具和共同规则属于预设作用域。运行时由宿主统一持有，节点加入创建者正在使用的同一预设版本，并记录 preset ID 和工作目录。冷恢复按节点自己记录的 preset ID 挂载当前定义；预设缺失或不可用时明确失败，不改用当前默认模式。
+
+不带预设注册表的 `headless` profile 不会提供这个模式。自定义嵌入式装配仍可显式加载 `dsh-atn` 和 `dsh-atn/tools`，但这是全局工具装配，不是本插件默认的安装入口。
 
 ## 最小使用例
 
-在一个普通 Session 里让模型启动网络：
+在选择了 **ATN** 的新 Session 中，模型可使用以下工具（此处展示底层协议）：
 
 ```text
 atn_start(objective="把 docs/x.md 的结论核对清楚", successCriteria="每条结论都有可复查来源", constraints="不要访问付费模型")
@@ -81,7 +82,7 @@ atn_finish(reason="本地工作已交回")
 
 | 工具 | 必要输入 | 语义 |
 |---|---|---|
-| `atn_start` | 目标、成功标准、共同约束 | 在当前普通 Session 初始化网络，建立初始任务，返回网络/节点/任务标识；不生成额外主管 |
+| `atn_start` | 目标、成功标准、共同约束 | 在当前 ATN Session 初始化网络，建立初始任务，返回网络/节点/任务标识；不生成额外主管 |
 | `atn_spawn` | 局部任务、上下文、可选寿命 | 创建同能力独立节点；id 由运行时分配，显示名称不是授权凭据 |
 | `atn_send` | 目标、类型、正文；`result` 另需任务标识、摘要、证据；可选稳定 `messageId` | `task` / `note` / `result`；发送者取自真实调用者，`result` 只能结清自己持有的匹配任务。带 `messageId` 的重试幂等：同一业务消息不会产生第二封邮件、第二个任务或第二次结算；同一 id 配上不同发送者、目标或内容则被明确拒绝 |
 | `atn_peers` | 可选查询 | 默认返回当前四个邻居及有界摘要；查询只给少量候选，不改变审批名单 |
@@ -154,7 +155,7 @@ await ctx.atn.stop(networkId, '用户要求停止')
 
 - 已验证基线：Harness `0.2.0-rc.2`、Cordis `4.0.4`、Node.js 24。Harness 仍在开发者预览阶段，不承诺未来版本兼容。
 - 单进程、单执行环境：不实现多机或多进程共享网络，也不能同时启动两个运行时写同一份存储。
-- 尚未验证受限 permission/sandbox 策略在真实执行路径上的拒绝行为（AUTH-01/02/03）；Agent preset 同构绑定仍未实现，当前测试覆盖无 preset 装配。请在隔离测试环境中评估，不要依赖本预览版保持生产权限边界。
+- 尚未验证受限 permission/sandbox 策略在真实执行路径上的拒绝行为（AUTH-01/02/03）。Agent preset 同构绑定、旧版本继承和冷恢复已覆盖，但 preset 本身不构成权限沙箱。
 - `lastGoalVersionSent` 表示消息交给了输入队列，不表示模型已读取或 step 已准入（CONTEXT-02 尚未完成）。恢复会根据 Session 历史与实时输入重新判断是否需要补发。
 - JSONL Session 历史中已落地的邮件可在整内核重建后去重；硬崩溃时尚未持久写入的 inbox 不提供跨存储的恰好一次保证。
 - 忙流停止测试覆盖遵守 AbortSignal 的模型 adapter；忽略取消或拒绝 dispose 的外部资源会被列入 straggler，无法保证已经退出。
@@ -175,7 +176,19 @@ npm run pack:tarball
 npm run smoke:profile          # 需要本机 dsh CLI；默认路径见脚本，可用 DSH_CLI 覆盖
 ```
 
-单元和集成测试不会访问真实 Session、凭据或用户工作区：每次运行都在新的临时目录里创建自己的 Harness home 和 Workspace，并关闭所有 handle、timer 和监听器。`smoke:profile` 需要 `DSH_CLI` 指向一个 `dsh` 启动器（默认是 DeepSeek Desktop 的 launcher），并在临时 Harness home 中安装真实 tarball。缺少 CLI 会明确失败；启动到 `MISSING_CREDENTIAL` 只验证 provider 前的启动路径，不代表 PROFILE-03 通过。GitHub CI 在 Linux 和 Windows 上运行类型检查、测试、构建与打包，不自动执行依赖本机 CLI 的 smoke。
+单元和集成测试使用临时 Session 与工作区。`smoke:profile` 需要 `DSH_CLI` 指向一个 `dsh` 启动器（默认是 DeepSeek Desktop 的 launcher），在临时 Harness home 的 Web profile 中安装真实 tarball，并使用确定性模型验证预设列表、Standard 隔离、ATN 工具调用和子节点同构能力。测试使用随机本地端口、不打开浏览器、不调用付费模型；缺少 CLI 会明确失败。这尚不等于 PROFILE-03 的全链路验收。GitHub CI 在 Linux 和 Windows 上运行类型检查、测试、构建与打包，不自动执行依赖本机 CLI 的 smoke。
+
+### 仓库与发布文件
+
+Git 保留源码、测试、文档、CI 和 lockfile；`.gitignore` 排除依赖、构建目录、tarball、测试报告、缓存、临时数据、上游参考检出、编辑器设置及本地凭据配置。已跟踪文件不会因为新增忽略规则自动移除，提交前可用 `git ls-files -ci --exclude-standard` 检查；正常应无输出。
+
+npm 使用 `package.json` 的 `files` 白名单，仅发布 `lib/`、`cordis.patch.yml`、README、许可证、NOTICE 和自动包含的 package.json。构建产物由 npm 分发，无需提交到 Git；发布前使用 `npm pack --dry-run --json` 检查清单。真实安装 smoke 可通过 `ATN_INSTALL_SPEC=dsh-atn@0.2.0` 切换为 registry 包验证。
+
+### 0.2.0 变更
+
+- 新增“Agent 预设 → 自定义 → ATN”模式，包含基础工作工具、九个 ATN 工具和模式提示词；其他预设保持隔离。
+- 创建节点继承实际使用的预设版本和工作目录；冷恢复按持久 preset ID 挂载，缺失时明确失败。
+- 新增六项预设集成测试及完整 Web profile 的模式 smoke；补充忽略规则、升级说明和发布文件范围。
 
 ## 仓库内容
 
@@ -186,7 +199,7 @@ npm run smoke:profile          # 需要本机 dsh CLI；默认路径见脚本，
 | `tests/integration/` | 真实 Harness 内核装配：模型工具调用驱动的创建/交付/审议路径、真实 storageDomain、注入时钟与持久重建，以及并发写入、退休释放、stop straggler、spawn 失败补偿、续期边界、恢复 goal context、effort 继承和稳定 message id 的专项测试 |
 | `tests/smoke/` | 真实 `dsh` profile 安装与启动验证 |
 | `prototype/` | 早期一次性验证原型，**不是**正式实现，保留作对照 |
-| `docs/` | 规格、验收清单、原型报告与[本轮修复实施报告](docs/REPAIR_IMPLEMENTATION_REPORT.md) |
+| `docs/` | 规格、验收清单、原型报告与[实施报告](https://github.com/ff66ccff/dsh-ATN/blob/v0.2.0/docs/REPAIR_IMPLEMENTATION_REPORT.md)；历史报告中的当时状态不代表当前版本 |
 
 ## License
 

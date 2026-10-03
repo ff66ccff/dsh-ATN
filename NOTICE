@@ -17,6 +17,7 @@ by this package:
   @deepseek-ai/cordis                         MIT
   @deepseek-ai/dsh-agent                      MIT
   @deepseek-ai/dsh-agent-loop                 MIT
+  @deepseek-ai/dsh-agent-preset               MIT
   @deepseek-ai/dsh-agent-preset-registry      MIT
   @deepseek-ai/dsh-brand                      MIT
   @deepseek-ai/dsh-llm                        MIT

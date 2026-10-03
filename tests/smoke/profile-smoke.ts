@@ -10,11 +10,14 @@
  * Run with: npm run smoke:profile
  * @module dsh-atn/tests/smoke/profile-smoke
  */
-import { spawn } from 'node:child_process'
-import { mkdtemp, readFile, rm, access } from 'node:fs/promises'
+import { execFile, spawn } from 'node:child_process'
+import { mkdtemp, readFile, rm, access, copyFile, writeFile } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
+import { load } from 'js-yaml'
+import { entryListSchema } from '@deepseek-ai/cordis-plugin-include'
 
 /** Per-command timeout; the launcher must never wait for interactive input. */
 const TIMEOUT_MS = 180_000
@@ -33,7 +36,7 @@ function cliPath(): string {
 }
 
 function tarballPath(): string {
-  const version = process.env.npm_package_version ?? '0.1.0'
+  const version = process.env.npm_package_version ?? '0.2.0'
   return join(process.cwd(), '.artifacts', `dsh-atn-${version}.tgz`)
 }
 
@@ -44,7 +47,7 @@ async function dsh(home: string, args: string[]): Promise<{ exitCode: number; st
   console.log(`  $ ${args.join(' ')}`)
   return new Promise((resolve) => {
     const child = spawn(command, {
-      cwd: process.cwd(),
+      cwd: home,
       env: { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/KEY|TOKEN|SECRET|CREDENTIAL|PASSWORD|^DSH_/i.test(key))), DSH_HOME: home },
       windowsHide: true,
       shell: true,
@@ -61,30 +64,30 @@ async function dsh(home: string, args: string[]): Promise<{ exitCode: number; st
       stderr += chunk
     })
     const timer = setTimeout(() => {
-      child.kill()
+      if (process.platform === 'win32' && child.pid !== undefined) {
+        // The launcher is a .cmd shim; killing only the shell leaves its Web
+        // server alive. Restrict termination to this test command's process tree.
+        execFile('taskkill', ['/pid', String(child.pid), '/t', '/f'], { windowsHide: true }, () => {})
+      } else child.kill()
       stderr += `\ndsh timed out after ${TIMEOUT_MS}ms`
     }, TIMEOUT_MS)
     child.on('close', (code) => {
       clearTimeout(timer)
       resolve({ exitCode: code ?? 1, stdout, stderr })
     })
+    child.on('error', (error) => {
+      clearTimeout(timer)
+      resolve({ exitCode: 1, stdout, stderr: `${stderr}\n${error.message}` })
+    })
   })
 }
 
 /** Rows of a composed `--dump-config` document, keyed by row id. */
 function rowsOf(config: string): Map<string, string> {
-  const rows = new Map<string, string>()
-  let current: string | null = null
-  for (const line of config.split(/\r?\n/)) {
-    const id = /^\s*-\s+id:\s*(\S+)/.exec(line)
-    if (id) {
-      current = id[1]!
-      rows.set(current, line.trim())
-      continue
-    }
-    if (current !== null) rows.set(current, `${rows.get(current)!}\n${line}`)
-  }
-  return rows
+  const rows = load(config, { schema: entryListSchema }) as { id: string }[]
+  // Keep each preset's children inside its own row. Repeated child ids such as
+  // persona or tool-fs must not hide changes to a different preset.
+  return new Map(rows.map(row => [row.id, JSON.stringify(row)]))
 }
 
 async function main(): Promise<void> {
@@ -108,10 +111,12 @@ async function main(): Promise<void> {
     const baseName = 'atn-smoke-base'
     const atnName = 'atn-smoke-atn'
 
-    const initBase = await dsh(home, ['--profile', baseName, '--from-default-profile', 'headless'])
-    report.push({ step: 'PROFILE-01 init base profile', command: `dsh --profile ${baseName} --from-default-profile headless`, exitCode: initBase.exitCode, detail: (initBase.stderr || initBase.stdout).trim().slice(0, 200) })
-    const initAtn = await dsh(home, ['--profile', atnName, '--from-default-profile', 'headless'])
-    report.push({ step: 'PROFILE-01 init target profile', command: `dsh --profile ${atnName} --from-default-profile headless`, exitCode: initAtn.exitCode, detail: (initAtn.stderr || initAtn.stdout).trim().slice(0, 200) })
+    const initBase = await dsh(home, ['--profile', baseName, '--from-default-profile', 'web', '--dump-config'])
+    if (initBase.exitCode !== 0) throw new Error(`baseline profile initialization failed: ${initBase.stderr}`)
+    report.push({ step: 'PROFILE-01 init base profile', command: `dsh --profile ${baseName} --from-default-profile web --dump-config`, exitCode: 0, detail: 'initialized isolated Web profile' })
+    const initAtn = await dsh(home, ['--profile', atnName, '--from-default-profile', 'web', '--dump-config'])
+    if (initAtn.exitCode !== 0) throw new Error(`target profile initialization failed: ${initAtn.stderr}`)
+    report.push({ step: 'PROFILE-01 init target profile', command: `dsh --profile ${atnName} --from-default-profile web --dump-config`, exitCode: 0, detail: 'initialized isolated Web profile' })
 
     const before = await dsh(home, ['--profile', baseName, '--dump-config'])
     if (before.exitCode !== 0) throw new Error(`baseline --dump-config failed: ${before.stderr}`)
@@ -134,48 +139,46 @@ async function main(): Promise<void> {
     for (const needle of ['# == dsh-atn', 'name: dsh-atn', 'name: dsh-atn/tools']) {
       if (!composed.includes(needle)) throw new Error(`composed config is missing "${needle}"`)
     }
-    report.push({ step: 'PROFILE-02 loader composes the bundle layer', command: `dsh --profile ${atnName} --dump-config`, exitCode: 0, detail: 'rows atn and atn-tools are present' })
+    if (!composed.includes('id: preset-atn')) throw new Error('ATN preset declaration is absent')
+    report.push({ step: 'PROFILE-02 loader composes the bundle layer', command: `dsh --profile ${atnName} --dump-config`, exitCode: 0, detail: 'host runtime and standalone ATN preset are present' })
 
-    // PROFILE-04: the bundle adds rows and changes nothing else about the profile.
-    // Only the row identity line (id + plugin name) is compared: `!!js`
-    // expressions in the composed document are evaluated in the profile's own
-    // context, so comparing raw bodies would compare generated text.
+    // Compare complete existing rows, including nested presets, permissions
+    // and models. Only the disposable profile's own path is normalized.
     const baseRows = rowsOf(before.stdout)
     const atnRows = rowsOf(composed)
-    const identity = (row: string): string => row.split('\n').filter(line => /^\s*-?\s*(id|name):/.test(line)).map(line => line.trim()).join('|')
+    const normalize = (row: string): string => row.replaceAll(baseName, '<profile>').replaceAll(atnName, '<profile>')
     const removed = [...baseRows.keys()].filter(id => !atnRows.has(id))
     if (removed.length > 0) throw new Error(`the bundle removed rows: ${removed.join(', ')}`)
-    const added = [...atnRows.keys()].filter((id) => id !== 'atn' && id !== 'atn-tools' && !baseRows.has(id))
-    const changed = [...baseRows.keys()].filter((id) => atnRows.has(id) && identity(atnRows.get(id)!) !== identity(baseRows.get(id)!))
+    const added = [...atnRows.keys()].filter((id) => !['atn', 'preset-atn'].includes(id) && !baseRows.has(id))
+    const changed = [...baseRows.keys()].filter((id) => atnRows.has(id) && normalize(atnRows.get(id)!) !== normalize(baseRows.get(id)!))
     if (added.length > 0) throw new Error(`the bundle added unexpected rows: ${added.join(', ')}`)
     if (changed.length > 0) {
-      const detail = changed.map((id) => `${id}\n  before: ${identity(baseRows.get(id)!)}\n  after:  ${identity(atnRows.get(id)!)}`).join('\n')
-      throw new Error(`the bundle changed existing row identities:\n${detail}`)
+      throw new Error(`the bundle changed existing rows: ${changed.join(', ')}`)
     }
     report.push({
       step: 'PROFILE-04 bundle does not override existing rows',
       command: 'diff of --dump-config with and without the bundle',
       exitCode: 0,
-      detail: `${baseRows.size} pre-existing row identities unchanged; only atn and atn-tools added`,
+      detail: `${baseRows.size} complete pre-existing rows unchanged; only ATN runtime and preset added`,
     })
 
-    // PROFILE-02: the profile actually boots the composed tree. There is no
-    // credential in the isolated home, so a boot that reaches the provider and
-    // reports a missing key verifies launch reached the provider check. The
-    // separate kernel integration tests verify ATN service and tools activation.
-    const boot = await dsh(home, ['--profile', atnName, 'noop'])
-    const bootText = `${boot.stdout}\n${boot.stderr}`
+    // A test-only observer runs after the real Web profile is ready. It uses a
+    // scripted adapter, so roster, isolation and ATN calls need no credentials.
+    const observer = join(home, 'profiles', atnName, 'preset-observer.mjs')
+    await copyFile(new URL('./preset-observer.mjs', import.meta.url), observer)
+    const overlay = join(home, 'preset-smoke.patch.yml')
+    await writeFile(overlay, `- insert:\n    - id: atn-smoke-observer\n      name: ${JSON.stringify(pathToFileURL(observer).href)}\n`, 'utf8')
+    const boot = await dsh(home, ['--profile', atnName, '--patch', overlay, '--no-open', '--port', '0'])
+    const bootText = `${boot.stdout}\n${boot.stderr}`.replace(/([?&]token=)[^\s&]+/g, '$1<redacted>')
     if (/Cannot find (module|package)|ERR_MODULE_NOT_FOUND|Cannot find package|invalid plugin|SyntaxError/.test(bootText)) {
       throw new Error(`the profile failed to load the bundle: ${bootText.trim()}`)
     }
-    if (!/MISSING_CREDENTIAL|no API key/.test(bootText)) {
-      throw new Error(`expected the boot to stop at the provider credential check, got: ${bootText.trim().slice(0, 400)}`)
-    }
+    if (boot.exitCode !== 0 || !boot.stdout.includes('ATN_PRESET_SMOKE ')) throw new Error(`ATN preset smoke failed: ${bootText.trim().slice(-8000)}`)
     report.push({
-      step: 'PROFILE-02 profile boots to provider credential check',
-      command: `dsh --profile ${atnName} noop`,
+      step: 'PRESET Web roster, scoped model requests and child creation (partial PROFILE-03)',
+      command: `dsh --profile ${atnName} --patch <observer> --no-open --port 0`,
       exitCode: boot.exitCode,
-      detail: bootText.trim().split(/\r?\n/).slice(-2).join(' | ').slice(0, 200),
+      detail: boot.stdout.split(/\r?\n/).find(line => line.startsWith('ATN_PRESET_SMOKE '))!,
     })
 
     const patchAfter = await readFile(join(home, 'profiles', atnName, 'cordis.patch.yml'), 'utf8').catch(() => '')

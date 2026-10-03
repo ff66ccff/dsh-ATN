@@ -12,6 +12,9 @@
  * @module dsh-atn/tests/fixtures/kernel
  */
 import { Context, type Fiber } from '@deepseek-ai/cordis'
+import Loader from '@deepseek-ai/cordis-plugin-loader'
+import AgentPresets from '@deepseek-ai/dsh-agent-preset-registry'
+import AgentPreset from '@deepseek-ai/dsh-agent-preset'
 import AgentRegistry from '@deepseek-ai/dsh-agent'
 import AgentLoop from '@deepseek-ai/dsh-agent-loop'
 import LlmRuntime, {
@@ -139,10 +142,12 @@ export interface Kernel {
  */
 export async function bootKernel(
   scratch: string,
-  deps: { store?: NetworkStore; clock?: () => number; cleanupTimeoutMs?: number } = {},
+  deps: { store?: NetworkStore; clock?: () => number; cleanupTimeoutMs?: number; presets?: boolean } = {},
 ): Promise<Kernel> {
   const ctx = new Context()
-  try {    await ctx.plugin(LlmRuntime)
+  try {
+    ctx.baseUrl = import.meta.url
+    await ctx.plugin(LlmRuntime)
     await ctx.plugin(SessionStore)
     await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SystemPrompt)
@@ -172,7 +177,18 @@ export async function bootKernel(
     } else {
       await ctx.plugin(plugin, testConfig())
     }
-    await ctx.plugin(AtnTools)
+    if (deps.presets) {
+      await ctx.plugin(Loader)
+      await ctx.plugin(AgentPresets, { default: 'standard' })
+      await ctx.plugin(AgentPreset, { id: 'standard', name: 'Standard', plugins: [] })
+      await ctx.plugin(AgentPreset, {
+        id: 'atn', name: 'ATN', description: 'Adaptive topology network',
+        plugins: [{ id: 'atn-tools', name: new URL('../../src/tools.ts', import.meta.url).href }],
+      })
+    } else {
+      // Legacy preset-free assembly remains covered for embedded callers.
+      await ctx.plugin(AtnTools)
+    }
 
     return { ctx, model, loop, atn: ctx.atn, scratch }
   } catch (error) {
@@ -194,10 +210,15 @@ function unwrap<T>(exports: T): T {
  * @param sessionId - Session id to create on.
  * @returns The host-owned agent.
  */
-export async function createHostAgent(kernel: Kernel, sessionId: string): Promise<Agent> {
+export async function createHostAgent(kernel: Kernel, sessionId: string, presetId?: string): Promise<Agent> {
   const handle = await kernel.ctx.agents.create({
     sessionId: SessionId(sessionId),
     agentOptions: { provider: 'atn-script', model: 'deterministic' },
+    meta: { cwd: kernel.scratch, ...(presetId === undefined ? {} : { agentPreset: presetId }) },
+    setup: async (agentCtx) => {
+      const presets = kernel.ctx.get('agentPresets')
+      if (presets !== undefined) await presets.mount(agentCtx, presetId)
+    },
   })
   return handle.agent
 }

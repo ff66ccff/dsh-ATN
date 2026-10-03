@@ -1,11 +1,70 @@
 # dsh-atn bundle layer.
 #
-# The runtime service row registers `ctx.atn`; the tools row injects that
-# service and adds the ATN model tools plus the shared-rules prompt section.
-# Neither row replaces the user's model, sandbox, approval or preset rows.
+# The host owns the runtime; the ATN preset owns its tools and prompt.
+# Harness lists this declaration on the Agent presets page and session picker.
+# Installing the bundle does not change the selected default preset.
 - insert:
     - id: atn
       name: dsh-atn
 - insert:
-    - id: atn-tools
-      name: dsh-atn/tools
+    - id: preset-atn
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: atn
+        name: ATN
+        description: 自适应拓扑网络：同能力 Agent 通过局部协作、共享目标和全体邻居投票完成任务。
+        order: 5
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: You are a coding agent powered by the {{model}} model, working in ATN mode.
+              suffix: Your working directory is {{cwd}}.
+          - id: agent-instructions
+            name: '@deepseek-ai/dsh-agent-instructions'
+            config:
+              maxBytes: 65536
+          - id: tool-bash
+            name: '@deepseek-ai/dsh-tool-bash'
+            disabled: !!js process.platform === 'win32'
+          - id: tool-pwsh
+            name: '@deepseek-ai/dsh-tool-pwsh'
+            disabled: !!js process.platform !== 'win32'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: tool-todo
+            name: '@deepseek-ai/dsh-tool-todo'
+            config:
+              allowParallelInProgress: true
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: present
+            name: '@deepseek-ai/dsh-tool-present'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+          - id: atn-tools
+            name: dsh-atn/tools

@@ -1,13 +1,27 @@
 # Local upstream source checkouts used for analysis.
 /upstream/
 
-# Installed dependencies for the formal package and the throwaway prototype.
-/node_modules/
-/prototype/node_modules/
+# Dependencies and package-manager caches (including nested examples/tests).
+node_modules/
+.pnpm-store/
+.npm/
 
 # Build output and packed tarballs.
 /lib/
+/prototype/lib/
+/dist/
 /.artifacts/
+*.tgz
+*.tsbuildinfo
+
+# Generated test reports, coverage and local caches.
+/coverage/
+/.nyc_output/
+/test-results/
+/playwright-report/
+/.cache/
+/.tmp/
+/tmp/
 
 # Disposable prototype state and generated evidence.
 /prototype/.scratch/
@@ -16,7 +30,24 @@
 
 # Local editor and agent settings, credentials and scratch space.
 /.claude/
-/.env
-/.env.*
+/.codex/
+/.vscode/
+/.idea/
+.env
+.env.*
+!.env.example
+!.env.sample
+.npmrc
 *.log
 /.scratch/
+
+# OS/editor transient files.
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+
+# Keep source, tests, docs, CI configuration and lockfiles versioned.
+# package.json "files" separately controls the npm package allowlist.

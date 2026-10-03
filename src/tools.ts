@@ -24,7 +24,10 @@ export const inject = ['tools', 'systemPrompt', 'agents', 'atn']
 
 /** Shared-rules text every node receives in its system prompt. */
 export const SHARED_RULES = [
-  'This session participates in an ATN network: a bounded group of same-capability nodes that share one short goal document.',
+  'You are in ATN mode: a bounded group of same-capability nodes that share one short goal document.',
+  'When the user gives you a task and this session has no ATN network, call atn_start with its objective, success criteria and constraints before doing the work. Do not start a network for a greeting or an unclear task.',
+  'A node receiving an ATN goal snapshot or task already belongs to that network; do not call atn_start again. Use atn_spawn for collaboration, passing only the necessary local task and context.',
+  'The entry node coordinates its own work and delivers the final result with atn_deliver after all tasks are settled. To settle your own initial task, send its result to your own node id. Workers return results to the requester recorded in their task.',
   'Rules you must follow:',
   '- A reply or an idle turn never completes a task. Settle work only with atn_send kind=result, naming the task and giving concrete evidence.',
   '- The shared goal document changes only when every approver on the proposal\'s frozen list consents explicitly. Silence, a timeout and a majority are not consent.',

@@ -1,8 +1,29 @@
 # dsh-atn 修复实施报告
 
+## 2026-10-04：0.2.0 独立 ATN 模式
+
+默认产品入口调整为 **设置 → Agent 预设 → 自定义 → ATN**。Bundle 新增宿主级 `atn` 运行时和 `preset-atn` 声明；基础工作工具、九个 ATN 工具及模式提示词均属于预设作用域。安装不改默认项，Standard 等原有预设不获得 ATN 工具或提示词。
+
+节点创建使用 `agentPresets.composeFrom` 加入创建者持有的实际预设版本，将 preset ID 和工作目录写入节点/Session。冷恢复使用记录的 preset ID 调用 `mount`，预设缺失时失败，不回退到默认模式；不要求创建者仍存活。
+
+验证证据：
+
+| 检查 | 范围与结果 |
+|---|---|
+| `npm run typecheck` / `npm test` / `npm run build` | 类型检查、139 项单元/集成测试和编译通过 |
+| `tests/integration/preset.test.ts` | 6 项：声明结构、UI roster 与隔离、父子孙绑定和 cwd、旧预设版本继承、冷恢复、缺失预设拒绝 |
+| `npm run smoke:profile` | 临时 Web profile 安装真实 tarball；预设 roster 同时包含 Standard/PTC/Minimal/Creator/ATN，ATN 可用且非默认；模型工具调用执行 start/spawn，子节点拥有同一套 22 个工具，其中 9 个为 ATN 工具 |
+| 配置对比 | 183 条完整既有宿主行及其嵌套配置未改动，仅新增运行时和 ATN 声明；目标 profile 的用户 patch 未改动 |
+
+Smoke 使用确定性 adapter，不读取用户凭据或真实 Session，不调用付费模型。测试辅助 adapter 单独识别模型的工具请求，避免 Web 的标题/摘要请求消耗测试脚本。预设测试通过不代表权限沙箱验证通过。
+
+发布工程：版本由 `0.1.0` 升至 `0.2.0`，沿用 npm `next` 标签；安装示例改为 `dsh plugin --profile web add dsh-atn@0.2.0`。`.gitignore` 覆盖嵌套依赖、构建产物、tarball、缓存、报告、临时数据和本地设置；npm 使用独立白名单。源码、测试、文档、CI 与 lockfile 继续版本化。
+
+当前缺口：AUTH-01/02/03 的受限执行路径、PROFILE-03 的完整消息/投票/退休/交付链路、CONTEXT-02 的模型读取确认语义、直接 GitHub 源码安装。AGENT-02 的预设绑定和真实 Web profile 的 start/spawn 路径现已有证据；下方 `0.1.0` 报告中的对应缺口仅描述当时状态。
+
 ## 2026-10-03 review 后直接修复
 
-本节是最新状态，下方原 121 项报告作为历史实施记录保留。代码定位以当前 `src/` 为准。交付定位为开发者预览版，尚未满足完整正式验收；源码已推送 GitHub，`dsh-atn@0.1.0` 已发布 npm，未创建 GitHub Release。
+本节记录 `0.1.0` 时的状态，下方原 121 项报告同样作为历史实施记录保留。代码定位可能随版本变化。该版定位为开发者预览版，尚未满足完整正式验收；源码已推送 GitHub，`dsh-atn@0.1.0` 已发布 npm，未创建 GitHub Release。
 
 | review 问题 | 当前处理 | 回归证据 |
 |---|---|---|

@@ -2,8 +2,8 @@
  * `dsh-atn` runtime entry: a Cordis service plugin that owns every ATN network
  * and every Agent the network creates.
  *
- * The bundle patch loads this row and the `./tools` row; the tools row injects
- * the `atn` service this class registers.
+ * The bundle patch loads this host row and an ATN preset declaration. The
+ * preset's `./tools` row injects the `atn` service this class registers.
  * @module dsh-atn
  */
 import type { Context } from '@deepseek-ai/cordis'

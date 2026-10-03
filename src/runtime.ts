@@ -22,6 +22,7 @@ import { SessionId, type Session } from '@deepseek-ai/dsh-session'
 import { captureDelegatedPolicyOverrides, appendDelegatedPolicyOverrides } from '@deepseek-ai/dsh-subagent'
 import { createScope, type Scope } from '@deepseek-ai/dsh-scope'
 import type {} from '@deepseek-ai/dsh-storage-domain'
+import type {} from '@deepseek-ai/dsh-agent-preset-registry'
 import type { UserMessage } from '@deepseek-ai/dsh-llm'
 import { Config as AtnConfig, limitsFromConfig, utf8Bytes, type Config } from './config.ts'
 import {
@@ -737,7 +738,7 @@ export class AtnRuntime extends Service<Config> {
           lifecycle: 'active',
           leaseDeadlineAt: null,
           modelRoute: { provider: agent.options.provider ?? 'inherit', model: agent.options.model ?? 'inherit', effort: agent.options.reasoningEffort ?? null },
-          presetId: null,
+          presetId: agent.ctx.get('agentPresets')?.composedPreset(agent.ctx) ?? null,
           permissionSeed: null,
           isEntry: true,
           creationState: 'published',
@@ -808,6 +809,8 @@ export class AtnRuntime extends Service<Config> {
     // Capture the inherited policy BEFORE the first await, so a later permission
     // change on the creator cannot widen the child.
     const inherited = captureDelegatedPolicyOverrides(agent)
+    const presets = agent.ctx.get('agentPresets')
+    const presetId = presets?.composedPreset(agent.ctx) ?? null
     const route = {
       provider: agent.options.provider ?? creator.modelRoute.provider,
       model: agent.options.model ?? creator.modelRoute.model,
@@ -854,7 +857,7 @@ export class AtnRuntime extends Service<Config> {
               lifecycle: 'provisioning',
               leaseDeadlineAt: now + leaseMs,
               modelRoute: route,
-              presetId: null,
+              presetId,
               permissionSeed: inherited as unknown,
               isEntry: false,
               creationState: 'pending',
@@ -873,17 +876,22 @@ export class AtnRuntime extends Service<Config> {
       handle = await this.owner.agents.create({
         sessionId: SessionId(sessionId),
         signal,
-        meta: { origin: 'subagent', delegationDepth: 1 },
+        meta: {
+          origin: 'subagent', delegationDepth: 1,
+          ...(agent.session.header.cwd === undefined ? {} : { cwd: agent.session.header.cwd }),
+          ...(presetId === null ? {} : { agentPreset: presetId }),
+        },
         agentOptions: {
           provider: route.provider === 'inherit' ? undefined : route.provider,
           model: route.model === 'inherit' ? undefined : route.model,
           reasoningEffort: effortOption(route.effort),
         },
         setup: async (agentCtx, child): Promise<void> => {
-          // Without a preset the child keeps the profile's ordinary tool set; the
-          // recorded policy seed keeps the delegated permission scope.
+          // Join the creator's retained revision, including when the declaration
+          // has since changed. Ownership remains with ATN, not the creator.
+          const joined = presets?.composeFrom(agentCtx, agent.ctx) ?? null
+          if (joined !== presetId) throw new AtnRefusal('preset-changed', 'creator preset changed during node creation')
           appendDelegatedPolicyOverrides(child.session as Session, inherited)
-          void agentCtx
         },
       })
     } catch (error) {
@@ -1943,6 +1951,14 @@ export class AtnRuntime extends Service<Config> {
             }
             const handle = await this.owner.agents.resume({
               resumeSessionId: SessionId(node.sessionId), signal,
+              setup: async (agentCtx): Promise<void> => {
+                if (node.presetId === null) return
+                const presets = agentCtx.get('agentPresets')
+                if (presets === undefined) throw new AtnRefusal('preset-unavailable', `cannot restore preset ${node.presetId} without the registry`)
+                // Resolve this node's durable identity, never the current default
+                // or a surviving relative's possibly different composition.
+                await presets.mount(agentCtx, node.presetId)
+              },
               agentOptions: {
                 provider: node.modelRoute.provider === 'inherit' ? undefined : node.modelRoute.provider,
                 model: node.modelRoute.model === 'inherit' ? undefined : node.modelRoute.model,
