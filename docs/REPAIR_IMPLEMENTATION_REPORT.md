@@ -2,7 +2,7 @@
 
 ## 2026-10-03 review 后直接修复
 
-本节是最新状态，下方原 121 项报告作为历史实施记录保留。代码定位以当前 `src/` 为准。交付定位为 GitHub 开发者预览源码，尚未满足完整正式验收；未发布 npm 或 release。
+本节是最新状态，下方原 121 项报告作为历史实施记录保留。代码定位以当前 `src/` 为准。交付定位为开发者预览版，尚未满足完整正式验收；源码已推送 GitHub，`dsh-atn@0.1.0` 已发布 npm，未创建 GitHub Release。
 
 | review 问题 | 当前处理 | 回归证据 |
 |---|---|---|
@@ -24,6 +24,14 @@
 实测：`npm test` **133/133 通过**，`npm run typecheck` 和 `npm run build` 退出 0；tarball 57 文件。真实 profile smoke 安装退出 0，96 个既有行 id/name 不变，目标 profile 的 patch 不变，启动到 `MISSING_CREDENTIAL`；它不证明真实 profile 纵向路径通过。新增 12 项：8 项集成、4 项单元；原 121 项保留。另从 Git 暂存区导出干净目录，依次执行 `npm ci --ignore-scripts`、typecheck、133 项测试、build 和 pack，全部退出 0；检查 tarball 的 57 个文件，无 node_modules/tests/src/.env/upstream/prototype/.claude。
 
 仍未完成：AUTH-01/02/03 受限执行路径；AGENT-02 的 preset 绑定；PROFILE-03 真实 profile 纵向运行；CONTEXT-02 未准入不算读取；GitHub 源码直接安装。MAIL-02 新测试证明整内核重建后的历史去重，不等于双进程同时写或硬崩溃跨存储事务保证。停止测试不能证明不遵守取消协议的外部操作一定退出。以上不标成通过。
+
+## npm 首次发布与安装验证
+
+2026-10-03，使用 npm 账号 `ff66ccff` 完成浏览器双重验证后，执行 `npm publish .artifacts/dsh-atn-0.1.0.tgz --access public --tag next --registry=https://registry.npmjs.org/`，退出 0。Registry 查询确认版本 `0.1.0`，`next` 和首次发布生成的 `latest` 均指向该版本；产品状态仍为开发者预览版。Registry 的 `dist.shasum` 与本地发布 tarball 一致：`909ca374905044874f8c14f100b115a3d009dda3`。
+
+设置 `ATN_INSTALL_SPEC=dsh-atn@0.1.0` 后实际执行 `npm run smoke:profile`：从 npm 安装退出 0，bundle 注册存在、`atn`/`atn-tools` 两行存在、96 个既有行 id/name 未变、目标 profile 的 `cordis.patch.yml` 未变，启动到 `MISSING_CREDENTIAL`。pnpm 自动为本次明确指定的新版本添加 `minimumReleaseAgeExclude` 条目；未配置真实模型凭据或调用付费模型。
+
+README 的首选安装方式已改为 `dsh plugin --profile headless add dsh-atn@0.1.0`，附模型配置、启用检查及源码构建备选步骤。新增 `publishConfig` 固定官方 registry、公开访问和 `next` 标签；`prepublishOnly` 执行类型检查、133 项测试和构建。原有完整验收缺口没有因发布 npm 而转为通过。
 
 ## 历史记录：首轮 121 项修复
 

@@ -3,7 +3,7 @@
 面向 **DeepSeek Harness** 的自适应拓扑网络插件：让同能力、独立执行的 agent，通过局部信息和按需协作完成共同目标。
 
 > **当前阶段：0.1.0 开发者预览版。**
-> 本轮 review 修复已通过 133 项测试；支持本地构建和 tarball 安装。完整验收尚未通过：受限权限执行路径（AUTH-01/02/03）、Agent preset 绑定、真实 profile 内 ATN 纵向运行（PROFILE-03）仍缺证据，见[最新修复记录](docs/REPAIR_IMPLEMENTATION_REPORT.md)。不应把本版本用作权限隔离已经验证的正式版本。
+> 本轮 review 修复已通过 133 项测试；支持 npm 安装、本地构建和 tarball 安装。完整验收尚未通过：受限权限执行路径（AUTH-01/02/03）、Agent preset 绑定、真实 profile 内 ATN 纵向运行（PROFILE-03）仍缺证据，见[最新修复记录](docs/REPAIR_IMPLEMENTATION_REPORT.md)。不应把本版本用作权限隔离已经验证的正式版本。
 
 ## 核心设计
 
@@ -19,25 +19,42 @@
 
 ## 安装与启用
 
-需要一个已经能运行的 `dsh` 安装和 Node.js 24。
+### 从 npm 安装（推荐）
+
+npm 包：[dsh-atn](https://www.npmjs.com/package/dsh-atn)。
+
+需要已安装的 **DeepSeek Harness `0.2.0-rc.2`**、Node.js 24，以及可用的模型配置。先确认 `dsh --version` 能正常运行，然后在终端执行：
+
+```bash
+dsh plugin --profile headless add dsh-atn@0.1.0
+dsh --profile headless --dump-config
+```
+
+第一行从 npm 下载并把 ATN 加入 `headless` profile；第二行检查配置，输出中应有 `# == dsh-atn`、`atn` 和 `atn-tools`。不需要克隆源码或编译，也不需要单独执行 `npm install -g dsh-atn`。
+
+配置好模型后即可运行一个任务：
+
+```bash
+dsh --profile headless "请使用 ATN，将核对当前项目 README 的工作拆分给节点，汇总核对结果。"
+```
+
+`headless` 是 Harness 自带的命令行 profile；已有其他 profile 时，把命令中的 `headless` 换成自己的名称。安装后重新启动对应 profile。若出现 `MISSING_CREDENTIAL`，需要先在 Harness 中配置模型凭据。
+
+当前版本属于开发者预览版，发布到 npm 的 `next` 标签；上面的命令固定 `0.1.0`，便于复现。安装本身不会启动网络，只有模型调用 `atn_start` 后才会创建 ATN 状态。
+
+### 从源码构建（开发者）
 
 ```bash
 git clone https://github.com/ff66ccff/dsh-ATN.git
 cd dsh-ATN
 npm ci
 npm run build
-npm run pack:tarball          # 生成 .artifacts/dsh-atn-0.1.0.tgz
+npm run pack:tarball
+
+dsh plugin --profile headless add ./.artifacts/dsh-atn-0.1.0.tgz
 ```
 
-把打包产物装进一个 profile（会初始化 profile 并加入 bundle 层）：
-
-```bash
-dsh plugin --profile my-atn add ./.artifacts/dsh-atn-0.1.0.tgz
-dsh --profile my-atn --dump-config      # 应出现 "# == dsh-atn" 层，含 atn 与 atn-tools 两行
-dsh --profile my-atn
-```
-
-推荐从 GitHub 源码检出后执行上面的构建命令，再安装生成的 tarball。直接用 `dsh plugin add github:...` 安装的构建授权行为尚未完成端到端验证。本项目未发布 npm 包。
+直接用 `dsh plugin add github:...` 安装的构建授权行为尚未完成端到端验证；推荐 npm 包或本地构建的 tarball。
 
 ### 前置服务
 

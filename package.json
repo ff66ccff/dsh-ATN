@@ -35,7 +35,8 @@
     "test:unit": "node --import tsx/esm --test \"tests/unit/**/*.test.ts\"",
     "pack:tarball": "node -e \"require('node:fs').mkdirSync('.artifacts', { recursive: true })\" && npm pack --ignore-scripts --pack-destination .artifacts",
     "smoke:profile": "node --import tsx/esm tests/smoke/profile-smoke.ts",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build"
   },
   "dsh": {
     "bundle": {
@@ -89,5 +90,10 @@
   "homepage": "https://github.com/ff66ccff/dsh-ATN#readme",
   "bugs": {
     "url": "https://github.com/ff66ccff/dsh-ATN/issues"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "next"
   }
 }

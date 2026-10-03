@@ -89,7 +89,12 @@ function rowsOf(config: string): Map<string, string> {
 
 async function main(): Promise<void> {
   const tarball = tarballPath()
-  if (!existsSync(tarball)) {
+  const registrySpec = process.env.ATN_INSTALL_SPEC
+  if (registrySpec !== undefined && !/^dsh-atn@\d+\.\d+\.\d+$/.test(registrySpec)) {
+    throw new Error('ATN_INSTALL_SPEC must be an exact dsh-atn version, such as dsh-atn@0.1.0')
+  }
+  const installSpec = registrySpec ?? tarball
+  if (registrySpec === undefined && !existsSync(tarball)) {
     throw new Error(`packed tarball not found at ${tarball}; run "npm run build && npm run pack:tarball" first`)
   }
   if (!existsSync(cliPath())) {
@@ -98,7 +103,7 @@ async function main(): Promise<void> {
 
   const home = await mkdtemp(join(tmpdir(), 'dsh-atn-profile-'))
   const report: StepReport[] = []
-  console.log(`profile smoke: home=${home} tarball=${tarball}`)
+  console.log(`profile smoke: home=${home} installSpec=${installSpec}`)
   try {
     const baseName = 'atn-smoke-base'
     const atnName = 'atn-smoke-atn'
@@ -112,9 +117,9 @@ async function main(): Promise<void> {
     if (before.exitCode !== 0) throw new Error(`baseline --dump-config failed: ${before.stderr}`)
     const patchBefore = await readFile(join(home, 'profiles', atnName, 'cordis.patch.yml'), 'utf8').catch(() => '')
 
-    const add = await dsh(home, ['plugin', '--profile', atnName, 'add', tarball])
-    if (add.exitCode !== 0) throw new Error(`tarball install failed: ${add.stderr || add.stdout}`)
-    report.push({ step: 'PROFILE-01 install tarball', command: `dsh plugin --profile ${atnName} add ${tarball}`, exitCode: add.exitCode, detail: (add.stdout || add.stderr).trim().split(/\r?\n/).slice(-3).join(' | ') })
+    const add = await dsh(home, ['plugin', '--profile', atnName, 'add', installSpec])
+    if (add.exitCode !== 0) throw new Error(`package install failed: ${add.stderr || add.stdout}`)
+    report.push({ step: 'PROFILE-01 install package', command: `dsh plugin --profile ${atnName} add ${installSpec}`, exitCode: add.exitCode, detail: (add.stdout || add.stderr).trim().split(/\r?\n/).slice(-3).join(' | ') })
 
     const manifest = JSON.parse(await readFile(join(home, 'profiles', atnName, 'package.json'), 'utf8')) as {
       dsh?: { profile?: { bundles?: string[] } }
@@ -180,7 +185,7 @@ async function main(): Promise<void> {
     }
     report.push({ step: 'PROFILE-04 user patch untouched', command: 'read profile cordis.patch.yml', exitCode: 0, detail: 'unchanged' })
 
-    console.log(JSON.stringify({ tarball, home, steps: report }, null, 2))
+    console.log(JSON.stringify({ installSpec, home, steps: report }, null, 2))
   } finally {
     await rm(home, { recursive: true, force: true })
     await access(home).then(
