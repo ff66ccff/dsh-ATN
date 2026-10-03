@@ -21,6 +21,12 @@ Smoke 使用确定性 adapter，不读取用户凭据或真实 Session，不调�
 
 当前缺口：AUTH-01/02/03 的受限执行路径、PROFILE-03 的完整消息/投票/退休/交付链路、CONTEXT-02 的模型读取确认语义、直接 GitHub 源码安装。AGENT-02 的预设绑定和真实 Web profile 的 start/spawn 路径现已有证据；下方 `0.1.0` 报告中的对应缺口仅描述当时状态。
 
+### 0.2.0 发布结果
+
+2026-10-04（Asia/Shanghai），发布代码提交 `9d7b72abbd0b3b0d647fe7b2cd300236003021c0` 已推送到 GitHub `main`，并创建 `v0.2.0` 标签。[该标签的 Windows/Linux CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/37154367261) 全部通过。Git 忽略检查覆盖 20 个依赖/产物/临时文件路径，已跟踪但应忽略的文件为 0；打包白名单检查通过，共 57 文件。
+
+npm 发布经账号双重验证后成功。Registry 查询确认 `dsh-atn@0.2.0` 可用，`next=0.2.0`、`latest=0.1.0`；`dist.shasum` 与经验证的本地 tarball 一致：`560b4987e38cafa6151452dc431a7b3b432dba42`。随后以 `ATN_INSTALL_SPEC=dsh-atn@0.2.0` 运行真实 Web profile smoke，直接从 npm 安装并验证模式列表、工具隔离、start/spawn、子节点预设和 183 条既有配置不变，退出 0。
+
 ## 2026-10-03 review 后直接修复
 
 本节记录 `0.1.0` 时的状态，下方原 121 项报告同样作为历史实施记录保留。代码定位可能随版本变化。该版定位为开发者预览版，尚未满足完整正式验收；源码已推送 GitHub，`dsh-atn@0.1.0` 已发布 npm，未创建 GitHub Release。
