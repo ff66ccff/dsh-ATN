@@ -1,0 +1,11 @@
+# dsh-atn bundle layer.
+#
+# The runtime service row registers `ctx.atn`; the tools row injects that
+# service and adds the ATN model tools plus the shared-rules prompt section.
+# Neither row replaces the user's model, sandbox, approval or preset rows.
+- insert:
+    - id: atn
+      name: dsh-atn
+- insert:
+    - id: atn-tools
+      name: dsh-atn/tools

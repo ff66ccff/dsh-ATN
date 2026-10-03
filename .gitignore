@@ -1,0 +1,22 @@
+# Local upstream source checkouts used for analysis.
+/upstream/
+
+# Installed dependencies for the formal package and the throwaway prototype.
+/node_modules/
+/prototype/node_modules/
+
+# Build output and packed tarballs.
+/lib/
+/.artifacts/
+
+# Disposable prototype state and generated evidence.
+/prototype/.scratch/
+/prototype/evidence/
+/prototype/*.log
+
+# Local editor and agent settings, credentials and scratch space.
+/.claude/
+/.env
+/.env.*
+*.log
+/.scratch/

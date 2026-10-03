@@ -1,0 +1,33 @@
+dsh-atn
+Copyright 2026 the dsh-ATN contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+Third-party notices
+-------------------
+
+No source file from the DeepSeek Harness repository is copied into this
+package. The runtime imports the published `@deepseek-ai/dsh-*` packages and
+`@deepseek-ai/cordis` as peer dependencies and uses only their documented
+public APIs.
+
+The following packages are consumed at run time. Their licenses are unchanged
+by this package:
+
+  @deepseek-ai/cordis                         MIT
+  @deepseek-ai/dsh-agent                      MIT
+  @deepseek-ai/dsh-agent-loop                 MIT
+  @deepseek-ai/dsh-agent-preset-registry      MIT
+  @deepseek-ai/dsh-brand                      MIT
+  @deepseek-ai/dsh-llm                        MIT
+  @deepseek-ai/dsh-scope                      MIT
+  @deepseek-ai/dsh-session                    MIT
+  @deepseek-ai/dsh-storage-domain             MIT
+  @deepseek-ai/dsh-subagent                   MIT
+  @deepseek-ai/dsh-system-prompt              MIT
+  @deepseek-ai/dsh-tools                      MIT
+  @deepseek-ai/schemastery                    MIT
+  zod                                         MIT
+
+DeepSeek Harness is a separate work by its own authors; this package is not
+affiliated with or endorsed by it.
