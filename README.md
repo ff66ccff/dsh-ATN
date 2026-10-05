@@ -4,9 +4,9 @@ dsh-ATN 是 DeepSeek Harness 的一个插件。装上之后，Harness 的「Agen
 
 这里没有中心调度，没有角色模板，也没有固定的协作轮次。运行时只负责持久化、投递、生命周期、额度和身份检查这些底层的事；连接和分工是节点自己的选择。
 
-> **版本 0.3.1，开发者预览。** `npm i dsh-atn` 装到的就是它，安装时写明确版本号更好复现。
+> **版本 0.3.2，开发者预览。** `npm i dsh-atn` 装到的就是它，安装时写明确版本号更好复现。
 >
-> 0.3.0 引入自适应拓扑：节点能在运行中自己换邻居，宿主验收不再是从一条边改到另一条边的前提。0.3.1 只是修正了这份 README 里关于 npm 标签的说明，功能与 0.3.0 相同。
+> 0.3.0 引入自适应拓扑：节点能在运行中自己换邻居，宿主验收不再是从一条边改到另一条边的前提。0.3.2 修复调度并发时显式 `tick()` 提前返回的问题，消除由此引起的 Windows CI 偶发失败。
 >
 > 需要说清楚的是，**目前还没有实验证据表明 ATN 比 Harness 自带的 agent team 更强**。已有的真实模型对照规模都很小，结果与边界见[实验说明](docs/EXPERIMENT_PILOT.md)和[自适应拓扑设计](docs/ADAPTIVE_TOPOLOGY.md)。
 
@@ -31,7 +31,7 @@ dsh-ATN 是 DeepSeek Harness 的一个插件。装上之后，Harness 的「Agen
 ### 从 npm 安装
 
 ```bash
-dsh plugin --profile web add dsh-atn@0.3.1
+dsh plugin --profile web add dsh-atn@0.3.2
 dsh --profile web --dump-config
 ```
 
@@ -57,7 +57,7 @@ cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.3.1.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.3.2.tgz
 ```
 
 用 `dsh plugin add github:...` 直接安装的方式没有验证过，建议走 npm 包或者自己构建的 tarball。
@@ -216,7 +216,7 @@ npm run smoke:profile          # 需要本机 dsh CLI；默认路径见脚本，
 npm run smoke:visualization    # 真实 Web profile 的观察接口、拓扑变化和浏览器包加载验证
 ```
 
-单元和集成测试使用临时 Session 与工作区，目前是 313 项。`smoke:profile` 需要 `DSH_CLI` 指向一个 `dsh` 启动器（默认是 DeepSeek Desktop 的 launcher），它会在临时 Harness home 的 Web profile 里安装真实 tarball，用确定性模型验证预设列表、Standard 隔离、ATN 工具调用和子节点同构能力。测试用随机本地端口，不打开浏览器、不调用付费模型；缺 CLI 会明确失败。这还不等于 PROFILE-03 的全链路验收。GitHub CI 在 Linux 和 Windows 上跑类型检查、测试、构建和打包，不跑依赖本机 CLI 的 smoke。
+单元和集成测试使用临时 Session 与工作区，目前是 315 项，另有 8 项 UI 交互测试。`smoke:profile` 需要 `DSH_CLI` 指向一个 `dsh` 启动器（默认是 DeepSeek Desktop 的 launcher），它会在临时 Harness home 的 Web profile 里安装真实 tarball，用确定性模型验证预设列表、Standard 隔离、ATN 工具调用和子节点同构能力。测试用随机本地端口，不打开浏览器、不调用付费模型；缺 CLI 会明确失败。这还不等于 PROFILE-03 的全链路验收。GitHub CI 在 Linux 和 Windows 上跑类型检查、测试、构建和打包，不跑依赖本机 CLI 的 smoke。
 
 可视化部分另有 8 项客户端交互测试，隔离共享 Modal 组件，验证只有 ATN 预设显示入口、元数据更新、离开 ATN 后关闭面板，以及刷新、取消、切换会话、断线重试和节点选择。`smoke:visualization` 在真实 Web profile 里验证严格观察接口、运行中的工具、失败结果、重连和客户端包分发，不等于桌面窗口的渲染验收。
 

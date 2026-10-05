@@ -439,7 +439,8 @@ export class AtnRuntime extends Service<Config> {
   private closing = false
   private readonly cleanupTimeoutMs: number
   private timer: NodeJS.Timeout | null = null
-  private ticking = false
+  /** Explicit passes queue; timer pulses never build up behind a slow pass. */
+  private tickTail: Promise<void> | null = null
   private readonly clock: () => number
 
   /**
@@ -2184,6 +2185,7 @@ export class AtnRuntime extends Service<Config> {
     if (this.timer !== null) return
     const period = Math.max(MIN_TICK_MS, Math.min(this.config.defaultLeaseMs, 1000))
     this.timer = setInterval(() => {
+      if (this.closing || this.tickTail !== null) return
       void this.tick().catch((error: unknown) => {
         this.ctx.logger.warn(`dsh-atn scheduler tick failed: ${describe(error)}`)
       })
@@ -2203,46 +2205,56 @@ export class AtnRuntime extends Service<Config> {
    *
    * A node that became terminal in this pass is released in the same pass, so
    * `retired` never means "still running".
+   * Explicit calls queue a fresh pass after any in-flight pass, so awaiting one
+   * also covers changes committed after the earlier pass inspected a network.
    *
    * @returns The network ids that changed during this pass.
    */
   async tick(): Promise<string[]> {
-    if (this.ticking) return []
-    this.ticking = true
+    if (this.closing) return []
+    const previous = this.tickTail ?? Promise.resolve()
+    const run = previous.then(() => this.closing ? [] : this.tickOnce())
+    // A failure belongs to its caller and must not poison subsequent passes.
+    const tail = run.then(() => undefined, () => undefined)
+    this.tickTail = tail
     try {
-      const store = await this.openStore()
-      const changed: string[] = []
-      for (const id of await store.list()) {
-        const record = await store.load(id)
-        if (record === undefined) continue
-        if (record.status !== 'open') {
-          await this.releaseOwnedHandles(id, 'terminal network')
-          continue
-        }
-        const now = this.now()
-        const committed = await this.mutate(id, (current) => {
-          if (current.status !== 'open') return { record: current, value: { changed: false, terminal: new Set<string>() } }
-          const expired = expireProposals(current, now)
-          const leased = this.expireLeases(expired, now)
-          const retired = materializeDeliveryTask(retireSettledNodes(this.retireExhaustedNodes(leased), now), now)
-          const terminal = this.terminalNodesOf(current, retired)
-          return { record: retired, value: { changed: retired !== current, terminal } }
-        })
-        if (committed.value.changed) changed.push(id)
-        if (committed.value.terminal.size > 0) {
-          await this.releaseSpecificHandles(id, committed.value.terminal)
-        }
-        await this.drainMailbox(id)
-        const latest = await this.requireNetwork(id)
-        if (now >= latest.deadlineAt) {
-          await this.stop(id, 'network deadline reached')
-          changed.push(id)
-        }
-      }
-      return changed
+      return await run
     } finally {
-      this.ticking = false
+      if (this.tickTail === tail) this.tickTail = null
     }
+  }
+
+  private async tickOnce(): Promise<string[]> {
+    const store = await this.openStore()
+    const changed: string[] = []
+    for (const id of await store.list()) {
+      const record = await store.load(id)
+      if (record === undefined) continue
+      if (record.status !== 'open') {
+        await this.releaseOwnedHandles(id, 'terminal network')
+        continue
+      }
+      const now = this.now()
+      const committed = await this.mutate(id, (current) => {
+        if (current.status !== 'open') return { record: current, value: { changed: false, terminal: new Set<string>() } }
+        const expired = expireProposals(current, now)
+        const leased = this.expireLeases(expired, now)
+        const retired = materializeDeliveryTask(retireSettledNodes(this.retireExhaustedNodes(leased), now), now)
+        const terminal = this.terminalNodesOf(current, retired)
+        return { record: retired, value: { changed: retired !== current, terminal } }
+      })
+      if (committed.value.changed) changed.push(id)
+      if (committed.value.terminal.size > 0) {
+        await this.releaseSpecificHandles(id, committed.value.terminal)
+      }
+      await this.drainMailbox(id)
+      const latest = await this.requireNetwork(id)
+      if (now >= latest.deadlineAt) {
+        await this.stop(id, 'network deadline reached')
+        changed.push(id)
+      }
+    }
+    return changed
   }
 
   private expireLeases(record: NetworkRecord, now: number): NetworkRecord {
