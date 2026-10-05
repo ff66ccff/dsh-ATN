@@ -20,5 +20,6 @@
     "sourceMap": true,
     "outDir": "lib"
   },
-  "include": ["src/**/*.ts", "tests/**/*.ts"]
+  "include": ["src/**/*.ts", "tests/**/*.ts", "experiments/**/*.ts"],
+  "exclude": ["src/client", "tests/client"]
 }

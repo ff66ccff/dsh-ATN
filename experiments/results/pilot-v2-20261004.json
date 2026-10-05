@@ -1,0 +1,368 @@
+{
+  "revision": "pilot-v2-20261004",
+  "date": "2026-10-04",
+  "scope": "One synthetic task, one sample per model and architecture. No claim of statistical or causal topology advantage.",
+  "providerPlugin": "dsh-opencode-go@0.1.20",
+  "harness": "0.2.0-rc.2",
+  "limits": {
+    "observedTokens": 80000,
+    "maxOutputTokens": 3072,
+    "timeoutMs": 180000,
+    "maxAgents": 3,
+    "maxCalls": 16
+  },
+  "originalResultsSha256": "409a5eb482dc6d8064e87823e3b31d791cf1c0a0a3bfedeefcb497fad3478e6e",
+  "localArtifacts": ".artifacts/experiments/pilot-v2-20261004",
+  "completed": 10,
+  "passed": 8,
+  "runs": [
+    {
+      "runId": "11ca0423-8b92-4816-b698-4d18698deb41",
+      "model": "deepseek-v4.1-flash",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 1,
+      "uniquePersistedSessions": 1,
+      "totalTokens": {
+        "known": 1627,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 5637,
+      "rewireCalls": 0,
+      "protocol": null,
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "4cc24a5e-48bc-436a-9164-c6c3e5637a45",
+      "model": "deepseek-v4.1-flash",
+      "mode": "independent-pool",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 4,
+      "uniquePersistedSessions": 3,
+      "totalTokens": {
+        "known": 6497,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 12130,
+      "rewireCalls": 0,
+      "protocol": {
+        "independentWorkers": 2,
+        "completedCandidates": 2,
+        "callsPerCandidate": [
+          1,
+          1
+        ],
+        "candidateCallLimit": 7,
+        "synthesis": "one entry; no oracle selection; all candidate and synthesis calls counted",
+        "activeAgentsAtStop": 1
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": 0.001098486,
+        "knownAmount": 0.001098486,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "10f4167d-e7bd-4f5f-bda6-567b8749b416",
+      "model": "deepseek-v4.1-flash",
+      "mode": "native-team",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 13,
+      "uniquePersistedSessions": 2,
+      "totalTokens": {
+        "known": 53564,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 33528,
+      "rewireCalls": 0,
+      "protocol": {
+        "members": 2,
+        "queuedMail": 0,
+        "openTasks": 0,
+        "tasks": [
+          {
+            "status": "completed"
+          }
+        ],
+        "activeAgentsAtStop": 2
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0.0024061499999999997,
+        "unknownCalls": 2,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "2aea3136-29cb-4df1-ba78-123d96b2ed84",
+      "model": "deepseek-v4.1-flash",
+      "mode": "atn-no-rewire",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 9,
+      "uniquePersistedSessions": 2,
+      "totalTokens": {
+        "known": 57757,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 38584,
+      "rewireCalls": 0,
+      "protocol": {
+        "status": "completed",
+        "nodes": 2,
+        "queuedMail": 0,
+        "pendingProposals": 0,
+        "openTasks": 0,
+        "failedTasks": 0,
+        "activeAgentsAtStop": 1
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0.00356871,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "e59c301c-f8ae-490c-84f6-c11bd9e06333",
+      "model": "deepseek-v4.1-flash",
+      "mode": "atn-adaptive",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 11,
+      "uniquePersistedSessions": 2,
+      "totalTokens": {
+        "known": 58265,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 26517,
+      "rewireCalls": 0,
+      "protocol": {
+        "status": "completed",
+        "nodes": 2,
+        "queuedMail": 0,
+        "pendingProposals": 0,
+        "openTasks": 0,
+        "failedTasks": 0,
+        "activeAgentsAtStop": 1
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0.002558988,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "8f6b2875-3f59-4d45-9f0e-60cb3a5cf28a",
+      "model": "space-bunny-free",
+      "mode": "independent-pool",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 5,
+      "uniquePersistedSessions": 3,
+      "totalTokens": {
+        "known": 8142,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 44392,
+      "rewireCalls": 0,
+      "protocol": {
+        "independentWorkers": 2,
+        "completedCandidates": 2,
+        "callsPerCandidate": [
+          2,
+          1
+        ],
+        "candidateCallLimit": 7,
+        "synthesis": "one entry; no oracle selection; all candidate and synthesis calls counted",
+        "activeAgentsAtStop": 1
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "84da83b7-5599-460a-aef0-61d25abc67d5",
+      "model": "space-bunny-free",
+      "mode": "native-team",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 14,
+      "uniquePersistedSessions": 3,
+      "totalTokens": {
+        "known": 50403,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 40197,
+      "rewireCalls": 0,
+      "protocol": {
+        "members": 3,
+        "queuedMail": 0,
+        "openTasks": 0,
+        "tasks": [],
+        "activeAgentsAtStop": 1
+      },
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "46c52ebe-7e81-4f4f-b4be-96d32e190702",
+      "model": "space-bunny-free",
+      "mode": "atn-no-rewire",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "quiescent-without-submission",
+      "calls": 2,
+      "uniquePersistedSessions": 1,
+      "totalTokens": {
+        "known": 7644,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 8052,
+      "rewireCalls": 0,
+      "protocol": null,
+      "requestFailures": [
+        {
+          "code": "EMPTY_RESPONSE"
+        }
+      ],
+      "toolErrors": 1,
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "d3113886-5fa9-4ae9-b0d3-f215f7a652aa",
+      "model": "space-bunny-free",
+      "mode": "atn-adaptive",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "timeout",
+      "calls": 10,
+      "uniquePersistedSessions": 2,
+      "totalTokens": {
+        "known": 42173,
+        "unknownCalls": 1
+      },
+      "elapsedMs": 180090,
+      "rewireCalls": 0,
+      "protocol": {
+        "status": "open",
+        "nodes": 2,
+        "queuedMail": 1,
+        "pendingProposals": 0,
+        "openTasks": 1,
+        "failedTasks": 0,
+        "activeAgentsAtStop": 0
+      },
+      "requestFailures": [
+        {
+          "code": "TIMEOUT"
+        }
+      ],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    },
+    {
+      "runId": "ab270bd7-0171-437e-8c15-5f057c8e3ad8",
+      "model": "space-bunny-free",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 2,
+      "uniquePersistedSessions": 1,
+      "totalTokens": {
+        "known": 3215,
+        "unknownCalls": 0
+      },
+      "elapsedMs": 6655,
+      "rewireCalls": 0,
+      "protocol": null,
+      "requestFailures": [],
+      "toolErrors": 0,
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "cleanup": "released",
+      "coverageClean": true
+    }
+  ]
+}

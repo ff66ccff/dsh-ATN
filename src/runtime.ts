@@ -35,7 +35,7 @@ import {
   type NetworkStore,
 } from './domain.ts'
 import { enqueueMail, markDelivered, markUndeliverable, pendingMails, MailIdentityError, type EnqueueInput } from './mailbox.ts'
-import { deriveNeighbourhood, TopologyError, type Neighbourhood } from './topology.ts'
+import { collaborationPeers, connectPublishedNode, reconcileTopology, rewireNode } from './topology.ts'
 import {
   canRelease,
   failProvisioning,
@@ -47,9 +47,12 @@ import {
   retireSettledNodes,
 } from './lifecycle.ts'
 import { cancelPendingProposals, castVote, expireProposals, openProposal, type CastVoteResult } from './proposals.ts'
-import { createTask, markTaskUnreachable, openTasks, settleTask } from './tasks.ts'
+import { assertTaskReferences, createTask, deliveryHolderOf, markTaskUnreachable, materializeDeliveryTask, openTasks, orphanTasks, settleTask, validateTaskResult, type TaskValidator } from './tasks.ts'
 import { goalSnapshotMessage, mailMessage, proposalMessage, taskMessage } from './messages.ts'
-import type { GoalDocument, NetworkRecord, NodeRecord } from './schema.ts'
+import { topologyFeedbackMessage } from './topology-feedback.ts'
+import { summarizeLocalFeedback, captureRewireObservations, refreshRewireObservations } from './local-feedback.ts'
+import { evaluateRewireEvidence, summarizeVerifiedFeedback, type RewireEvaluation } from './verified-feedback.ts'
+import type { GoalDocument, NetworkRecord, NodeRecord, TaskRecord } from './schema.ts'
 import { HandleReleaser, waitBounded, type HandleReleaseOutcome } from './handles.ts'
 import { randomUUID } from 'node:crypto'
 
@@ -58,6 +61,19 @@ declare module '@deepseek-ai/cordis' {
     /** The mounted ATN runtime. */
     atn: AtnRuntime
   }
+  interface Events {
+    /** Durable claim committed; host authorization finishes before mail can wake the holder. */
+    'atn/task-claimed'(payload: TaskClaimedEvent): void
+  }
+}
+
+/** Trusted host notification; task identities come from the committed network. */
+export interface TaskClaimedEvent {
+  readonly networkId: string
+  readonly sourceTask: TaskRecord
+  readonly task: TaskRecord
+  readonly sessionId: string
+  readonly at: number
 }
 
 /** Public input of `atn_start`. */
@@ -92,6 +108,10 @@ export interface SpawnInput {
   readonly context: string
   /** Optional requested lease in milliseconds. */
   readonly leaseMs?: number
+  /** Completed upstream submissions required by this task; host verification is optional. */
+  readonly dependsOn?: readonly string[]
+  /** Failed attempt this task replaces; history remains intact. */
+  readonly retryOf?: string
 }
 
 /** Public result of `atn_spawn`. */
@@ -116,12 +136,18 @@ export interface SendInput {
   readonly body: string
   /** Task this mail relates to; required to settle a task. */
   readonly taskId?: string
+  /** Result outcome; defaults to `completed` and is only valid for `kind: result`. */
+  readonly outcome?: 'completed' | 'failed'
   /** Short result summary, required for `kind: result`. */
   readonly summary?: string
   /** Evidence references, required for `kind: result`. */
   readonly evidence?: readonly string[]
   /** Stable id chosen by the caller so a model retry is idempotent. */
   readonly messageId?: string
+  /** Only for kind=task: completed upstream submissions without host rejection. */
+  readonly dependsOn?: readonly string[]
+  /** Only for kind=task: failed attempt replaced by the new task. */
+  readonly retryOf?: string
 }
 
 /** Public result of `atn_send`. */
@@ -134,20 +160,60 @@ export interface SendResult {
   readonly delivery: 'delivered' | 'queued' | 'undeliverable'
   /** Task settled by a result mail, when applicable. */
   readonly settledTaskId: string | null
+  /** Recorded outcome when this mail settles a task. */
+  readonly outcome?: 'completed' | 'failed'
+}
+
+/** Bounded observations a node can use to choose collaborators. */
+export interface PeerSummary {
+  readonly id: string
+  readonly lifecycle: string
+  readonly openTasks: number
+  readonly pendingVotes: number
+  readonly taskSummaries: readonly string[]
+  /** Recent terminal task summaries prefixed with their explicit status. */
+  readonly recentResults: readonly string[]
+  /** Independent validation observations, kept separate from self-reported outcomes. */
+  readonly verifiedFeedback: ReturnType<typeof summarizeVerifiedFeedback>
+  readonly telemetry: ReturnType<typeof summarizeLocalFeedback>
 }
 
 /** Public result of `atn_peers`. */
 export interface PeersResult {
   /** Calling node. */
   readonly self: string
-  /** Up to two active ancestors, nearest first. */
-  readonly upstream: readonly string[]
-  /** Up to two active selected descendants, nearest first. */
-  readonly downstream: readonly string[]
+  /** Up to four active collaborators chosen by this node. */
+  readonly neighbours: readonly string[]
   /** Bounded per-node summaries. */
-  readonly nodes: readonly { id: string; lifecycle: string; openTasks: number; pendingVotes: number }[]
+  readonly nodes: readonly PeerSummary[]
   /** Candidates returned by an explicit query, when one was supplied. */
   readonly candidates?: readonly string[]
+  /** The same bounded observations for discovery candidates. */
+  readonly candidateNodes?: readonly PeerSummary[]
+}
+
+/** One local inspection, optionally claiming abandoned work atomically. */
+export interface StatusInput {
+  readonly query?: string
+  readonly taskIds?: readonly string[]
+  readonly claimTaskId?: string
+}
+
+/** Atomically replace the calling node's directed collaboration neighbourhood. */
+export interface RewireInput {
+  readonly peers: readonly string[]
+  readonly intent?: 'exploration' | 'verified-improvement'
+  readonly baselineTaskIds?: readonly string[]
+  readonly candidateTaskIds?: readonly string[]
+}
+
+/** The neighbourhood committed by `atn_rewire`. */
+export interface RewireResult {
+  readonly self: string
+  readonly neighbours: readonly string[]
+  readonly intent: 'exploration' | 'verified-improvement'
+  readonly evaluation: RewireEvaluation
+  readonly rewireId: string | null
 }
 
 /** Public result of `atn_finish`. */
@@ -368,6 +434,8 @@ export class AtnRuntime extends Service<Config> {
   private readonly activations = new Map<string, { networkId: string; controller: AbortController; done: Promise<unknown> }>()
   private readonly acceptedInputs = new WeakMap<Agent, Set<string>>()
   private readonly inputTails = new Map<string, Promise<unknown>>()
+  /** Wildcard discovery resumes after each caller's last returned candidate. */
+  private readonly discoveryCursors = new Map<string, Map<string, string>>()
   private closing = false
   private readonly cleanupTimeoutMs: number
   private timer: NodeJS.Timeout | null = null
@@ -393,6 +461,14 @@ export class AtnRuntime extends Service<Config> {
     }
 
     ctx.on('agent/pre-step', async (payload, next) => this.preStep(payload, next))
+    ctx.on('agent/status', ({ agent, status }) => {
+      if (status === 'idle') this.acceptedInputs.delete(agent)
+      else {
+        // A new driver can synchronously claim its pending batch before mail
+        // replay resumes. Protect those real inputs, never an old lost claim.
+        for (const pending of [...agent.inbox.nextStep, ...agent.inbox.nextTurn]) this.rememberInput(agent, pending)
+      }
+    })
     ctx.effect(() => () => this.disposeRuntime(), 'atn-runtime')
 
     if (deps.store === undefined && ctx.get('storageDomain') !== undefined) {
@@ -416,13 +492,14 @@ export class AtnRuntime extends Service<Config> {
    *
    * @param networkId - Network being mutated.
    * @param fn - Synchronous transform of the latest record.
+   * @param repairTopology - Hard stop skips graph repair so damaged links cannot block shutdown.
    * @returns The committed record and the value the transform decided.
    */
-  private async mutate<Value>(networkId: string, fn: Mutation<Value>): Promise<MutationResult<Value>> {
+  private async mutate<Value>(networkId: string, fn: Mutation<Value>, repairTopology = true): Promise<MutationResult<Value>> {
     const previous = this.mutationTails.get(networkId) ?? Promise.resolve()
     const run = previous.then(
-      () => this.mutateOnce(networkId, fn),
-      () => this.mutateOnce(networkId, fn),
+      () => this.mutateOnce(networkId, fn, repairTopology),
+      () => this.mutateOnce(networkId, fn, repairTopology),
     )
     const tail = run.then(
       () => undefined,
@@ -436,17 +513,19 @@ export class AtnRuntime extends Service<Config> {
     }
   }
 
-  private async mutateOnce<Value>(networkId: string, fn: Mutation<Value>): Promise<MutationResult<Value>> {
+  private async mutateOnce<Value>(networkId: string, fn: Mutation<Value>, repairTopology: boolean): Promise<MutationResult<Value>> {
     const store = this.requireStore()
     let decided: MutationOutcome<Value> | undefined
     // The decision logic runs with the authoritative current record and completes
     // synchronously: the queue holds the network until this write commits.
     const record = await store.update(networkId, (current) => {
-      const outcome = fn(current)
+      const outcome = fn(repairTopology ? reconcileTopology(current) : current)
       decided = outcome
-      return outcome.record
+      const observed = refreshRewireObservations(outcome.record, this.now())
+      return repairTopology ? reconcileTopology(observed) : observed
     })
     this.syncIndex(record)
+    this.notifyObservers(record)
     if (decided === undefined) throw new Error(`network ${networkId} mutation produced no decision`)
     return { record, value: decided.value }
   }
@@ -499,6 +578,14 @@ export class AtnRuntime extends Service<Config> {
     if (networkId === undefined) return decision
     const admitted = await this.admitStep(networkId, payload.agent.id)
     if (!admitted) return { kind: 'reject' }
+    // Only piggyback on real inbox input. A loop's empty end-of-turn probe (or
+    // synthetic context alone) must never start another step for graph feedback.
+    if (payload.messages.length === 0 || decision.messages.length === 0) return decision
+    const record = await this.inspect(networkId)
+    const node = findBySession(record, payload.agent.id)
+    if (record.status !== 'open' || node === undefined) return decision
+    const feedback = topologyFeedbackMessage(record, node.id, payload.agent.session.snapshotEvents(), this.now())
+    if (feedback !== undefined) return { ...decision, messages: [...decision.messages, feedback] }
     return decision
   }
 
@@ -532,35 +619,30 @@ export class AtnRuntime extends Service<Config> {
   }
 
   /**
-   * Admit one model step for an ATN-owned node against the network's step budget.
+   * Admit one model step against this node's budget, including the entry node.
    *
    * The lifecycle gate and the budget debit are one atomic decision, so two
    * concurrent steps can never both consume the last unit of budget.
    *
-   * The counter covers steps this runtime admits for nodes it owns. It does not
-   * cover provider retries, auxiliary model calls, or host-owned agents.
+   * Provider retries and calls before network creation remain host accounting.
    *
    * @param networkId - Network id.
    * @param sessionId - Session whose step is being admitted.
-   * @returns `false` when the step must be refused, in which case the node is drained.
+   * @returns `false` when the step must be refused; exhausted nodes retire.
    */
   async admitStep(networkId: string, sessionId: string): Promise<boolean> {
-    const record = await this.inspect(networkId)
-    const node = findBySession(record, sessionId)
-    // The entry node is host-owned: its steps are not the network's budget.
-    if (node === undefined || node.isEntry) return true
-
     return this.mutate(networkId, (current) => {
       const current_node = findBySession(current, sessionId)
       if (current_node === undefined) return { record: current, value: false }
-      if (current_node.isEntry) return { record: current, value: true }
+      // Completing or stopping ATN must not disable the host's ordinary chat.
+      if (current_node.isEntry && current.status !== 'open') return { record: current, value: true }
       const decision = this.stepDecision(current, current_node.id)
       if (!decision.allow) return { record: current, value: false }
-      if (current.stepsUsed >= current.limits.stepBudget) {
-        const drained = requestDrain(current, current_node.id, 'network step budget exhausted')
-        return { record: drained, value: false }
+      if ((current_node.stepsUsed ?? 0) >= current.limits.stepBudget) {
+        return { record: this.closeNode(current, current_node.id, 'retired', 'node step budget exhausted'), value: false }
       }
-      return { record: { ...current, stepsUsed: current.stepsUsed + 1 }, value: true }
+      return { record: { ...current, stepsUsed: current.stepsUsed + 1,
+        nodes: { ...current.nodes, [current_node.id]: { ...current_node, stepsUsed: (current_node.stepsUsed ?? 0) + 1 } } }, value: true }
     }).then((result) => result.value)
   }
 
@@ -636,6 +718,15 @@ export class AtnRuntime extends Service<Config> {
       this.nodeOfSession.set(node.sessionId, node.id)
     }
     if (record.status !== 'open') this.stopped.add(record.id)
+  }
+
+  /** Observers cannot turn a successful durable write into a failed operation. */
+  private notifyObservers(record: NetworkRecord): void {
+    try {
+      this.ctx.emit('atn/network-updated', { record, at: this.now() })
+    } catch (error) {
+      this.ctx.logger.warn(`dsh-atn observer failed: ${describe(error)}`)
+    }
   }
 
   // ------------------------------------------------------------- identity
@@ -728,19 +819,21 @@ export class AtnRuntime extends Service<Config> {
       status: 'open',
       limits: limitsFromConfig(this.config),
       goalHistory: [{ version: 1, document, proposedBy: null, approvedBy: [], committedAt: now }],
-      stepsUsed: 0,
+      stepsUsed: agent.status === 'running' ? 1 : 0,
       nodes: {
         [nodeId]: {
           id: nodeId,
           sessionId: agent.id,
           creatorId: null,
           selectedChildId: null,
+          peerIds: [],
           lifecycle: 'active',
           leaseDeadlineAt: null,
           modelRoute: { provider: agent.options.provider ?? 'inherit', model: agent.options.model ?? 'inherit', effort: agent.options.reasoningEffort ?? null },
           presetId: agent.ctx.get('agentPresets')?.composedPreset(agent.ctx) ?? null,
           permissionSeed: null,
           isEntry: true,
+          stepsUsed: agent.status === 'running' ? 1 : 0,
           creationState: 'published',
           lastGoalVersionSent: 0,
           note: 'host-owned entry node',
@@ -767,6 +860,7 @@ export class AtnRuntime extends Service<Config> {
 
     await store.create(record)
     this.syncIndex(record)
+    this.notifyObservers(record)
     this.startScheduler()
 
     const task = record.tasks[created.taskId]!
@@ -834,9 +928,10 @@ export class AtnRuntime extends Service<Config> {
         throw new AtnRefusal('not-active', `node ${creator.id} is ${currentCreator.lifecycle} and cannot create children`)
       }
       assertNodeCapacity(current, current.limits)
+      assertTaskReferences(current, { ...input, requesterId: creator.id })
       // The initial task is part of the same spawn: refuse before creating an
       // Agent when the task quota cannot hold it.
-      if (Object.keys(current.tasks).length >= current.limits.maxTasks) {
+      if (Object.values(current.tasks).filter(task => task.kind !== 'delivery').length >= current.limits.maxTasks) {
         throw new LimitExceededError(
           'maxTasks',
           `network ${current.id} already recorded ${current.limits.maxTasks} tasks, so a spawn cannot be given its initial task`,
@@ -860,6 +955,7 @@ export class AtnRuntime extends Service<Config> {
               presetId,
               permissionSeed: inherited as unknown,
               isEntry: false,
+              stepsUsed: 0,
               creationState: 'pending',
               lastGoalVersionSent: 0,
               note: null,
@@ -902,7 +998,7 @@ export class AtnRuntime extends Service<Config> {
 
     this.handles.set(sessionId, handle)
 
-    let published: { nodeId: string; taskId: string; goalVersion: number; neighbours: string[] }
+    let published: { nodeId: string; taskId: string; mailId: string; goalVersion: number; neighbours: string[] }
     try {
       const committed = await this.mutate(record.id, (current) => {
         signal.throwIfAborted()
@@ -916,22 +1012,37 @@ export class AtnRuntime extends Service<Config> {
         }
         // Publish and hand over the initial task as one decision: a node can
         // never become visible while its work fails to commit.
-        const visible = publishNode(current, sessionId, this.now()).record
+        const visible = connectPublishedNode(publishNode(current, sessionId, this.now()).record, pending.id)
         const settled = createTask(visible, {
           holderId: pending.id,
           requesterId: creator.id,
           description: input.task,
           context: input.context,
+          dependsOn: input.dependsOn,
+          retryOf: input.retryOf,
           now: this.now(),
         })
         const revision = currentGoal(settled.record)
+        // Publish the assignment's outbox row with the node and task. A crash
+        // before any input append must still leave recoverable work to deliver.
+        const assignment = taskMessage(settled.record.tasks[settled.taskId]!, record.id, revision.version)
+        const enqueued = enqueueMail(settled.record, {
+          fromId: creator.id,
+          toId: pending.id,
+          kind: 'task',
+          taskId: settled.taskId,
+          proposalId: null,
+          body: assignment.content.flatMap(block => block.type === 'text' ? [block.text] : []).join('\n'),
+          now: this.now(),
+        })
         return {
-          record: settled.record,
+          record: enqueued.record,
           value: {
             nodeId: pending.id,
             taskId: settled.taskId,
+            mailId: enqueued.mailId,
             goalVersion: revision.version,
-            neighbours: [...deriveNeighbourhood(settled.record.nodes, pending.id).upstream, ...deriveNeighbourhood(settled.record.nodes, pending.id).downstream],
+            neighbours: collaborationPeers(settled.record.nodes, pending.id),
           },
         }
       })
@@ -943,25 +1054,20 @@ export class AtnRuntime extends Service<Config> {
       throw error
     }
 
-    const neighbourhood = deriveNeighbourhood((await this.inspect(record.id)).nodes, published.nodeId)
+    const neighbours = collaborationPeers((await this.inspect(record.id)).nodes, published.nodeId)
     let post: { taskId: string; goalVersion: number } | undefined
     try {
-      // Hand the new node its context and work. A failure here must not leave a
-      // visible node with no task notification, so it takes the same
-      // compensation path as a failed publish.
+      // Context setup failures still compensate the creation. The assignment
+      // itself is already durable and can retry independently after setup.
       signal.throwIfAborted()
       const synced = await this.syncGoalIfNeeded(record.id, published.nodeId, handle.agent, false)
       const finalRecord = synced ?? (await this.inspect(record.id))
       const task = finalRecord.tasks[published.taskId]
       if (task === undefined) throw new Error(`initial task ${published.taskId} is missing from network ${record.id}`)
-      await this.withInput(sessionId, async () => {
-        signal.throwIfAborted()
-        const latest = await this.inspect(record.id)
-        if (latest.status !== 'open' || latest.nodes[published.nodeId]?.lifecycle !== 'active') {
-          throw new AtnRefusal('network-closed', 'creation was interrupted before task delivery')
-        }
-        await this.recordModelInput(handle.agent, taskMessage(task, record.id, currentGoal(latest).version), record.id, published.nodeId)
-      })
+      signal.throwIfAborted()
+      if (finalRecord.status !== 'open' || finalRecord.nodes[published.nodeId]?.lifecycle !== 'active') {
+        throw new AtnRefusal('network-closed', 'creation was interrupted before task delivery')
+      }
       post = { taskId: task.id, goalVersion: currentGoal(finalRecord).version }
     } catch (error) {
       const reason = describe(error)
@@ -970,11 +1076,19 @@ export class AtnRuntime extends Service<Config> {
       throw error
     }
 
+    // A temporary recipient/receipt write failure cannot erase an accepted
+    // assignment. Keep its outbox row queued for the scheduler or recovery.
+    try {
+      await this.deliverMail(record.id, published.mailId)
+    } catch (error) {
+      this.ctx.logger.warn(`dsh-atn initial task ${post.taskId} awaits durable delivery: ${describe(error)}`)
+    }
+
     return {
       nodeId: published.nodeId,
       sessionId,
       taskId: post.taskId,
-      neighbours: [...neighbourhood.upstream, ...neighbourhood.downstream],
+      neighbours,
     }
   }
 
@@ -995,10 +1109,15 @@ export class AtnRuntime extends Service<Config> {
         for (const task of Object.values(tasks)) {
           if (task.holderId === node?.id && task.status === 'open') tasks[task.id] = {
             ...task, status: 'failed', settledAt: this.now(), settledBy: node.id,
+            holderStepsAtSettlement: node.stepsUsed,
             result: { summary: `node creation failed: ${reason}`, evidence: [] },
           }
         }
-        return applied({ ...failed, tasks })
+        let compensated = { ...failed, tasks }
+        for (const mail of pendingMails(compensated)) {
+          if (mail.toId === node?.id) compensated = markUndeliverable(compensated, mail.id, reason, this.now())
+        }
+        return applied(compensated)
       })
     } catch (error) {
       this.ctx.logger.warn(`dsh-atn could not record the failed creation of ${sessionId}: ${describe(error)}`)
@@ -1045,6 +1164,15 @@ export class AtnRuntime extends Service<Config> {
     }
     this.resolveNode(record, input.to)
 
+    if (input.kind !== 'task' && (input.dependsOn !== undefined || input.retryOf !== undefined)) {
+      throw new AtnRefusal('invalid-task-references', 'dependsOn and retryOf are only valid for task mail')
+    }
+
+    if (input.outcome !== undefined && (
+      input.kind !== 'result' || (input.outcome !== 'completed' && input.outcome !== 'failed')
+    )) {
+      throw new AtnRefusal('invalid-outcome', 'outcome must be completed or failed and is only valid for a result mail')
+    }
     if (input.kind === 'result') {
       if (input.taskId === undefined) throw new AtnRefusal('missing-task', 'a result mail must name the task it settles')
       if (input.summary === undefined) throw new AtnRefusal('missing-summary', 'a result mail must carry a summary')
@@ -1064,6 +1192,14 @@ export class AtnRuntime extends Service<Config> {
       // the same id is refused before any task or settlement is decided.
       const reused = existingMail(current, input, sender.id, target.id)
       if (reused !== undefined) {
+        if (input.kind === 'task') {
+          const original = reused.taskId === null ? undefined : current.tasks[reused.taskId]
+          const dependsOn = input.dependsOn ?? (input.retryOf === undefined ? [] : current.tasks[input.retryOf]?.dependsOn ?? [])
+          if (original === undefined || (original.retryOf ?? null) !== (input.retryOf ?? null) ||
+            JSON.stringify(original.dependsOn ?? []) !== JSON.stringify(dependsOn)) {
+            throw new MailIdentityError(`mail ${reused.id} has different task dependencies; a stable id cannot be reused for a different message`)
+          }
+        }
         return { record: current, value: { mailId: reused.id, duplicate: true, settledTaskId: reused.taskId } }
       }
       if (input.kind === 'task') {
@@ -1076,6 +1212,20 @@ export class AtnRuntime extends Service<Config> {
         if (target.lifecycle !== 'active') {
           throw new AtnRefusal('target-not-active', `node ${target.id} is ${target.lifecycle} and cannot take new tasks`)
         }
+      }
+      // New communication follows the caller's chosen edges. An existing open
+      // task keeps a narrow discussion channel even after either endpoint rewires.
+      // Check retries above this gate: changing edges never revokes accepted mail.
+      const task = input.taskId === undefined ? undefined : current.tasks[input.taskId]
+      const taskDiscussion = input.kind === 'note' && task?.status === 'open' && (
+        (task.holderId === sender.id && task.requesterId === target.id) ||
+        (task.requesterId === sender.id && task.holderId === target.id)
+      )
+      if (sender.id !== target.id && !taskDiscussion && !collaborationPeers(current.nodes, sender.id).includes(target.id)) {
+        throw new AtnRefusal(
+          'not-a-neighbour',
+          `node ${target.id} is not in your collaboration neighbours; use atn_status to discover and atn_rewire to connect first`,
+        )
       }
       const enqueueInput: EnqueueInput = {
         fromId: sender.id,
@@ -1093,6 +1243,8 @@ export class AtnRuntime extends Service<Config> {
           requesterId: sender.id,
           description: input.body,
           context: '',
+          dependsOn: input.dependsOn,
+          retryOf: input.retryOf,
           now: this.now(),
         })
         const enqueued = enqueueMail(created.record, { ...enqueueInput, taskId: created.taskId })
@@ -1116,6 +1268,7 @@ export class AtnRuntime extends Service<Config> {
 
   private async settleByResult(networkId: string, senderId: string, input: SendInput): Promise<SendResult> {
     const taskId = input.taskId!
+    const outcome = input.outcome ?? 'completed'
     const committed = await this.mutate(networkId, (current) => {
       const sender = current.nodes[senderId]
       if (current.status !== 'open') throw new AtnRefusal('network-closed', `network ${current.id} is ${current.status}`)
@@ -1132,6 +1285,7 @@ export class AtnRuntime extends Service<Config> {
         const task = current.tasks[taskId]
         const sameClaim =
           reused.taskId === taskId &&
+          task?.status === outcome &&
           task?.result !== null &&
           task?.result !== undefined &&
           task.result.summary === (input.summary ?? '') &&
@@ -1144,10 +1298,16 @@ export class AtnRuntime extends Service<Config> {
         }
         return { record: current, value: { mailId: reused.id, duplicate: true } }
       }
+      if (current.tasks[taskId]?.kind === 'delivery') {
+        throw new AtnRefusal('delivery-task', 'a delivery obligation is settled only by atn_finish with scope=network')
+      }
       const settled = settleTask(current, taskId, senderId, {
         summary: input.summary ?? '',
         evidence: input.evidence ?? [],
-      }, this.now())
+      }, this.now(), outcome === 'failed')
+      if (settled.task.requesterId !== input.to) {
+        throw new AtnRefusal('not-task-requester', `result for ${taskId} must return to its requester ${settled.task.requesterId}`)
+      }
       const enqueued = enqueueMail(settled.record, {
         fromId: senderId,
         toId: input.to,
@@ -1162,10 +1322,10 @@ export class AtnRuntime extends Service<Config> {
       return { record: enqueued.record, value: { mailId: enqueued.mailId, duplicate: enqueued.duplicate } }
     })
     if (committed.value.duplicate) {
-      return { mailId: committed.value.mailId, duplicate: true, delivery: await this.attemptDelivery(networkId, committed.value.mailId), settledTaskId: taskId }
+      return { mailId: committed.value.mailId, duplicate: true, delivery: await this.attemptDelivery(networkId, committed.value.mailId), settledTaskId: taskId, outcome }
     }
     const delivery = await this.attemptDelivery(networkId, committed.value.mailId)
-    return { mailId: committed.value.mailId, duplicate: false, delivery, settledTaskId: taskId }
+    return { mailId: committed.value.mailId, duplicate: false, delivery, settledTaskId: taskId, outcome }
   }
 
   private async attemptDelivery(networkId: string, mailId: string): Promise<SendResult['delivery']> {
@@ -1173,10 +1333,11 @@ export class AtnRuntime extends Service<Config> {
   }
 
   /**
-   * Deliver one queued mail to its target's persisted input and confirm it.
+   * Deliver one queued mail and confirm its persisted model-input receipt.
    *
-   * Delivery is confirmed only after the message was handed to the target, so
-   * an interrupt between the two leaves a replayable queued row.
+   * Pending and claimed input stays queued: the Harness removes claimed inbox
+   * input before it logs user/message. Only a flush covering that later history
+   * event permits confirmation, leaving the outbox replayable across the gap.
    *
    * @param networkId - Network owning the mail.
    * @param mailId - Mail to deliver.
@@ -1186,6 +1347,13 @@ export class AtnRuntime extends Service<Config> {
     const first = await this.inspect(networkId)
     const sessionId = first.nodes[first.mails[mailId]?.toId ?? '']?.sessionId
     if (sessionId === undefined) return 'undeliverable'
+    const live = this.ctx.agents.get(SessionId(sessionId))
+    if (first.mails[mailId]?.status === 'queued' && live !== undefined) {
+      // A scheduler may observe a newly published outbox before spawn finishes
+      // its own context setup. Give the recipient the goal before any work can
+      // wake it, using a separate input-queue operation to avoid reentrancy.
+      await this.syncGoalIfNeeded(networkId, first.mails[mailId]!.toId, live, false)
+    }
     return this.withInput(sessionId, async () => {
       const record = await this.inspect(networkId)
       const mail = record.mails[mailId]
@@ -1199,14 +1367,35 @@ export class AtnRuntime extends Service<Config> {
       const agent = this.ctx.agents.get(SessionId(sessionId))
       if (agent === undefined) return 'queued'
       const proposal = mail.proposalId === null ? undefined : record.proposals[mail.proposalId]
-      const message = proposal === undefined ? mailMessage(mail, networkId) : proposalMessage(proposal, networkId)
-      if (!this.alreadyQueued(agent, message)) {
-        if (agent.status === 'running') agent.inject(message)
-        else agent.followup(message)
+      const resultTask = mail.kind === 'result' && mail.taskId !== null ? record.tasks[mail.taskId] : undefined
+      const resultStatus = resultTask?.status
+      const outcome = resultStatus === 'completed' || resultStatus === 'failed' ? resultStatus : undefined
+      const relatedTask = mail.taskId === null ? undefined : record.tasks[mail.taskId]
+      const message = proposal === undefined ? mailMessage(mail, networkId, outcome, resultTask?.result, relatedTask) : proposalMessage(proposal, networkId)
+      const marker = this.messageMarker(message)
+      if (agent.status === 'idle' && (marker === null || !this.hasLoggedInput(agent, marker))) {
+        // A failed turn can strand injected input in nextStep, or lose its
+        // claimed batch before user/message is logged. Live acceptance is not
+        // a reason to leave that durable outbox parked once no driver owns it.
+        // Avoid repeatedly opening rejected turns after the local budget ends;
+        // the ordinary pre-step/provider gates still arbitrate a real wake.
+        if (!this.stepDecision(record, target.id).allow || (target.stepsUsed ?? 0) >= record.limits.stepBudget) return 'queued'
+        const pendingStep = agent.inbox.nextStep.find(pending => this.messageMarker(pending) === marker)
+        const pendingTurn = agent.inbox.nextTurn.find(pending => this.messageMarker(pending) === marker)
+        // send() appends: use the existing boundary's LAST item as the wake
+        // carrier so every pending identity and its committed order stay put.
+        // Inbox removal and send are synchronous public operations.
+        const carrier = pendingStep !== undefined ? agent.inbox.nextStep.at(-1)
+          : pendingTurn !== undefined ? agent.inbox.nextTurn.at(-1) : undefined
+        if (carrier !== undefined) agent.inbox.remove(carrier.id)
+        agent.send(carrier ?? message, pendingStep === undefined ? 'next-turn' : 'next-step', true)
+      } else if (!this.alreadyQueued(agent, message)) {
+        agent.inject(message)
       }
       this.rememberInput(agent, message)
-      await this.mutate(networkId, current => applied(markDelivered(current, mailId, this.now())))
-      return 'delivered'
+      if (!await this.flushInputReceipt(agent, message)) return 'queued'
+      const committed = await this.mutate(networkId, current => applied(markDelivered(current, mailId, this.now())))
+      return committed.record.mails[mailId]?.status ?? 'undeliverable'
     })
   }
 
@@ -1215,15 +1404,36 @@ export class AtnRuntime extends Service<Config> {
     if (marker === null) return false
     const inbox = agent.inbox
     return (
-      this.acceptedInputs.get(agent)?.has(marker) === true ||
+      // Only a running driver may still own a claimed, unlogged input batch.
+      // Once idle, actual inbox/history evidence supersedes live acceptance.
+      (agent.status === 'running' && this.acceptedInputs.get(agent)?.has(marker) === true) ||
       inbox.nextStep.some((pending) => this.messageMarker(pending) === marker) ||
       inbox.nextTurn.some((pending) => this.messageMarker(pending) === marker) ||
-      agent.session.snapshotEvents().some(event => event.type === 'user/message' &&
-        (event.data as UserMessage).source?.kind === 'atn' && this.messageMarker(event.data as UserMessage) === marker)
+      this.hasLoggedInput(agent, marker)
     )
   }
 
+  private hasLoggedInput(agent: Agent, marker: string): boolean {
+    return agent.session.snapshotEvents().some(event => event.type === 'user/message' &&
+      (event.data as UserMessage).source?.kind === 'atn' && this.messageMarker(event.data as UserMessage) === marker)
+  }
+
+  /** Check an immutable history prefix BEFORE flushing the prefix durably. */
+  private async flushInputReceipt(agent: Agent, message: UserMessage): Promise<boolean> {
+    const marker = this.messageMarker(message)
+    if (marker === null) return false
+    const loggedBeforeFlush = this.hasLoggedInput(agent, marker)
+    if (!await this.ctx.sessions.flush(agent.session)) return false
+    if (loggedBeforeFlush) return true
+    // A fast driver may have admitted the input during the first checkpoint.
+    // A second checkpoint must cover that event; a live observation alone is
+    // never an acknowledgement. Never await the driver (it may be this caller).
+    if (!this.hasLoggedInput(agent, marker)) return false
+    return this.ctx.sessions.flush(agent.session)
+  }
+
   private rememberInput(agent: Agent, message: UserMessage): void {
+    if (agent.status !== 'running') return
     const marker = this.messageMarker(message)
     if (marker === null) return
     const accepted = this.acceptedInputs.get(agent) ?? new Set<string>()
@@ -1252,46 +1462,185 @@ export class AtnRuntime extends Service<Config> {
    */
   async peers(agent: Agent, query?: string): Promise<PeersResult> {
     const { record, node } = await this.callerContext(agent)
-    let neighbourhood: Neighbourhood
-    try {
-      neighbourhood = deriveNeighbourhood(record.nodes, node.id)
-    } catch (error) {
-      if (error instanceof TopologyError) throw new AtnRefusal(error.code, error.message)
-      throw error
-    }
-    const ids = [...neighbourhood.upstream, ...neighbourhood.downstream]
-    const nodes = ids.map((id) => {
+    const ids = collaborationPeers(record.nodes, node.id)
+    const tasks = Object.values(record.tasks)
+    const summarize = (id: string): PeerSummary => {
       const peer = record.nodes[id]!
+      const held = tasks.filter(task => task.holderId === id)
+      const ongoing = held.filter(task => task.status === 'open')
+      const recent = held.filter(task => task.status !== 'open')
+        .sort((left, right) => (right.settledAt ?? 0) - (left.settledAt ?? 0) || right.id.localeCompare(left.id))
       return {
         id: peer.id,
         lifecycle: peer.lifecycle,
-        openTasks: openTasks(record).filter((task) => task.holderId === id).length,
+        openTasks: ongoing.length,
         pendingVotes: Object.values(record.proposals).filter(
           (proposal) => proposal.status === 'pending' && proposal.voters.includes(id) && !proposal.votes.some((vote) => vote.voterId === id),
         ).length,
+        taskSummaries: [...ongoing, ...recent].slice(0, 3).map(task => task.description.slice(0, 240)),
+        recentResults: recent.slice(0, 2).map(task => `[${task.status}] ${task.result?.summary ?? task.description}`.slice(0, 240)),
+        verifiedFeedback: summarizeVerifiedFeedback(record, id, { observerId: node.id }),
+        telemetry: summarizeLocalFeedback(record, id, { observerId: node.id, now: this.now() }),
       }
-    })
+    }
 
     const result: PeersResult = {
       self: node.id,
-      upstream: neighbourhood.upstream,
-      downstream: neighbourhood.downstream,
-      nodes,
+      neighbours: ids,
+      nodes: ids.map(summarize),
     }
     if (query !== undefined && query.trim().length > 0) {
       const needle = query.trim().toLowerCase()
-      const candidates = Object.values(record.nodes)
+      const terms = needle.split(/\s+/)
+      const ranked = Object.values(record.nodes)
         .filter((candidate) => candidate.id !== node.id && !ids.includes(candidate.id))
-        .filter((candidate) => candidate.lifecycle === 'active' || candidate.lifecycle === 'draining')
-        .filter((candidate) => {
-          const tasks = openTasks(record).filter((task) => task.holderId === candidate.id)
-          return tasks.some((task) => task.description.toLowerCase().includes(needle)) || candidate.id.toLowerCase().includes(needle)
+        .filter((candidate) => candidate.lifecycle === 'active' && candidate.creationState === 'published')
+        .map(candidate => {
+          const held = tasks.filter(task => task.holderId === candidate.id)
+          const text = [candidate.id, ...held.flatMap(task => [task.description, task.context, task.result?.summary ?? ''])].join('\n').toLowerCase()
+          return {
+            id: candidate.id,
+            score: needle === '*' ? 1 : terms.filter(term => text.includes(term)).length,
+            load: held.filter(task => task.status === 'open').length,
+            createdAt: candidate.createdAt,
+          }
         })
-        .slice(0, 3)
+        .filter(candidate => candidate.score > 0)
+        .sort((left, right) => right.score - left.score || left.load - right.load || left.createdAt - right.createdAt || left.id.localeCompare(right.id))
         .map((candidate) => candidate.id)
-      return { ...result, candidates }
+      let candidates = ranked.slice(0, 3)
+      if (needle === '*' && ranked.length > 0) {
+        const cursors = this.discoveryCursors.get(record.id) ?? new Map<string, string>()
+        const previous = cursors.get(node.id)
+        const start = previous === undefined ? 0 : (ranked.indexOf(previous) + 1) % ranked.length
+        candidates = Array.from({ length: Math.min(3, ranked.length) }, (_, offset) => ranked[(start + offset) % ranked.length]!)
+        // No await between reading and advancing: concurrent calls get successive pages.
+        cursors.set(node.id, candidates[candidates.length - 1]!)
+        this.discoveryCursors.set(record.id, cursors)
+      }
+      return { ...result, candidates, candidateNodes: candidates.map(summarize) }
     }
     return result
+  }
+
+  /** Run a trusted host validator atomically. Deliberately has no model tool. */
+  async verifyTask(networkId: string, taskId: string, validator: TaskValidator): Promise<TaskRecord> {
+    const committed = await this.mutate(networkId, current => {
+      const checked = validateTaskResult(current, taskId, validator, this.now())
+      return { record: checked.record, value: checked.task }
+    })
+    return committed.value
+  }
+
+  /** Stage a host-defined recovery obligation before failing its current holder. No model tool exposes this API. */
+  async provisionRecoveryTask(networkId: string, holderId: string, description: string, context = ''): Promise<TaskRecord> {
+    if (description.trim().length === 0) throw new AtnRefusal('missing-task', 'a recovery task needs an executable description')
+    const committed = await this.mutate(networkId, current => {
+      const holder = current.nodes[holderId]
+      if (current.status !== 'open' || this.now() >= current.deadlineAt || holder?.lifecycle !== 'active') {
+        throw new AtnRefusal('recovery-unavailable', 'recovery provisioning requires an active holder in an open network')
+      }
+      const created = createTask(current, { holderId, requesterId: current.entryNodeId, description, context, now: this.now() })
+      return { record: created.record, value: created.record.tasks[created.taskId]! }
+    })
+    return structuredClone(committed.value)
+  }
+
+  /** Read bounded task records; only the host can write acceptance. */
+  async tasks(agent: Agent, taskIds?: readonly string[]): Promise<TaskRecord[]> {
+    const { record, node } = await this.callerContext(agent)
+    if (taskIds !== undefined && (taskIds.length > 16 || new Set(taskIds).size !== taskIds.length)) {
+      throw new AtnRefusal('invalid-task-query', 'request at most 16 distinct task ids')
+    }
+    const tasks = taskIds === undefined
+      ? Object.values(record.tasks).filter(task => task.holderId === node.id || task.requesterId === node.id)
+        .sort((a, b) => b.createdAt - a.createdAt || b.id.localeCompare(a.id)).slice(0, 16)
+      : taskIds.map(id => {
+        const task = record.tasks[id]
+        if (task === undefined) throw new AtnRefusal('unknown-task', `unknown task ${id}`)
+        return task
+      })
+    return structuredClone(tasks)
+  }
+
+  /** Inspect work and resources; an idle node may select one orphan to recover. */
+  async status(agent: Agent, input: StatusInput = {}) {
+    // Validate read arguments before any optional mutation.
+    await this.tasks(agent, input.taskIds)
+    const claimedTask = input.claimTaskId === undefined ? undefined : await this.claim(agent, input.claimTaskId)
+    const peers = await this.peers(agent, input.query)
+    const tasks = await this.tasks(agent, input.taskIds)
+    const { record, node } = await this.callerContext(agent)
+    const candidates = orphanTasks(record)
+    const terms = input.query?.trim().toLowerCase().split(/\s+/).filter(Boolean) ?? []
+    const relevant = terms.length === 0 || input.query?.trim() === '*' ? candidates : candidates.filter(task => {
+      const text = `${task.description} ${task.context}`.toLowerCase()
+      return terms.some(term => text.includes(term))
+    })
+    return { ...peers, tasks, orphanTasks: structuredClone(relevant.slice(0, 16)),
+      orphanTasksRemaining: Math.max(0, relevant.length - 16),
+      budget: { stepsUsed: node.stepsUsed ?? 0, stepBudget: record.limits.stepBudget,
+        stepsRemaining: Math.max(0, record.limits.stepBudget - (node.stepsUsed ?? 0)), deadlineAt: record.deadlineAt },
+      ...(claimedTask === undefined ? {} : { claimedTask }) }
+  }
+
+  /** Preserve the failed attempt and atomically create its single recovery task. */
+  async claim(agent: Agent, taskId: string): Promise<TaskRecord> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      const caller = current.nodes[node.id]!
+      if (current.status !== 'open' || this.now() >= current.deadlineAt || caller.lifecycle !== 'active'
+        || (caller.stepsUsed ?? 0) >= current.limits.stepBudget) {
+        throw new AtnRefusal('claim-unavailable', 'claim requires an active node with remaining budget in an open network')
+      }
+      if (openTasks(current).some(task => task.holderId === node.id)) {
+        throw new AtnRefusal('claim-busy', 'settle your current tasks before claiming abandoned work')
+      }
+      const source = orphanTasks(current).find(task => task.id === taskId)
+      if (source === undefined) throw new AtnRefusal('not-orphan', `task ${taskId} is not available for claim`)
+      const created = createTask(current, { holderId: node.id, requesterId: source.requesterId,
+        kind: source.kind,
+        description: source.description, context: source.context, dependsOn: source.dependsOn,
+        retryOf: source.id, now: this.now() })
+      const enqueued = enqueueMail(created.record, { fromId: source.requesterId, toId: node.id, kind: 'task',
+        taskId: created.taskId, proposalId: null,
+        body: `Recovery task claimed. Use atn_status to read task ${created.taskId} and its full context.`, now: this.now() })
+      return { record: enqueued.record, value: { source, task: enqueued.record.tasks[created.taskId]!, mailId: enqueued.mailId } }
+    })
+    try {
+      await this.ctx.parallel('atn/task-claimed', { networkId: record.id, sourceTask: structuredClone(committed.value.source),
+        task: structuredClone(committed.value.task), sessionId: node.sessionId, at: this.now() })
+    } catch (error) {
+      this.ctx.logger.warn(`dsh-atn claim observer failed: ${describe(error)}`)
+    }
+    await this.attemptDelivery(record.id, committed.value.mailId)
+    return structuredClone(committed.value.task)
+  }
+
+  /** Replace only the caller's outgoing edges; task and vote obligations stay put. */
+  async rewire(agent: Agent, input: RewireInput): Promise<RewireResult> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      if (this.now() >= current.deadlineAt) throw new AtnRefusal('network-expired', 'the network deadline has passed')
+      const intent = input.intent ?? 'exploration'
+      if (intent !== 'exploration' && intent !== 'verified-improvement') throw new AtnRefusal('invalid-rewire-intent', 'invalid rewire intent')
+      const previousPeers = collaborationPeers(current.nodes, node.id)
+      const rewired = rewireNode(current, node.id, input.peers)
+      const evaluation = evaluateRewireEvidence(current, {
+        requesterId: node.id, previousPeers, nextPeers: input.peers,
+        baselineTaskIds: input.baselineTaskIds ?? [], candidateTaskIds: input.candidateTaskIds ?? [],
+      })
+      // Verification is an optional observation, never permission to change edges.
+      const allocated = allocateId(rewired, 'rewire')
+      const rewireId = allocated.id
+      const next = { ...allocated.next, rewireHistory: [...(current.rewireHistory ?? []), {
+          id: rewireId, nodeId: node.id, createdAt: this.now(), previousPeers,
+          nextPeers: [...input.peers], intent, evaluation,
+          observations: captureRewireObservations(current, node.id, previousPeers, input.peers, this.now()),
+        }] }
+      return { record: next, value: { self: node.id, neighbours: collaborationPeers(next.nodes, node.id), intent, evaluation, rewireId } }
+    })
+    return committed.value
   }
 
   // --------------------------------------------------------------- finish
@@ -1350,7 +1699,7 @@ export class AtnRuntime extends Service<Config> {
           kind: 'note',
           taskId: null,
           proposalId: opened.proposal.id,
-          body: `Review request for proposal ${opened.proposal.id}: decide with atn_vote.`,
+          body: `Host-managed review request for proposal ${opened.proposal.id}: resolve with ctx.atn.vote.`,
           now: this.now(),
         })
         working = enqueued.record
@@ -1409,16 +1758,19 @@ export class AtnRuntime extends Service<Config> {
    * @param networkId - Network owning the proposal.
    * @returns The vote result.
    */
-  private reportVote(decision: CastVoteResult, latest: NetworkRecord, proposalId: string, networkId: string): VoteResult {
+  private async reportVote(decision: CastVoteResult, latest: NetworkRecord, proposalId: string, networkId: string): Promise<VoteResult> {
     const proposal = latest.proposals[proposalId] ?? decision.proposal
     const outstanding = proposal.voters.filter((voter) => !proposal.votes.some((vote) => vote.voterId === voter))
     if (!decision.idempotent && proposal.status === 'committed') {
       const version = proposal.committedVersion ?? currentGoal(latest).version
-      // The answer is already durable; broadcasting the new revision is
-      // best-effort context sync and never blocks the voter's own turn.
-      void this.broadcastGoal(version, latest).catch((error: unknown) => {
+      // The answer is already durable. Complete context checkpoints before
+      // returning so the next request cannot race ahead of a successful sync;
+      // these checkpoints never await any recipient's driver or model turn.
+      try {
+        await this.broadcastGoal(version, latest)
+      } catch (error) {
         this.ctx.logger.warn(`dsh-atn could not broadcast goal v${version} of ${networkId}: ${describe(error)}`)
-      })
+      }
     }
     return {
       proposalId: proposal.id,
@@ -1441,13 +1793,13 @@ export class AtnRuntime extends Service<Config> {
   private async broadcastGoal(version: number, record: NetworkRecord): Promise<void> {
     const revision = record.goalHistory.find((entry) => entry.version === version)
     if (revision === undefined) return
-    for (const node of Object.values(record.nodes)) {
-      if (node.lifecycle !== 'active' && node.lifecycle !== 'draining') continue
+    await Promise.all(Object.values(record.nodes).map(async node => {
+      if (node.lifecycle !== 'active' && node.lifecycle !== 'draining') return
       const target = this.ctx.agents.get(SessionId(node.sessionId))
-      if (target === undefined) continue
+      if (target === undefined) return
       // Context sync never wakes an idle node: it is queued for its next request.
       await this.syncGoalIfNeeded(record.id, node.id, target, false)
-    }
+    }))
   }
 
   /**
@@ -1469,10 +1821,11 @@ export class AtnRuntime extends Service<Config> {
       const node = record.nodes[nodeId]
       if (record.status !== 'open' || this.closing || node === undefined || (node.lifecycle !== 'active' && node.lifecycle !== 'draining')) return undefined
       const revision = currentGoal(record)
-      const message = goalSnapshotMessage(revision, networkId)
+      const message = goalSnapshotMessage(revision, networkId, record.goalHistory[0]!.document)
       const present = this.alreadyQueued(target, message)
       if (present && (node.lastGoalVersionSent ?? 0) >= revision.version) return undefined
       if (!present) await this.recordModelInput(target, message, networkId, nodeId, wake)
+      if (!await this.ctx.sessions.flush(target.session)) return undefined
       return (await this.mutate(networkId, current => applied(markGoalSynced(current, nodeId, revision.version)))).record
     })
   }
@@ -1534,17 +1887,17 @@ export class AtnRuntime extends Service<Config> {
   // -------------------------------------------------------------- deliver
 
   /**
-   * Record the entry node's user-facing delivery and complete the network when
+   * Record the current delivery holder's user-facing result and complete the network when
    * every mechanical condition is met.
    *
-   * @param agent - Calling entry agent.
+   * @param agent - Calling entry agent or holder of the claimed delivery obligation.
    * @param input - Summary, evidence and the goal version it was produced against.
    * @returns Whether completion was accepted, and why not when it was not.
    */
   async deliver(agent: Agent, input: DeliverInput): Promise<DeliverResult> {
     const { record, node } = await this.callerContext(agent)
-    if (!node.isEntry) {
-      throw new AtnRefusal('not-entry', `node ${node.id} is not the host delivery entry of network ${record.id}`)
+    if (record.status === 'open' && deliveryHolderOf(record) !== node.id) {
+      throw new AtnRefusal('not-delivery-holder', `node ${node.id} does not hold the delivery obligation of network ${record.id}`)
     }
     const goalVersion = currentGoal(record).version
 
@@ -1560,6 +1913,11 @@ export class AtnRuntime extends Service<Config> {
       return { accepted: false, reason: `network ${record.id} is ${record.status}`, goalVersion, releasedNodes: [] }
     }
 
+    // The holder may have consumed a result in this very model request. Refresh
+    // its durable receipts before evaluating completion, without waiting for a
+    // driver or forcing a retry loop until the next scheduler tick.
+    await this.drainMailbox(record.id)
+
     // The completion gate and the final record are decided against the latest
     // record inside one critical section, so a concurrent result or proposal
     // cannot be written past the gate.
@@ -1572,13 +1930,13 @@ export class AtnRuntime extends Service<Config> {
         return { record: current, value: { accepted: false, reason: `network ${current.id} is ${current.status}` } }
       }
       const now = this.now()
-      const entry = current.nodes[node.id]
-      if (entry === undefined || !entry.isEntry) {
-        return { record: current, value: { accepted: false, reason: `node ${node.id} is not the host delivery entry` } }
+      const holder = current.nodes[node.id]
+      if (holder === undefined || deliveryHolderOf(current) !== holder.id) {
+        return { record: current, value: { accepted: false, reason: `node ${node.id} does not hold the delivery obligation` } }
       }
       // Work held by other nodes, open review and undelivered results all block
-      // completion; the entry node's own local tasks are what this call settles.
-      const foreignOpenTasks = openTasks(current).filter((task) => task.holderId !== entry.id)
+      // completion; the holder's own local tasks are what this call settles.
+      const foreignOpenTasks = openTasks(current).filter((task) => task.holderId !== holder.id)
       const proposals = Object.values(current.proposals).filter((proposal) => proposal.status === 'pending')
       const queued = pendingMails(current)
       const blockers: string[] = []
@@ -1594,15 +1952,16 @@ export class AtnRuntime extends Service<Config> {
         return { record: current, value: { accepted: false, reason: `completion refused: ${blockers.join('; ')}` } }
       }
 
-      const ownTasks = openTasks(current).filter((task) => task.holderId === entry.id)
+      const ownTasks = openTasks(current).filter((task) => task.holderId === holder.id)
       const tasks = { ...current.tasks }
       for (const task of ownTasks) {
         tasks[task.id] = {
           ...task,
           status: 'completed',
           result: { summary: input.summary, evidence: [...input.evidence] },
-          settledBy: entry.id,
+          settledBy: holder.id,
           settledAt: now,
+          holderStepsAtSettlement: holder.stepsUsed,
         }
       }
       const finalized: NetworkRecord = {
@@ -1620,8 +1979,15 @@ export class AtnRuntime extends Service<Config> {
     if (!outcome.value.accepted) {
       return { accepted: false, reason: outcome.value.reason, goalVersion: currentGoal(outcome.record).version, releasedNodes: [] }
     }
-    const released = await this.releaseOwnedHandles(record.id, 'network completed')
+    // A replacement holder can be an ATN-owned worker executing this very tool.
+    // Let the scheduler release that handle after its tool stack returns.
+    const released = await this.releaseOwnedHandles(record.id, 'network completed', this.cleanupTimeoutMs, node.id)
     return { accepted: true, reason: null, goalVersion: input.goalVersion, releasedNodes: released }
+  }
+
+  /** Current submission authority, without mutating the network or taking its write queue. */
+  async deliveryHolder(networkId: string): Promise<string | null> {
+    return deliveryHolderOf(await this.requireNetwork(networkId))
   }
 
   // ----------------------------------------------------------------- stop
@@ -1665,6 +2031,7 @@ export class AtnRuntime extends Service<Config> {
             status: 'failed',
             settledBy: task.holderId,
             settledAt: this.now(),
+            holderStepsAtSettlement: current.nodes[task.holderId]?.stepsUsed,
             result: { summary: `cancelled by network stop: ${reason}`, evidence: [] },
           },
         }
@@ -1683,7 +2050,7 @@ export class AtnRuntime extends Service<Config> {
           ]),
         ),
       })
-    })
+    }, false)
     reason = stopped.record.note ?? reason
     this.stopped.add(networkId)
     const creating = [...this.activations.values()].filter(item => item.networkId === networkId)
@@ -1729,11 +2096,15 @@ export class AtnRuntime extends Service<Config> {
    * @param reason - Why the release is happening.
    * @returns Node ids whose disposal was confirmed.
    */
-  private async releaseOwnedHandles(networkId: string, reason: string, timeoutMs = this.cleanupTimeoutMs): Promise<string[]> {
+  private async releaseOwnedHandles(networkId: string, reason: string, timeoutMs = this.cleanupTimeoutMs, excludeNodeId?: string): Promise<string[]> {
     const record = await this.requireNetwork(networkId)
     const sessions = new Set<string>()
     for (const node of Object.values(record.nodes)) {
-      if (node.isEntry) continue
+      if (node.isEntry || node.id === excludeNodeId) continue
+      if (record.status === 'completed' && this.ctx.agents.get(SessionId(node.sessionId))?.status === 'running'
+        && Object.values(record.tasks).some(task => task.kind === 'delivery' && task.status === 'completed' && task.settledBy === node.id)) {
+        continue
+      }
       sessions.add(node.sessionId)
       const handle = this.handles.get(node.sessionId)
       if (handle !== undefined) this.beginRelease(node.id, node.sessionId, handle)
@@ -1766,6 +2137,48 @@ export class AtnRuntime extends Service<Config> {
   }
 
   // ------------------------------------------------------------ scheduler
+
+  /** Terminalize one node without losing task attempts, mail or review history. */
+  private closeNode(record: NetworkRecord, nodeId: string, lifecycle: 'failed' | 'retired', reason: string): NetworkRecord {
+    const node = record.nodes[nodeId]
+    if (node === undefined) throw new AtnRefusal('unknown-node', `unknown node ${nodeId}`)
+    if (node.lifecycle === 'failed' || node.lifecycle === 'retired') return record
+    const now = this.now()
+    let next: NetworkRecord = { ...record, nodes: { ...record.nodes,
+      [nodeId]: { ...node, lifecycle, leaseDeadlineAt: null, note: reason } } }
+    for (const task of openTasks(next)) {
+      if (task.holderId === nodeId) next = markTaskUnreachable(next, task.id, reason, now)
+    }
+    for (const mail of Object.values(next.mails)) {
+      if (mail.toId === nodeId && mail.status === 'queued') next = markUndeliverable(next, mail.id, reason, now)
+    }
+    const proposals = { ...next.proposals }
+    for (const proposal of Object.values(proposals)) {
+      if (proposal.status === 'pending' && (proposal.proposerId === nodeId || proposal.voters.includes(nodeId))) {
+        proposals[proposal.id] = { ...proposal, status: 'cancelled', settledAt: now, note: reason }
+      }
+    }
+    return materializeDeliveryTask({ ...next, proposals }, now)
+  }
+
+  /** Host-only failure injection/notification; invoke outside the target's own tool stack. */
+  async failNode(networkId: string, nodeId: string, reason: string): Promise<void> {
+    await this.mutate(networkId, current => {
+      if (current.status !== 'open') throw new AtnRefusal('network-closed', `network ${networkId} is ${current.status}`)
+      return applied(this.closeNode(current, nodeId, 'failed', reason))
+    })
+    await this.releaseSpecificHandles(networkId, new Set([nodeId]))
+  }
+
+  private retireExhaustedNodes(record: NetworkRecord): NetworkRecord {
+    let next = record
+    for (const node of Object.values(record.nodes)) {
+      // Allow the last admitted call to finish its tools before retiring it.
+      if ((node.stepsUsed ?? 0) < record.limits.stepBudget || this.ctx.agents.get(SessionId(node.sessionId))?.status === 'running') continue
+      next = this.closeNode(next, node.id, 'retired', 'node step budget exhausted')
+    }
+    return next
+  }
 
   private startScheduler(): void {
     if (this.timer !== null) return
@@ -1811,7 +2224,7 @@ export class AtnRuntime extends Service<Config> {
           if (current.status !== 'open') return { record: current, value: { changed: false, terminal: new Set<string>() } }
           const expired = expireProposals(current, now)
           const leased = this.expireLeases(expired, now)
-          const retired = retireSettledNodes(leased, now)
+          const retired = materializeDeliveryTask(retireSettledNodes(this.retireExhaustedNodes(leased), now), now)
           const terminal = this.terminalNodesOf(current, retired)
           return { record: retired, value: { changed: retired !== current, terminal } }
         })
@@ -1973,7 +2386,9 @@ export class AtnRuntime extends Service<Config> {
                 if (current.status !== 'open' || this.closing || candidate === undefined || candidate.lifecycle === 'failed' || candidate.lifecycle === 'retired') {
                   throw new AtnRefusal('network-closed', 'node closed while resume was in progress')
                 }
-                return applied(candidate.creationState === 'pending' ? publishNode(current, node.sessionId, this.now()).record : current)
+                return applied(candidate.creationState === 'pending'
+                  ? connectPublishedNode(publishNode(current, node.sessionId, this.now()).record, node.id)
+                  : current)
               })
               await this.syncGoalIfNeeded(id, node.id, handle.agent)
             } catch (error) {
@@ -2005,7 +2420,9 @@ export class AtnRuntime extends Service<Config> {
       }
       await this.mutate(record.id, (current) => applied({
         ...current,
-        tasks: { ...current.tasks, [task.id]: { ...task, status: 'failed', settledAt: now, result: { summary: `holder ${failedNodeId} could not be recovered`, evidence: [] } } },
+        tasks: { ...current.tasks, [task.id]: { ...task, status: 'failed', settledAt: now,
+          holderStepsAtSettlement: current.nodes[task.holderId]?.stepsUsed,
+          result: { summary: `holder ${failedNodeId} could not be recovered`, evidence: [] } } },
       }))
     }
   }

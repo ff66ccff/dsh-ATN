@@ -10,7 +10,7 @@
  */
 import { currentGoal, allocateId, LimitExceededError, NetworkStoreError } from './domain.ts'
 import { utf8Bytes } from './config.ts'
-import { deriveNeighbourhood } from './topology.ts'
+import { changedContractFields, governanceVoters } from './governance.ts'
 import type { GoalDocument, NetworkRecord, ProposalId, ProposalRecord, VoteRecord } from './schema.ts'
 
 /** Why a proposal operation was refused. */
@@ -24,6 +24,7 @@ export type ProposalErrorCode =
   | 'document-too-large'
   | 'network-closed'
   | 'proposer-not-active'
+  | 'protected-goal'
 
 /** Raised when a proposal operation violates the recorded rules. */
 export class ProposalError extends Error {
@@ -72,8 +73,13 @@ export function openProposal(record: NetworkRecord, input: OpenProposalInput): {
   if (proposer === undefined) {
     throw new NetworkStoreError('missing', `proposer ${input.proposerId} is not part of network ${record.id}`)
   }
-  if (proposer.lifecycle !== 'active') {
+  if (proposer.lifecycle !== 'active' || proposer.creationState !== 'published') {
     throw new ProposalError('proposer-not-active', `node ${input.proposerId} is ${proposer.lifecycle} and cannot propose`)
+  }
+
+  const changed = changedContractFields(record, input.document)
+  if (changed.length > 0) {
+    throw new ProposalError('protected-goal', `a proposal cannot change the startup contract (${changed.join(', ')}); revise only the plan`)
   }
   if (Object.keys(record.proposals).length >= record.limits.maxProposals) {
     throw new LimitExceededError('maxProposals', `network ${record.id} already recorded ${record.limits.maxProposals} proposals`)
@@ -87,8 +93,7 @@ export function openProposal(record: NetworkRecord, input: OpenProposalInput): {
   }
 
   const base = currentGoal(record)
-  const frozen = deriveNeighbourhood(record.nodes, input.proposerId)
-  const voters = [...frozen.upstream, ...frozen.downstream].filter((id) => id !== input.proposerId)
+  const voters = governanceVoters(record, input.proposerId)
   if (voters.length === 0) {
     throw new ProposalError('no-approvers', `node ${input.proposerId} has no active approvers and cannot change the shared document`)
   }
@@ -102,7 +107,7 @@ export function openProposal(record: NetworkRecord, input: OpenProposalInput): {
     id: proposalId,
     proposerId: input.proposerId,
     baseVersion: base.version,
-    document: input.document,
+    document: { ...input.document },
     rationale: input.rationale,
     voters,
     votes: [],
@@ -214,6 +219,18 @@ export function resolveProposal(record: NetworkRecord, proposalId: ProposalId, n
       [proposalId]: { ...proposal, status, note, settledAt: now, committedVersion },
     },
   })
+
+  // Pre-upgrade proposals keep their frozen electorate and votes, but a
+  // previously legal contract replacement cannot bypass the current guard.
+  // Empty historical lists are never allowed to pass by vacuous unanimity.
+  const changed = changedContractFields(record, proposal.document)
+  if (changed.length > 0 || proposal.voters.length === 0) {
+    const note = changed.length > 0
+      ? `proposal changes the protected startup contract (${changed.join(', ')})`
+      : 'proposal has no frozen approvers'
+    const next = settle('cancelled', note, null)
+    return { record: next, proposal: next.proposals[proposalId]! }
+  }
 
   if (proposal.votes.some((vote) => !vote.approve)) {
     return { record: settle('rejected', 'at least one approver rejected the proposal', null), proposal: { ...proposal, status: 'rejected', note: 'at least one approver rejected the proposal', settledAt: now, committedVersion: null } }

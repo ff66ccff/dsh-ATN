@@ -162,3 +162,22 @@ test('MESSAGE-ID-04: a note retry keeps the sender, target and first settlement 
     await rm(b.scratch, { recursive: true, force: true })
   }
 })
+
+test('MESSAGE-ID-05: multiline ids are rejected without creating work or settling an existing task', async () => {
+  const b = await bench()
+  try {
+    const child = await b.kernel.atn.spawn(b.host, { task: 'Must remain open.', context: '' })
+    const worker = b.kernel.ctx.agents.get(SessionId(child.sessionId))!
+    const before = await b.kernel.atn.network(b.networkId)
+    for (const messageId of ['same\none', 'same\ntwo', 'same\rone']) {
+      await assert.rejects(b.kernel.atn.send(b.host, { to: child.nodeId, kind: 'task', body: 'Must not create another task.', messageId }), /single line/)
+      await assert.rejects(b.kernel.atn.send(worker, { to: b.entryNodeId, kind: 'result', taskId: child.taskId, body: 'Must not settle.', summary: 'Rejected result.', evidence: [], messageId }), /single line/)
+    }
+    const after = await b.kernel.atn.network(b.networkId)
+    assert.deepEqual(after.tasks, before.tasks)
+    assert.deepEqual(after.mails, before.mails)
+  } finally {
+    await b.kernel.ctx.fiber.dispose()
+    await rm(b.scratch, { recursive: true, force: true })
+  }
+})

@@ -105,7 +105,8 @@ test('REVIEW-06: exhausted budget drains and releases a node with no outstanding
     const task = Object.values(record.tasks).find(t => t.holderId === child.nodeId)!
     await kernel.atn.send(agent, { to: record.entryNodeId, kind: 'result', taskId: task.id, body: 'done', summary: 'done' })
     await settle(kernel)
-    await store.update(networkId, current => ({ ...current, stepsUsed: current.limits.stepBudget }))
+    await store.update(networkId, current => ({ ...current, nodes: { ...current.nodes,
+      [child.nodeId]: { ...current.nodes[child.nodeId]!, stepsUsed: current.limits.stepBudget } } }))
     assert.equal(await kernel.atn.admitStep(networkId, child.sessionId), false)
     await kernel.atn.tick()
     assert.equal((await kernel.atn.network(networkId)).nodes[child.nodeId]!.lifecycle, 'retired')
@@ -121,7 +122,7 @@ test('REVIEW-07: concurrent votes and recovery append one goal snapshot per reci
     const c = await kernel.atn.spawn(ba, { task: 'C', context: '' })
     const ca = kernel.ctx.agents.get(SessionId(c.sessionId))!
     await settle(kernel)
-    const proposal = await kernel.atn.propose(ba, { document: { ...goal, objective: 'v2' }, rationale: 'test' })
+    const proposal = await kernel.atn.propose(ba, { document: { ...goal, plan: 'v2' }, rationale: 'test' })
     await Promise.all([kernel.atn.vote(host, { proposalId: proposal.proposalId, approve: true }), kernel.atn.vote(ca, { proposalId: proposal.proposalId, approve: true })])
     await kernel.atn.recover()
     await settle(kernel)

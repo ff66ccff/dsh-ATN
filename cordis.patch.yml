@@ -12,7 +12,7 @@
       config:
         id: atn
         name: ATN
-        description: 自适应拓扑网络：同能力 Agent 通过局部协作、共享目标和全体邻居投票完成任务。
+        description: 自适应拓扑网络：同能力 Agent 在独立预算内根据局部遥测选择协作者、调整连接并认领遗留任务。
         order: 5
         plugins:
           - id: persona

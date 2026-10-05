@@ -13,6 +13,8 @@ import { SessionId } from '@deepseek-ai/dsh-session'
 import { bootKernel, createHostAgent, drive, settle, atnMessages, type Kernel } from '../fixtures/kernel.ts'
 import { MemoryNetworkStore } from '../../src/domain.ts'
 import { currentGoal } from '../../src/domain.ts'
+import { goalSnapshotMessage } from '../../src/messages.ts'
+import type { GoalRevision } from '../../src/schema.ts'
 
 const goal = {
   objective: 'Replay an unread goal revision.',
@@ -56,7 +58,7 @@ test('RECOVER-CONTEXT-01: a revision committed without a live Agent is replayed 
     // The middle node proposes; its frozen approvers are the entry node and the
     // leaf, so one consent is not enough.
     const proposal = await b.kernel.ctx.atn.propose(parentAgent, {
-      document: { ...goal, objective: 'Replayed objective.' },
+      document: { ...goal, plan: 'Replayed work plan.' },
       rationale: 'revise',
     })
     assert.deepEqual([...proposal.voters].sort(), [record.entryNodeId, leaf.id].sort())
@@ -87,12 +89,12 @@ test('RECOVER-CONTEXT-01: a revision committed without a live Agent is replayed 
 
     // The node's next model request carries the replayed revision.
     const resumedAgent = b.kernel.ctx.agents.get(SessionId(leaf.sessionId))!
-    b.kernel.model.enqueue(leaf.sessionId, [{ tool: 'atn_peers', args: {} }])
+    b.kernel.model.enqueue(leaf.sessionId, [{ tool: 'atn_status', args: {} }])
     await drive(resumedAgent, 'continue after recovery')
     await settle(b.kernel)
     const snapshots = atnMessages(resumedAgent).filter((text) => text.includes('version=2'))
     assert.ok(snapshots.length >= 1, 'the replayed snapshot reached the node input')
-    assert.ok(snapshots[0]!.includes('Replayed objective.'), 'the snapshot carries the committed body')
+    assert.ok(snapshots[0]!.includes('Replayed work plan.'), 'the snapshot carries the committed plan')
 
     // A second recovery pass must not create a second handle or snapshot.
     const seen = snapshots.length
@@ -134,6 +136,72 @@ test('RECOVER-CONTEXT-02: a node that already read the revision is not appended 
     assert.equal(after, before, 'no duplicate goal snapshot was appended')
     assert.ok(b.kernel.ctx.atn.ownsHandle(child.id), 'the existing handle is preserved')
     assert.equal(b.kernel.ctx.agents.get(SessionId(child.sessionId)), childAgent, 'the same live Agent is kept')
+  } finally {
+    await b.kernel.ctx.fiber.dispose()
+    await rm(b.scratch, { recursive: true, force: true })
+  }
+})
+
+test('RECOVER-GOVERNANCE: an already-read legacy revision receives the initial contract once after cold recovery', async () => {
+  const b = await bench()
+  try {
+    const host = await createHostAgent(b.kernel, 'session-host')
+    const started = await b.kernel.atn.start(host, goal)
+    const child = await b.kernel.atn.spawn(host, { task: 'Review the durable contract.', context: '' })
+    await settle(b.kernel)
+    const childAgent = b.kernel.ctx.agents.get(SessionId(child.sessionId))!
+    const legacy: GoalRevision = {
+      version: 2,
+      document: {
+        objective: 'Legacy replacement objective.',
+        successCriteria: 'Legacy relaxed criteria.',
+        constraints: '',
+        plan: 'Compare independent evidence before selecting a result.',
+      },
+      proposedBy: started.nodeId,
+      approvedBy: [child.nodeId],
+      committedAt: 1_000_000,
+    }
+    // Log the exact pre-upgrade marker/body before installing the legacy
+    // durable revision, so ordinary runtime sync cannot supplement it early.
+    childAgent.inject(goalSnapshotMessage(legacy, started.networkId))
+    await drive(childAgent, 'Read the legacy revision.')
+    await settle(b.kernel)
+    await b.kernel.ctx.sessions.flush(childAgent.session)
+    assert.ok(atnMessages(childAgent).some(text => text.includes('version=2') && text.includes(legacy.document.objective)))
+    const old = await b.store.update(started.networkId, record => ({
+      ...record,
+      goalHistory: [...record.goalHistory, legacy],
+      nodes: { ...record.nodes, [child.nodeId]: { ...record.nodes[child.nodeId]!, lastGoalVersionSent: 2 } },
+    }))
+    await b.kernel.ctx.fiber.dispose()
+    b.kernel = await bootKernel(b.scratch, { store: b.store, clock: () => 1_000_000, cleanupTimeoutMs: 50 })
+    await b.kernel.atn.recover()
+    await settle(b.kernel)
+
+    const resumed = b.kernel.ctx.agents.get(SessionId(child.sessionId))!
+    const supplements = () => atnMessages(resumed).filter(text => text.split('\n')[0].includes('version=2 contract=initial'))
+    assert.equal(supplements().length, 1, 'the old same-version receipt cannot suppress the contract supplement')
+    for (const value of [goal.objective, goal.successCriteria, goal.constraints, legacy.document.plan!]) {
+      assert.ok(supplements()[0].includes(value), `supplement includes ${value}`)
+    }
+    assert.ok(!supplements()[0].includes(legacy.document.objective), 'the effective snapshot does not present a weakened legacy field as authoritative')
+    assert.ok(atnMessages(resumed).some(text => text.includes(legacy.document.objective)), 'the old log is retained for audit')
+    const recovered = await b.kernel.atn.network(started.networkId)
+    assert.deepEqual(recovered.goalHistory, old.goalHistory, 'recovery does not fabricate a vote or rewrite committed history')
+    assert.equal(recovered.nodes[child.nodeId].lastGoalVersionSent, 2)
+
+    await b.kernel.atn.recover()
+    await settle(b.kernel)
+    assert.equal(supplements().length, 1, 'the supplemental marker deduplicates later recovery')
+
+    const newcomer = await b.kernel.atn.spawn(resumed, { task: 'Join after upgrade.', context: '' })
+    await settle(b.kernel)
+    const newcomerAgent = b.kernel.ctx.agents.get(SessionId(newcomer.sessionId))!
+    const firstSnapshot = atnMessages(newcomerAgent).find(text => text.startsWith('[ATN shared goal]'))!
+    assert.ok(firstSnapshot.includes('version=2 contract=initial'))
+    assert.ok(firstSnapshot.includes(goal.constraints), 'new nodes also receive the original constraints')
+    assert.ok(!firstSnapshot.includes(legacy.document.objective))
   } finally {
     await b.kernel.ctx.fiber.dispose()
     await rm(b.scratch, { recursive: true, force: true })

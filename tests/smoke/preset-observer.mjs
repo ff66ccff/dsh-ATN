@@ -78,7 +78,8 @@ async function run(ctx) {
     assert.ok(!tools('atn-smoke-standard').some(name => name.startsWith('atn_')))
     assert.ok(!JSON.stringify(adapter.requests.find(request => request.sessionId === 'atn-smoke-standard').messages).includes('You are in ATN mode'))
     assert.deepEqual(tools(child.sessionId), tools('atn-smoke-entry'))
-    assert.equal(tools(child.sessionId).filter(name => name.startsWith('atn_')).length, 9)
+    assert.equal(tools(child.sessionId).filter(name => name.startsWith('atn_')).length, 6)
+    assert.ok(tools(child.sessionId).includes('atn_rewire'))
     assert.ok(JSON.stringify(adapter.requests.find(request => request.sessionId === child.sessionId).messages).includes('You are in ATN mode'))
     await ctx.atn.stop(record.id, 'smoke complete')
     console.log('ATN_PRESET_SMOKE ' + JSON.stringify({

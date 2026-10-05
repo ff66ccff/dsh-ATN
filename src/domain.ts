@@ -254,6 +254,7 @@ export function renderGoal(document: GoalDocument): string {
     `Objective: ${document.objective}`,
     `Success criteria: ${document.successCriteria}`,
     `Constraints: ${document.constraints}`,
+    ...(document.plan === undefined ? [] : [`Collaboration plan (subject to the startup contract): ${document.plan}`]),
   ].join('\n')
 }
 

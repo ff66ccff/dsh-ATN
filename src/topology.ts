@@ -1,5 +1,5 @@
 /**
- * Pure neighbour derivation over persistent node records.
+ * Pure collaboration graph operations and legacy birth-neighbour derivation.
  *
  * The neighbourhood is derived from the birth lineage (`creatorId`) upward and
  * the selected-branch path (`selectedChildId`) downward. Non-`active` nodes are
@@ -11,10 +11,13 @@
  * quietly constructing a different graph.
  * @module dsh-atn/topology
  */
-import type { NodeId, NodeRecord } from './schema.ts'
+import type { NetworkRecord, NodeId, NodeRecord } from './schema.ts'
 
 /** How many neighbours each direction holds. */
 export const NEIGHBOURS_PER_DIRECTION = 2
+
+/** Maximum outgoing collaboration links selected by one node. */
+export const MAX_COLLABORATION_PEERS = 4
 
 /** Ordered neighbour slots of one node. */
 export interface Neighbourhood {
@@ -27,7 +30,16 @@ export interface Neighbourhood {
 }
 
 /** Why neighbour derivation refused to produce a graph. */
-export type TopologyErrorCode = 'unknown-node' | 'dangling-link' | 'lineage-cycle'
+export type TopologyErrorCode =
+  | 'unknown-node'
+  | 'dangling-link'
+  | 'lineage-cycle'
+  | 'network-closed'
+  | 'not-active'
+  | 'target-not-active'
+  | 'self-link'
+  | 'duplicate-peer'
+  | 'too-many-peers'
 
 /** Raised when stored lineage cannot describe a valid path. */
 export class TopologyError extends Error {
@@ -99,8 +111,8 @@ export function deriveNeighbourhood(nodes: Readonly<Record<NodeId, NodeRecord>>,
 }
 
 /**
- * Flatten a neighbourhood into the ordered slot list used by approval lists and
- * discovery results: upstream nearest first, then downstream nearest first.
+ * Flatten a neighbourhood into the ordered slot list used by legacy graph
+ * bootstrap and discovery: upstream nearest first, then downstream nearest first.
  *
  * @param neighbourhood - Result of {@link deriveNeighbourhood}.
  * @returns The neighbour ids without the node itself.
@@ -123,4 +135,140 @@ export function nearestReceivingDescendant(
 ): NodeId | null {
   const { downstream } = deriveNeighbourhood(nodes, nodeId)
   return downstream[0] ?? null
+}
+
+function isCollaborator(node: NodeRecord): boolean {
+  return node.lifecycle === 'active' && node.creationState === 'published'
+}
+
+function recordedPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, node: NodeRecord): readonly NodeId[] {
+  return node.peerIds ?? neighbourIds(deriveNeighbourhood(nodes, node.id))
+}
+
+/**
+ * Read effective directed collaboration links. Missing lists bootstrap from the
+ * old lineage. Explicit lists, including [], are authoritative.
+ *
+ * Active neighbours keep their slots. For each inactive link, one replacement
+ * may be found by breadth-first traversal through inactive nodes' recorded
+ * links. Active nodes stop traversal: repair never explores through a live
+ * collaborator or adds links merely because unused capacity is available.
+ */
+export function collaborationPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, nodeId: NodeId): NodeId[] {
+  const self = nodes[nodeId]
+  if (self === undefined) throw new TopologyError('unknown-node', `node ${nodeId} is not part of this network`)
+  const peers: NodeId[] = []
+  const inactive: NodeId[] = []
+  const seen = new Set<NodeId>([nodeId])
+  for (const id of recordedPeers(nodes, self)) {
+    if (seen.has(id)) continue
+    seen.add(id)
+    const peer = resolve(nodes, id, nodeId, 'collaboration')
+    if (isCollaborator(peer)) peers.push(id)
+    else inactive.push(id)
+  }
+
+  const capacity = Math.min(MAX_COLLABORATION_PEERS, peers.length + inactive.length)
+  const queue = [...inactive]
+  for (let index = 0; index < queue.length && peers.length < capacity; index += 1) {
+    const current = nodes[queue[index]]!
+    for (const id of recordedPeers(nodes, current)) {
+      if (seen.has(id)) continue
+      seen.add(id)
+      const peer = resolve(nodes, id, current.id, 'collaboration')
+      if (isCollaborator(peer)) peers.push(id)
+      else queue.push(id)
+      if (peers.length >= capacity) break
+    }
+  }
+  return peers.slice(0, MAX_COLLABORATION_PEERS)
+}
+
+function requireOpen(record: NetworkRecord): void {
+  if (record.status !== 'open') {
+    throw new TopologyError('network-closed', `network ${record.id} is ${record.status}`)
+  }
+}
+
+function requireActiveNode(record: NetworkRecord, nodeId: NodeId): NodeRecord {
+  const node = record.nodes[nodeId]
+  if (node === undefined) throw new TopologyError('unknown-node', `node ${nodeId} is not part of network ${record.id}`)
+  if (!isCollaborator(node)) {
+    throw new TopologyError('not-active', `node ${nodeId} must be active and published to choose collaborators`)
+  }
+  return node
+}
+
+function samePeers(left: readonly NodeId[] | undefined, right: readonly NodeId[]): boolean {
+  return left !== undefined && left.length === right.length && left.every((id, index) => id === right[index])
+}
+
+/** Replace only this node's outgoing links; no birth records or other votes change. */
+export function rewireNode(record: NetworkRecord, nodeId: NodeId, peers: readonly NodeId[]): NetworkRecord {
+  requireOpen(record)
+  const self = requireActiveNode(record, nodeId)
+  if (peers.length > MAX_COLLABORATION_PEERS) {
+    throw new TopologyError('too-many-peers', `a node may choose at most ${MAX_COLLABORATION_PEERS} collaborators`)
+  }
+  const seen = new Set<NodeId>()
+  for (const id of peers) {
+    if (id === nodeId) throw new TopologyError('self-link', 'a node cannot choose itself as a collaborator')
+    if (seen.has(id)) throw new TopologyError('duplicate-peer', `collaborator ${id} was listed more than once`)
+    seen.add(id)
+    const peer = record.nodes[id]
+    if (peer === undefined) throw new TopologyError('unknown-node', `node ${id} is not part of network ${record.id}`)
+    if (!isCollaborator(peer)) {
+      throw new TopologyError('target-not-active', `collaborator ${id} must be active and published`)
+    }
+  }
+  if (samePeers(self.peerIds, peers)) return record
+  return { ...record, nodes: { ...record.nodes, [nodeId]: { ...self, peerIds: [...peers] } } }
+}
+
+/**
+ * Persist bootstrap and inactive-link repair from one shared graph snapshot.
+ * Published inactive nodes retain their last links so neighbours can bridge
+ * through them. Provisioning nodes wait for connectPublishedNode; closed
+ * networks are unchanged.
+ */
+export function reconcileTopology(record: NetworkRecord): NetworkRecord {
+  if (record.status !== 'open') return record
+  let nodes = record.nodes
+  for (const node of Object.values(record.nodes)) {
+    if (node.creationState !== 'published') continue
+    if (node.lifecycle !== 'active' && node.peerIds !== undefined) continue
+    const peers = collaborationPeers(record.nodes, node.id)
+    if (samePeers(node.peerIds, peers)) continue
+    if (nodes === record.nodes) nodes = { ...record.nodes }
+    nodes[node.id] = { ...node, peerIds: peers }
+  }
+  return nodes === record.nodes ? record : { ...record, nodes }
+}
+
+/**
+ * Give a newly published node a small initial neighbourhood. The creator adds
+ * the new node only when it has a free slot; existing links are never evicted.
+ * An already initialized node is left alone, including an explicitly empty
+ * list, making recovery retries unable to undo subsequent model choices.
+ */
+export function connectPublishedNode(record: NetworkRecord, nodeId: NodeId): NetworkRecord {
+  requireOpen(record)
+  const node = requireActiveNode(record, nodeId)
+  if (node.peerIds !== undefined) return record
+  if (node.creatorId === null) {
+    return { ...record, nodes: { ...record.nodes, [nodeId]: { ...node, peerIds: [] } } }
+  }
+  const creator = resolve(record.nodes, node.creatorId, nodeId, 'creator')
+  const creatorPeers = collaborationPeers(record.nodes, creator.id)
+  const peers = [...new Set([creator.id, ...creatorPeers])]
+    .filter(id => id !== nodeId && isCollaborator(record.nodes[id]!))
+    .slice(0, MAX_COLLABORATION_PEERS)
+  const nodes = { ...record.nodes, [nodeId]: { ...node, peerIds: peers } }
+  if (isCollaborator(creator)) {
+    const nextCreatorPeers = creatorPeers.includes(nodeId) || creatorPeers.length >= MAX_COLLABORATION_PEERS
+      ? creatorPeers
+      : [...creatorPeers, nodeId]
+    if (!samePeers(creator.peerIds, nextCreatorPeers)) nodes[creator.id] = { ...creator, peerIds: nextCreatorPeers }
+  }
+  return { ...record, nodes }
 }

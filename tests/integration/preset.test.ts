@@ -12,7 +12,7 @@ import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixt
 import { SHARED_RULES } from '../../src/tools.ts'
 
 const goal = { objective: 'Check ATN mode.', successCriteria: 'Scoped tools survive spawn and recovery.', constraints: 'Scripted model only.' }
-const atnTools = ['atn_deliver', 'atn_finish', 'atn_peers', 'atn_propose', 'atn_renew', 'atn_send', 'atn_spawn', 'atn_start', 'atn_vote']
+const atnTools = ['atn_finish', 'atn_rewire', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status']
 
 async function withPresets(run: (kernel: Kernel) => Promise<void>): Promise<void> {
   const scratch = await mkdtemp(join(tmpdir(), 'dsh-atn-preset-'))

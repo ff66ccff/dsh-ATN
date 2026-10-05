@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "issuedModelCalls": 0,
+  "measurement": "All durable ATN mail, including setup/control/result envelopes. Each delivered edge is one hop; forwarding is counted again. Context proxy excludes shared prompts and tool outputs.",
+  "interpretation": "Achievable deterministic policies, not a proven global optimum or a claim about model performance. Actions do not consume model steps unless stepProxyEnforced is true.",
+  "results": [
+    {
+      "policy": "hub",
+      "task": "shift-ledger-1",
+      "agents": 8,
+      "delivered": true,
+      "issuedModelCalls": 0,
+      "aggregateOnly": true,
+      "messages": 22,
+      "hops": 22,
+      "payloadBytes": 7873,
+      "maxContextBytes": 1346,
+      "contextBytesByNode": {
+        "network-1:node-3": 1192,
+        "network-1:node-6": 1078,
+        "network-1:node-9": 920,
+        "network-1:node-12": 924,
+        "network-1:node-15": 927,
+        "network-1:node-18": 743,
+        "network-1:node-21": 743,
+        "network-1:node-1": 1346
+      },
+      "actions": 49,
+      "actionsByNode": {
+        "node-1": 5,
+        "node-3": 11,
+        "node-6": 7,
+        "node-9": 6,
+        "node-12": 6,
+        "node-15": 6,
+        "node-18": 6,
+        "node-21": 2
+      },
+      "maxNodeActions": 11,
+      "stepProxyEnforced": false,
+      "limits": {
+        "maxResidentNodes": 8,
+        "maxTotalNodes": 8,
+        "maxTasks": 128,
+        "maxProposals": 64,
+        "maxPendingMailPerNode": 32,
+        "maxRetainedMail": 128,
+        "maxMessageBytes": 8192,
+        "maxDocumentBytes": 8192,
+        "defaultLeaseMs": 300000,
+        "maxLeaseExtensionMs": 1800000,
+        "networkDeadlineMs": 3600000,
+        "proposalDeadlineMs": 120000,
+        "stepBudget": 16
+      },
+      "rewires": 0,
+      "claims": 1,
+      "failure": null,
+      "answer": "{\"phase\":2,\"netByAccount\":{\"A\":1042,\"B\":811,\"C\":805,\"D\":935},\"evidence\":[\"initial-0\",\"correction-0\",\"initial-1\",\"correction-1\",\"initial-2\",\"correction-2\",\"initial-3\",\"correction-3\",\"initial-4\",\"correction-4\",\"initial-5\",\"correction-5\",\"initial-6\",\"correction-6\",\"initial-7\",\"correction-7\"]}",
+      "manipulation": {
+        "phase": 2,
+        "checks": {
+          "enoughNodes": true,
+          "sparseTopology": true,
+          "initialGraphReachable": true,
+          "distributedInitialReads": true,
+          "phaseChanged": true,
+          "activeWorkerFailed": true
+        },
+        "valid": true,
+        "causalClaim": false,
+        "outcomeChecks": {
+          "revisedEvidenceRead": true,
+          "failedShardRecovered": true
+        },
+        "initialTopology": {
+          "nodes": 8,
+          "maxPeers": 4,
+          "minPeers": 4,
+          "reachableFromEntry": 8
+        },
+        "registeredNodes": 8,
+        "initialShardsRead": 8,
+        "correctionShardsRead": 8,
+        "failedSlot": 7,
+        "recoveryMode": "self-organized",
+        "backupSlot": null,
+        "deniedReads": 0
+      }
+    },
+    {
+      "policy": "ring-gossip",
+      "task": "shift-ledger-1",
+      "agents": 8,
+      "delivered": true,
+      "issuedModelCalls": 0,
+      "aggregateOnly": true,
+      "messages": 68,
+      "hops": 68,
+      "payloadBytes": 20768,
+      "maxContextBytes": 3811,
+      "contextBytesByNode": {
+        "network-1:node-3": 3811,
+        "network-1:node-6": 2475,
+        "network-1:node-9": 3053,
+        "network-1:node-12": 2657,
+        "network-1:node-15": 3474,
+        "network-1:node-18": 2226,
+        "network-1:node-21": 743,
+        "network-1:node-1": 2329
+      },
+      "actions": 95,
+      "actionsByNode": {
+        "node-1": 14,
+        "node-3": 14,
+        "node-6": 13,
+        "node-9": 12,
+        "node-12": 13,
+        "node-15": 13,
+        "node-18": 14,
+        "node-21": 2
+      },
+      "maxNodeActions": 14,
+      "stepProxyEnforced": false,
+      "limits": {
+        "maxResidentNodes": 8,
+        "maxTotalNodes": 8,
+        "maxTasks": 128,
+        "maxProposals": 64,
+        "maxPendingMailPerNode": 32,
+        "maxRetainedMail": 128,
+        "maxMessageBytes": 8192,
+        "maxDocumentBytes": 8192,
+        "defaultLeaseMs": 300000,
+        "maxLeaseExtensionMs": 1800000,
+        "networkDeadlineMs": 3600000,
+        "proposalDeadlineMs": 120000,
+        "stepBudget": 16
+      },
+      "rewires": 0,
+      "claims": 1,
+      "failure": null,
+      "answer": "{\"phase\":2,\"netByAccount\":{\"A\":1042,\"B\":811,\"C\":805,\"D\":935},\"evidence\":[\"initial-0\",\"correction-0\",\"initial-1\",\"correction-1\",\"initial-2\",\"correction-2\",\"initial-3\",\"correction-3\",\"initial-4\",\"correction-4\",\"initial-5\",\"correction-5\",\"initial-6\",\"correction-6\",\"initial-7\",\"correction-7\"]}",
+      "manipulation": {
+        "phase": 2,
+        "checks": {
+          "enoughNodes": true,
+          "sparseTopology": true,
+          "initialGraphReachable": true,
+          "distributedInitialReads": true,
+          "phaseChanged": true,
+          "activeWorkerFailed": true
+        },
+        "valid": true,
+        "causalClaim": false,
+        "outcomeChecks": {
+          "revisedEvidenceRead": true,
+          "failedShardRecovered": true
+        },
+        "initialTopology": {
+          "nodes": 8,
+          "maxPeers": 4,
+          "minPeers": 4,
+          "reachableFromEntry": 8
+        },
+        "registeredNodes": 8,
+        "initialShardsRead": 8,
+        "correctionShardsRead": 8,
+        "failedSlot": 7,
+        "recoveryMode": "self-organized",
+        "backupSlot": null,
+        "deniedReads": 0
+      }
+    },
+    {
+      "policy": "tree-aggregate",
+      "task": "shift-ledger-1",
+      "agents": 8,
+      "delivered": true,
+      "issuedModelCalls": 0,
+      "aggregateOnly": true,
+      "messages": 27,
+      "hops": 27,
+      "payloadBytes": 8904,
+      "maxContextBytes": 1420,
+      "contextBytesByNode": {
+        "network-1:node-3": 1420,
+        "network-1:node-6": 1304,
+        "network-1:node-9": 1308,
+        "network-1:node-12": 1312,
+        "network-1:node-15": 1313,
+        "network-1:node-18": 946,
+        "network-1:node-21": 743,
+        "network-1:node-1": 558
+      },
+      "actions": 54,
+      "actionsByNode": {
+        "node-1": 6,
+        "node-3": 12,
+        "node-6": 7,
+        "node-9": 7,
+        "node-12": 7,
+        "node-15": 7,
+        "node-18": 6,
+        "node-21": 2
+      },
+      "maxNodeActions": 12,
+      "stepProxyEnforced": false,
+      "limits": {
+        "maxResidentNodes": 8,
+        "maxTotalNodes": 8,
+        "maxTasks": 128,
+        "maxProposals": 64,
+        "maxPendingMailPerNode": 32,
+        "maxRetainedMail": 128,
+        "maxMessageBytes": 8192,
+        "maxDocumentBytes": 8192,
+        "defaultLeaseMs": 300000,
+        "maxLeaseExtensionMs": 1800000,
+        "networkDeadlineMs": 3600000,
+        "proposalDeadlineMs": 120000,
+        "stepBudget": 16
+      },
+      "rewires": 0,
+      "claims": 1,
+      "failure": null,
+      "answer": "{\"phase\":2,\"netByAccount\":{\"A\":1042,\"B\":811,\"C\":805,\"D\":935},\"evidence\":[\"initial-0\",\"correction-0\",\"initial-1\",\"correction-1\",\"initial-2\",\"correction-2\",\"initial-3\",\"correction-3\",\"initial-4\",\"correction-4\",\"initial-5\",\"correction-5\",\"initial-6\",\"correction-6\",\"initial-7\",\"correction-7\"]}",
+      "manipulation": {
+        "phase": 2,
+        "checks": {
+          "enoughNodes": true,
+          "sparseTopology": true,
+          "initialGraphReachable": true,
+          "distributedInitialReads": true,
+          "phaseChanged": true,
+          "activeWorkerFailed": true
+        },
+        "valid": true,
+        "causalClaim": false,
+        "outcomeChecks": {
+          "revisedEvidenceRead": true,
+          "failedShardRecovered": true
+        },
+        "initialTopology": {
+          "nodes": 8,
+          "maxPeers": 4,
+          "minPeers": 4,
+          "reachableFromEntry": 8
+        },
+        "registeredNodes": 8,
+        "initialShardsRead": 8,
+        "correctionShardsRead": 8,
+        "failedSlot": 7,
+        "recoveryMode": "self-organized",
+        "backupSlot": null,
+        "deniedReads": 0
+      }
+    },
+    {
+      "policy": "adaptive",
+      "task": "shift-ledger-1",
+      "agents": 8,
+      "delivered": true,
+      "issuedModelCalls": 0,
+      "aggregateOnly": true,
+      "messages": 67,
+      "hops": 67,
+      "payloadBytes": 21334,
+      "maxContextBytes": 4633,
+      "contextBytesByNode": {
+        "network-1:node-3": 3127,
+        "network-1:node-6": 4633,
+        "network-1:node-9": 3544,
+        "network-1:node-12": 3394,
+        "network-1:node-15": 2654,
+        "network-1:node-18": 1895,
+        "network-1:node-21": 743,
+        "network-1:node-1": 1344
+      },
+      "actions": 98,
+      "actionsByNode": {
+        "node-1": 15,
+        "node-3": 14,
+        "node-6": 13,
+        "node-9": 14,
+        "node-12": 13,
+        "node-15": 13,
+        "node-18": 14,
+        "node-21": 2
+      },
+      "maxNodeActions": 15,
+      "stepProxyEnforced": false,
+      "limits": {
+        "maxResidentNodes": 8,
+        "maxTotalNodes": 8,
+        "maxTasks": 128,
+        "maxProposals": 64,
+        "maxPendingMailPerNode": 32,
+        "maxRetainedMail": 128,
+        "maxMessageBytes": 8192,
+        "maxDocumentBytes": 8192,
+        "defaultLeaseMs": 300000,
+        "maxLeaseExtensionMs": 1800000,
+        "networkDeadlineMs": 3600000,
+        "proposalDeadlineMs": 120000,
+        "stepBudget": 16
+      },
+      "rewires": 4,
+      "claims": 1,
+      "failure": null,
+      "answer": "{\"phase\":2,\"netByAccount\":{\"A\":1042,\"B\":811,\"C\":805,\"D\":935},\"evidence\":[\"initial-0\",\"correction-0\",\"initial-1\",\"correction-1\",\"initial-2\",\"correction-2\",\"initial-3\",\"correction-3\",\"initial-4\",\"correction-4\",\"initial-5\",\"correction-5\",\"initial-6\",\"correction-6\",\"initial-7\",\"correction-7\"]}",
+      "manipulation": {
+        "phase": 2,
+        "checks": {
+          "enoughNodes": true,
+          "sparseTopology": true,
+          "initialGraphReachable": true,
+          "distributedInitialReads": true,
+          "phaseChanged": true,
+          "activeWorkerFailed": true
+        },
+        "valid": true,
+        "causalClaim": false,
+        "outcomeChecks": {
+          "revisedEvidenceRead": true,
+          "failedShardRecovered": true
+        },
+        "initialTopology": {
+          "nodes": 8,
+          "maxPeers": 4,
+          "minPeers": 4,
+          "reachableFromEntry": 8
+        },
+        "registeredNodes": 8,
+        "initialShardsRead": 8,
+        "correctionShardsRead": 8,
+        "failedSlot": 7,
+        "recoveryMode": "self-organized",
+        "backupSlot": null,
+        "deniedReads": 0
+      }
+    }
+  ]
+}

@@ -107,7 +107,7 @@ test('EFFORT-02: recovery resumes on the persisted effort, never a profile defau
 
     const resumed = b.kernel.ctx.agents.get(SessionId(child.sessionId))!
     assert.equal(resumed.options.reasoningEffort, 'medium', 'the resumed agent keeps the recorded effort')
-    b.kernel.model.enqueue(child.sessionId, [{ tool: 'atn_peers', args: {} }])
+    b.kernel.model.enqueue(child.sessionId, [{ tool: 'atn_status', args: {} }])
     await drive(resumed, 'report neighbours')
     await settle(b.kernel)
     const request = b.kernel.model.requests.filter((entry) => entry.sessionId === child.sessionId).at(-1)!

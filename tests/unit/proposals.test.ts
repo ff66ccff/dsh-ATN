@@ -11,25 +11,22 @@ import { makeChain, makeNode, testGoal } from '../fixtures/network.ts'
 import type { GoalDocument, NetworkRecord } from '../../src/schema.ts'
 
 const replacement: GoalDocument = {
-  objective: 'Ship the minimal bundle.',
-  successCriteria: 'A reviewer can re-run every command.',
-  constraints: 'No paid models.',
+  ...testGoal,
+  plan: 'Ship the minimal bundle and record commands for review.',
 }
 
 /**
- * A - B - C - D - E chain plus a second branch X off C.
- * C's frozen approver list is B, A, D, E: four members.
+ * A - B - C - D - E chain.
+ * C's frozen approver list is A, B, D, E: four members.
  */
 function fourApprovers(): NetworkRecord {
-  const chain = makeChain(['A', 'B', 'C', 'D', 'E'])
-  chain.nodes['X'] = makeNode('X', { creatorId: 'C' })
-  return chain
+  return makeChain(['A', 'B', 'C', 'D', 'E'])
 }
 
 test('VOTE-01: three approvals out of a four-member list do not commit', () => {
   const network = fourApprovers()
   const opened = openProposal(network, { proposerId: 'C', document: replacement, rationale: 'first', now: 0 })
-  assert.deepEqual(opened.proposal.voters, ['B', 'A', 'D', 'E'])
+  assert.deepEqual(opened.proposal.voters, ['A', 'B', 'D', 'E'])
 
   let record = opened.record
   record = castVote(record, { proposalId: opened.proposal.id, voterId: 'B', approve: true, reason: null, now: 1 }).record
@@ -83,13 +80,13 @@ test('VOTE-03: reshaping the topology after a vote does not move that vote to an
   const opened = openProposal(network, { proposerId: 'C', document: replacement, rationale: '', now: 0 })
   let record = castVote(opened.record, { proposalId: opened.proposal.id, voterId: 'B', approve: true, reason: null, now: 1 }).record
   // A neighbour retires, so the live topology no longer matches the frozen list.
-  record = { ...record, nodes: { ...record.nodes, A: { ...record.nodes['A']!, lifecycle: 'draining' as const } } }
+  record = { ...record, nodes: { ...record.nodes, A: { ...record.nodes['A']!, lifecycle: 'draining' as const }, X: makeNode('X', { creatorId: 'C' }) } }
 
   assert.throws(
     () => castVote(record, { proposalId: opened.proposal.id, voterId: 'X', approve: true, reason: null, now: 2 }),
     (error: unknown) => error instanceof ProposalError && error.code === 'not-a-voter',
   )
-  assert.deepEqual(record.proposals[opened.proposal.id]!.voters, ['B', 'A', 'D', 'E'], 'the frozen list is untouched')
+  assert.deepEqual(record.proposals[opened.proposal.id]!.voters, ['A', 'B', 'D', 'E'], 'the frozen list is untouched')
 })
 
 test('VOTE-04: a draining node can still vote on an old proposal but cannot open a new one', () => {
@@ -117,6 +114,7 @@ test('VOTE-04: a replacement node that fills the vacated slot cannot vote on the
   const network = fourApprovers()
   const opened = openProposal(network, { proposerId: 'C', document: replacement, rationale: '', now: 0 })
   // X becomes an active neighbour of C by the current topology but was not on the frozen list.
+  opened.record.nodes['X'] = makeNode('X', { creatorId: 'C' })
   assert.throws(
     () => castVote(opened.record, { proposalId: opened.proposal.id, voterId: 'X', approve: true, reason: null, now: 1 }),
     (error: unknown) => error instanceof ProposalError && error.code === 'not-a-voter',
@@ -134,7 +132,7 @@ test('VOTE-05: a voter that has left the current neighbourhood can still cast it
 test('VOTE-06: two proposals on the same base cannot both commit', () => {
   const network = fourApprovers()
   const first = openProposal(network, { proposerId: 'C', document: replacement, rationale: 'one', now: 0 })
-  const second = openProposal(first.record, { proposerId: 'D', document: { ...replacement, objective: 'Other' }, rationale: 'two', now: 0 })
+  const second = openProposal(first.record, { proposerId: 'D', document: { ...replacement, plan: 'Other approach' }, rationale: 'two', now: 0 })
 
   let record = second.record
   for (const voter of first.proposal.voters) {

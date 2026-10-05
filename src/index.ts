@@ -9,11 +9,15 @@
 import type { Context } from '@deepseek-ai/cordis'
 import { assertConfigRelations, Config, type Config as AtnConfig } from './config.ts'
 import { AtnRuntime } from './runtime.ts'
+import { AtnObserver } from './observer.ts'
 
 export const name = 'atn'
 /** Services the runtime needs before it can own networks. */
 export const inject = ['agents', 'tools', 'sessions']
 export { Config, AtnRuntime }
+export { createExactJsonValidator, isTaskAccepted } from './tasks.ts'
+export type { TaskValidator, TaskValidationOutcome } from './tasks.ts'
+export type { TaskRecord, TaskAcceptance, TaskAcceptanceMetrics } from './schema.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.
@@ -30,5 +34,6 @@ export default class AtnRuntimePlugin extends AtnRuntime {
   constructor(ctx: Context, config: AtnConfig) {
     assertConfigRelations(config)
     super(ctx, config)
+    ctx.inject(['typert'], inner => { inner.plugin(AtnObserver) })
   }
 }

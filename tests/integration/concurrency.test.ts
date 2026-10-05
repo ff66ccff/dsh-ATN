@@ -45,6 +45,11 @@ test('CONCURRENCY-01: two simultaneous spawns keep both nodes and both tasks, an
   const bench = await boot()
   try {
     const { host, networkId } = await startNetwork(bench.kernel)
+    const selectedDuringPublish: string[] = []
+    bench.store.updateHook = next => {
+      const selected = next.nodes[next.entryNodeId]!.selectedChildId
+      if (selected !== null) selectedDuringPublish.push(selected)
+    }
     const [first, second] = await Promise.all([
       bench.kernel.ctx.atn.spawn(host, { task: 'First concurrent task.', context: '' }),
       bench.kernel.ctx.atn.spawn(host, { task: 'Second concurrent task.', context: '' }),
@@ -55,8 +60,9 @@ test('CONCURRENCY-01: two simultaneous spawns keep both nodes and both tasks, an
     const children = Object.values(record.nodes).filter((node) => node.creatorId === record.entryNodeId)
     assert.equal(children.length, 2, 'both spawned nodes survived')
     assert.equal(Object.values(record.tasks).filter((task) => task.status === 'open').length, 3, 'the entry task and both spawned tasks survived')
-    const firstBorn = [...children].sort((left, right) => left.createdAt - right.createdAt || left.id.localeCompare(right.id))[0]!
-    assert.equal(record.nodes[record.entryNodeId]!.selectedChildId, firstBorn.id, 'exactly one child claimed the selected slot')
+    assert.ok(selectedDuringPublish.length > 0)
+    assert.equal(new Set(selectedDuringPublish).size, 1, 'later publications never overwrite the first successful claim')
+    assert.equal(record.nodes[record.entryNodeId]!.selectedChildId, selectedDuringPublish[0], 'the first published child claimed the selected slot, independent of creation-intent order')
     for (const child of children) {
       assert.ok(bench.kernel.ctx.atn.ownsHandle(child.id), `${child.id} keeps its handle`)
       assert.equal(child.creationState, 'published')
@@ -79,7 +85,7 @@ test('CONCURRENCY-02: simultaneous voters keep every vote and commit exactly one
     const childAgent = bench.kernel.ctx.agents.get(SessionId(child.sessionId))!
 
     const proposal = await bench.kernel.ctx.atn.propose(parentAgent, {
-      document: { ...goal, objective: 'Revised objective.' },
+      document: { ...goal, plan: 'Revised work plan.' },
       rationale: 'concurrent approval',
     })
     const topology = await bench.kernel.ctx.atn.network(networkId)
@@ -132,22 +138,28 @@ test('CONCURRENCY-03: concurrent task mails keep every mail and task with unique
   }
 })
 
-test('CONCURRENCY-04: two nodes racing for the last step budget cannot exceed it', async () => {
+test('CONCURRENCY-04: concurrent steps are bounded per node without consuming a peer budget', async () => {
   const bench = await boot()
   try {
     const { host, networkId } = await startNetwork(bench.kernel)
     const first = await bench.kernel.ctx.atn.spawn(host, { task: 'A work.', context: '' })
     const second = await bench.kernel.ctx.atn.spawn(host, { task: 'B work.', context: '' })
 
-    // Freeze the network budget at exactly one admitted step.
-    await bench.store.update(networkId, (current) => ({ ...current, limits: { ...current.limits, stepBudget: 1 }, stepsUsed: 0 }))
-    const [a, b] = await Promise.all([
+    await settle(bench.kernel)
+    // Freeze each budget at one unit; previous real fixture calls are deliberately reset.
+    await bench.store.update(networkId, (current) => ({ ...current, limits: { ...current.limits, stepBudget: 1 }, stepsUsed: 0,
+      nodes: Object.fromEntries(Object.entries(current.nodes).map(([id, node]) => [id, { ...node, stepsUsed: 0 }])) }))
+    const [a, b, duplicate] = await Promise.all([
       bench.kernel.ctx.atn.admitStep(networkId, first.sessionId),
       bench.kernel.ctx.atn.admitStep(networkId, second.sessionId),
+      bench.kernel.ctx.atn.admitStep(networkId, first.sessionId),
     ])
-    assert.equal([a, b].filter((admitted) => admitted).length, 1, 'exactly one step was admitted')
+    assert.deepEqual([a, b, duplicate], [true, true, false])
     const record = await bench.kernel.ctx.atn.network(networkId)
-    assert.equal(record.stepsUsed, 1, 'the budget was never exceeded')
+    assert.equal(record.stepsUsed, 2, 'aggregate remains telemetry only')
+    assert.equal(record.nodes[first.nodeId]!.stepsUsed, 1)
+    assert.equal(record.nodes[second.nodeId]!.stepsUsed, 1)
+    assert.equal(record.nodes[first.nodeId]!.lifecycle, 'retired')
   } finally {
     await bench.kernel.ctx.fiber.dispose()
     await rm(bench.scratch, { recursive: true, force: true })

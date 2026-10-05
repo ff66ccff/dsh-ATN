@@ -36,7 +36,7 @@ function cliPath(): string {
 }
 
 function tarballPath(): string {
-  const version = process.env.npm_package_version ?? '0.2.0'
+  const version = process.env.npm_package_version ?? '0.3.0'
   return join(process.cwd(), '.artifacts', `dsh-atn-${version}.tgz`)
 }
 

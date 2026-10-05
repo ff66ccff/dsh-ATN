@@ -1,0 +1,1166 @@
+{
+  "revision": "pilot-free-muse-20261004",
+  "date": "2026-10-04",
+  "executionScope": "Live catalog-free routes and muse-spark-1.3-contributor only.",
+  "scope": "Preflight and bounded real-model regression runs, not a statistical or causal topology evaluation. No online task verifier is installed.",
+  "providerPlugin": "dsh-opencode-go@0.1.20",
+  "harness": "0.2.0-rc.2",
+  "runs": [
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-preflight-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-preflight-20261004/longcat-2.5-preview-free-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "b9b287df40c338d4e0434a17d016c60688dd39a4a83814671d53dea39a973860",
+      "runId": "aec1866e-bc0f-4756-a279-76a4dbac4aa3",
+      "model": "longcat-2.5-preview-free",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 1,
+      "agents": 1,
+      "elapsedMs": 56509,
+      "tokens": {
+        "known": 3736,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 8,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 120000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-preflight-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-preflight-20261004/muse-spark-1.3-contributor-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "9ae93420178c52a2cc79f6d08f7d8f60f79e301917909123f8104b88c02cbee2",
+      "runId": "31ff7643-823b-4d1d-827d-b1c8a192d5fc",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 2,
+      "agents": 1,
+      "elapsedMs": 10616,
+      "tokens": {
+        "known": 5104,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.0005173,
+        "knownAmount": 0.0005173,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 8,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 120000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-preflight-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-preflight-20261004/space-bunny-free-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "b11c4c9821b8e4bb61787876a9cb8c98a574c22cd49a47e1c857a57118d407c1",
+      "runId": "bc64c0fc-12f5-4bd3-a1f0-61753eec0291",
+      "model": "space-bunny-free",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 3,
+      "agents": 1,
+      "elapsedMs": 22598,
+      "tokens": {
+        "known": 5029,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 8,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 120000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/longcat-2.5-preview-free-ledger-reconciliation-atn-adaptive-1/report.json",
+      "reportSha256": "5c9a3f0f36ee8ddbc4340c4034ee49c83179f71ac1fce9e0f1333d3873d63506",
+      "runId": "28f7574b-a526-4478-9bd8-5d27fde3e45a",
+      "model": "longcat-2.5-preview-free",
+      "mode": "atn-adaptive",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "quiescent-without-submission",
+      "calls": 1,
+      "agents": 1,
+      "elapsedMs": 62815,
+      "tokens": {
+        "known": 6656,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "none",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {},
+      "toolErrors": [],
+      "finishReasons": {
+        "max-tokens": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/longcat-2.5-preview-free-ledger-reconciliation-atn-no-rewire-1/report.json",
+      "reportSha256": "bf46d5c75174156f449d6f066d413822b0194d5141d39912a28608e94b0df5e4",
+      "runId": "f0a3b755-28d0-44c8-b26e-270d9abb500d",
+      "model": "longcat-2.5-preview-free",
+      "mode": "atn-no-rewire",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "quiescent-without-submission",
+      "calls": 1,
+      "agents": 1,
+      "elapsedMs": 57571,
+      "tokens": {
+        "known": 6685,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "none",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {},
+      "toolErrors": [],
+      "finishReasons": {
+        "max-tokens": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/longcat-2.5-preview-free-ledger-reconciliation-independent-pool-1/report.json",
+      "reportSha256": "87e98db08478f40a22e1887d19457f226c4d7c4db31c8e547a8f183835cad3cb",
+      "runId": "caf0d8ed-f856-4f88-841e-13722f859d68",
+      "model": "longcat-2.5-preview-free",
+      "mode": "independent-pool",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 3,
+      "agents": 3,
+      "elapsedMs": 58384,
+      "tokens": {
+        "known": 7369,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "independentWorkers": 2,
+        "completedCandidates": 2,
+        "callsPerCandidate": [
+          1,
+          1
+        ],
+        "candidateCallLimit": 7,
+        "synthesis": "one entry; no oracle selection; all candidate and synthesis calls counted",
+        "activeAgentsAtStop": 1
+      },
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 2
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/longcat-2.5-preview-free-ledger-reconciliation-native-team-1/report.json",
+      "reportSha256": "a6ca4991d1002ccdb55614968cda324c52dcf0b797e278e34071944c43bec7e8",
+      "runId": "c2cc62b5-b7ea-412f-880f-c35cd8e4a749",
+      "model": "longcat-2.5-preview-free",
+      "mode": "native-team",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "quiescent-without-submission",
+      "calls": 5,
+      "agents": 2,
+      "elapsedMs": 125592,
+      "tokens": {
+        "known": 16926,
+        "unknownCalls": 1
+      },
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "requestFailures": [
+        {
+          "code": "TIMEOUT"
+        }
+      ],
+      "cleanup": "released",
+      "protocol": {
+        "members": 2,
+        "queuedMail": 0,
+        "openTasks": 0,
+        "tasks": [],
+        "activeAgentsAtStop": 0
+      },
+      "submissionMethod": "none",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "send_message": 1,
+        "spawn_teammate": 1,
+        "wait_agent": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 1,
+        "error": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/longcat-2.5-preview-free-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "654e4cb87f93181c8cc4cead2c4477f2dd9a3b56d3e54f1b673531b66d233ec3",
+      "runId": "508723af-b5ef-4f43-a22a-9dd78a5483f1",
+      "model": "longcat-2.5-preview-free",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0.75,
+      "stop": "submitted",
+      "calls": 2,
+      "agents": 1,
+      "elapsedMs": 31482,
+      "tokens": {
+        "known": 4691,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/muse-spark-1.3-contributor-ledger-reconciliation-atn-adaptive-1/report.json",
+      "reportSha256": "1be3e9cc1411b37d47e62e2d7e75d7156b83d4fb7e04a9e41fcd1c0b67efc9da",
+      "runId": "2a457d5a-6143-4f56-ad33-d7f4c61604b9",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "atn-adaptive",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "final-text",
+      "calls": 5,
+      "agents": 1,
+      "elapsedMs": 19891,
+      "tokens": {
+        "known": 30369,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.0011715459999999999,
+        "knownAmount": 0.0011715459999999999,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "status": "completed",
+        "nodes": 1,
+        "queuedMail": 0,
+        "pendingProposals": 0,
+        "openTasks": 0,
+        "failedTasks": 0,
+        "taskAcceptance": {
+          "passed": 0,
+          "rejected": 0,
+          "submittedUnverified": 1
+        },
+        "explicitRewires": [],
+        "governanceProposals": [],
+        "activeAgentsAtStop": 0
+      },
+      "submissionMethod": "final-text",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "atn_start": 1,
+        "read_document": 4,
+        "atn_send": 1,
+        "atn_deliver": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/muse-spark-1.3-contributor-ledger-reconciliation-atn-no-rewire-1/report.json",
+      "reportSha256": "9c986fa3bfded6fa65a0c4764895977714e31ff520fa8047425875456c503adb",
+      "runId": "0b1ce639-6ea4-4e85-b427-9cbff9672a98",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "atn-no-rewire",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "final-text",
+      "calls": 6,
+      "agents": 1,
+      "elapsedMs": 23555,
+      "tokens": {
+        "known": 40672,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.00160212,
+        "knownAmount": 0.00160212,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "status": "completed",
+        "nodes": 1,
+        "queuedMail": 0,
+        "pendingProposals": 0,
+        "openTasks": 0,
+        "failedTasks": 0,
+        "taskAcceptance": {
+          "passed": 0,
+          "rejected": 0,
+          "submittedUnverified": 1
+        },
+        "explicitRewires": [],
+        "governanceProposals": [],
+        "activeAgentsAtStop": 0
+      },
+      "submissionMethod": "final-text",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "atn_start": 1,
+        "read_document": 4,
+        "atn_send": 1,
+        "atn_deliver": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/muse-spark-1.3-contributor-ledger-reconciliation-independent-pool-1/report.json",
+      "reportSha256": "4cbabae949593ff4ed8dbec59dd58aef8050c82f2208869a81b0453e1cf13863",
+      "runId": "221fa8a6-2374-4b53-b18a-d14a97a61e36",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "independent-pool",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 4,
+      "agents": 3,
+      "elapsedMs": 16432,
+      "tokens": {
+        "known": 10012,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.001313804,
+        "knownAmount": 0.001313804,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "independentWorkers": 2,
+        "completedCandidates": 2,
+        "callsPerCandidate": [
+          1,
+          1
+        ],
+        "candidateCallLimit": 7,
+        "synthesis": "one entry; no oracle selection; all candidate and synthesis calls counted",
+        "activeAgentsAtStop": 1
+      },
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 2
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/muse-spark-1.3-contributor-ledger-reconciliation-native-team-1/report.json",
+      "reportSha256": "417010c93ee0cc49d6ab728939044700bf49eda6c5c39c84684e6bae9f3eb7d8",
+      "runId": "17b54163-08d8-4353-815d-da5f5fd9d442",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "native-team",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 1,
+      "agents": 1,
+      "elapsedMs": 9882,
+      "tokens": {
+        "known": 4149,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.0005348260000000001,
+        "knownAmount": 0.0005348260000000001,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "members": 1,
+        "queuedMail": 0,
+        "openTasks": 0,
+        "tasks": [],
+        "activeAgentsAtStop": 1
+      },
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/muse-spark-1.3-contributor-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "fde55efd054f3c9170aff0db7636fea32f809dca9be3f75901f323764b3d21b8",
+      "runId": "0577b3ed-46e6-440c-bc90-f714d3adfe5f",
+      "model": "muse-spark-1.3-contributor",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 2,
+      "agents": 1,
+      "elapsedMs": 15113,
+      "tokens": {
+        "known": 5354,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0.0005572,
+        "knownAmount": 0.0005572,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/space-bunny-free-ledger-reconciliation-atn-adaptive-1/report.json",
+      "reportSha256": "0d9b1eaa233399e29ac60e8a6b7dc1822531e57e20552d3894fc1bd39a45b979",
+      "runId": "e9b3ad08-0a66-4148-a46d-8fae51c6efb9",
+      "model": "space-bunny-free",
+      "mode": "atn-adaptive",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 12,
+      "agents": 2,
+      "elapsedMs": 88011,
+      "tokens": {
+        "known": 70168,
+        "unknownCalls": 1
+      },
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "status": "open",
+        "nodes": 2,
+        "queuedMail": 2,
+        "pendingProposals": 0,
+        "openTasks": 1,
+        "failedTasks": 0,
+        "taskAcceptance": {
+          "passed": 0,
+          "rejected": 0,
+          "submittedUnverified": 1
+        },
+        "explicitRewires": [],
+        "governanceProposals": [],
+        "activeAgentsAtStop": 2
+      },
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 8,
+        "atn_start": 1,
+        "atn_spawn": 1,
+        "atn_peers": 1,
+        "atn_tasks": 3,
+        "atn_send": 2,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/space-bunny-free-ledger-reconciliation-atn-no-rewire-1/report.json",
+      "reportSha256": "1b4603c572fd5c18a172b9cf263805119ff0b3fa8c21f14baf28cfe072f086f6",
+      "runId": "b6f77cd5-dd02-4f0c-b5a5-4bf2e8ca8539",
+      "model": "space-bunny-free",
+      "mode": "atn-no-rewire",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "observed-token-limit",
+      "calls": 15,
+      "agents": 2,
+      "elapsedMs": 52233,
+      "tokens": {
+        "known": 83560,
+        "unknownCalls": 1
+      },
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "status": "open",
+        "nodes": 2,
+        "queuedMail": 1,
+        "pendingProposals": 0,
+        "openTasks": 1,
+        "failedTasks": 0,
+        "taskAcceptance": {
+          "passed": 0,
+          "rejected": 0,
+          "submittedUnverified": 1
+        },
+        "explicitRewires": [],
+        "governanceProposals": [],
+        "activeAgentsAtStop": 1
+      },
+      "submissionMethod": "none",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 8,
+        "atn_peers": 5,
+        "atn_send": 2,
+        "atn_start": 1,
+        "atn_spawn": 1,
+        "atn_renew": 1,
+        "atn_tasks": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "aborted": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/space-bunny-free-ledger-reconciliation-independent-pool-1/report.json",
+      "reportSha256": "b8ea09e62d2b0ec0c9e41424ca4a2c1d29ae345b4851d1d84efb28232fff2faf",
+      "runId": "f8b112e2-4ba5-4af9-bd48-91c12378a5ca",
+      "model": "space-bunny-free",
+      "mode": "independent-pool",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 6,
+      "agents": 3,
+      "elapsedMs": 19653,
+      "tokens": {
+        "known": 9999,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": {
+        "independentWorkers": 2,
+        "completedCandidates": 2,
+        "callsPerCandidate": [
+          2,
+          2
+        ],
+        "candidateCallLimit": 7,
+        "synthesis": "one entry; no oracle selection; all candidate and synthesis calls counted",
+        "activeAgentsAtStop": 1
+      },
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 9,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 2
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/space-bunny-free-ledger-reconciliation-native-team-1/report.json",
+      "reportSha256": "09a19afb30b24b9c30f575a2c9d2f71cf31eaa3be39505766d290a66aeb71b3e",
+      "runId": "17b11de1-91bd-4fcd-b7e5-c6c5fe0c3b51",
+      "model": "space-bunny-free",
+      "mode": "native-team",
+      "task": "ledger-reconciliation",
+      "passed": false,
+      "score": 0,
+      "stop": "call-limit",
+      "calls": 16,
+      "agents": 3,
+      "elapsedMs": 78028,
+      "tokens": {
+        "known": 56024,
+        "unknownCalls": 1
+      },
+      "referenceCost": {
+        "amount": null,
+        "knownAmount": 0,
+        "unknownCalls": 1,
+        "currency": "USD"
+      },
+      "requestFailures": [
+        {
+          "code": "TRANSPORT"
+        }
+      ],
+      "cleanup": "released",
+      "protocol": {
+        "members": 3,
+        "queuedMail": 0,
+        "openTasks": 0,
+        "tasks": [],
+        "activeAgentsAtStop": 2
+      },
+      "submissionMethod": "none",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 16,
+        "send_message": 2,
+        "list_agents": 3,
+        "spawn_teammate": 2,
+        "wait_agent": 2
+      },
+      "toolErrors": [],
+      "finishReasons": {
+        "completed": 1,
+        "error": 1,
+        "aborted": 1
+      },
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    },
+    {
+      "batch": ".artifacts/experiments/pilot-free-muse-matrix-20261004",
+      "report": ".artifacts/experiments/pilot-free-muse-matrix-20261004/space-bunny-free-ledger-reconciliation-single-1/report.json",
+      "reportSha256": "dc0a5b8632664743d301bbed8170b95e59a83992dc2c52536ff89ba167f2aced",
+      "runId": "64f54ab7-661f-43e1-bc1a-447ab277189a",
+      "model": "space-bunny-free",
+      "mode": "single",
+      "task": "ledger-reconciliation",
+      "passed": true,
+      "score": 1,
+      "stop": "submitted",
+      "calls": 2,
+      "agents": 1,
+      "elapsedMs": 8095,
+      "tokens": {
+        "known": 3430,
+        "unknownCalls": 0
+      },
+      "referenceCost": {
+        "amount": 0,
+        "knownAmount": 0,
+        "unknownCalls": 0,
+        "currency": "USD"
+      },
+      "requestFailures": [],
+      "cleanup": "released",
+      "protocol": null,
+      "submissionMethod": "tool",
+      "coverage": {
+        "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+        "hiddenHttpRetries": "unknown",
+        "directExternalCalls": "not-observed",
+        "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+        "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+        "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+        "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+        "priceTableId": "live-models.dev-opencode-go-reference-not-subscription-bill",
+        "writeFailed": false,
+        "observationErrors": 0,
+        "closedWithInFlight": false
+      },
+      "actualToolCalls": {
+        "read_document": 4,
+        "submit_answer": 1
+      },
+      "toolErrors": [],
+      "finishReasons": {},
+      "limits": {
+        "calls": 16,
+        "perCallOutputTokens": 3072,
+        "observedTokens": 80000,
+        "tokenLimitIsAdmissionThreshold": true,
+        "timeoutMs": 180000,
+        "agents": 3
+      }
+    }
+  ]
+}

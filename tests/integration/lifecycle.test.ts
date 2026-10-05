@@ -74,11 +74,11 @@ test('LIFE-05/STOP-01/STOP-02: an expired lease drains the node, and stop is a p
     assert.ok(Object.values(record.tasks).every((task) => task.status !== 'open'), 'open tasks are settled on stop')
 
     // Nothing may reopen or extend a stopped network.
+    await assert.rejects(kernel.ctx.atn.renew(host, { extendMs: 60_000, taskId: openForB[0]!.id, basis: 'still working' }))
     kernel.model.enqueue('session-host', [
-      { tool: 'atn_renew', args: { extendMs: 60_000, basis: 'still working' } },
       { tool: 'atn_spawn', args: { task: 'Too late.', context: '' } },
     ])
-    await drive(host, 'try to renew and spawn after the stop')
+    await drive(host, 'try to spawn after the stop')
     await settle(kernel)
 
     record = await kernel.ctx.atn.network(networkId)

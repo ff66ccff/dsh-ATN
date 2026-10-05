@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.client.json",
+  "compilerOptions": { "types": ["node", "react", "react-dom", "jsdom"] },
+  "include": ["src/client/**/*.ts", "src/client/**/*.tsx", "tests/client/**/*.ts", "tests/client/**/*.tsx"]
+}

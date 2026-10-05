@@ -49,6 +49,32 @@ async function fixture(cleanupTimeoutMs: number = CLEANUP_TIMEOUT_MS): Promise<F
   return { kernel, networkId, childNodeId: child.id, childSession: child.sessionId, host, scratch }
 }
 
+test('STOP-TOPOLOGY: damaged collaboration links cannot prevent a durable hard stop', async () => {
+  const bench = await fixture()
+  try {
+    const store = await bench.kernel.atn.openStore()
+    await store.update(bench.networkId, record => ({
+      ...record,
+      nodes: {
+        ...record.nodes,
+        [record.entryNodeId]: { ...record.nodes[record.entryNodeId], peerIds: ['missing-node'] },
+      },
+    }))
+    await assert.rejects(() => bench.kernel.atn.peers(bench.host), /missing node/)
+    const report = await bench.kernel.atn.stop(bench.networkId, 'stop despite damaged topology')
+    assert.deepEqual(report.released, [bench.childNodeId])
+    assert.deepEqual(report.stragglers, [])
+    const record = await bench.kernel.atn.network(bench.networkId)
+    assert.equal(record.status, 'stopped')
+    assert.ok(Object.values(record.tasks).every(task => task.status !== 'open'))
+    assert.equal(bench.kernel.atn.handleFor(bench.childNodeId), undefined)
+    assert.equal(bench.kernel.ctx.agents.get(SessionId('session-host')), bench.host)
+  } finally {
+    await bench.kernel.ctx.fiber.dispose()
+    await rm(bench.scratch, { recursive: true, force: true })
+  }
+})
+
 /**
  * Replace one node's live handle with a controllable fake, keeping the session
  * mapping the runtime uses to find it.

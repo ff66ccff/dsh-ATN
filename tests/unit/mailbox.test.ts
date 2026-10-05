@@ -5,9 +5,9 @@
  */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { enqueueMail, inboxOf, markDelivered, markUndeliverable, pendingMails } from '../../src/mailbox.ts'
+import { enqueueMail, inboxOf, mailBytes, markDelivered, markUndeliverable, pendingMails } from '../../src/mailbox.ts'
 import { LimitExceededError } from '../../src/domain.ts'
-import { makeChain } from '../fixtures/network.ts'
+import { makeChain, makeTask } from '../fixtures/network.ts'
 
 test('MAIL-01: a mail exists durably before any delivery is attempted', () => {
   const network = makeChain(['A', 'B'])
@@ -108,4 +108,69 @@ test('MAIL-ID: automatic ids skip caller-reserved future counter values', () => 
   assert.notEqual(second.mailId, first.mailId)
   assert.equal(second.record.mails[first.mailId]!.body, 'reserved')
   assert.equal(Object.keys(second.record.mails).length, 2)
+})
+
+test('MAIL-RESERVE: accepted tasks can each return one result after ordinary retention and pending limits fill', () => {
+  const base = makeChain(['A', 'B'])
+  const tasks = Object.fromEntries(['task-one', 'task-two'].map(id => [id, makeTask(id, {
+    holderId: 'B', requesterId: 'A', status: 'completed', settledBy: 'B', settledAt: 1,
+    result: { summary: 'Done.', evidence: ['proof.txt'] },
+  })]))
+  let record = { ...base, tasks, limits: { ...base.limits, maxRetainedMail: 1, maxPendingMailPerNode: 1, maxTasks: 2 } }
+  const ordinary = { fromId: 'B', toId: 'A', kind: 'note' as const, taskId: null, proposalId: null, body: 'queued context', now: 0 }
+  record = enqueueMail(record, ordinary).record
+  for (const taskId of Object.keys(tasks)) {
+    const result = { ...ordinary, kind: 'result' as const, taskId, body: 'done', id: `result-${taskId}` }
+    const accepted = enqueueMail(record, result)
+    record = accepted.record
+    assert.equal(enqueueMail(record, result).duplicate, true, 'stable retries also work at the bound')
+    assert.throws(() => enqueueMail(record, { ...result, id: `forged-${taskId}` }), LimitExceededError, 'a second result cannot claim another reserved slot')
+    assert.throws(() => enqueueMail(record, ordinary), LimitExceededError, 'new ordinary mail cannot consume the completion reserve')
+  }
+  assert.equal(Object.keys(record.mails).length, record.limits.maxRetainedMail + record.limits.maxTasks)
+  assert.equal(pendingMails(record).length, 3, 'all three can remain pending without blocking accepted settlements')
+})
+
+test('MAIL-RESERVE: unrelated senders cannot consume result capacity and structured evidence stays byte bounded', () => {
+  const base = makeChain(['A', 'B'])
+  const task = makeTask('task-proof', { holderId: 'B', requesterId: 'A', status: 'completed', settledBy: 'B', result: { summary: 'Done.', evidence: ['proof'] } })
+  let record = { ...base, tasks: { [task.id]: task }, limits: { ...base.limits, maxRetainedMail: 1, maxPendingMailPerNode: 1 } }
+  const envelope = { fromId: 'A', toId: 'B', kind: 'note' as const, taskId: null, proposalId: null, body: 'context', now: 0 }
+  record = markDelivered(enqueueMail(record, { ...envelope, id: 'context' }).record, 'context', 1)
+  assert.throws(() => enqueueMail(record, { ...envelope, kind: 'result', taskId: task.id }), LimitExceededError)
+  const oversized = { ...record, tasks: { [task.id]: { ...task, result: { summary: 'Done.', evidence: ['x'.repeat(base.limits.maxMessageBytes)] } } } }
+  assert.throws(
+    () => enqueueMail(oversized, { ...envelope, fromId: 'B', toId: 'A', kind: 'result', taskId: task.id, body: 'done' }),
+    (error: unknown) => error instanceof LimitExceededError && error.bound === 'maxMessageBytes',
+  )
+})
+
+test('MAIL-BYTES: caller and generated ids count toward the exact byte bound without breaking old retries', () => {
+  const base = makeChain(['A', 'B'])
+  const input = { fromId: 'A', toId: 'B', kind: 'note' as const, taskId: null, proposalId: null, body: 'ok', now: 0, id: '消息-🧪' }
+  const exactBytes = mailBytes(input)
+  const exact = enqueueMail({ ...base, limits: { ...base.limits, maxMessageBytes: exactBytes } }, input)
+  assert.equal(exact.mailId, input.id)
+  assert.throws(
+    () => enqueueMail({ ...base, limits: { ...base.limits, maxMessageBytes: exactBytes - 1 } }, input),
+    (error: unknown) => error instanceof LimitExceededError && error.bound === 'maxMessageBytes',
+  )
+  assert.throws(() => enqueueMail(base, { ...input, id: 'x'.repeat(base.limits.maxMessageBytes * 4) }), LimitExceededError)
+  const { id: _id, ...automatic } = input
+  const generatedBytes = mailBytes({ ...automatic, id: `mail-${base.sequence + 1}` })
+  assert.throws(() => enqueueMail({ ...base, limits: { ...base.limits, maxMessageBytes: generatedBytes - 1 } }, automatic), LimitExceededError)
+  assert.equal(enqueueMail({ ...exact.record, limits: { ...exact.record.limits, maxMessageBytes: 1 } }, input).duplicate, true, 'a previously accepted id remains retryable after a tighter bound')
+})
+
+test('MAIL-ID: new ids cannot collide through line breaks, while identical historical envelopes remain retryable', () => {
+  const base = makeChain(['A', 'B'])
+  const input = { fromId: 'A', toId: 'B', kind: 'note' as const, taskId: null, proposalId: null, body: 'legacy message', now: 0 }
+  for (const id of ['same\none', 'same\ntwo', 'same\rone', 'same\r\none']) {
+    assert.throws(() => enqueueMail(base, { ...input, id }), /single line/)
+  }
+  const legacyId = 'previously-accepted\nlegacy'
+  const { now: _now, ...envelope } = input
+  const legacy = { ...base, mails: { [legacyId]: { ...envelope, id: legacyId, status: 'queued' as const, enqueuedAt: 0, settledAt: null, note: null } } }
+  assert.equal(enqueueMail(legacy, { ...input, id: legacyId }).duplicate, true)
+  assert.throws(() => enqueueMail(legacy, { ...input, id: legacyId, body: 'different business message' }), /cannot be reused/)
 })

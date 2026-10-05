@@ -4,12 +4,12 @@
  * Everything here operates on a `NetworkRecord` and returns a new record, so a
  * caller can put enqueue, task settlement and its outbox row in ONE atomic
  * network update. Enqueue is always persisted before any delivery is attempted:
- * `queued` means durable-but-not-in-the-target's-input, `delivered` means the
- * target's persisted input holds it.
+ * `queued` means durable but awaiting a persisted model-input receipt;
+ * `delivered` means the target's user-message history durably holds it.
  * @module dsh-atn/mailbox
  */
 import { allocateId, LimitExceededError, NetworkStoreError, pendingMailFor } from './domain.ts'
-import type { MailId, MailKind, MailRecord, NetworkRecord, NodeId } from './schema.ts'
+import type { MailId, MailKind, MailRecord, NetworkRecord, NodeId, TaskRecord } from './schema.ts'
 import { utf8Bytes } from './config.ts'
 
 /** Input for enqueueing one mail. */
@@ -46,14 +46,24 @@ export interface EnqueueResult {
  * Compute the envelope-inclusive size of a mail body.
  *
  * @param mail - Envelope fields that travel with the body.
+ * @param result - Structured result included in a result message.
  * @returns UTF-8 byte length of the envelope and body together.
  */
-export function mailBytes(mail: Pick<EnqueueInput, 'fromId' | 'toId' | 'kind' | 'taskId' | 'proposalId' | 'body'>): number {
-  const envelope = [mail.fromId, mail.toId, mail.kind, mail.taskId ?? '', mail.proposalId ?? ''].join('\u0000')
-  return utf8Bytes(envelope) + utf8Bytes(mail.body)
+export function mailBytes(mail: Pick<EnqueueInput, 'id' | 'fromId' | 'toId' | 'kind' | 'taskId' | 'proposalId' | 'body'>, result?: TaskRecord['result']): number {
+  const envelope = [mail.id ?? '', mail.fromId, mail.toId, mail.kind, mail.taskId ?? '', mail.proposalId ?? ''].join('\u0000')
+  return utf8Bytes(envelope) + utf8Bytes(mail.body) + (result == null ? 0 : utf8Bytes(JSON.stringify(result)))
 }
 
-/** Raised when a caller reuses a stable mail id for a different message. */
+/** One result per accepted task may use the bounded completion reserve. */
+function canUseSettlementReserve(record: NetworkRecord, input: EnqueueInput): boolean {
+  if (input.kind !== 'result' || input.taskId === null) return false
+  const task = record.tasks[input.taskId]
+  return task !== undefined && (task.status === 'completed' || task.status === 'failed') &&
+    task.holderId === input.fromId && task.requesterId === input.toId && task.settledBy === input.fromId &&
+    task.result !== null && !Object.values(record.mails).some(mail => mail.kind === 'result' && mail.taskId === task.id)
+}
+
+/** Raised when a stable mail id is ambiguous or reused for a different message. */
 export class MailIdentityError extends NetworkStoreError {
   /**
    * @param message - Human-readable detail naming the reused id.
@@ -109,29 +119,41 @@ export function enqueueMail(record: NetworkRecord, input: EnqueueInput): Enqueue
       }
       return { record, mailId: input.id, duplicate: true }
     }
+    // Delivery markers occupy one line. An embedded line break could collapse
+    // distinct ids onto the same deduplication marker. Check historical retries
+    // first so previously accepted envelopes remain retryable after upgrading.
+    if (/[\r\n]/.test(input.id)) throw new MailIdentityError('a new mail id must be a single line without CR or LF')
   }
-  const limits = record.limits
-  if (mailBytes(input) > limits.maxMessageBytes) {
-    throw new LimitExceededError(
-      'maxMessageBytes',
-      `mail from ${input.fromId} to ${input.toId} is ${mailBytes(input)} bytes, above the ${limits.maxMessageBytes} byte bound`,
-    )
-  }
-  if (pendingMailFor(record, input.fromId) >= limits.maxPendingMailPerNode) {
-    throw new LimitExceededError(
-      'maxPendingMailPerNode',
-      `node ${input.fromId} already has ${limits.maxPendingMailPerNode} undelivered mails`,
-    )
-  }
-  if (Object.keys(record.mails).length >= limits.maxRetainedMail) {
-    throw new LimitExceededError('maxRetainedMail', `network ${record.id} retains ${limits.maxRetainedMail} mail records`)
-  }
-
   let allocated = input.id === undefined ? allocateId(record, 'mail') : { id: input.id, next: record }
   while (input.id === undefined && Object.hasOwn(allocated.next.mails, allocated.id)) {
     allocated = allocateId(allocated.next, 'mail')
   }
   const mailId = allocated.id
+  const limits = record.limits
+  const result = input.kind === 'result' && input.taskId !== null ? record.tasks[input.taskId]?.result : undefined
+  const size = mailBytes({ ...input, id: mailId }, result)
+  if (size > limits.maxMessageBytes) {
+    throw new LimitExceededError(
+      'maxMessageBytes',
+      `mail from ${input.fromId} to ${input.toId} is ${size} bytes, above the ${limits.maxMessageBytes} byte bound`,
+    )
+  }
+  // Ordinary work cannot consume completion capacity. There are at most
+  // maxTasks accepted tasks and only their first authentic result can use the
+  // reserve, so retention stays <= maxRetainedMail + maxTasks without deleting
+  // receipts or weakening stable-id retries. The same reserve prevents an
+  // unavailable recipient from blocking settlement through outbound pressure.
+  const reserve = canUseSettlementReserve(record, input) ? limits.maxTasks : 0
+  if (pendingMailFor(record, input.fromId) >= limits.maxPendingMailPerNode + reserve) {
+    throw new LimitExceededError(
+      'maxPendingMailPerNode',
+      `node ${input.fromId} already has ${limits.maxPendingMailPerNode} undelivered mails`,
+    )
+  }
+  if (Object.keys(record.mails).length >= limits.maxRetainedMail + reserve) {
+    throw new LimitExceededError('maxRetainedMail', `network ${record.id} retains ${limits.maxRetainedMail} mail records`)
+  }
+
   const mails = {
     ...allocated.next.mails,
     [mailId]: {
@@ -152,7 +174,7 @@ export function enqueueMail(record: NetworkRecord, input: EnqueueInput): Enqueue
 }
 
 /**
- * Mark a queued mail as present in the target's persisted input.
+ * Mark a queued mail as present in the target's persisted user-message history.
  *
  * @param record - Current network record.
  * @param mailId - Mail to confirm.

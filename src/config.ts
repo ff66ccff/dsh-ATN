@@ -20,9 +20,9 @@ export interface Config {
   maxTasks: number
   /** Cumulative proposals in one network. */
   maxProposals: number
-  /** Pending outbound mail per node. */
+  /** Ordinary pending outbound mail per node; accepted tasks retain one result slot each. */
   maxPendingMailPerNode: number
-  /** Cumulative retained mail records per network. */
+  /** Ordinary retained mail allowance; at most maxTasks extra first-result settlement records. */
   maxRetainedMail: number
   /** Maximum UTF-8 bytes of one mail body, envelope included. */
   maxMessageBytes: number
@@ -36,7 +36,7 @@ export interface Config {
   networkDeadlineMs: number
   /** Wall-clock deadline of one proposal, in milliseconds. */
   proposalDeadlineMs: number
-  /** Admitted model-step budget for ATN-owned nodes. */
+  /** Admitted model-step budget per node, including the entry after network creation. */
   stepBudget: number
   /** Storage-domain name holding network records. */
   domainName: string
@@ -56,7 +56,7 @@ export const Config: z<Config> = z.object({
   maxLeaseExtensionMs: z.natural().default(30 * 60 * 1000),
   networkDeadlineMs: z.natural().default(60 * 60 * 1000),
   proposalDeadlineMs: z.natural().default(2 * 60 * 1000),
-  stepBudget: z.natural().default(4096),
+  stepBudget: z.natural().default(64),
   domainName: z.string().default(ATN_DOMAIN_NAME),
 })
 

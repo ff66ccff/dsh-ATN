@@ -20,9 +20,8 @@ const goal = {
 }
 
 const revised = {
-  objective: 'Establish the vertical path, revised.',
-  successCriteria: 'Every step is proven, including the document change.',
-  constraints: 'No paid models; unanimous consent only.',
+  ...goal,
+  plan: 'Prove every step including the shared plan change.',
 }
 
 async function withKernel(run: (kernel: Kernel) => Promise<void>): Promise<void> {
@@ -86,21 +85,18 @@ test('M3/DELIVERY: the full path commits one goal revision and completes the net
     const taskB = Object.values(record.tasks).find((task) => task.holderId === nodeB.id && task.status === 'open')!
     kernel.model.enqueue(nodeB.sessionId, [
       { tool: 'atn_send', args: { to: entryId, kind: 'result', taskId: taskB.id, body: 'B is done.', summary: 'B completed its local work.', evidence: ['session-b'] } },
-      { tool: 'atn_propose', args: { ...revised, rationale: 'The criteria need the document change too.' } },
     ])
     await drive(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, 'report and propose')
     await settle(kernel)
+    await kernel.atn.propose(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, { document: revised, rationale: 'Host-managed plan revision.' })
 
     record = await kernel.ctx.atn.network(networkId)
     const proposal = Object.values(record.proposals)[0]!
     assert.equal(proposal.status, 'pending')
-    assert.deepEqual([...proposal.voters].sort(), [entryId, nodeC.id].sort(), 'the frozen approver list is B\'s current neighbourhood')
+    assert.deepEqual([...proposal.voters].sort(), [entryId, nodeC.id].sort(), 'every other active participant reviews the shared plan')
 
     // C consents; the entry node has not voted yet, so nothing commits.
-    kernel.model.enqueue(nodeC.sessionId, [
-      { tool: 'atn_vote', args: { proposalId: proposal.id, approve: true, reason: 'agreed' } },
-    ])
-    await drive(kernel.ctx.agents.get(SessionId(nodeC.sessionId))!, 'vote on the proposal')
+    await kernel.atn.vote(kernel.ctx.agents.get(SessionId(nodeC.sessionId))!, { proposalId: proposal.id, approve: true, reason: 'agreed' })
     await settle(kernel)
 
     record = await kernel.ctx.atn.network(networkId)
@@ -109,10 +105,7 @@ test('M3/DELIVERY: the full path commits one goal revision and completes the net
 
     // The entry node consents: the document now commits exactly once.
     const requestsBefore = kernel.model.requests.filter((request) => request.sessionId === nodeB.sessionId).length
-    kernel.model.enqueue('session-host', [
-      { tool: 'atn_vote', args: { proposalId: proposal.id, approve: true, reason: 'agreed' } },
-    ])
-    await drive(host, 'vote on the proposal')
+    await kernel.atn.vote(host, { proposalId: proposal.id, approve: true, reason: 'agreed' })
     await settle(kernel)
 
     record = await kernel.ctx.atn.network(networkId)
@@ -129,15 +122,15 @@ test('M3/DELIVERY: the full path commits one goal revision and completes the net
     )
 
     // CONTEXT-01: B's next real request carries the new version, replayably.
-    kernel.model.enqueue(nodeB.sessionId, [{ tool: 'atn_peers', args: {} }])
+    kernel.model.enqueue(nodeB.sessionId, [{ tool: 'atn_status', args: {} }])
     await drive(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, 'report neighbours')
     await settle(kernel)
     const bTexts = atnMessages(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!)
-    assert.ok(bTexts.some((text) => text.includes('version=2') && text.includes(revised.objective)), 'B can replay goal v2')
+    assert.ok(bTexts.some((text) => text.includes('version=2') && text.includes(revised.plan)), 'B can replay plan v2')
 
     // An early delivery against the old version is refused.
     kernel.model.enqueue('session-host', [
-      { tool: 'atn_deliver', args: { summary: 'stale summary', evidence: ['old'], goalVersion: 1 } },
+      { tool: 'atn_finish', args: { scope: 'network', summary: 'stale summary', evidence: ['old'], goalVersion: 1 } },
     ])
     await drive(host, 'try to deliver against the old version')
     await settle(kernel)
@@ -146,7 +139,7 @@ test('M3/DELIVERY: the full path commits one goal revision and completes the net
 
     // The current version can complete it, and releases the ATN-owned nodes.
     kernel.model.enqueue('session-host', [
-      { tool: 'atn_deliver', args: { summary: 'Everything is done and verified.', evidence: ['session-b', 'session-c'], goalVersion: 2 } },
+      { tool: 'atn_finish', args: { scope: 'network', summary: 'Everything is done and verified.', evidence: ['session-b', 'session-c'], goalVersion: 2 } },
     ])
     await drive(host, 'deliver the final result')
     await settle(kernel)
@@ -171,7 +164,7 @@ test('DELIVERY-01: an early delivery is refused while another node still holds w
     kernel.model.enqueue('session-host', [
       { tool: 'atn_start', args: goal },
       { tool: 'atn_spawn', args: { task: 'Node B local work.', context: '' } },
-      { tool: 'atn_deliver', args: { summary: 'early', evidence: [], goalVersion: 1 } },
+      { tool: 'atn_finish', args: { scope: 'network', summary: 'early', evidence: [], goalVersion: 1 } },
     ])
     await drive(host, 'start, spawn and try to finish early')
     await settle(kernel)
@@ -201,6 +194,7 @@ test('MAIL-04: queued, delivered and completed are separate facts on the wire', 
     ])
     await drive(host, 'assign a second task')
     await settle(kernel)
+    await kernel.ctx.atn.tick() // Confirm the newly admitted user-message receipt.
 
     const after = await kernel.ctx.atn.network(record.id)
     const second = Object.values(after.tasks).find((task) => task.description === 'Second piece of work for B.')!
@@ -211,7 +205,7 @@ test('MAIL-04: queued, delivered and completed are separate facts on the wire', 
   })
 })
 
-test('TOPO-02/VOTE-03: a second branch never becomes an approver of the frozen list', async () => {
+test('TOPO-02/VOTE-03: new branches join free collaboration slots without rewriting lineage', async () => {
   await withKernel(async (kernel) => {
     const host = await createHostAgent(kernel, 'session-host')
     kernel.model.enqueue('session-host', [
@@ -223,20 +217,20 @@ test('TOPO-02/VOTE-03: a second branch never becomes an approver of the frozen l
     const record = await kernel.ctx.atn.network((await kernel.ctx.atn.networkIds())[0]!)
     const nodeB = nodeByCreator(record, record.entryNodeId)
 
-    // B's first child keeps the selected-child slot, so it is B's downstream neighbour.
+    // B's first child keeps the selected-child birth record.
     kernel.model.enqueue(nodeB.sessionId, [
       { tool: 'atn_spawn', args: { task: 'Node C local work.', context: 'selected branch' } },
     ])
     await drive(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, 'create the selected child')
     await settle(kernel)
 
-    // A second child is a real branch but not on the selected path.
+    // A second child joins a free collaboration slot despite being off the selected path.
     kernel.model.enqueue(nodeB.sessionId, [
       { tool: 'atn_spawn', args: { task: 'Node X local work.', context: 'other branch' } },
-      { tool: 'atn_propose', args: { ...revised, rationale: 'two approvers are enough' } },
     ])
     await drive(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, 'branch out and propose')
     await settle(kernel)
+    await kernel.atn.propose(kernel.ctx.agents.get(SessionId(nodeB.sessionId))!, { document: revised, rationale: 'consult current collaborators' })
 
     const after = await kernel.ctx.atn.network(record.id)
     const children = Object.values(after.nodes).filter((node) => node.creatorId === nodeB.id)
@@ -244,11 +238,11 @@ test('TOPO-02/VOTE-03: a second branch never becomes an approver of the frozen l
     assert.equal(after.nodes[nodeB.id]!.selectedChildId, children[0]!.id, 'the first published child keeps the slot')
 
     const proposal = Object.values(after.proposals)[0]!
-    assert.equal(proposal.voters.length, 2, 'the frozen list holds the entry node and the selected child only')
+    assert.equal(proposal.voters.length, 3, 'the frozen list holds every other active participant')
     for (const child of children) {
       assert.ok(
-        proposal.voters.includes(child.id) === (child.id === after.nodes[nodeB.id]!.selectedChildId),
-        `${child.id} is an approver only when it is on the selected path`,
+        proposal.voters.includes(child.id),
+        `${child.id} is an approver because it is an active participant`,
       )
     }
   })

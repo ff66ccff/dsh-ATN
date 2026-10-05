@@ -17,7 +17,7 @@ import {
 } from '../../src/lifecycle.ts'
 import { createTask, settleTask } from '../../src/tasks.ts'
 import { openProposal } from '../../src/proposals.ts'
-import { makeChain, makeNode } from '../fixtures/network.ts'
+import { makeChain, makeNode, testGoal } from '../fixtures/network.ts'
 
 test('TOPO-03: only the first successfully published child claims the selected-child slot', () => {
   const base = makeChain(['A'])
@@ -72,7 +72,7 @@ test('LIFE-02: a draining node keeps its old task and its already assigned vote,
   const created = createTask(network, { holderId: 'B', requesterId: 'A', description: 'old work', context: '', now: 0 })
   const proposal = openProposal(created.record, {
     proposerId: 'A',
-    document: { objective: 'x', successCriteria: 'y', constraints: 'z' },
+    document: { ...testGoal, plan: 'Revised work plan.' },
     rationale: '',
     now: 0,
   })
@@ -91,7 +91,7 @@ test('LIFE-02: a draining node is released only after its task and vote are sett
   const created = createTask(network, { holderId: 'B', requesterId: 'A', description: 'old work', context: '', now: 0 })
   const proposal = openProposal(created.record, {
     proposerId: 'A',
-    document: { objective: 'x', successCriteria: 'y', constraints: 'z' },
+    document: { ...testGoal, plan: 'Revised work plan.' },
     rationale: '',
     now: 0,
   })
@@ -120,7 +120,7 @@ test('LIFE-04: a node that already voted does not wait for the other approvers',
   const network = makeChain(['A', 'B', 'C'])
   const proposal = openProposal(network, {
     proposerId: 'A',
-    document: { objective: 'x', successCriteria: 'y', constraints: 'z' },
+    document: { ...testGoal, plan: 'Revised work plan.' },
     rationale: '',
     now: 0,
   })
