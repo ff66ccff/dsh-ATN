@@ -150,7 +150,7 @@
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/",
-    "tag": "next"
+    "tag": "latest"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/dsh-typert-registry": {
