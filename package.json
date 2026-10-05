@@ -1,6 +1,6 @@
 {
   "name": "dsh-atn",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "type": "module",
   "description": "Standalone ATN Agent preset for DeepSeek Harness: same-capability nodes, local discovery, four neighbours and unanimous shared-goal voting.",

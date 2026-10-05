@@ -7,7 +7,7 @@ import { basename, dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const CLI = process.env.DSH_CLI ?? 'D:\\DeepSeekDesktop\\resources\\runtime\\cli\\bin\\dsh.cmd'
-const TARBALL = resolve('.artifacts', `dsh-atn-${process.env.npm_package_version ?? '0.3.0'}.tgz`)
+const TARBALL = resolve('.artifacts', `dsh-atn-${process.env.npm_package_version ?? '0.3.1'}.tgz`)
 const preview = process.env.ATN_VISUAL_PREVIEW === '1'
 const redact = (text: string): string => text.replace(/([?&]token=)[^\s&"'<>]+/g, '$1<redacted>')
 

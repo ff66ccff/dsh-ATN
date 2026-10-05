@@ -4,9 +4,9 @@ dsh-ATN 是 DeepSeek Harness 的一个插件。装上之后，Harness 的「Agen
 
 这里没有中心调度，没有角色模板，也没有固定的协作轮次。运行时只负责持久化、投递、生命周期、额度和身份检查这些底层的事；连接和分工是节点自己的选择。
 
-> **版本 0.3.0，开发者预览。** `npm i dsh-atn` 装到的就是它，安装时写明确版本号更好复现。
+> **版本 0.3.1，开发者预览。** `npm i dsh-atn` 装到的就是它，安装时写明确版本号更好复现。
 >
-> 0.3.0 的主线是自适应拓扑：节点能在运行中自己换邻居，宿主验收不再是从一条边改到另一条边的前提。
+> 0.3.0 引入自适应拓扑：节点能在运行中自己换邻居，宿主验收不再是从一条边改到另一条边的前提。0.3.1 只是修正了这份 README 里关于 npm 标签的说明，功能与 0.3.0 相同。
 >
 > 需要说清楚的是，**目前还没有实验证据表明 ATN 比 Harness 自带的 agent team 更强**。已有的真实模型对照规模都很小，结果与边界见[实验说明](docs/EXPERIMENT_PILOT.md)和[自适应拓扑设计](docs/ADAPTIVE_TOPOLOGY.md)。
 
@@ -31,7 +31,7 @@ dsh-ATN 是 DeepSeek Harness 的一个插件。装上之后，Harness 的「Agen
 ### 从 npm 安装
 
 ```bash
-dsh plugin --profile web add dsh-atn@0.3.0
+dsh plugin --profile web add dsh-atn@0.3.1
 dsh --profile web --dump-config
 ```
 
@@ -57,7 +57,7 @@ cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.3.0.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.3.1.tgz
 ```
 
 用 `dsh plugin add github:...` 直接安装的方式没有验证过，建议走 npm 包或者自己构建的 tarball。
@@ -240,7 +240,11 @@ npm run experiment:pilot -- --execute   # 使用已配置的 OPENCODE_API_KEY �
 
 Git 保留源码、测试、文档、CI 和 lockfile；`.gitignore` 排除依赖、构建目录、tarball、测试报告、缓存、临时数据、上游参考检出、编辑器设置和本地凭据配置。已跟踪的文件不会因为新增忽略规则自动移除，提交前可以用 `git ls-files -ci --exclude-standard` 检查，正常应该没有输出。
 
-npm 按 `package.json` 的 `files` 白名单发布，只有 `lib/`、`cordis.patch.yml`、README、LICENSE、NOTICE 和自动包含的 package.json。构建产物由 npm 分发，不需要提交到 Git；发布前用 `npm pack --dry-run --json` 检查清单。真实安装 smoke 可以通过 `ATN_INSTALL_SPEC=dsh-atn@0.3.0` 切换成 registry 包验证。
+npm 按 `package.json` 的 `files` 白名单发布，只有 `lib/`、`cordis.patch.yml`、README、LICENSE、NOTICE 和自动包含的 package.json。构建产物由 npm 分发，不需要提交到 Git；发布前用 `npm pack --dry-run --json` 检查清单。真实安装 smoke 可以通过 `ATN_INSTALL_SPEC=dsh-atn@0.3.1` 切换成 registry 包验证。
+
+### 0.3.1 变更
+
+- 只修正这份 README 中关于 npm 标签的说明；功能与 0.3.0 相同。
 
 ### 0.3.0 变更
 
