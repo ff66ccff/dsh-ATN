@@ -1,0 +1,519 @@
+{
+  "conditions": {
+    "agents": 8,
+    "chainLength": 2,
+    "steps": 48,
+    "maxCalls": 384,
+    "timeoutMs": 600000,
+    "topologyBinding": true
+  },
+  "sourceHashes": {
+    "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+    "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+    "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+    "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+    "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+    "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+    "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+    "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+    "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+    "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+    "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+    "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+    "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+    "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+    "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+    "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+    "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+    "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+    "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+    "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+    "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+    "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+    "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+    "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+    "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+    "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+    "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+    "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+  },
+  "runs": [
+    {
+      "seed": 17,
+      "policy": "direct-owner-synthesis-with-sequential-rewiring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 67,
+      "actionsByNode": {
+        "node-1": 27,
+        "node-3": 6,
+        "node-6": 4,
+        "node-9": 6,
+        "node-12": 6,
+        "node-15": 6,
+        "node-18": 6,
+        "node-21": 6
+      },
+      "maxNodeActions": 27,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 19,
+      "hops": 19,
+      "payloadBytes": 10618,
+      "maxContextBytes": 2192,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 19,
+      "totalTransferBytes": 10618,
+      "contextBytesByNode": {
+        "network-1:node-3": 1206,
+        "network-1:node-6": 1145,
+        "network-1:node-9": 1210,
+        "network-1:node-12": 1214,
+        "network-1:node-15": 1217,
+        "network-1:node-18": 1217,
+        "network-1:node-21": 1217,
+        "network-1:node-1": 2192
+      },
+      "interpretation": "Zero-model constructive adaptive solution using only published holder metadata and received owner results, within the same degree/step limits. Fixed feasibility is determined separately by the offline proof.",
+      "maxNodeStepRatio": 0.5625
+    },
+    {
+      "seed": 31,
+      "policy": "direct-owner-synthesis-with-sequential-rewiring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 67,
+      "actionsByNode": {
+        "node-1": 27,
+        "node-3": 6,
+        "node-6": 6,
+        "node-9": 4,
+        "node-12": 6,
+        "node-15": 6,
+        "node-18": 6,
+        "node-21": 6
+      },
+      "maxNodeActions": 27,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 19,
+      "hops": 19,
+      "payloadBytes": 10618,
+      "maxContextBytes": 2192,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 19,
+      "totalTransferBytes": 10618,
+      "contextBytesByNode": {
+        "network-1:node-3": 1206,
+        "network-1:node-6": 1206,
+        "network-1:node-9": 1149,
+        "network-1:node-12": 1214,
+        "network-1:node-15": 1217,
+        "network-1:node-18": 1217,
+        "network-1:node-21": 1217,
+        "network-1:node-1": 2192
+      },
+      "interpretation": "Zero-model constructive adaptive solution using only published holder metadata and received owner results, within the same degree/step limits. Fixed feasibility is determined separately by the offline proof.",
+      "maxNodeStepRatio": 0.5625
+    },
+    {
+      "seed": 45,
+      "policy": "direct-owner-synthesis-with-sequential-rewiring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 67,
+      "actionsByNode": {
+        "node-1": 27,
+        "node-3": 6,
+        "node-6": 6,
+        "node-9": 6,
+        "node-12": 6,
+        "node-15": 4,
+        "node-18": 6,
+        "node-21": 6
+      },
+      "maxNodeActions": 27,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 19,
+      "hops": 19,
+      "payloadBytes": 10616,
+      "maxContextBytes": 2191,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 19,
+      "totalTransferBytes": 10616,
+      "contextBytesByNode": {
+        "network-1:node-3": 1206,
+        "network-1:node-6": 1206,
+        "network-1:node-9": 1210,
+        "network-1:node-12": 1214,
+        "network-1:node-15": 1155,
+        "network-1:node-18": 1217,
+        "network-1:node-21": 1217,
+        "network-1:node-1": 2191
+      },
+      "interpretation": "Zero-model constructive adaptive solution using only published holder metadata and received owner results, within the same degree/step limits. Fixed feasibility is determined separately by the offline proof.",
+      "maxNodeStepRatio": 0.5625
+    },
+    {
+      "seed": 59,
+      "policy": "direct-owner-synthesis-with-sequential-rewiring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 67,
+      "actionsByNode": {
+        "node-1": 27,
+        "node-3": 6,
+        "node-6": 6,
+        "node-9": 6,
+        "node-12": 6,
+        "node-15": 6,
+        "node-18": 4,
+        "node-21": 6
+      },
+      "maxNodeActions": 27,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 19,
+      "hops": 19,
+      "payloadBytes": 10604,
+      "maxContextBytes": 2179,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 19,
+      "totalTransferBytes": 10604,
+      "contextBytesByNode": {
+        "network-1:node-3": 1206,
+        "network-1:node-6": 1206,
+        "network-1:node-9": 1210,
+        "network-1:node-12": 1214,
+        "network-1:node-15": 1217,
+        "network-1:node-18": 1155,
+        "network-1:node-21": 1217,
+        "network-1:node-1": 2179
+      },
+      "interpretation": "Zero-model constructive adaptive solution using only published holder metadata and received owner results, within the same degree/step limits. Fixed feasibility is determined separately by the offline proof.",
+      "maxNodeStepRatio": 0.5625
+    },
+    {
+      "seed": 73,
+      "policy": "direct-owner-synthesis-with-sequential-rewiring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 67,
+      "actionsByNode": {
+        "node-1": 27,
+        "node-3": 6,
+        "node-6": 6,
+        "node-9": 6,
+        "node-12": 6,
+        "node-15": 6,
+        "node-18": 4,
+        "node-21": 6
+      },
+      "maxNodeActions": 27,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 19,
+      "hops": 19,
+      "payloadBytes": 10616,
+      "maxContextBytes": 2191,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 19,
+      "totalTransferBytes": 10616,
+      "contextBytesByNode": {
+        "network-1:node-3": 1206,
+        "network-1:node-6": 1206,
+        "network-1:node-9": 1210,
+        "network-1:node-12": 1214,
+        "network-1:node-15": 1217,
+        "network-1:node-18": 1155,
+        "network-1:node-21": 1217,
+        "network-1:node-1": 2191
+      },
+      "interpretation": "Zero-model constructive adaptive solution using only published holder metadata and received owner results, within the same degree/step limits. Fixed feasibility is determined separately by the offline proof.",
+      "maxNodeStepRatio": 0.5625
+    }
+  ],
+  "allPassed": true,
+  "causalClaim": false
+}

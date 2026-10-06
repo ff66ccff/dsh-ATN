@@ -1,0 +1,572 @@
+{
+  "version": 1,
+  "reconciledAt": "2026-10-06T06:49:53.736Z",
+  "auditPassed": true,
+  "bootstrap": null,
+  "adaptiveProbe": {
+    "source": {
+      "path": ".artifacts/experiments/topology-binding-deepseek-probe-20261006/batch.json",
+      "sha256": "fadce2301da26b74e159b2904d30aa8e6607002f02992fd3d449fa74c57c2c1b"
+    },
+    "planned": 5,
+    "complete": false,
+    "summary": {
+      "probeGatePassed": false,
+      "repeats": 1,
+      "runsWithSuccessfulRewire": 1,
+      "successfulRewireRunRate": 1,
+      "discovery": {
+        "attempts": 4,
+        "successful": 4,
+        "blocked": 0,
+        "unchanged": 0,
+        "pending": 0,
+        "successRate": 1,
+        "discoverabilityProblem": false,
+        "status": "passed",
+        "passed": true
+      },
+      "correct": 1,
+      "twoPhaseSuccessRate": 1,
+      "capabilityGatePassed": false,
+      "eligibleModel": true,
+      "stepHeadroomPassed": true,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 4,
+        "successfulRewires": 4,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 16,
+        "callsWithPriorStatusQuery": 4
+      },
+      "interpretation": "mechanism-and-adaptive-capability-only",
+      "causalClaim": false
+    },
+    "runs": [
+      {
+        "runId": "335d1b09-ee83-4106-9d0a-a994424e7612",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 17,
+        "execution": "live-provider",
+        "startedAt": 1791268583478,
+        "completedAt": 1791268747496,
+        "directory": ".artifacts/experiments/topology-binding-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17",
+        "report": {
+          "path": ".artifacts/experiments/topology-binding-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json",
+          "sha256": "fca914b321bba885d70f3bb7585deb7326a1cb6954d9ed4125fa9ee2d5e9361b"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 17,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+          "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+          "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+          "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-topology-binding-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "passed": true,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "issuedModelCalls": 81,
+        "topologyProof": {
+          "version": 1,
+          "seed": 17,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "e435426743bdb195962d61d08d25c2bd09dd75c3023b0ddf0eb956bbb466623a",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "holder": 6
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 5
+            },
+            {
+              "from": 0,
+              "to": 6
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "holder": 6
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": [
+            {
+              "phase": 1,
+              "sender": "node-21",
+              "to": "node-18",
+              "kind": "result",
+              "taskId": "task-22",
+              "code": "invalid-fact-request"
+            },
+            {
+              "phase": 1,
+              "sender": "node-6",
+              "to": "node-3",
+              "kind": "result",
+              "taskId": "task-7",
+              "code": "invalid-fact-request"
+            },
+            {
+              "phase": 1,
+              "sender": "node-21",
+              "to": "node-18",
+              "kind": "result",
+              "taskId": "task-22",
+              "code": "invalid-fact-request"
+            },
+            {
+              "phase": 1,
+              "sender": "node-21",
+              "to": "node-18",
+              "kind": "result",
+              "taskId": "task-22",
+              "code": "invalid-fact-request"
+            },
+            {
+              "phase": 1,
+              "sender": "node-3",
+              "to": "node-1",
+              "kind": "result",
+              "taskId": "task-4",
+              "code": "invalid-fact-request"
+            },
+            {
+              "phase": 1,
+              "sender": "node-3",
+              "to": "node-1",
+              "kind": "result",
+              "taskId": "task-4",
+              "code": "invalid-fact-request"
+            }
+          ]
+        },
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 2,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 4,
+          "successfulRewires": 4,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 16,
+          "callsWithPriorStatusQuery": 4,
+          "attempts": [
+            {
+              "callId": "call_00_n05sxtbl5ewnr1uosfe4q0gp",
+              "sessionId": "shifting-335d1b09-ee83-4106-9d0a-a994424e7612",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-28",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_l2h748bgegq8v99feielwslx",
+              "sessionId": "shifting-335d1b09-ee83-4106-9d0a-a994424e7612",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-37",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_6l2t5p2o74gad4cg8z6m8kwy",
+              "sessionId": "shifting-335d1b09-ee83-4106-9d0a-a994424e7612",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-51",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_0wm6vg08pielvsa6bcdxxu68",
+              "sessionId": "shifting-335d1b09-ee83-4106-9d0a-a994424e7612",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-58",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 22,
+          "maxNodeStepRatio": 0.4583333333333333,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 4,
+            "successfulRewires": 4,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {
+            "other-tool-error": 1,
+            "invalid-fact-request": 6
+          },
+          "toolCallsByName": {
+            "read_evidence": 16,
+            "atn_status": 26,
+            "atn_board": 22,
+            "atn_send": 19,
+            "submit_checkpoint": 2
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 22,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 11,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "accepted": 4,
+            "rejected": 2
+          }
+        }
+      }
+    ]
+  },
+  "comparison": null,
+  "gates": {
+    "fixedGatePassed": false,
+    "calibrationGatePassed": false,
+    "everyArmRepeated": false,
+    "matchedSeeds": true,
+    "homogeneous": false,
+    "uniqueRuns": true,
+    "liveProvider": false,
+    "validComparisonRuns": false,
+    "adaptiveProbeGatePassed": false,
+    "probeMatchesComparison": false,
+    "separateProbeRuns": true,
+    "probePrecedesComparison": false,
+    "structuralProofGatePassed": false,
+    "forwardingEnforcementGatePassed": false,
+    "probeRealInterceptions": 0,
+    "comparisonRealInterceptions": 0,
+    "feedbackVarianceGatePassed": false,
+    "rejectedReviews": 0,
+    "comparisonRejectedReviews": 0,
+    "probeRejectedReviews": 2,
+    "stepHeadroom": {
+      "limit": 0.8,
+      "arms": [
+        {
+          "mode": "adaptive",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "fixed",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-feedback",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-board",
+          "runs": [],
+          "withinLimit": false
+        }
+      ],
+      "withinLimit": false
+    },
+    "mayInterpretTopology": false,
+    "interpretation": "feasibility-only",
+    "arms": [
+      {
+        "mode": "adaptive",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "fixed",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-feedback",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-board",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      }
+    ],
+    "probe": {
+      "probeGatePassed": false,
+      "repeats": 1,
+      "runsWithSuccessfulRewire": 1,
+      "successfulRewireRunRate": 1,
+      "discovery": {
+        "attempts": 4,
+        "successful": 4,
+        "blocked": 0,
+        "unchanged": 0,
+        "pending": 0,
+        "successRate": 1,
+        "discoverabilityProblem": false,
+        "status": "passed",
+        "passed": true
+      },
+      "correct": 1,
+      "twoPhaseSuccessRate": 1,
+      "capabilityGatePassed": false,
+      "eligibleModel": true,
+      "stepHeadroomPassed": true,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 4,
+        "successfulRewires": 4,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 16,
+        "callsWithPriorStatusQuery": 4
+      },
+      "interpretation": "mechanism-and-adaptive-capability-only",
+      "causalClaim": false
+    },
+    "excludedProbeRuns": 0,
+    "causalClaim": false
+  },
+  "unmet": [
+    "adaptive probe below 4/5 two-phase correctness or model ineligible",
+    "no real owner-refusal interception",
+    "comparison data has no rejected reviews",
+    "four comparison arms have not each completed >=5 runs",
+    "comparison step headroom not verified for all arms"
+  ],
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Mechanism and capability observations only unless all fixture, live enforcement, prior adaptive capability, comparison rejection, repeats and headroom gates pass. No causal estimate."
+}
