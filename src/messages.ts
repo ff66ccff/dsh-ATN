@@ -67,7 +67,7 @@ export function goalSnapshotMessage(revision: GoalRevision, networkId: string, s
 export function taskMessage(task: TaskRecord, networkId: string, goalVersion: number): UserMessage {
   const text = [
     `[ATN task] network=${networkId} task=${task.id} goalVersion=${goalVersion} holder=${task.holderId} requester=${task.requesterId}`,
-    `You are node ${task.holderId}. Choose collaborators with atn_status and adjust your links with atn_rewire when useful.`,
+    `You are node ${task.holderId}. Use atn_status to discover collaborators and its rewire option to adjust your links.`,
     task.description,
     task.context.length > 0 ? `Context: ${task.context}` : '',
     (task.dependsOn?.length ?? 0) > 0 ? `Upstream submissions (check acceptance separately): ${task.dependsOn!.join(', ')}. Read results with atn_status.` : '',
@@ -89,7 +89,8 @@ export function taskMessage(task: TaskRecord, networkId: string, goalVersion: nu
  * @param result - Durable conclusion and evidence belonging to the settled task.
  * @returns A logged, replayable user message.
  */
-export function mailMessage(mail: MailRecord, networkId: string, outcome?: 'completed' | 'failed', result?: TaskRecord['result'], task?: TaskRecord): UserMessage {
+export function mailMessage(mail: MailRecord, networkId: string, outcome?: 'completed' | 'failed', result?: TaskRecord['result'], task?: TaskRecord,
+  continuation = false): UserMessage {
   const header = [
     `[ATN ${mail.kind}] network=${networkId} mail=${mail.id} from=${mail.fromId}`,
     mail.taskId === null ? '' : `task=${mail.taskId}`,
@@ -103,12 +104,23 @@ export function mailMessage(mail: MailRecord, networkId: string, outcome?: 'comp
   const resultLines = mail.kind === 'result' && result != null
     ? `\nSummary: ${result.summary}\nEvidence:\n${result.evidence.length === 0 ? '(none supplied)' : result.evidence.map(reference => `- ${reference}`).join('\n')}`
     : ''
-  const verificationLine = mail.kind === 'result' ? '\nSubmission is not host acceptance. Inspect the task with atn_status before using it as a verified dependency.' : ''
+  const verificationLine = mail.kind === 'result' && !continuation ? '\nSubmission is not host acceptance. Inspect the task with atn_status before using it as a verified dependency.' : ''
   const taskReferences = mail.kind === 'task' ? [
     (task?.dependsOn?.length ?? 0) > 0 ? `\nUpstream submissions (check acceptance separately): ${task!.dependsOn!.join(', ')}. Read upstream results with atn_status.` : '',
     task?.retryOf ? `\nRetry of: ${task.retryOf}. Previous attempt remains available with atn_status.` : '',
   ].join('') : ''
-  const text = `${header}\n${outcomeLine}${mail.body}${resultLines}${verificationLine}${taskReferences}`
+  // Remove only our exact repeated assignment, never arbitrary peer-authored instructions.
+  let body = mail.body
+  if (continuation && task !== undefined && body.startsWith(`[ATN task] network=${networkId} task=${task.id} `)) {
+    const version = body.split('\n', 1)[0]?.match(/goalVersion=(\d+)/)?.[1]
+    if (version !== undefined) {
+      const assignment = taskMessage(task, networkId, Number(version)).content[0]
+      if (assignment?.type === 'text' && body.startsWith(assignment.text)) {
+        body = body.slice(assignment.text.length).trimStart()
+      }
+    }
+  }
+  const text = `${header}\n${outcomeLine}${body}${resultLines}${verificationLine}${continuation ? '' : taskReferences}`
   return textMessage(text, [{ name: 'atn/mail', text }])
 }
 

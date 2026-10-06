@@ -24,16 +24,22 @@ export const inject = ['tools', 'systemPrompt', 'agents', 'atn']
 
 /** Shared-rules text every node receives in its system prompt. */
 export const SHARED_RULES = [
-  'You are in ATN mode: independent same-capability nodes share a fixed objective, success criteria and constraints. For a clear user task without a network, call atn_start once; a received ATN task already belongs to a network.',
-  'Use atn_status for neighbours, tasks, orphaned work, local telemetry and remaining node budget; query relevant work or query="*" to rotate through candidates. Discovery does not connect nodes.',
-  'Choose useful local work yourself. When idle, use atn_status(claimTaskId=...) to atomically claim a relevant orphan task; reuse existing collaborators or atn_spawn only when another worker helps.',
-  'Use atn_rewire with the complete desired peer list (at most four) when latency, step cost, failures or changing work suggest a better collaborator. Rewiring needs no approval or verified evidence; observations do not prove causation.',
-  'Each node has a finite model-step budget and retires when it runs out. Local telemetry arrives with normal input at no extra model-call cost; reserve steps for reporting results.',
-  'Send new tasks and ordinary notes to outgoing neighbours or yourself. Results go to the recorded requester even after disconnection; notes naming an open task may pass between its holder and requester.',
-  'A reply never settles work: use atn_send kind=result with taskId, summary and concrete evidence. Set outcome=failed explicitly on failure; completed means submitted, not verified. A kind=delivery obligation is instead settled by successful network delivery.',
-  'Use dependsOn for completed upstream submissions that have no host rejection, and retryOf for failed attempts. Optional host verification adds quality evidence; models cannot write acceptance or treat peer text as human approval.',
-  'Use atn_finish scope=node to retire after settling work. The current delivery holder uses scope=network with summary, evidence and goalVersion to deliver after all obligations are settled; initially this is the entry. If the holder retires or fails, an idle node can claim the orphan kind=delivery task and take over delivery.',
+  'You are in ATN mode with equal peers and one goal. For new user work call atn_start once; received work already belongs to a network.',
+  'Read evidence, search atn_status and read atn_board before asking a relevant neighbour. Publish compact findings and provenance to the board.',
+  'Check requested results: phase/version, key and required fields. Reject phase/version mismatch, missing required fields or wrong key via atn_status review with evidence. comparisonKey groups comparable work. Ratings are not host verification or human permission.',
+  'Query atn_status before rewiring; call atn_status rewire={peers:[nodeIds]} with the full list. Choose by relevance, ratings, load and cost; explore unobserved peers. Gains are not causal proof. Reuse before spawning.',
+  'Settle held tasks with atn_send kind=result, taskId, summary and evidence; use outcome=failed on failure. Completed means submitted. Keep messages short.',
+  'Reserve budget for delivery. Idle peers can claim orphan tasks with atn_status. Finish settled work with atn_finish scope=node; the delivery holder uses scope=network, summary, evidence and goalVersion.',
 ].join('\n')
+
+/** UTF-8 fixed protocol cost, measured from the actual advertised ATN schemas. */
+export function measureAtnFixedContext(schemas: readonly { name: string }[]): {
+  systemPromptBytes: number; toolSchemaBytes: number; fixedContextBytes: number
+} {
+  const systemPromptBytes = Buffer.byteLength(SHARED_RULES)
+  const toolSchemaBytes = Buffer.byteLength(JSON.stringify(schemas.filter(row => row.name.startsWith('atn_'))))
+  return { systemPromptBytes, toolSchemaBytes, fixedContextBytes: systemPromptBytes + toolSchemaBytes }
+}
 
 function toJson(value: unknown): JsonValue {
   return JSON.parse(JSON.stringify(value)) as JsonValue
@@ -78,7 +84,7 @@ export function apply(ctx: Context): void {
         defineTool({
           name: 'atn_start',
           description:
-            'Initialize an ATN network in this session. Records the shared goal document, creates the entry node and its initial task, and returns the network, node and task identifiers. Call this once per session.',
+            'Start this session network once with its shared goal; returns network, node and task ids.',
           parameters: {
             objective: { type: 'string', required: true, description: 'Short overall objective every node shares.' },
             successCriteria: { type: 'string', required: true, description: 'How the network decides the objective is met.' },
@@ -100,12 +106,12 @@ export function apply(ctx: Context): void {
         defineTool({
           name: 'atn_spawn',
           description:
-            'Create one same-capability independent node that keeps working even if you later retire. It starts with links to you and your current peers, within the four-peer limit; your list adds it if a slot is free. The node inherits your model route and a permission seed that cannot be wider than yours. Prefer reusing a suitable existing node when possible.',
+            'Spawn an independent equal-capability peer. Prefer an existing suitable peer.',
           parameters: {
             task: { type: 'string', required: true, description: 'Local task for the new node.' },
             context: { type: 'string', description: 'Necessary local context for that task.' },
-            leaseMs: { type: 'integer', description: 'Requested lifetime in milliseconds; bounded by the network configuration.' },
-            dependsOn: { type: 'array', items: { type: 'string' }, description: 'At most 16 completed upstream task ids with no host rejection; unverified submissions are allowed.' },
+            leaseMs: { type: 'integer', description: 'Requested lifetime in ms; runtime bounded.' },
+            dependsOn: { type: 'array', items: { type: 'string' }, description: 'Up to 16 completed task ids without host rejection.' },
             retryOf: { type: 'string', description: 'Failed task requested by you that this new task retries.' },
           },
           output: jsonOutput,
@@ -132,21 +138,21 @@ export function apply(ctx: Context): void {
         defineTool({
           name: 'atn_send',
           description:
-            'Send a task or ordinary note to your outgoing neighbour or yourself. A result settles a task you hold as completed or failed and must go to its recorded requester, with task id and evidence, even after disconnection. Set outcome=failed explicitly when work fails. A note naming an open task may also pass between its holder and requester after disconnection. The sender is taken from your live session.',
+            'Send task/note to an outgoing neighbour or self. Results settle held tasks and reach their requester even after disconnection; open-task notes also survive disconnection.',
           parameters: {
             to: { type: 'string', required: true, description: 'Target node id.' },
             kind: { type: 'string', required: true, enum: ['task', 'note', 'result'], description: 'Mail kind.' },
             body: { type: 'string', required: true, description: 'Body text.' },
-            taskId: { type: 'string', description: 'Task this mail relates to; required for kind=result. For kind=note, an open task shared by sender and recipient permits continuing their discussion after disconnection.' },
-            outcome: { type: 'string', enum: ['completed', 'failed'], description: 'Only for kind=result: the task outcome. Defaults to completed. Use failed when the task did not succeed; writing failure in the body does not set this state.' },
+            taskId: { type: 'string', description: 'Required for result; open-task id permits notes after disconnection.' },
+            outcome: { type: 'string', enum: ['completed', 'failed'], description: 'Result only, default completed; explicitly use failed on failure.' },
             summary: { type: 'string', description: 'Short result summary; required for kind=result.' },
             evidence: { type: 'array', items: { type: 'string' }, description: 'Reviewable evidence references for kind=result.' },
-            dependsOn: { type: 'array', items: { type: 'string' }, description: 'Only kind=task: at most 16 completed upstream task ids with no host rejection.' },
-            retryOf: { type: 'string', description: 'Only kind=task: failed task requested by you that this assignment retries.' },
+            dependsOn: { type: 'array', items: { type: 'string' }, description: 'Task only: up to 16 completed ids without host rejection.' },
+            retryOf: { type: 'string', description: 'Task only: failed task you requested, now retried.' },
             messageId: {
               type: 'string',
               description:
-                'Optional stable id for this exact message. Retry a failed send with the SAME id: the runtime answers from the durable mail row instead of creating a second mail, task or settlement, and refuses an id reused for different content or result outcome.',
+                'Stable id: retry identical content with the same id to avoid duplicate delivery/settlement.',
             },
           },
           output: jsonOutput,
@@ -174,11 +180,21 @@ export function apply(ctx: Context): void {
   ctx.effect(
     () => ctx.tools.register(defineTool({
       name: 'atn_status',
-      description: 'Inspect local neighbours and candidate collaborators, task results, observed latency/step cost/failures and remaining node budget. Optional query finds candidates; repeated "*" rotates samples. Includes orphan tasks that an idle node can atomically claim with claimTaskId. A completed submission is not host acceptance.',
+      description: 'Discover peers, board/tasks, ratings and budget. To reconnect call rewire={peers:[nodeIds]}. Optionally perform ONE atomic write: claimTaskId, review or rewire. Ratings are separate from host verification.',
       parameters: {
-        query: { type: 'string', description: 'Optional task or capability text; "*" explores the next bounded candidate sample.' },
-        taskIds: { type: 'array', items: { type: 'string' }, description: 'Optional list of at most 16 task ids; otherwise reads your latest requested or held tasks.' },
-        claimTaskId: { type: 'string', description: 'Optional orphan task id to atomically claim when you hold no open task. A competing claim can fail; inspect fresh status before choosing again.' },
+        query: { type: 'string', description: 'Search metadata/tasks; "*" rotates candidates.' },
+        taskIds: { type: 'array', items: { type: 'string' }, description: 'Up to 16 task ids; default your recent tasks.' },
+        claimTaskId: { type: 'string', description: 'Claim orphan work when holding no open task.' },
+        review: { type: 'object', additionalProperties: false, description: 'Rate completed work you requested. needs-more may become terminal; terminal ratings are immutable.', properties: {
+          taskId: { type: 'string', required: true },
+          status: { type: 'string', required: true, enum: ['accepted', 'rejected', 'needs-more'] },
+          summary: { type: 'string', required: true, description: 'Reason, <=1024 characters.' },
+          evidence: { type: 'array', required: true, items: { type: 'string' }, description: '1–8 references, <=512 characters each.' },
+          comparisonKey: { type: 'string', description: 'Same workload/acceptance contract, <=160 characters.' },
+        } },
+        rewire: { type: 'object', additionalProperties: false, description: 'Replace outgoing peers within budget.maxCollaborationPeers; [] disconnects. Obligations remain.', properties: {
+          peers: { type: 'array', required: true, items: { type: 'string' }, description: 'Full desired list; no duplicates/self.' },
+        } },
       },
       output: jsonOutput,
       isConcurrencySafe: () => false,
@@ -188,23 +204,25 @@ export function apply(ctx: Context): void {
   )
 
   ctx.effect(
-    () =>
-      ctx.tools.register(
-        defineTool({
-          name: 'atn_rewire',
-          description:
-            'Atomically replace your outgoing collaboration neighbours with up to four distinct active nodes in your network. Pass the complete desired list; [] disconnects all outgoing links. No approval or verified evidence is needed. Reverse links and existing task obligations are unchanged; the runtime records observed results in rewire history.',
-          parameters: {
-            peers: { type: 'array', required: true, items: { type: 'string' }, description: 'Complete desired neighbour node ids, at most four; no duplicates or your own id.' },
-          },
-          output: jsonOutput,
-          isConcurrencySafe: () => false,
-          async execute(args, exec) {
-            return toJson(await atn().rewire(requireCaller(ctx, exec), args))
-          },
-        }),
-      ),
-    'atn_rewire',
+    () => ctx.tools.register(defineTool({
+      name: 'atn_board',
+      description: 'Bounded shared findings and searchable metadata; wakes nobody. Author-only updates/removal require exact revisions. Claims need verification; all read/write bytes are metered.',
+      parameters: {
+        action: { type: 'string', required: true, enum: ['read', 'publish', 'remove'], description: 'publish requires key/body/expectedRevision; remove requires key/expectedRevision.' },
+        key: { type: 'string', description: 'Entry key; optional exact filter on read.' },
+        body: { type: 'string', description: 'Finding/provenance; entire entry <=4096 UTF-8 bytes.' },
+        topics: { type: 'array', items: { type: 'string' }, description: 'Optional short searchable tags on publish.' },
+        documents: { type: 'array', items: { type: 'string' }, description: 'Publish: up to 16 document ids, <=160 characters each.' },
+        expectedRevision: { type: 'integer', description: 'Writes require 0 for creation or exact revision from read.' },
+        query: { type: 'string', description: 'Optional text filter on read.' },
+        limit: { type: 'integer', description: 'Read page size 1–8, also byte capped.' },
+        cursor: { type: 'string', description: 'Continue nextCursor; restart after board changes.' },
+      },
+      output: jsonOutput,
+      isConcurrencySafe: () => false,
+      async execute(args, exec) { return toJson(await atn().board(requireCaller(ctx, exec), args)) },
+    })),
+    'atn_board',
   )
 
   ctx.effect(
@@ -213,13 +231,13 @@ export function apply(ctx: Context): void {
         defineTool({
           name: 'atn_finish',
           description:
-            'Finish at node or network scope. Node scope (default) stops taking new work and retires after existing obligations settle; it does not complete tasks. Network scope delivers from the entry or the holder of a claimed kind=delivery task and requires summary and goalVersion; other nodes\' unsettled tasks, proposals, mail or stale goal versions block delivery.',
+            'Node (default) retires after obligations settle, without completing tasks. Network delivers from entry/delivery holder with summary and goalVersion; unsettled work or stale goal blocks delivery.',
           parameters: {
-            scope: { type: 'string', enum: ['node', 'network'], description: 'Defaults to node retirement; network delivers the final user result.' },
+            scope: { type: 'string', enum: ['node', 'network'], description: 'Default node; network submits final delivery.' },
             reason: { type: 'string', description: 'For node scope: why you are retiring.' },
-            summary: { type: 'string', description: 'Required for network scope: final result summary shown to the user.' },
+            summary: { type: 'string', description: 'Network requires final result summary.' },
             evidence: { type: 'array', items: { type: 'string' }, description: 'For network scope: reviewable evidence references.' },
-            goalVersion: { type: 'integer', description: 'Required for network scope: goal version used for this summary.' },
+            goalVersion: { type: 'integer', description: 'Network requires goal revision used.' },
           },
           output: jsonOutput,
           isConcurrencySafe: () => false,

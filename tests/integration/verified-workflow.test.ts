@@ -111,7 +111,7 @@ test('VERIFIED-WORKFLOW-02: rewires remain open while optional host evidence rec
     const discovery = await kernel.atn.peers(host, '*')
     assert.equal(discovery.nodes[0]!.verifiedFeedback.passed, 1)
     assert.equal(discovery.candidateNodes!.find(node => node.id === candidate.nodeId)!.verifiedFeedback.passed, 1)
-    const noChange = await call<RewireResult>(kernel, host, 'atn_rewire', { peers: [baseline.nodeId] })
+    const { rewire: noChange } = await call<{ rewire: RewireResult }>(kernel, host, 'atn_status', { rewire: { peers: [baseline.nodeId] } })
     assert.ok(noChange.rewireId)
     const accepted = await kernel.atn.network(started.networkId)
     assert.equal(accepted.rewireHistory!.length, before.rewireHistory!.length + 3)
