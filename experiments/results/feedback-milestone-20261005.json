@@ -1,0 +1,492 @@
+{
+  "schemaVersion": 1,
+  "experiment": "p0-p1-feedback-milestone",
+  "generatedAt": "2026-10-05T09:37:44.272Z",
+  "mechanism": "Action -> requester-local result judgement -> persisted local observation -> next peer choice.",
+  "method": "Real Harness agents, runtime mutation queues, task/result delivery and JSON persistence; deterministic scripted decisions.",
+  "paidModelCalls": 0,
+  "sourceHashes": {
+    "feedback-milestone.ts": "2ba54b6d55e21e92c291709b7a6e8929d7eba5453a491ec2afbdafc2908769c0",
+    "../src/runtime.ts": "cf92ecc712723a493d65d5d9978bb63b6fe85c5703f6ffc7e348c68cf47312f5",
+    "../src/schema.ts": "c201d4bfc60efa4c4f81590250b37c95b454b0f2d47a9a4deb508876a8fa9d99",
+    "../src/knowledge.ts": "fbb28a89c8185ae5bcffe58de77e523d4aaf840e53e9705c40dd3d496f7321bc",
+    "../src/requester-feedback.ts": "f9b8cbecca172f03b9b3779caab5b7cf3a1a72b98314b135ed9cf01da5cefd7f",
+    "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+    "../src/tools.ts": "f33e0983f599a0c2deca21292fa23ed8dee959cfa7d5b83af41d27b98ffb0e6b",
+    "../src/verified-feedback.ts": "fd7bb8701ce572425ebeb9b5a67e624e374972927d5ddb1bd6c26f13102ca808",
+    "../src/topology-feedback.ts": "abebd95bd89dbcd06737ef78684673aab05be5134805a663eb9338534acc9db2",
+    "../tests/fixtures/kernel.ts": "2f9263b06b4e89cf0f8f1a1a8e7146df349d1f3cac0e34c580cc5ffdb419191e",
+    "../package.json": "3334d331a55b1ff23cd1874765612ea36a540658df58c9b972a9d161c92c8dc1",
+    "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+  },
+  "interpretation": "Tests that the feedback path can close. Requester judgement is not an oracle, a causal topology estimate, or evidence of LLM collective improvement.",
+  "limitations": [
+    "Scripted policy and constructed samples; no real-model efficacy estimate.",
+    "Five nodes and cheap discovery do not test topology scarcity.",
+    "No message, token, latency or cost improvement claim; requester evaluation compares quality only."
+  ],
+  "pending": [
+    "P2 bounded shared whiteboard",
+    "P3 scarce topology or communication costs",
+    "P4 unknown information placement with changing useful collaborators",
+    "P5 further prompt-overhead measurement"
+  ],
+  "arms": [
+    {
+      "arm": "missing-feedback-control",
+      "nodeCount": 5,
+      "identicalInitialAssignments": true,
+      "paidModelCalls": 0,
+      "scriptedModelCalls": 12,
+      "discovery": {
+        "query": "slot-5",
+        "beforePublication": [],
+        "afterPublication": [
+          "node-9"
+        ],
+        "candidateNodeId": "node-9",
+        "knowledgeFingerprint": {
+          "source": "self-reported",
+          "documents": [
+            "document:slot-5:current"
+          ],
+          "topics": [
+            "slot-5"
+          ],
+          "contributions": [
+            "current value with provenance"
+          ],
+          "updatedAt": 1000000,
+          "currentLoad": 1,
+          "requesterAccepted": 0,
+          "requesterRejected": 0,
+          "requesterNeedsMore": 0,
+          "requesterAcceptanceRate": null,
+          "requesterTaskIds": [],
+          "requesterOmittedTasks": 0,
+          "hostPassed": 0,
+          "hostFailed": 0,
+          "hostTaskIds": [],
+          "hostOmittedTasks": 0
+        }
+      },
+      "localFeedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "tasks": {
+        "baselineTaskId": "task-17",
+        "incompleteTaskId": "task-20",
+        "candidateTaskId": "task-23"
+      },
+      "decisionInput": {
+        "previous": {
+          "source": "requester",
+          "taskIds": [
+            "task-17"
+          ],
+          "omittedTasks": 0,
+          "openTasks": 1,
+          "accepted": 0,
+          "rejected": 0,
+          "needsMore": 0,
+          "unrated": 1,
+          "acceptanceRate": null,
+          "observations": [
+            {
+              "taskId": "task-17",
+              "status": "unrated",
+              "requesterId": null,
+              "comparisonKey": null,
+              "checkedAt": null,
+              "hostRejected": false
+            }
+          ]
+        },
+        "candidate": {
+          "source": "requester",
+          "taskIds": [
+            "task-23",
+            "task-20"
+          ],
+          "omittedTasks": 0,
+          "openTasks": 0,
+          "accepted": 0,
+          "rejected": 0,
+          "needsMore": 0,
+          "unrated": 2,
+          "acceptanceRate": null,
+          "observations": [
+            {
+              "taskId": "task-23",
+              "status": "unrated",
+              "requesterId": null,
+              "comparisonKey": null,
+              "checkedAt": null,
+              "hostRejected": false
+            },
+            {
+              "taskId": "task-20",
+              "status": "unrated",
+              "requesterId": null,
+              "comparisonKey": null,
+              "checkedAt": null,
+              "hostRejected": false
+            }
+          ]
+        }
+      },
+      "decision": {
+        "neighbours": [
+          "node-9"
+        ],
+        "hostEvaluation": {
+          "verdict": "insufficient-evidence",
+          "causalClaim": false,
+          "baselineTaskIds": [],
+          "candidateTaskIds": [],
+          "comparisonKey": null,
+          "validatorId": null,
+          "costUnit": null,
+          "baseline": {
+            "passed": 0,
+            "failed": 0,
+            "unverified": 0,
+            "passRate": null,
+            "meanLatencyMs": null,
+            "meanCost": null
+          },
+          "candidate": {
+            "passed": 0,
+            "failed": 0,
+            "unverified": 0,
+            "passRate": null,
+            "meanLatencyMs": null,
+            "meanCost": null
+          },
+          "delta": {
+            "passRate": null,
+            "meanLatencyMs": null,
+            "meanCost": null
+          },
+          "reasons": [
+            "empty-sample",
+            "baseline-uncovered-peer",
+            "candidate-uncovered-peer",
+            "missing-or-different-comparison-key",
+            "missing-or-different-validator",
+            "unknown-latency",
+            "unknown-or-incomparable-cost"
+          ]
+        },
+        "requesterEvaluation": {
+          "source": "requester",
+          "qualityOnly": true,
+          "causalClaim": false,
+          "verdict": "insufficient-evidence",
+          "requesterId": "node-1",
+          "baselineTaskIds": [],
+          "candidateTaskIds": [],
+          "comparisonKey": null,
+          "baseline": {
+            "accepted": 0,
+            "rejected": 0,
+            "needsMore": 0,
+            "unrated": 0,
+            "acceptanceRate": null
+          },
+          "candidate": {
+            "accepted": 0,
+            "rejected": 0,
+            "needsMore": 0,
+            "unrated": 0,
+            "acceptanceRate": null
+          },
+          "delta": {
+            "acceptanceRate": null
+          },
+          "reasons": [
+            "empty-sample",
+            "baseline-uncovered-peer",
+            "candidate-uncovered-peer",
+            "missing-or-different-comparison-key"
+          ]
+        }
+      },
+      "explicitRewires": [
+        {
+          "id": "rewire-15",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-16",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-26",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-27",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        }
+      ],
+      "hostAcceptance": {
+        "beforeIndependentCheck": false,
+        "afterIndependentCheck": true,
+        "checkedAfterDecision": true,
+        "validatorId": "milestone-exact-json:v1"
+      },
+      "causalClaim": false
+    },
+    {
+      "arm": "requester-feedback",
+      "nodeCount": 5,
+      "identicalInitialAssignments": true,
+      "paidModelCalls": 0,
+      "scriptedModelCalls": 12,
+      "discovery": {
+        "query": "slot-5",
+        "beforePublication": [],
+        "afterPublication": [
+          "node-9"
+        ],
+        "candidateNodeId": "node-9",
+        "knowledgeFingerprint": {
+          "source": "self-reported",
+          "documents": [
+            "document:slot-5:current"
+          ],
+          "topics": [
+            "slot-5"
+          ],
+          "contributions": [
+            "current value with provenance"
+          ],
+          "updatedAt": 1000000,
+          "currentLoad": 1,
+          "requesterAccepted": 0,
+          "requesterRejected": 0,
+          "requesterNeedsMore": 0,
+          "requesterAcceptanceRate": null,
+          "requesterTaskIds": [],
+          "requesterOmittedTasks": 0,
+          "hostPassed": 0,
+          "hostFailed": 0,
+          "hostTaskIds": [],
+          "hostOmittedTasks": 0
+        }
+      },
+      "localFeedback": {
+        "accepted": 1,
+        "rejected": 1,
+        "needsMore": 1
+      },
+      "tasks": {
+        "baselineTaskId": "task-17",
+        "incompleteTaskId": "task-20",
+        "candidateTaskId": "task-23"
+      },
+      "decisionInput": {
+        "previous": {
+          "source": "requester",
+          "taskIds": [
+            "task-17"
+          ],
+          "omittedTasks": 0,
+          "openTasks": 1,
+          "accepted": 0,
+          "rejected": 1,
+          "needsMore": 0,
+          "unrated": 0,
+          "acceptanceRate": 0,
+          "observations": [
+            {
+              "taskId": "task-17",
+              "status": "rejected",
+              "requesterId": "node-1",
+              "comparisonKey": "slot-5-current-value:v1",
+              "checkedAt": 1000010,
+              "hostRejected": false
+            }
+          ]
+        },
+        "candidate": {
+          "source": "requester",
+          "taskIds": [
+            "task-23",
+            "task-20"
+          ],
+          "omittedTasks": 0,
+          "openTasks": 0,
+          "accepted": 1,
+          "rejected": 0,
+          "needsMore": 1,
+          "unrated": 0,
+          "acceptanceRate": 1,
+          "observations": [
+            {
+              "taskId": "task-23",
+              "status": "accepted",
+              "requesterId": "node-1",
+              "comparisonKey": "slot-5-current-value:v1",
+              "checkedAt": 1000030,
+              "hostRejected": false
+            },
+            {
+              "taskId": "task-20",
+              "status": "needs-more",
+              "requesterId": "node-1",
+              "comparisonKey": "slot-5-provenance-only:v1",
+              "checkedAt": 1000020,
+              "hostRejected": false
+            }
+          ]
+        }
+      },
+      "decision": {
+        "neighbours": [
+          "node-9"
+        ],
+        "hostEvaluation": {
+          "verdict": "insufficient-evidence",
+          "causalClaim": false,
+          "baselineTaskIds": [
+            "task-17"
+          ],
+          "candidateTaskIds": [
+            "task-23"
+          ],
+          "comparisonKey": null,
+          "validatorId": null,
+          "costUnit": null,
+          "baseline": {
+            "passed": 0,
+            "failed": 0,
+            "unverified": 1,
+            "passRate": null,
+            "meanLatencyMs": 10,
+            "meanCost": null
+          },
+          "candidate": {
+            "passed": 0,
+            "failed": 0,
+            "unverified": 1,
+            "passRate": null,
+            "meanLatencyMs": 10,
+            "meanCost": null
+          },
+          "delta": {
+            "passRate": null,
+            "meanLatencyMs": null,
+            "meanCost": null
+          },
+          "reasons": [
+            "unverified-results",
+            "missing-or-different-comparison-key",
+            "missing-or-different-validator",
+            "unknown-or-incomparable-cost"
+          ]
+        },
+        "requesterEvaluation": {
+          "source": "requester",
+          "qualityOnly": true,
+          "causalClaim": false,
+          "verdict": "observed-improvement",
+          "requesterId": "node-1",
+          "baselineTaskIds": [
+            "task-17"
+          ],
+          "candidateTaskIds": [
+            "task-23"
+          ],
+          "comparisonKey": "slot-5-current-value:v1",
+          "baseline": {
+            "accepted": 0,
+            "rejected": 1,
+            "needsMore": 0,
+            "unrated": 0,
+            "acceptanceRate": 0
+          },
+          "candidate": {
+            "accepted": 1,
+            "rejected": 0,
+            "needsMore": 0,
+            "unrated": 0,
+            "acceptanceRate": 1
+          },
+          "delta": {
+            "acceptanceRate": 1
+          },
+          "reasons": []
+        }
+      },
+      "explicitRewires": [
+        {
+          "id": "rewire-15",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-16",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-26",
+          "intent": "exploration",
+          "evidenceSource": "none",
+          "verdict": "insufficient-evidence",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "insufficient-evidence",
+          "causalClaim": false
+        },
+        {
+          "id": "rewire-27",
+          "intent": "exploration",
+          "evidenceSource": "requester",
+          "verdict": "observed-improvement",
+          "hostVerdict": "insufficient-evidence",
+          "requesterVerdict": "observed-improvement",
+          "causalClaim": false
+        }
+      ],
+      "hostAcceptance": {
+        "beforeIndependentCheck": false,
+        "afterIndependentCheck": true,
+        "checkedAfterDecision": true,
+        "validatorId": "milestone-exact-json:v1"
+      },
+      "causalClaim": false
+    }
+  ]
+}
