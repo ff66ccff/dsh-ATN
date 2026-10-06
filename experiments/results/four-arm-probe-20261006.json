@@ -1,0 +1,2360 @@
+{
+  "version": 2,
+  "reconciledAt": "2026-10-06T08:14:26.996Z",
+  "auditPassed": true,
+  "bootstrap": {
+    "source": {
+      "path": ".artifacts/four-arm/desktop-probe-resume-20261006/profile-bootstrap.json",
+      "sha256": "647c635568536cd575f169e41618acd53aaf62d284c3fc8f1a23013874db70c1"
+    },
+    "integrity": {
+      "schema": 1,
+      "auditedAt": "2026-10-06T08:13:01.430Z",
+      "stage": "bridge-complete",
+      "sourceProfile": "desktop",
+      "sourceProfilePath": "C:/Users/66ccff/.dsh/profiles/desktop",
+      "before": {
+        "package.json": "3794bacbc9c4495dd378562d141eaf8e7e5274838d7978f5cf4a4635bbc52ec5",
+        "cordis.patch.yml": "4c3058ffb63585479c9b81ce3e7e2cad5523d50f87916b103c53dec645aef0b5",
+        "cordis.yml": "c300dcf2ebc5f02062d6591268d29d3db6fe45e0cb138f5467276fe2ba06076e"
+      },
+      "after": {
+        "package.json": "3794bacbc9c4495dd378562d141eaf8e7e5274838d7978f5cf4a4635bbc52ec5",
+        "cordis.patch.yml": "4c3058ffb63585479c9b81ce3e7e2cad5523d50f87916b103c53dec645aef0b5",
+        "cordis.yml": "c300dcf2ebc5f02062d6591268d29d3db6fe45e0cb138f5467276fe2ba06076e"
+      },
+      "unchanged": true
+    },
+    "completion": {
+      "completedAt": "2026-10-06T08:13:01.431Z",
+      "completed": true,
+      "exitCode": 0
+    },
+    "installedIdentity": {
+      "schema": 1,
+      "modulePath": "D:/DeepSeekDesktop/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-llm/lib/index.js",
+      "actualServiceInstanceMatches": true,
+      "markerFunctions": [
+        "markAgentLoopRequest",
+        "isAgentLoopRequest"
+      ]
+    }
+  },
+  "comparisonBootstrap": null,
+  "armCosts": [
+    {
+      "mode": "adaptive",
+      "repeats": 0,
+      "cost": null
+    },
+    {
+      "mode": "fixed",
+      "repeats": 0,
+      "cost": null
+    },
+    {
+      "mode": "no-feedback",
+      "repeats": 0,
+      "cost": null
+    },
+    {
+      "mode": "no-board",
+      "repeats": 0,
+      "cost": null
+    }
+  ],
+  "adaptiveProbe": {
+    "source": {
+      "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/batch.json",
+      "sha256": "a15e1b091b9d688bb81ab03d2cd2a36522b13c089a9ffcac0c08e868f281e89a"
+    },
+    "planned": 5,
+    "complete": true,
+    "summary": {
+      "probeGatePassed": false,
+      "repeats": 5,
+      "runsWithSuccessfulRewire": 5,
+      "successfulRewireRunRate": 1,
+      "discovery": {
+        "attempts": 18,
+        "successful": 18,
+        "blocked": 0,
+        "unchanged": 0,
+        "pending": 0,
+        "successRate": 1,
+        "discoverabilityProblem": false,
+        "status": "passed",
+        "passed": true
+      },
+      "correct": 3,
+      "twoPhaseSuccessRate": 0.6,
+      "capabilityGatePassed": false,
+      "eligibleModel": true,
+      "stepHeadroomPassed": true,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 18,
+        "successfulRewires": 18,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 71,
+        "callsWithPriorStatusQuery": 18
+      },
+      "factFlowAuditGatePassed": true,
+      "bindingReferenceGatePassed": true,
+      "interpretation": "mechanism-and-adaptive-capability-only",
+      "causalClaim": false
+    },
+    "runs": [
+      {
+        "runId": "8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 17,
+        "execution": "live-provider",
+        "startedAt": 1791273421051,
+        "completedAt": 1791273549015,
+        "directory": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17",
+        "report": {
+          "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json",
+          "sha256": "686c0bdca18cb9993f26ab773882935fe7606866b53084a31bed279781e8e1a3"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 17,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+          "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+          "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+          "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+          "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+          "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-four-arm-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "passed": true,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "issuedModelCalls": 86,
+        "topologyProof": {
+          "version": 1,
+          "seed": 17,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "e435426743bdb195962d61d08d25c2bd09dd75c3023b0ddf0eb956bbb466623a",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "holder": 6
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 5
+            },
+            {
+              "from": 0,
+              "to": 6
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "holder": 6
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": []
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-40",
+              "requestMailId": "mail-41",
+              "resultMailId": "mail-43",
+              "deliveredAt": 1791273462300,
+              "directPeers": [
+                "node-12",
+                "node-3"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "ownerSlot": 5,
+              "ownerNodeId": "node-15",
+              "taskId": "task-45",
+              "requestMailId": "mail-46",
+              "resultMailId": "mail-47",
+              "deliveredAt": 1791273483427,
+              "directPeers": [
+                "node-15",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-60",
+              "requestMailId": "mail-61",
+              "resultMailId": "mail-62",
+              "deliveredAt": 1791273528730,
+              "directPeers": [
+                "node-9",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-64",
+              "requestMailId": "mail-65",
+              "resultMailId": "mail-66",
+              "deliveredAt": 1791273543830,
+              "directPeers": [
+                "node-18",
+                "node-12"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "comparisonEligible": true,
+        "entrySteps": 29,
+        "atnTotalInteractions": 39,
+        "atnTotalTransferBytes": 15912,
+        "atnMessages": 26,
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 86,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 39,
+            "reference": 19,
+            "multiple": 2.0526315789473686,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 15912,
+            "reference": 10618,
+            "multiple": 1.4985873045771332,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 29,
+            "reference": 27,
+            "multiple": 1.0740740740740742,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "budget": {
+          "issued": 86,
+          "denied": 1,
+          "lastRejection": "ended",
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "failures": [],
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 2,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 5,
+          "successfulRewires": 5,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 18,
+          "callsWithPriorStatusQuery": 5,
+          "attempts": [
+            {
+              "callId": "call_01_vp34dbaa1vkmfm24d5x43bed",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-39",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_3yp8qdbsmzf0v6s9jiwgh87z",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-44",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_vb17r9r4jpxuk6r4f3vs2mh2",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-55",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_a2222q7v70t6fv9zmxky5cq6",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-59",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_hdfazxqmttm7wlltrwrtiglc",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-63",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 29,
+          "maxNodeStepRatio": 0.6041666666666666,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "checkpointCallsMatchRaw": true,
+            "positiveFactFlow": true,
+            "factFlowMatchesReport": true,
+            "constructiveBindingConfirmed": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 5,
+            "successfulRewires": 5,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {},
+          "toolCallsByName": {
+            "read_evidence": 16,
+            "atn_status": 29,
+            "atn_send": 19,
+            "atn_board": 13,
+            "submit_checkpoint": 2
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 29,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "rejected": 2,
+            "accepted": 4
+          }
+        }
+      },
+      {
+        "runId": "2677d33c-81e0-40a8-8085-b50df438bc94",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 31,
+        "execution": "live-provider",
+        "startedAt": 1791273806698,
+        "completedAt": 1791273962223,
+        "directory": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-31",
+        "report": {
+          "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-31/report.json",
+          "sha256": "66f907986a9aa24c24f2830368e590c70528d398ba94ed7fbfb2743b1efc80ad"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 31,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+          "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+          "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+          "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+          "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+          "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-four-arm-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "passed": false,
+        "stopReason": "phase-2-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 68,
+        "topologyProof": {
+          "version": 1,
+          "seed": 31,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "aed00b8e542e9890a3a5e95260f6dfb23c3d04ff85bfe144c31ded4711ea2c72",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 6
+            },
+            {
+              "phase": 1,
+              "key": "key-12",
+              "document": "phase-1:key-12",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-15",
+              "document": "phase-2:key-15",
+              "holder": 2
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 5
+            },
+            {
+              "from": 0,
+              "to": 6
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 6
+            },
+            {
+              "phase": 1,
+              "key": "key-12",
+              "document": "phase-1:key-12",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-15",
+              "document": "phase-2:key-15",
+              "holder": 2
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": []
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 1,
+          "auditedFacts": 2,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-43",
+              "requestMailId": "mail-44",
+              "resultMailId": "mail-45",
+              "deliveredAt": 1791273871150,
+              "directPeers": [
+                "node-18",
+                "node-21"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-12",
+              "document": "phase-1:key-12",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-47",
+              "requestMailId": "mail-48",
+              "resultMailId": "mail-49",
+              "deliveredAt": 1791273896328,
+              "directPeers": [
+                "node-12",
+                "node-21"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "comparisonEligible": true,
+        "entrySteps": 16,
+        "atnTotalInteractions": 40,
+        "atnTotalTransferBytes": 21501,
+        "atnMessages": 22,
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 68,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 40,
+            "reference": 19,
+            "multiple": 2.1052631578947367,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 21501,
+            "reference": 10618,
+            "multiple": 2.024957619137314,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 16,
+            "reference": 27,
+            "multiple": 0.5925925925925926,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "budget": {
+          "issued": 68,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "failures": [],
+        "requesterFeedback": {
+          "accepted": 3,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 2,
+          "successfulRewires": 2,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 2,
+          "attempts": [
+            {
+              "callId": "call_01_h0zn8jqrwsnsn4mhp792mjgv",
+              "sessionId": "shifting-2677d33c-81e0-40a8-8085-b50df438bc94",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-42",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_0d75msimtj5gzyokrtf3y96k",
+              "sessionId": "shifting-2677d33c-81e0-40a8-8085-b50df438bc94",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-46",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 16,
+          "maxNodeStepRatio": 0.3333333333333333,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "checkpointCallsMatchRaw": true,
+            "positiveFactFlow": true,
+            "factFlowMatchesReport": true,
+            "constructiveBindingConfirmed": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 2,
+            "successfulRewires": 2,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {
+            "other-tool-error": 1
+          },
+          "toolCallsByName": {
+            "read_evidence": 16,
+            "atn_status": 15,
+            "atn_send": 15,
+            "atn_board": 19,
+            "submit_checkpoint": 1
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 16,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 6,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 6,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "accepted": 3
+          }
+        }
+      },
+      {
+        "runId": "b1929b78-0135-4e46-adff-6d46e28fbc41",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 45,
+        "execution": "live-provider",
+        "startedAt": 1791273962810,
+        "completedAt": 1791274120958,
+        "directory": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-45",
+        "report": {
+          "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-45/report.json",
+          "sha256": "1f13db81b317eaf98f5d18f50d787e47d16bf054182677cd4d03c13705c667f7"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 45,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+          "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+          "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+          "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+          "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+          "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-four-arm-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "passed": true,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "issuedModelCalls": 82,
+        "topologyProof": {
+          "version": 1,
+          "seed": 45,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "cfaa5b97011891fb44bb68d7345ab1e3dec9af248396170b6418b0083d009e29",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 2
+            },
+            {
+              "phase": 1,
+              "key": "key-01",
+              "document": "phase-1:key-01",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 6
+            },
+            {
+              "phase": 2,
+              "key": "key-08",
+              "document": "phase-2:key-08",
+              "holder": 3
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 6
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 2
+            },
+            {
+              "phase": 1,
+              "key": "key-01",
+              "document": "phase-1:key-01",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 6
+            },
+            {
+              "phase": 2,
+              "key": "key-08",
+              "document": "phase-2:key-08",
+              "holder": 3
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": []
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 2,
+              "ownerNodeId": "node-6",
+              "taskId": "task-42",
+              "requestMailId": "mail-43",
+              "resultMailId": "mail-44",
+              "deliveredAt": 1791274028170,
+              "directPeers": [
+                "node-6",
+                "node-21"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-01",
+              "document": "phase-1:key-01",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-46",
+              "requestMailId": "mail-47",
+              "resultMailId": "mail-48",
+              "deliveredAt": 1791274049282,
+              "directPeers": [
+                "node-12",
+                "node-6"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-61",
+              "requestMailId": "mail-62",
+              "resultMailId": "mail-63",
+              "deliveredAt": 1791274094530,
+              "directPeers": [
+                "node-18",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-08",
+              "document": "phase-2:key-08",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-65",
+              "requestMailId": "mail-66",
+              "resultMailId": "mail-67",
+              "deliveredAt": 1791274114649,
+              "directPeers": [
+                "node-9",
+                "node-12"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "comparisonEligible": true,
+        "entrySteps": 25,
+        "atnTotalInteractions": 42,
+        "atnTotalTransferBytes": 20829,
+        "atnMessages": 26,
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 82,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 42,
+            "reference": 19,
+            "multiple": 2.210526315789474,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 20829,
+            "reference": 10616,
+            "multiple": 1.9620384325546345,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 25,
+            "reference": 27,
+            "multiple": 0.9259259259259259,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "budget": {
+          "issued": 82,
+          "denied": 1,
+          "lastRejection": "ended",
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "failures": [],
+        "requesterFeedback": {
+          "accepted": 6,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 5,
+          "successfulRewires": 5,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 5,
+          "attempts": [
+            {
+              "callId": "call_01_gtsl3s2byt3i7j4zgskczidm",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-41",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_1t1482r5qrumy8aetmvswrfv",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-45",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_soo87jurl2sotf4izzm48pda",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-56",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_ohnkq0ctloy08dpy1o6tkxcu",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-60",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_wjiptqktnpcobszvr8nixyab",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-64",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 25,
+          "maxNodeStepRatio": 0.5208333333333334,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "checkpointCallsMatchRaw": true,
+            "positiveFactFlow": true,
+            "factFlowMatchesReport": true,
+            "constructiveBindingConfirmed": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 5,
+            "successfulRewires": 5,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {},
+          "toolCallsByName": {
+            "read_evidence": 16,
+            "atn_status": 21,
+            "atn_send": 19,
+            "atn_board": 16,
+            "submit_checkpoint": 2
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 25,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 10,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "accepted": 6
+          }
+        }
+      },
+      {
+        "runId": "28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 59,
+        "execution": "live-provider",
+        "startedAt": 1791274121561,
+        "completedAt": 1791274275317,
+        "directory": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-59",
+        "report": {
+          "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-59/report.json",
+          "sha256": "ae4bc2b0b9e67c677bd5aedf8402d9b38377dfe74e4772d46bba85019e4e14c0"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 59,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+          "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+          "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+          "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+          "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+          "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-four-arm-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "passed": true,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "issuedModelCalls": 87,
+        "topologyProof": {
+          "version": 1,
+          "seed": 59,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "32d15a32e0bd8e543e10ff2baee30e3f32d92f712b14b1181ef271649c286deb",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 2
+            },
+            {
+              "phase": 2,
+              "key": "key-01",
+              "document": "phase-2:key-01",
+              "holder": 4
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 5
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "holder": 5
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 2
+            },
+            {
+              "phase": 2,
+              "key": "key-01",
+              "document": "phase-2:key-01",
+              "holder": 4
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": [
+            {
+              "phase": 1,
+              "sender": "node-1",
+              "to": "node-3",
+              "kind": "task",
+              "taskId": null,
+              "code": "extra-transport-fields"
+            }
+          ]
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-42",
+              "requestMailId": "mail-43",
+              "resultMailId": "mail-44",
+              "deliveredAt": 1791274180910,
+              "directPeers": [
+                "node-9",
+                "node-3"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "ownerSlot": 5,
+              "ownerNodeId": "node-15",
+              "taskId": "task-46",
+              "requestMailId": "mail-47",
+              "resultMailId": "mail-48",
+              "deliveredAt": 1791274207089,
+              "directPeers": [
+                "node-15",
+                "node-9"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 2,
+              "ownerNodeId": "node-6",
+              "taskId": "task-60",
+              "requestMailId": "mail-61",
+              "resultMailId": "mail-62",
+              "deliveredAt": 1791274252323,
+              "directPeers": [
+                "node-21",
+                "node-6"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-01",
+              "document": "phase-2:key-01",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-64",
+              "requestMailId": "mail-65",
+              "resultMailId": "mail-66",
+              "deliveredAt": 1791274270448,
+              "directPeers": [
+                "node-12",
+                "node-6"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "comparisonEligible": true,
+        "entrySteps": 30,
+        "atnTotalInteractions": 40,
+        "atnTotalTransferBytes": 16226,
+        "atnMessages": 26,
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 87,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 40,
+            "reference": 19,
+            "multiple": 2.1052631578947367,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 16226,
+            "reference": 10604,
+            "multiple": 1.53017729158808,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 30,
+            "reference": 27,
+            "multiple": 1.1111111111111112,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "budget": {
+          "issued": 87,
+          "denied": 1,
+          "lastRejection": "ended",
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "failures": [],
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 2,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 4,
+          "successfulRewires": 4,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 23,
+          "callsWithPriorStatusQuery": 4,
+          "attempts": [
+            {
+              "callId": "call_01_ow71bmx66jaw49c6s8f4bg6p",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-41",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_bc7av78ia5vbzye3o4w3m9rc",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-45",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_9q6k2blz37joylkqry3vl0xy",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-55",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_0b8n3hq79pjzkgwn76k3syqw",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-63",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 30,
+          "maxNodeStepRatio": 0.625,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "checkpointCallsMatchRaw": true,
+            "positiveFactFlow": true,
+            "factFlowMatchesReport": true,
+            "constructiveBindingConfirmed": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 4,
+            "successfulRewires": 4,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {
+            "extra-transport-fields": 1
+          },
+          "toolCallsByName": {
+            "read_evidence": 16,
+            "atn_status": 33,
+            "atn_send": 20,
+            "atn_board": 14,
+            "submit_checkpoint": 2
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 30,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 9,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 8,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "rejected": 2,
+            "accepted": 4
+          }
+        }
+      },
+      {
+        "runId": "088ec85e-7a01-4d9e-9046-830e2b980478",
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "deepseek-v4.1-flash",
+        "seed": 73,
+        "execution": "live-provider",
+        "startedAt": 1791274276031,
+        "completedAt": 1791274381421,
+        "directory": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-73",
+        "report": {
+          "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-73/report.json",
+          "sha256": "2d73a7b748afc40aee057d7543abbc2860496131b6e85c32644385cee0e62531"
+        },
+        "conditions": {
+          "agents": 8,
+          "seed": 73,
+          "chainLength": 2,
+          "topologyBinding": true,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+          "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+          "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+          "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+          "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+          "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+          "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+          "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+          "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "providerProvenance": {
+          "provider": "dsh-opencode-go",
+          "plugin": "dsh-opencode-go",
+          "profile": "desktop-four-arm-validation",
+          "sourceProfile": "desktop",
+          "modelImport": "dsh-desktop-profile-llm",
+          "mount": "dsh-profile-import"
+        },
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "passed": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 48,
+        "topologyProof": {
+          "version": 1,
+          "seed": 73,
+          "agents": 8,
+          "chainLength": 2,
+          "taskRevision": 3,
+          "topologyBinding": true,
+          "topology": {
+            "entrySlot": 0,
+            "maxCollaborationPeers": 2,
+            "initialPeers": [
+              7,
+              1
+            ]
+          },
+          "fixtureHash": "cb56e7ebe87095c8111b8c0995d20a8d1970076cefc85fd6adb925a7c4cf1b04",
+          "requiredFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "holder": 2
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-10",
+              "document": "phase-2:key-10",
+              "holder": 5
+            }
+          ],
+          "initialOutdegreeLimit": 2,
+          "requiredDirectEdges": [
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 0,
+              "to": 4
+            },
+            {
+              "from": 0,
+              "to": 5
+            }
+          ],
+          "requiredDirectEdgeCount": 4,
+          "exceedsStaticDegree": true,
+          "unreachableFacts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "holder": 3
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "holder": 2
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "holder": 4
+            },
+            {
+              "phase": 2,
+              "key": "key-10",
+              "document": "phase-2:key-10",
+              "holder": 5
+            }
+          ],
+          "fixedReachable": false,
+          "conclusion": "unreachable",
+          "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+        },
+        "topologyBinding": {
+          "enforced": true,
+          "refusedResults": 0,
+          "refusals": []
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 0,
+          "auditedFacts": 0,
+          "facts": [],
+          "violations": [],
+          "noSubmission": true,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "comparisonEligible": true,
+        "entrySteps": 14,
+        "atnTotalInteractions": 30,
+        "atnTotalTransferBytes": 14991,
+        "atnMessages": 20,
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 48,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 30,
+            "reference": 19,
+            "multiple": 1.5789473684210527,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 14991,
+            "reference": 10616,
+            "multiple": 1.4121137905048982,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 14,
+            "reference": 27,
+            "multiple": 0.5185185185185185,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "budget": {
+          "issued": 48,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "failures": [],
+        "requesterFeedback": {
+          "accepted": 3,
+          "rejected": 1,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 2,
+          "successfulRewires": 2,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 2,
+          "attempts": [
+            {
+              "callId": "call_01_k4zsad7p2czurvjourypqk6w",
+              "sessionId": "shifting-088ec85e-7a01-4d9e-9046-830e2b980478",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-42",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_108gcmhltov3shva27grmt3v",
+              "sessionId": "shifting-088ec85e-7a01-4d9e-9046-830e2b980478",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-46",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 14,
+          "maxNodeStepRatio": 0.2916666666666667,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "rawAudit": {
+          "checks": {
+            "runIdentity": true,
+            "sourceMatchesCurrent": true,
+            "checkpointEvaluationMatches": true,
+            "checkpointCallsMatchRaw": true,
+            "positiveFactFlow": true,
+            "factFlowMatchesReport": true,
+            "constructiveBindingConfirmed": true,
+            "structuralProofVerified": true,
+            "rewireCountsMatchRaw": true,
+            "ownerRefusalsMatchRaw": true,
+            "localReadAcl": true,
+            "ownerResultsOnly": true,
+            "exactHeaders": true,
+            "sameModelAndPermissions": true,
+            "sameToolSchemas": true,
+            "everyNodeHasActualHeader": true,
+            "nodeStepCountsMatchStorage": true
+          },
+          "passed": true,
+          "differingSources": [],
+          "rawRewireCounts": {
+            "statusRewireCalls": 2,
+            "successfulRewires": 2,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "pendingRewires": 0
+          },
+          "ownerRefusals": [],
+          "toolErrorsByCode": {
+            "other-tool-error": 1
+          },
+          "toolCallsByName": {
+            "read_evidence": 8,
+            "atn_status": 16,
+            "atn_send": 13,
+            "atn_board": 10,
+            "atn_finish": 1
+          },
+          "nodeSteps": [
+            {
+              "id": "node-1",
+              "stepsUsed": 14,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-3",
+              "stepsUsed": 7,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-6",
+              "stepsUsed": 6,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-9",
+              "stepsUsed": 5,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-12",
+              "stepsUsed": 5,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-15",
+              "stepsUsed": 4,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-18",
+              "stepsUsed": 4,
+              "lifecycle": "active"
+            },
+            {
+              "id": "node-21",
+              "stepsUsed": 3,
+              "lifecycle": "active"
+            }
+          ],
+          "durableRequesterRatings": {
+            "accepted": 3,
+            "rejected": 1
+          }
+        }
+      }
+    ]
+  },
+  "comparison": null,
+  "gates": {
+    "fixedGatePassed": false,
+    "calibrationGatePassed": false,
+    "everyArmRepeated": false,
+    "matchedSeeds": true,
+    "homogeneous": false,
+    "uniqueRuns": true,
+    "liveProvider": false,
+    "validComparisonRuns": false,
+    "adaptiveProbeGatePassed": false,
+    "probeMatchesComparison": false,
+    "separateProbeRuns": true,
+    "probePrecedesComparison": false,
+    "structuralProofGatePassed": false,
+    "bindingReferenceGatePassed": false,
+    "factFlowAuditGatePassed": false,
+    "feedbackVarianceGatePassed": false,
+    "rejectedReviews": 0,
+    "comparisonRejectedReviews": 0,
+    "probeRejectedReviews": 5,
+    "stepHeadroom": {
+      "limit": 0.8,
+      "arms": [
+        {
+          "mode": "adaptive",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "fixed",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-feedback",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-board",
+          "runs": [],
+          "withinLimit": false
+        }
+      ],
+      "withinLimit": false
+    },
+    "mayInterpretTopology": false,
+    "interpretation": "feasibility-only",
+    "consistentNonFixedAdvantage": false,
+    "benefitClaim": "not-supported",
+    "arms": [
+      {
+        "mode": "adaptive",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "fixed",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-feedback",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-board",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      }
+    ],
+    "excludedFactFlowRuns": [],
+    "probe": {
+      "probeGatePassed": false,
+      "repeats": 5,
+      "runsWithSuccessfulRewire": 5,
+      "successfulRewireRunRate": 1,
+      "discovery": {
+        "attempts": 18,
+        "successful": 18,
+        "blocked": 0,
+        "unchanged": 0,
+        "pending": 0,
+        "successRate": 1,
+        "discoverabilityProblem": false,
+        "status": "passed",
+        "passed": true
+      },
+      "correct": 3,
+      "twoPhaseSuccessRate": 0.6,
+      "capabilityGatePassed": false,
+      "eligibleModel": true,
+      "stepHeadroomPassed": true,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 18,
+        "successfulRewires": 18,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 71,
+        "callsWithPriorStatusQuery": 18
+      },
+      "factFlowAuditGatePassed": true,
+      "bindingReferenceGatePassed": true,
+      "interpretation": "mechanism-and-adaptive-capability-only",
+      "causalClaim": false
+    },
+    "excludedProbeRuns": 0,
+    "causalClaim": false
+  },
+  "unmet": [
+    "adaptive probe below 4/5 two-phase correctness or model ineligible",
+    "comparison data has no rejected reviews",
+    "four comparison arms have not each completed >=5 runs",
+    "comparison step headroom not verified for all arms"
+  ],
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "benefitClaim": "not-supported",
+  "interpretation": "Fixed structural impossibility is task design. Adaptive benefit requires consistent superiority over both non-fixed controls after all comparison gates pass. Cost ratios describe coordination overhead only; no causal estimate."
+}

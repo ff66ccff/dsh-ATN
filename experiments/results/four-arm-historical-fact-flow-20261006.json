@@ -1,0 +1,1144 @@
+{
+  "version": 1,
+  "auditedAt": "2026-10-06T07:52:51.607Z",
+  "runs": [
+    {
+      "runId": "335d1b09-ee83-4106-9d0a-a994424e7612",
+      "seed": 17,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json",
+        "sha256": "fca914b321bba885d70f3bb7585deb7326a1cb6954d9ed4125fa9ee2d5e9361b"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-30",
+            "requestMailId": "mail-31",
+            "resultMailId": "mail-35",
+            "deliveredAt": 1791268621722,
+            "directPeers": [
+              "node-12",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-13",
+            "document": "phase-1:key-13",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-38",
+            "requestMailId": "mail-39",
+            "resultMailId": "mail-41",
+            "deliveredAt": 1791268679020,
+            "directPeers": [
+              "node-15",
+              "node-12"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-52",
+            "requestMailId": "mail-53",
+            "resultMailId": "mail-56",
+            "deliveredAt": 1791268723270,
+            "directPeers": [
+              "node-9",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-09",
+            "document": "phase-2:key-09",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-59",
+            "requestMailId": "mail-60",
+            "resultMailId": "mail-61",
+            "deliveredAt": 1791268739390,
+            "directPeers": [
+              "node-18",
+              "node-21"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 81,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "00fd3d9d-580d-4355-854a-446a089b93f2",
+      "seed": 17,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v2-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json",
+        "sha256": "0fba870aed5372cbbf56b3398a77924e46540fab69f08a08039486230da6b3cd"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-33",
+            "requestMailId": "mail-34",
+            "resultMailId": "mail-36",
+            "deliveredAt": 1791269150688,
+            "directPeers": [
+              "node-12",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-13",
+            "document": "phase-1:key-13",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-38",
+            "requestMailId": "mail-39",
+            "resultMailId": "mail-40",
+            "deliveredAt": 1791269172897,
+            "directPeers": [
+              "node-15",
+              "node-12"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-48",
+            "requestMailId": "mail-49",
+            "resultMailId": "mail-53",
+            "deliveredAt": 1791269202123,
+            "directPeers": [
+              "node-9",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-09",
+            "document": "phase-2:key-09",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-56",
+            "requestMailId": "mail-57",
+            "resultMailId": "mail-58",
+            "deliveredAt": 1791269248500,
+            "directPeers": [
+              "node-18",
+              "node-9"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 74,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "f7deeb45-ae3a-4617-a81a-859f3d8f5697",
+      "seed": 31,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v2-20261006/deepseek-v4.1-flash-adaptive-seed-31/report.json",
+        "sha256": "dba5f58e06335c711a03f9eca7a16b5d11b9bd09a92992c8d664ee5a665fb039"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 1,
+        "auditedFacts": 2,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-35",
+            "requestMailId": "mail-36",
+            "resultMailId": "mail-37",
+            "deliveredAt": 1791269317848,
+            "directPeers": [
+              "node-18",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-12",
+            "document": "phase-1:key-12",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-39",
+            "requestMailId": "mail-40",
+            "resultMailId": "mail-41",
+            "deliveredAt": 1791269333948,
+            "directPeers": [
+              "node-12",
+              "node-18"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": false,
+      "issuedModelCalls": 78,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "855f6abf-b999-4f51-9ddb-c9ee21288c56",
+      "seed": 45,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v2-20261006/deepseek-v4.1-flash-adaptive-seed-45/report.json",
+        "sha256": "c805407f37fdbb48ae7480f5ee87d71ee1f8d607058d01153f020c114231177f"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 2,
+            "ownerNodeId": "node-6",
+            "taskId": "task-30",
+            "requestMailId": "mail-31",
+            "resultMailId": "mail-34",
+            "deliveredAt": 1791269465413,
+            "directPeers": [
+              "node-6",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-01",
+            "document": "phase-1:key-01",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-36",
+            "requestMailId": "mail-37",
+            "resultMailId": "mail-38",
+            "deliveredAt": 1791269485575,
+            "directPeers": [
+              "node-12",
+              "node-6"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-46",
+            "requestMailId": "mail-47",
+            "resultMailId": "mail-51",
+            "deliveredAt": 1791269528864,
+            "directPeers": [
+              "node-18",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-08",
+            "document": "phase-2:key-08",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-53",
+            "requestMailId": "mail-54",
+            "resultMailId": "mail-55",
+            "deliveredAt": 1791269539937,
+            "directPeers": [
+              "node-9",
+              "node-18"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 72,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "aba522e6-df37-470b-b8b6-8b0737572dd2",
+      "seed": 59,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v2-20261006/deepseek-v4.1-flash-adaptive-seed-59/report.json",
+        "sha256": "8fda449f639396613f98ab4ad1dfe8dbbf68b4f237a341e258a74d52ecdc540b"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 0,
+        "auditedFacts": 0,
+        "facts": [],
+        "violations": [],
+        "noSubmission": true,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": false,
+      "issuedModelCalls": 39,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "8b099aaa-1385-411c-9425-9f710e1162ec",
+      "seed": 73,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v2-20261006/deepseek-v4.1-flash-adaptive-seed-73/report.json",
+        "sha256": "65ef10567a9b128249a9a4865b42cda013f67058e5816efa484bf4662ba39d33"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "9fbf8a339c4c8666cd2daaf7e59f4e3244f757be3bba3cf44737c3bd4f829509",
+        "shifting-evidence-task.ts": "69bb3fcede030f25dc49e2b4ef6e3d513b5e9497ea1c6896f348b9a1b35ce49d",
+        "shifting-evidence-reference.ts": "b39bdab45f517ccb53b97870ba8fb80a7ea1178ade22258996645b6b61b3e6ab",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "ec7753e6cba465b3d1236fa6364d2345c03fabf221a3131f7b5ff6b2553b8a37",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-29",
+            "requestMailId": "mail-30",
+            "resultMailId": "mail-35",
+            "deliveredAt": 1791269690941,
+            "directPeers": [
+              "node-9",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-02",
+            "document": "phase-1:key-02",
+            "ownerSlot": 2,
+            "ownerNodeId": "node-6",
+            "taskId": "task-39",
+            "requestMailId": "mail-40",
+            "resultMailId": "mail-41",
+            "deliveredAt": 1791269718042,
+            "directPeers": [
+              "node-6",
+              "node-9"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-48",
+            "requestMailId": "mail-49",
+            "resultMailId": "mail-54",
+            "deliveredAt": 1791269758293,
+            "directPeers": [
+              "node-12",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-10",
+            "document": "phase-2:key-10",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-57",
+            "requestMailId": "mail-58",
+            "resultMailId": "mail-59",
+            "deliveredAt": 1791269770389,
+            "directPeers": [
+              "node-15",
+              "node-12"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 78,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "bb4632af-a354-4ab0-bfdf-15a8830b8ae4",
+      "seed": 17,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v3-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json",
+        "sha256": "cf1f084c5b79fe5187f61956bf2a618ea56ed86832c1262b5e2e78c48b8ad2c4"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+        "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+        "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-43",
+            "requestMailId": "mail-44",
+            "resultMailId": "mail-45",
+            "deliveredAt": 1791270053472,
+            "directPeers": [
+              "node-12",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-13",
+            "document": "phase-1:key-13",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-47",
+            "requestMailId": "mail-48",
+            "resultMailId": "mail-50",
+            "deliveredAt": 1791270090613,
+            "directPeers": [
+              "node-15",
+              "node-12"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-63",
+            "requestMailId": "mail-64",
+            "resultMailId": "mail-65",
+            "deliveredAt": 1791270143918,
+            "directPeers": [
+              "node-21",
+              "node-9"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-09",
+            "document": "phase-2:key-09",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-67",
+            "requestMailId": "mail-68",
+            "resultMailId": "mail-69",
+            "deliveredAt": 1791270171065,
+            "directPeers": [
+              "node-18",
+              "node-9"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 83,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "77310032-2005-480c-97e6-b6a3d9a520d4",
+      "seed": 31,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v3-20261006/deepseek-v4.1-flash-adaptive-seed-31/report.json",
+        "sha256": "4daa662333c63550a80b548001be9036a7f7cd617bd5f18daf5cb2f6fd513539"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+        "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+        "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-42",
+            "requestMailId": "mail-43",
+            "resultMailId": "mail-44",
+            "deliveredAt": 1791270228739,
+            "directPeers": [
+              "node-18",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-12",
+            "document": "phase-1:key-12",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-46",
+            "requestMailId": "mail-47",
+            "resultMailId": "mail-48",
+            "deliveredAt": 1791270242841,
+            "directPeers": [
+              "node-12",
+              "node-18"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-61",
+            "requestMailId": "mail-62",
+            "resultMailId": "mail-63",
+            "deliveredAt": 1791270291150,
+            "directPeers": [
+              "node-15",
+              "node-12"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-15",
+            "document": "phase-2:key-15",
+            "ownerSlot": 2,
+            "ownerNodeId": "node-6",
+            "taskId": "task-65",
+            "requestMailId": "mail-66",
+            "resultMailId": "mail-67",
+            "deliveredAt": 1791270304302,
+            "directPeers": [
+              "node-6",
+              "node-15"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 80,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "78dc7b7e-e7e6-4831-9aba-5aa0ba090834",
+      "seed": 45,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v3-20261006/deepseek-v4.1-flash-adaptive-seed-45/report.json",
+        "sha256": "51de52f74b9668de8851a2065c07d63217e98a62a8fa48379b69422bde9660ee"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+        "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+        "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 2,
+            "ownerNodeId": "node-6",
+            "taskId": "task-42",
+            "requestMailId": "mail-43",
+            "resultMailId": "mail-44",
+            "deliveredAt": 1791270357871,
+            "directPeers": [
+              "node-6",
+              "node-3"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-01",
+            "document": "phase-1:key-01",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-46",
+            "requestMailId": "mail-47",
+            "resultMailId": "mail-49",
+            "deliveredAt": 1791270388086,
+            "directPeers": [
+              "node-12",
+              "node-6"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 6,
+            "ownerNodeId": "node-18",
+            "taskId": "task-62",
+            "requestMailId": "mail-63",
+            "resultMailId": "mail-64",
+            "deliveredAt": 1791270428289,
+            "directPeers": [
+              "node-18",
+              "node-12"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-08",
+            "document": "phase-2:key-08",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-66",
+            "requestMailId": "mail-67",
+            "resultMailId": "mail-68",
+            "deliveredAt": 1791270447394,
+            "directPeers": [
+              "node-9",
+              "node-12"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 86,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "dd3cac71-bdcd-497e-9341-8ee03e5e6571",
+      "seed": 59,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v3-20261006/deepseek-v4.1-flash-adaptive-seed-59/report.json",
+        "sha256": "9c2f07fcb883fa184d3d91fe0e9241277cd8934b1bdb7adfe2f05fb7ffd6cc8f"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+        "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+        "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 2,
+        "auditedFacts": 4,
+        "facts": [
+          {
+            "phase": 1,
+            "key": "key-00",
+            "document": "phase-1:key-00",
+            "ownerSlot": 3,
+            "ownerNodeId": "node-9",
+            "taskId": "task-46",
+            "requestMailId": "mail-47",
+            "resultMailId": "mail-48",
+            "deliveredAt": 1791270514397,
+            "directPeers": [
+              "node-9",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 1,
+            "key": "key-02",
+            "document": "phase-1:key-02",
+            "ownerSlot": 5,
+            "ownerNodeId": "node-15",
+            "taskId": "task-53",
+            "requestMailId": "mail-54",
+            "resultMailId": "mail-58",
+            "deliveredAt": 1791270538537,
+            "directPeers": [
+              "node-15",
+              "node-21"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-00",
+            "document": "phase-2:key-00",
+            "ownerSlot": 2,
+            "ownerNodeId": "node-6",
+            "taskId": "task-72",
+            "requestMailId": "mail-73",
+            "resultMailId": "mail-74",
+            "deliveredAt": 1791270607876,
+            "directPeers": [
+              "node-6",
+              "node-15"
+            ]
+          },
+          {
+            "phase": 2,
+            "key": "key-01",
+            "document": "phase-2:key-01",
+            "ownerSlot": 4,
+            "ownerNodeId": "node-12",
+            "taskId": "task-76",
+            "requestMailId": "mail-77",
+            "resultMailId": "mail-78",
+            "deliveredAt": 1791270632040,
+            "directPeers": [
+              "node-12",
+              "node-15"
+            ]
+          }
+        ],
+        "violations": [],
+        "noSubmission": false,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": true,
+      "issuedModelCalls": 102,
+      "comparisonAdmission": false
+    },
+    {
+      "runId": "3e6c1da6-c73f-470f-b3cc-6549f6dd5d69",
+      "seed": 73,
+      "mode": "adaptive",
+      "model": "deepseek-v4.1-flash",
+      "report": {
+        "path": ".artifacts/experiments/topology-binding-deepseek-probe-v3-20261006/deepseek-v4.1-flash-adaptive-seed-73/report.json",
+        "sha256": "25f4c44c6b0e27d36a9ba3ec4ee2ec1559f29250e7db825cbfb4783cdb1ac989"
+      },
+      "originalSourceHashes": {
+        "shifting-evidence-run.ts": "1d24934eb6ed18e2b06edb78e0bc59e0dac9ee78adf0c3fc816f49c80be00a88",
+        "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+        "shifting-evidence-reference.ts": "bb6e4f727ea6d7e2279e4ffa78bd5eff005f63fe6d9f976c6105826e2ce31363",
+        "shifting-evidence-profile-run.ts": "afde07a5c22c3e64647d63f3b7bb0bbc9a10e6c3a0b7d375f01c9b8d85d6b1a9",
+        "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+        "shifting-evidence-protocol.ts": "3c774d3f04bef60cf1448a35edd612985b0f4e23c689390ec65ea596acc3f5f8",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+        "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "75e5b2ddf387a02e370766fb35c05ddde67c1d9b6c5d2f1902b1462caf5f91da",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "factFlowAudit": {
+        "version": 1,
+        "passed": true,
+        "submittedCheckpoints": 0,
+        "auditedFacts": 0,
+        "facts": [],
+        "violations": [],
+        "noSubmission": true,
+        "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+      },
+      "liveOwnerDeliveries": true,
+      "liveSubmissionsMatch": true,
+      "passed": true,
+      "originalCompletionPassed": false,
+      "issuedModelCalls": 34,
+      "comparisonAdmission": false
+    }
+  ],
+  "allPassed": true,
+  "issuedNewModelCalls": 0,
+  "interpretation": "Historical provenance audit only. Original failures remain; old source identities cannot qualify a new comparison."
+}

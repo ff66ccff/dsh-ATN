@@ -1,0 +1,479 @@
+{
+  "version": 1,
+  "issuedModelCalls": 0,
+  "proofs": [
+    {
+      "version": 1,
+      "seed": 17,
+      "agents": 8,
+      "chainLength": 2,
+      "taskRevision": 3,
+      "topologyBinding": true,
+      "topology": {
+        "entrySlot": 0,
+        "maxCollaborationPeers": 2,
+        "initialPeers": [
+          7,
+          1
+        ]
+      },
+      "fixtureHash": "e435426743bdb195962d61d08d25c2bd09dd75c3023b0ddf0eb956bbb466623a",
+      "requiredFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 4
+        },
+        {
+          "phase": 1,
+          "key": "key-13",
+          "document": "phase-1:key-13",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 2,
+          "key": "key-09",
+          "document": "phase-2:key-09",
+          "holder": 6
+        }
+      ],
+      "initialOutdegreeLimit": 2,
+      "requiredDirectEdges": [
+        {
+          "from": 0,
+          "to": 3
+        },
+        {
+          "from": 0,
+          "to": 4
+        },
+        {
+          "from": 0,
+          "to": 5
+        },
+        {
+          "from": 0,
+          "to": 6
+        }
+      ],
+      "requiredDirectEdgeCount": 4,
+      "exceedsStaticDegree": true,
+      "unreachableFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 4
+        },
+        {
+          "phase": 1,
+          "key": "key-13",
+          "document": "phase-1:key-13",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 2,
+          "key": "key-09",
+          "document": "phase-2:key-09",
+          "holder": 6
+        }
+      ],
+      "fixedReachable": false,
+      "conclusion": "unreachable",
+      "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+    },
+    {
+      "version": 1,
+      "seed": 31,
+      "agents": 8,
+      "chainLength": 2,
+      "taskRevision": 3,
+      "topologyBinding": true,
+      "topology": {
+        "entrySlot": 0,
+        "maxCollaborationPeers": 2,
+        "initialPeers": [
+          7,
+          1
+        ]
+      },
+      "fixtureHash": "aed00b8e542e9890a3a5e95260f6dfb23c3d04ff85bfe144c31ded4711ea2c72",
+      "requiredFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 6
+        },
+        {
+          "phase": 1,
+          "key": "key-12",
+          "document": "phase-1:key-12",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-15",
+          "document": "phase-2:key-15",
+          "holder": 2
+        }
+      ],
+      "initialOutdegreeLimit": 2,
+      "requiredDirectEdges": [
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 4
+        },
+        {
+          "from": 0,
+          "to": 5
+        },
+        {
+          "from": 0,
+          "to": 6
+        }
+      ],
+      "requiredDirectEdgeCount": 4,
+      "exceedsStaticDegree": true,
+      "unreachableFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 6
+        },
+        {
+          "phase": 1,
+          "key": "key-12",
+          "document": "phase-1:key-12",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-15",
+          "document": "phase-2:key-15",
+          "holder": 2
+        }
+      ],
+      "fixedReachable": false,
+      "conclusion": "unreachable",
+      "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+    },
+    {
+      "version": 1,
+      "seed": 45,
+      "agents": 8,
+      "chainLength": 2,
+      "taskRevision": 3,
+      "topologyBinding": true,
+      "topology": {
+        "entrySlot": 0,
+        "maxCollaborationPeers": 2,
+        "initialPeers": [
+          7,
+          1
+        ]
+      },
+      "fixtureHash": "cfaa5b97011891fb44bb68d7345ab1e3dec9af248396170b6418b0083d009e29",
+      "requiredFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 2
+        },
+        {
+          "phase": 1,
+          "key": "key-01",
+          "document": "phase-1:key-01",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 6
+        },
+        {
+          "phase": 2,
+          "key": "key-08",
+          "document": "phase-2:key-08",
+          "holder": 3
+        }
+      ],
+      "initialOutdegreeLimit": 2,
+      "requiredDirectEdges": [
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 3
+        },
+        {
+          "from": 0,
+          "to": 4
+        },
+        {
+          "from": 0,
+          "to": 6
+        }
+      ],
+      "requiredDirectEdgeCount": 4,
+      "exceedsStaticDegree": true,
+      "unreachableFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 2
+        },
+        {
+          "phase": 1,
+          "key": "key-01",
+          "document": "phase-1:key-01",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 6
+        },
+        {
+          "phase": 2,
+          "key": "key-08",
+          "document": "phase-2:key-08",
+          "holder": 3
+        }
+      ],
+      "fixedReachable": false,
+      "conclusion": "unreachable",
+      "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+    },
+    {
+      "version": 1,
+      "seed": 59,
+      "agents": 8,
+      "chainLength": 2,
+      "taskRevision": 3,
+      "topologyBinding": true,
+      "topology": {
+        "entrySlot": 0,
+        "maxCollaborationPeers": 2,
+        "initialPeers": [
+          7,
+          1
+        ]
+      },
+      "fixtureHash": "32d15a32e0bd8e543e10ff2baee30e3f32d92f712b14b1181ef271649c286deb",
+      "requiredFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 1,
+          "key": "key-02",
+          "document": "phase-1:key-02",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 2
+        },
+        {
+          "phase": 2,
+          "key": "key-01",
+          "document": "phase-2:key-01",
+          "holder": 4
+        }
+      ],
+      "initialOutdegreeLimit": 2,
+      "requiredDirectEdges": [
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 3
+        },
+        {
+          "from": 0,
+          "to": 4
+        },
+        {
+          "from": 0,
+          "to": 5
+        }
+      ],
+      "requiredDirectEdgeCount": 4,
+      "exceedsStaticDegree": true,
+      "unreachableFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 1,
+          "key": "key-02",
+          "document": "phase-1:key-02",
+          "holder": 5
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 2
+        },
+        {
+          "phase": 2,
+          "key": "key-01",
+          "document": "phase-2:key-01",
+          "holder": 4
+        }
+      ],
+      "fixedReachable": false,
+      "conclusion": "unreachable",
+      "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+    },
+    {
+      "version": 1,
+      "seed": 73,
+      "agents": 8,
+      "chainLength": 2,
+      "taskRevision": 3,
+      "topologyBinding": true,
+      "topology": {
+        "entrySlot": 0,
+        "maxCollaborationPeers": 2,
+        "initialPeers": [
+          7,
+          1
+        ]
+      },
+      "fixtureHash": "cb56e7ebe87095c8111b8c0995d20a8d1970076cefc85fd6adb925a7c4cf1b04",
+      "requiredFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 1,
+          "key": "key-02",
+          "document": "phase-1:key-02",
+          "holder": 2
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-10",
+          "document": "phase-2:key-10",
+          "holder": 5
+        }
+      ],
+      "initialOutdegreeLimit": 2,
+      "requiredDirectEdges": [
+        {
+          "from": 0,
+          "to": 2
+        },
+        {
+          "from": 0,
+          "to": 3
+        },
+        {
+          "from": 0,
+          "to": 4
+        },
+        {
+          "from": 0,
+          "to": 5
+        }
+      ],
+      "requiredDirectEdgeCount": 4,
+      "exceedsStaticDegree": true,
+      "unreachableFacts": [
+        {
+          "phase": 1,
+          "key": "key-00",
+          "document": "phase-1:key-00",
+          "holder": 3
+        },
+        {
+          "phase": 1,
+          "key": "key-02",
+          "document": "phase-1:key-02",
+          "holder": 2
+        },
+        {
+          "phase": 2,
+          "key": "key-00",
+          "document": "phase-2:key-00",
+          "holder": 4
+        },
+        {
+          "phase": 2,
+          "key": "key-10",
+          "document": "phase-2:key-10",
+          "holder": 5
+        }
+      ],
+      "fixedReachable": false,
+      "conclusion": "unreachable",
+      "argument": "Only the exact local owner may answer a fact request. The entry needs every listed owner edge across both phases. A fixed edge set cannot rotate; adaptive edges may rotate sequentially within the degree bound."
+    }
+  ],
+  "eligibleSeeds": [
+    17,
+    31,
+    45,
+    59,
+    73
+  ],
+  "ineligibleSeeds": []
+}

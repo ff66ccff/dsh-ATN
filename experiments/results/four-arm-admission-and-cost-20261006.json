@@ -1,0 +1,1307 @@
+{
+  "version": 1,
+  "finalizedAt": "2026-10-06T08:17:44.037Z",
+  "issuedNewModelCalls": 0,
+  "sources": {
+    "probe": {
+      "path": ".artifacts/experiments/four-arm-deepseek-probe-20261006/batch.json",
+      "sha256": "a15e1b091b9d688bb81ab03d2cd2a36522b13c089a9ffcac0c08e868f281e89a"
+    },
+    "audit": {
+      "path": "experiments/results/four-arm-probe-20261006.json",
+      "sha256": "fc1ed00a53b191f0445c6171edb5e5517b99c942fc3209d15d2acec47e54d6cf"
+    },
+    "reference": {
+      "path": "experiments/results/four-arm-reference-20261006.json",
+      "sha256": "598b0c9ce6269cd92f53f9831f989c2b6b9073f5ff07db6fd4df00da92d1e980"
+    }
+  },
+  "sourceHashes": {
+    "shifting-evidence-run.ts": "845a966c15e3ecac98d87224db43216d136634f6b7330d935ff496a2de20af57",
+    "shifting-evidence-task.ts": "5b5f4a291a18c1a898a9042aebc541f718ffb97d24763d6e512d4df021675e32",
+    "shifting-evidence-reference.ts": "4611b548490eb74c6d9b542bf7c052c4cfc8c81c2e3f118fb876cba5aac36060",
+    "shifting-evidence-profile-run.ts": "949b0a2a02673a2fbfaee23497c37c4802ceac6d54614ab153f97d2c7e97b989",
+    "shifting-evidence-access.ts": "688de1292532a1210a15ffff836f0b603a3c9ebd44e5cb02c1e7c351b8dc9c53",
+    "shifting-evidence-protocol.ts": "08116ced6274b12b2cb139dd8a54d13c66b9dc19c7cf072bf94bd6cf4db37bff",
+    "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+    "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+    "topology-binding-proof.ts": "2a74c5c710bbe0e481d5fdf63f2ad9b7bebc4823aaf52add3166c1ed09ecce8e",
+    "topology-binding-access.ts": "86923da1c450ed68debd26ee6824989ef8079945a4550937b4e0371b38a48ad7",
+    "topology-binding-audit.ts": "d355539d21b707571354ea391a801fefe8a8cad7b52a7f06cc33db876dee79ca",
+    "topology-binding-reference.ts": "d7d349844a8cb788dad61cf636b24e7c60372fbcaea207044155b0256ca247ee",
+    "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+    "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+    "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+    "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+    "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+    "../src/runtime.ts": "3ac9badddf73e8ae7cdaf475aaaa5abf6531c38ed1a0bd422ee2c220aa43550c",
+    "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+    "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+    "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+    "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+    "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+    "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+    "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+    "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+    "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+    "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+    "../package.json": "f4c74c6ed89cf73cfb69b21647d6d3b6460cbab4ebe9358d8666ae05e04e7ff9",
+    "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+  },
+  "comparisonAdmission": {
+    "passed": false,
+    "error": "Adaptive probe admission failed: require >=5 distinct same-source/config live adaptive probes, >=80% two-phase correctness, <=80% node steps and 100% successful rewire attempts (at least one)"
+  },
+  "bindingConfirmed": true,
+  "gates": {
+    "constructiveBinding": true,
+    "structuralProof": true,
+    "probeCapability": {
+      "passed": false,
+      "correct": 3,
+      "repeats": 5,
+      "required": 0.8,
+      "observed": 0.6
+    },
+    "probeDiscovery": {
+      "attempts": 18,
+      "successful": 18,
+      "blocked": 0,
+      "unchanged": 0,
+      "pending": 0,
+      "successRate": 1,
+      "discoverabilityProblem": false,
+      "status": "passed",
+      "passed": true
+    },
+    "probeHeadroom": true,
+    "positiveFactFlow": true,
+    "comparisonRepeats": {
+      "passed": false,
+      "observed": 0,
+      "requiredPerArm": 5
+    },
+    "comparisonRejected": {
+      "passed": false,
+      "observed": null
+    },
+    "comparisonHeadroom": {
+      "passed": false,
+      "observed": null
+    }
+  },
+  "probe": {
+    "runs": [
+      {
+        "runId": "8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+        "seed": 17,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "issuedModelCalls": 86,
+        "entrySteps": 29,
+        "communication": {
+          "messages": 26,
+          "interactions": 39,
+          "bytes": 15912
+        },
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 86,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 39,
+            "reference": 19,
+            "multiple": 2.0526315789473686,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 15912,
+            "reference": 10618,
+            "multiple": 1.4985873045771332,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 29,
+            "reference": 27,
+            "multiple": 1.0740740740740742,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 2,
+          "needsMore": 0
+        },
+        "rewires": {
+          "statusRewireCalls": 5,
+          "successfulRewires": 5,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 18,
+          "callsWithPriorStatusQuery": 5,
+          "attempts": [
+            {
+              "callId": "call_01_vp34dbaa1vkmfm24d5x43bed",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-39",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_3yp8qdbsmzf0v6s9jiwgh87z",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-44",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_vb17r9r4jpxuk6r4f3vs2mh2",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-55",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_a2222q7v70t6fv9zmxky5cq6",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-59",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_hdfazxqmttm7wlltrwrtiglc",
+              "sessionId": "shifting-8461fce2-1cd7-4fcf-8cd3-1597661e2adf",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-63",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 29,
+          "maxNodeStepRatio": 0.6041666666666666,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-40",
+              "requestMailId": "mail-41",
+              "resultMailId": "mail-43",
+              "deliveredAt": 1791273462300,
+              "directPeers": [
+                "node-12",
+                "node-3"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-13",
+              "document": "phase-1:key-13",
+              "ownerSlot": 5,
+              "ownerNodeId": "node-15",
+              "taskId": "task-45",
+              "requestMailId": "mail-46",
+              "resultMailId": "mail-47",
+              "deliveredAt": 1791273483427,
+              "directPeers": [
+                "node-15",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-60",
+              "requestMailId": "mail-61",
+              "resultMailId": "mail-62",
+              "deliveredAt": 1791273528730,
+              "directPeers": [
+                "node-9",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-09",
+              "document": "phase-2:key-09",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-64",
+              "requestMailId": "mail-65",
+              "resultMailId": "mail-66",
+              "deliveredAt": 1791273543830,
+              "directPeers": [
+                "node-18",
+                "node-12"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "failures": [],
+        "modelObservation": {
+          "attempts": 86,
+          "settledAttempts": 86,
+          "inFlight": 0,
+          "errors": 0,
+          "aborted": 0,
+          "incomplete": 0,
+          "modelDurationMs": 348916,
+          "toolsStarted": 79,
+          "toolsFinished": 79,
+          "toolErrors": 0,
+          "toolDurationMs": 432,
+          "tokens": {
+            "inputTokens": {
+              "known": 124992,
+              "unknownCalls": 0
+            },
+            "outputTokens": {
+              "known": 33905,
+              "unknownCalls": 0
+            },
+            "cacheReadTokens": {
+              "known": 1459456,
+              "unknownCalls": 1
+            },
+            "cacheWriteTokens": {
+              "known": 0,
+              "unknownCalls": 86
+            },
+            "reasoningTokens": {
+              "known": 0,
+              "unknownCalls": 86
+            },
+            "totalTokens": {
+              "known": 1618353,
+              "unknownCalls": 0
+            }
+          },
+          "cost": {
+            "amount": null,
+            "knownAmount": 0.04259326799999999,
+            "unknownCalls": 1,
+            "currency": "USD"
+          }
+        },
+        "coverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "report": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-17/report.json"
+      },
+      {
+        "runId": "2677d33c-81e0-40a8-8085-b50df438bc94",
+        "seed": 31,
+        "stopReason": "phase-2-quiescence",
+        "cleanup": "released",
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "issuedModelCalls": 68,
+        "entrySteps": 16,
+        "communication": {
+          "messages": 22,
+          "interactions": 40,
+          "bytes": 21501
+        },
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 68,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 40,
+            "reference": 19,
+            "multiple": 2.1052631578947367,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 21501,
+            "reference": 10618,
+            "multiple": 2.024957619137314,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 16,
+            "reference": 27,
+            "multiple": 0.5925925925925926,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "requesterFeedback": {
+          "accepted": 3,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewires": {
+          "statusRewireCalls": 2,
+          "successfulRewires": 2,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 2,
+          "attempts": [
+            {
+              "callId": "call_01_h0zn8jqrwsnsn4mhp792mjgv",
+              "sessionId": "shifting-2677d33c-81e0-40a8-8085-b50df438bc94",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-42",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_0d75msimtj5gzyokrtf3y96k",
+              "sessionId": "shifting-2677d33c-81e0-40a8-8085-b50df438bc94",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-46",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 16,
+          "maxNodeStepRatio": 0.3333333333333333,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 1,
+          "auditedFacts": 2,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-43",
+              "requestMailId": "mail-44",
+              "resultMailId": "mail-45",
+              "deliveredAt": 1791273871150,
+              "directPeers": [
+                "node-18",
+                "node-21"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-12",
+              "document": "phase-1:key-12",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-47",
+              "requestMailId": "mail-48",
+              "resultMailId": "mail-49",
+              "deliveredAt": 1791273896328,
+              "directPeers": [
+                "node-12",
+                "node-21"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "failures": [],
+        "modelObservation": {
+          "attempts": 68,
+          "settledAttempts": 68,
+          "inFlight": 0,
+          "errors": 0,
+          "aborted": 0,
+          "incomplete": 0,
+          "modelDurationMs": 336524,
+          "toolsStarted": 66,
+          "toolsFinished": 66,
+          "toolErrors": 1,
+          "toolDurationMs": 529,
+          "tokens": {
+            "inputTokens": {
+              "known": 97935,
+              "unknownCalls": 0
+            },
+            "outputTokens": {
+              "known": 38665,
+              "unknownCalls": 0
+            },
+            "cacheReadTokens": {
+              "known": 797824,
+              "unknownCalls": 0
+            },
+            "cacheWriteTokens": {
+              "known": 0,
+              "unknownCalls": 68
+            },
+            "reasoningTokens": {
+              "known": 0,
+              "unknownCalls": 68
+            },
+            "totalTokens": {
+              "known": 934424,
+              "unknownCalls": 0
+            }
+          },
+          "cost": {
+            "amount": 0.040282722,
+            "knownAmount": 0.040282722,
+            "unknownCalls": 0,
+            "currency": "USD"
+          }
+        },
+        "coverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "report": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-31/report.json"
+      },
+      {
+        "runId": "b1929b78-0135-4e46-adff-6d46e28fbc41",
+        "seed": 45,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "issuedModelCalls": 82,
+        "entrySteps": 25,
+        "communication": {
+          "messages": 26,
+          "interactions": 42,
+          "bytes": 20829
+        },
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 82,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 42,
+            "reference": 19,
+            "multiple": 2.210526315789474,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 20829,
+            "reference": 10616,
+            "multiple": 1.9620384325546345,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 25,
+            "reference": 27,
+            "multiple": 0.9259259259259259,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "requesterFeedback": {
+          "accepted": 6,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewires": {
+          "statusRewireCalls": 5,
+          "successfulRewires": 5,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 5,
+          "attempts": [
+            {
+              "callId": "call_01_gtsl3s2byt3i7j4zgskczidm",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-41",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_1t1482r5qrumy8aetmvswrfv",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-45",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_soo87jurl2sotf4izzm48pda",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-56",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_ohnkq0ctloy08dpy1o6tkxcu",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-60",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_wjiptqktnpcobszvr8nixyab",
+              "sessionId": "shifting-b1929b78-0135-4e46-adff-6d46e28fbc41",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-64",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 25,
+          "maxNodeStepRatio": 0.5208333333333334,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 2,
+              "ownerNodeId": "node-6",
+              "taskId": "task-42",
+              "requestMailId": "mail-43",
+              "resultMailId": "mail-44",
+              "deliveredAt": 1791274028170,
+              "directPeers": [
+                "node-6",
+                "node-21"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-01",
+              "document": "phase-1:key-01",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-46",
+              "requestMailId": "mail-47",
+              "resultMailId": "mail-48",
+              "deliveredAt": 1791274049282,
+              "directPeers": [
+                "node-12",
+                "node-6"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 6,
+              "ownerNodeId": "node-18",
+              "taskId": "task-61",
+              "requestMailId": "mail-62",
+              "resultMailId": "mail-63",
+              "deliveredAt": 1791274094530,
+              "directPeers": [
+                "node-18",
+                "node-12"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-08",
+              "document": "phase-2:key-08",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-65",
+              "requestMailId": "mail-66",
+              "resultMailId": "mail-67",
+              "deliveredAt": 1791274114649,
+              "directPeers": [
+                "node-9",
+                "node-12"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "failures": [],
+        "modelObservation": {
+          "attempts": 82,
+          "settledAttempts": 82,
+          "inFlight": 0,
+          "errors": 0,
+          "aborted": 0,
+          "incomplete": 0,
+          "modelDurationMs": 356425,
+          "toolsStarted": 74,
+          "toolsFinished": 74,
+          "toolErrors": 0,
+          "toolDurationMs": 366,
+          "tokens": {
+            "inputTokens": {
+              "known": 116586,
+              "unknownCalls": 0
+            },
+            "outputTokens": {
+              "known": 36714,
+              "unknownCalls": 0
+            },
+            "cacheReadTokens": {
+              "known": 1330816,
+              "unknownCalls": 0
+            },
+            "cacheWriteTokens": {
+              "known": 0,
+              "unknownCalls": 82
+            },
+            "reasoningTokens": {
+              "known": 0,
+              "unknownCalls": 82
+            },
+            "totalTokens": {
+              "known": 1484116,
+              "unknownCalls": 0
+            }
+          },
+          "cost": {
+            "amount": 0.043508747999999986,
+            "knownAmount": 0.043508747999999986,
+            "unknownCalls": 0,
+            "currency": "USD"
+          }
+        },
+        "coverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "report": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-45/report.json"
+      },
+      {
+        "runId": "28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+        "seed": 59,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "issuedModelCalls": 87,
+        "entrySteps": 30,
+        "communication": {
+          "messages": 26,
+          "interactions": 40,
+          "bytes": 16226
+        },
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 87,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 40,
+            "reference": 19,
+            "multiple": 2.1052631578947367,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 16226,
+            "reference": 10604,
+            "multiple": 1.53017729158808,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 30,
+            "reference": 27,
+            "multiple": 1.1111111111111112,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 2,
+          "needsMore": 0
+        },
+        "rewires": {
+          "statusRewireCalls": 4,
+          "successfulRewires": 4,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 23,
+          "callsWithPriorStatusQuery": 4,
+          "attempts": [
+            {
+              "callId": "call_01_ow71bmx66jaw49c6s8f4bg6p",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-41",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_bc7av78ia5vbzye3o4w3m9rc",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-45",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_9q6k2blz37joylkqry3vl0xy",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-55",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_00_0b8n3hq79pjzkgwn76k3syqw",
+              "sessionId": "shifting-28a2696a-9a0f-4bd0-97a7-9d7e3441ee93",
+              "phase": 2,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-63",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 30,
+          "maxNodeStepRatio": 0.625,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 2,
+          "auditedFacts": 4,
+          "facts": [
+            {
+              "phase": 1,
+              "key": "key-00",
+              "document": "phase-1:key-00",
+              "ownerSlot": 3,
+              "ownerNodeId": "node-9",
+              "taskId": "task-42",
+              "requestMailId": "mail-43",
+              "resultMailId": "mail-44",
+              "deliveredAt": 1791274180910,
+              "directPeers": [
+                "node-9",
+                "node-3"
+              ]
+            },
+            {
+              "phase": 1,
+              "key": "key-02",
+              "document": "phase-1:key-02",
+              "ownerSlot": 5,
+              "ownerNodeId": "node-15",
+              "taskId": "task-46",
+              "requestMailId": "mail-47",
+              "resultMailId": "mail-48",
+              "deliveredAt": 1791274207089,
+              "directPeers": [
+                "node-15",
+                "node-9"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-00",
+              "document": "phase-2:key-00",
+              "ownerSlot": 2,
+              "ownerNodeId": "node-6",
+              "taskId": "task-60",
+              "requestMailId": "mail-61",
+              "resultMailId": "mail-62",
+              "deliveredAt": 1791274252323,
+              "directPeers": [
+                "node-21",
+                "node-6"
+              ]
+            },
+            {
+              "phase": 2,
+              "key": "key-01",
+              "document": "phase-2:key-01",
+              "ownerSlot": 4,
+              "ownerNodeId": "node-12",
+              "taskId": "task-64",
+              "requestMailId": "mail-65",
+              "resultMailId": "mail-66",
+              "deliveredAt": 1791274270448,
+              "directPeers": [
+                "node-12",
+                "node-6"
+              ]
+            }
+          ],
+          "violations": [],
+          "noSubmission": false,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "failures": [],
+        "modelObservation": {
+          "attempts": 87,
+          "settledAttempts": 87,
+          "inFlight": 0,
+          "errors": 0,
+          "aborted": 0,
+          "incomplete": 0,
+          "modelDurationMs": 367180,
+          "toolsStarted": 85,
+          "toolsFinished": 85,
+          "toolErrors": 1,
+          "toolDurationMs": 323,
+          "tokens": {
+            "inputTokens": {
+              "known": 128825,
+              "unknownCalls": 0
+            },
+            "outputTokens": {
+              "known": 35552,
+              "unknownCalls": 0
+            },
+            "cacheReadTokens": {
+              "known": 1660544,
+              "unknownCalls": 0
+            },
+            "cacheWriteTokens": {
+              "known": 0,
+              "unknownCalls": 87
+            },
+            "reasoningTokens": {
+              "known": 0,
+              "unknownCalls": 87
+            },
+            "totalTokens": {
+              "known": 1824921,
+              "unknownCalls": 0
+            }
+          },
+          "cost": {
+            "amount": 0.04563658199999998,
+            "knownAmount": 0.04563658199999998,
+            "unknownCalls": 0,
+            "currency": "USD"
+          }
+        },
+        "coverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "report": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-59/report.json"
+      },
+      {
+        "runId": "088ec85e-7a01-4d9e-9046-830e2b980478",
+        "seed": 73,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "issuedModelCalls": 48,
+        "entrySteps": 14,
+        "communication": {
+          "messages": 20,
+          "interactions": 30,
+          "bytes": 14991
+        },
+        "costRelativeToReference": {
+          "topology": "adaptive",
+          "modelCalls": {
+            "actual": 48,
+            "reference": 0,
+            "multiple": null,
+            "status": "undefined-zero-reference"
+          },
+          "interactions": {
+            "actual": 30,
+            "reference": 19,
+            "multiple": 1.5789473684210527,
+            "status": "defined"
+          },
+          "transferBytes": {
+            "actual": 14991,
+            "reference": 10616,
+            "multiple": 1.4121137905048982,
+            "status": "defined"
+          },
+          "entrySteps": {
+            "actual": 14,
+            "reference": 27,
+            "multiple": 0.5185185185185185,
+            "status": "defined"
+          },
+          "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+        },
+        "requesterFeedback": {
+          "accepted": 3,
+          "rejected": 1,
+          "needsMore": 0
+        },
+        "rewires": {
+          "statusRewireCalls": 2,
+          "successfulRewires": 2,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 2,
+          "attempts": [
+            {
+              "callId": "call_01_k4zsad7p2czurvjourypqk6w",
+              "sessionId": "shifting-088ec85e-7a01-4d9e-9046-830e2b980478",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-42",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_01_108gcmhltov3shva27grmt3v",
+              "sessionId": "shifting-088ec85e-7a01-4d9e-9046-830e2b980478",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-46",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "stepHeadroom": {
+          "perNodeSteps": 48,
+          "maxNodeSteps": 14,
+          "maxNodeStepRatio": 0.2916666666666667,
+          "limit": 0.8,
+          "observed": true,
+          "withinLimit": true
+        },
+        "factFlowAudit": {
+          "version": 1,
+          "passed": true,
+          "submittedCheckpoints": 0,
+          "auditedFacts": 0,
+          "facts": [],
+          "violations": [],
+          "noSubmission": true,
+          "interpretation": "Provenance only. No submission has no asserted facts; it remains a failed completion. Correctness is scored separately."
+        },
+        "failures": [],
+        "modelObservation": {
+          "attempts": 48,
+          "settledAttempts": 48,
+          "inFlight": 0,
+          "errors": 0,
+          "aborted": 0,
+          "incomplete": 0,
+          "modelDurationMs": 345044,
+          "toolsStarted": 48,
+          "toolsFinished": 48,
+          "toolErrors": 1,
+          "toolDurationMs": 186,
+          "tokens": {
+            "inputTokens": {
+              "known": 84300,
+              "unknownCalls": 0
+            },
+            "outputTokens": {
+              "known": 37329,
+              "unknownCalls": 0
+            },
+            "cacheReadTokens": {
+              "known": 480640,
+              "unknownCalls": 1
+            },
+            "cacheWriteTokens": {
+              "known": 0,
+              "unknownCalls": 48
+            },
+            "reasoningTokens": {
+              "known": 0,
+              "unknownCalls": 48
+            },
+            "totalTokens": {
+              "known": 602269,
+              "unknownCalls": 0
+            }
+          },
+          "cost": {
+            "amount": null,
+            "knownAmount": 0.035508870000000005,
+            "unknownCalls": 1,
+            "currency": "USD"
+          }
+        },
+        "coverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "report": ".artifacts/experiments/four-arm-deepseek-probe-20261006/deepseek-v4.1-flash-adaptive-seed-73/report.json"
+      }
+    ],
+    "costs": {
+      "topology": "adaptive",
+      "modelCalls": {
+        "actual": 371,
+        "reference": 0,
+        "multiple": null,
+        "status": "undefined-zero-reference"
+      },
+      "interactions": {
+        "actual": 191,
+        "reference": 95,
+        "multiple": 2.0105263157894737,
+        "status": "defined"
+      },
+      "transferBytes": {
+        "actual": 89459,
+        "reference": 53072,
+        "multiple": 1.685615767259572,
+        "status": "defined"
+      },
+      "entrySteps": {
+        "actual": 114,
+        "reference": 135,
+        "multiple": 0.8444444444444444,
+        "status": "defined"
+      },
+      "interpretation": "Model coordination overhead relative to the same-topology constructive policy; not topology benefit. The fixed reference is incomplete."
+    },
+    "phase1SubmittedRate": 0.8,
+    "phase2SubmittedRate": 0.6,
+    "accepted": 20,
+    "rejected": 5,
+    "maxNodeStepRatio": 0.625,
+    "unknownUsage": {
+      "totalTokens": 0,
+      "inputTokens": 0,
+      "cacheReadTokens": 2,
+      "cacheWriteTokens": 371,
+      "referenceCost": 2
+    }
+  },
+  "referenceTotals": {
+    "adaptive": {
+      "topologyMode": "adaptive",
+      "issuedModelCalls": 0,
+      "totalInteractions": 95,
+      "totalTransferBytes": 53072,
+      "entrySteps": 135
+    },
+    "fixed": {
+      "topologyMode": "fixed",
+      "issuedModelCalls": 0,
+      "totalInteractions": 55,
+      "totalTransferBytes": 44892,
+      "entrySteps": 50
+    }
+  },
+  "comparisonArms": [
+    {
+      "mode": "adaptive",
+      "repeats": 0,
+      "execution": "not-executed",
+      "metrics": null,
+      "costMultiples": null,
+      "baselineTopology": "adaptive",
+      "reason": "adaptive-probe-capability-below-4-of-5"
+    },
+    {
+      "mode": "fixed",
+      "repeats": 0,
+      "execution": "not-executed",
+      "metrics": null,
+      "costMultiples": null,
+      "baselineTopology": "fixed",
+      "reason": "adaptive-probe-capability-below-4-of-5"
+    },
+    {
+      "mode": "no-feedback",
+      "repeats": 0,
+      "execution": "not-executed",
+      "metrics": null,
+      "costMultiples": null,
+      "baselineTopology": "adaptive",
+      "reason": "adaptive-probe-capability-below-4-of-5"
+    },
+    {
+      "mode": "no-board",
+      "repeats": 0,
+      "execution": "not-executed",
+      "metrics": null,
+      "costMultiples": null,
+      "baselineTopology": "adaptive",
+      "reason": "adaptive-probe-capability-below-4-of-5"
+    }
+  ],
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "benefitClaim": "not-supported",
+  "interpretation": "Constructive binding holds. The same-source adaptive probe is 3/5. No comparison is admitted. Fixed structural failure is task design. Probe cost ratios include all failures and indicate coordination overhead only; comparison-arm costs remain unmeasured."
+}
