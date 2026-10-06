@@ -1,0 +1,95 @@
+{
+  "schema": 1,
+  "auditedAt": "2026-10-06T05:16:46.833Z",
+  "exportedAt": "2026-10-06T05:50:46.515Z",
+  "purpose": "imported-desktop-route-tool-smoke",
+  "sourceProfile": "desktop",
+  "bootstrap": "installed public runProfile + original Desktop layers + scratch writeback",
+  "node": "v24.18.1",
+  "plugins": {
+    "dsh-opencode-go": {
+      "name": "dsh-opencode-go",
+      "version": "0.1.20",
+      "packageHash": "b8a594c70873ecc53335b4e51b3b86b587acf0d32a259b2be1d62b1a32d0f072",
+      "entryHash": "c94753a4411b6da85e392e9ec0f7cd724ce01dac4586b4c3054bcdb8b9b9e4aa"
+    },
+    "opencode-go-pi-ai": {
+      "name": "@earendil-works/pi-ai",
+      "version": "0.87.1",
+      "packageHash": "0422fc7227a158c3c843c1540edfff017d2103be33ee48b882e2ff9032a5f7d2"
+    }
+  },
+  "importedModelIds": [
+    "kimi-k3",
+    "glm-5.3",
+    "deepseek-v4-pro",
+    "deepseek-v4.1-flash",
+    "qwen3.8-max",
+    "qwen3.8-flash",
+    "mimo-v2.6-pro",
+    "mimo-v2.6-flash",
+    "longcat-2.5-preview-free",
+    "muse-spark-1.3-contributor"
+  ],
+  "models": [
+    {
+      "model": "space-bunny-free",
+      "provider": "dsh-opencode-go",
+      "passed": false,
+      "rounds": 0,
+      "acceptedToolCalls": 0,
+      "finishKinds": [],
+      "error": {
+        "name": "Error",
+        "code": "MISSING_IMPORTED_MODEL"
+      },
+      "source": {
+        "path": ".artifacts/peer-variance/desktop-import-smoke-20261006/space-bunny-free.json",
+        "sha256": "0d1112d11422e13bbe1dbd61f3e90dea2b089f9b892268b16eab40cbced3231b"
+      }
+    },
+    {
+      "model": "longcat-2.5-preview-free",
+      "provider": "dsh-opencode-go",
+      "passed": true,
+      "rounds": 2,
+      "acceptedToolCalls": 1,
+      "finishKinds": [
+        "tool-calls",
+        "stop"
+      ],
+      "source": {
+        "path": ".artifacts/peer-variance/desktop-import-smoke-20261006/longcat-2.5-preview-free.json",
+        "sha256": "abd06a541d03e00f0152cb90b6ce96fa03004adce40d2cd90f4c90cb55e20178"
+      }
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "provider": "dsh-opencode-go",
+      "passed": true,
+      "rounds": 2,
+      "acceptedToolCalls": 1,
+      "finishKinds": [
+        "tool-calls",
+        "stop"
+      ],
+      "source": {
+        "path": ".artifacts/peer-variance/desktop-import-deepseek-smoke-20261006/deepseek-v4.1-flash.json",
+        "sha256": "4e87e4c6efa6c313d2edf695a55e9982003bed9e5cde729f11062ed225a13df5"
+      }
+    }
+  ],
+  "credentialConfigured": true,
+  "credentialSource": "file",
+  "userProfileUnchanged": true,
+  "deepseekExitCode": 0,
+  "initialBootstrapComplete": false,
+  "initialBootstrapNote": "Initial GUI invocation was not awaited; LongCat roundtrip finished but the remaining DeepSeek row was not completed. DeepSeek was tested with Start-Process -Wait in a separate directory. These are small route smoke tests, not ATN topology comparison runs.",
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "source": {
+    "path": ".artifacts/peer-variance/desktop-import-smoke-audit-20261006.json",
+    "sha256": "d48a11dbbf0bd0a6e7db2f060e1cf8437d0dd76d29f532e2dcf65685f878a88f"
+  },
+  "interpretation": "Two imported models each completed one real tool roundtrip and a final answer. The absent Space Bunny import was rejected before inference. These small smoke sessions are separate from ATN probe and fixed batches."
+}

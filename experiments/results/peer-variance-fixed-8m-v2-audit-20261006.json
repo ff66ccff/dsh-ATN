@@ -1,0 +1,1075 @@
+{
+  "version": 1,
+  "auditedAt": "2026-10-05T17:51:46.073Z",
+  "auditTimestampMeaning": "Source working-tree identity fields describe the state observed at auditedAt; immutable artifact hashes remain independently checkable.",
+  "batch": {
+    "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/batch.json",
+    "sha256": "f2b1e993a83d60ce3f48efb0fd4dbad84e68ec3f635184a1a3c9777b193bb4a5"
+  },
+  "complete": true,
+  "priorProbe": {
+    "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006-v3/batch.json",
+    "sha256": "b9cbd08d1c0e9d15287d8ac1c10b5c81624604401031a59f4874d294362fdfbe"
+  },
+  "summary": {
+    "fixedGatePassed": false,
+    "calibrationGatePassed": false,
+    "everyArmRepeated": false,
+    "homogeneous": true,
+    "uniqueRuns": true,
+    "liveProvider": true,
+    "validComparisonRuns": true,
+    "adaptiveProbeGatePassed": false,
+    "probeMatchesComparison": true,
+    "separateProbeRuns": true,
+    "probePrecedesComparison": true,
+    "feedbackVarianceGatePassed": false,
+    "rejectedReviews": 0,
+    "comparisonRejectedReviews": 0,
+    "probeRejectedReviews": 0,
+    "stepHeadroom": {
+      "limit": 0.8,
+      "arms": [
+        {
+          "mode": "adaptive",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "fixed",
+          "runs": [
+            {
+              "runId": "0e6716b5-ff6b-47d5-9cd1-4f50df82ebe0",
+              "seed": 17,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 1,
+              "maxNodeStepRatio": 0.020833333333333332,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "02f7933f-6d7a-4a00-99db-6e6af637f04a",
+              "seed": 31,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 1,
+              "maxNodeStepRatio": 0.020833333333333332,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "0152ecfa-e230-4884-847a-142158d2ecbe",
+              "seed": 45,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 1,
+              "maxNodeStepRatio": 0.020833333333333332,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "b151a34e-73f1-471c-b711-a7d46b220e0d",
+              "seed": 59,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 3,
+              "maxNodeStepRatio": 0.0625,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "16c52f9f-6011-4f24-9fb1-0010faa662b2",
+              "seed": 73,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 1,
+              "maxNodeStepRatio": 0.020833333333333332,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            }
+          ],
+          "withinLimit": true
+        },
+        {
+          "mode": "no-feedback",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-board",
+          "runs": [],
+          "withinLimit": false
+        }
+      ],
+      "withinLimit": true
+    },
+    "mayInterpretTopology": false,
+    "interpretation": "feasibility-only",
+    "arms": [
+      {
+        "mode": "adaptive",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "fixed",
+        "repeats": 5,
+        "correct": 0,
+        "successRate": 0,
+        "phase1SubmittedRate": 0,
+        "phase2SubmittedRate": 0,
+        "submissionDisciplineFailures": 5,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-feedback",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-board",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      }
+    ],
+    "probe": {
+      "probeGatePassed": false,
+      "repeats": 5,
+      "runsWithSuccessfulRewire": 0,
+      "successfulRewireRunRate": 0,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 0,
+        "callsWithPriorStatusQuery": 0
+      },
+      "interpretation": "rewire-discoverability-only",
+      "causalClaim": false
+    },
+    "excludedProbeRuns": 0,
+    "causalClaim": false
+  },
+  "runs": [
+    {
+      "seed": 17,
+      "runId": "0e6716b5-ff6b-47d5-9cd1-4f50df82ebe0",
+      "model": "space-bunny-free",
+      "purpose": "comparison",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 17,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "2af0f489eb60bffdd7fdd17b8a39fc6e7dfae5a17fb893ce005026da2ca697e2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchCurrent": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "bcdd0fc6bd191c7058f732150ebaa1ebf977fc34d6860b7f8ce6cbee943d87a8"
+        }
+      },
+      "sourceSnapshotHashesMatch": true,
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 8,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 0,
+      "rawStatusCalls": 0,
+      "rawRewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 0,
+        "callsWithPriorStatusQuery": 0
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 0,
+      "reportedExplicitRewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 1,
+        "maxNodeStepRatio": 0.020833333333333332,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 1,
+      "stepSnapshotMatches": true,
+      "failureCounts": {
+        "TIMEOUT": 3,
+        "TRANSPORT": 5
+      },
+      "sanitizedErrorMessages": {
+        "Connection error.": 5,
+        "Request timed out.": 3
+      },
+      "providerInfrastructureFailureBeforeToolUse": true,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/report.json",
+          "sha256": "f898abe84688825bfa6caa93702bfe9a9f37a500b307bf0b39e6e0b93e43ca62"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/manifest.json",
+          "sha256": "ac46fc78397736a2ed595b0e5b5b37f6bc99bd5fe2e4d0e463bddebdd59143aa"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/storage/atn_networks.json",
+          "sha256": "3a1a0593488eb44fd0f78bf65616f49a18b3ad30a1d3e3bfdff4052bcd37ccb9"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "b09319d07d2bafd7e9b601a1c10b4789ac0953d293fda2810a17ef1e92ab584a",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-13576875-1657-4c50-ba0f-587fb85b4a53/session.v4.jsonl",
+              "sha256": "4d3b0384e101c5bba80cc2ba026b2948a73b496631de624c7c7adabe8d2136a4"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-380e14b1-8b00-4e18-8dd1-3012099cc90d/session.v4.jsonl",
+              "sha256": "00c9e64c2913865e67d6cb178f227aff8e337898b924a9513af630daf45f43dd"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-3e8ff9d1-4cab-41a3-82fe-757f4c75104d/session.v4.jsonl",
+              "sha256": "6311f234c6445c7e51962e60dbe60f503a487a1ac066ddd8da9b2d65771ea6a1"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-b2d686b9-3e77-422d-a61d-e266b37220bc/session.v4.jsonl",
+              "sha256": "e20027a3bb97c61d9f22176cf6621d790c704a24702918d2deb22fc90481464a"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-bd9d81eb-a813-465c-a500-b837fad28c8c/session.v4.jsonl",
+              "sha256": "7d675f8b3f817cd08aceccb8cf0ac444190d2b572572539216e9fc2bf0151f85"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-c9302346-c4c1-48c6-ba6d-306c810d250c/session.v4.jsonl",
+              "sha256": "663e87e1c9bb25f36e069a782cc6b0a34826392b81608804f1bdd2de300160ee"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/atn-cab5647d-ae3e-430e-906c-cd9a4abdda13/session.v4.jsonl",
+              "sha256": "f99b98f4a1413346dea05bc0444fa1c75ce6b71eee17593737abf27d663c916d"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-17--/shifting-0e6716b5-ff6b-47d5-9cd1-4f50df82ebe0/session.v4.jsonl",
+              "sha256": "24a61b78db4c963335794f01f1bd53ba6b3e8e44f9fe5b2c8ca4cf3605c5a4f5"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "seed": 31,
+      "runId": "02f7933f-6d7a-4a00-99db-6e6af637f04a",
+      "model": "space-bunny-free",
+      "purpose": "comparison",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 31,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "2af0f489eb60bffdd7fdd17b8a39fc6e7dfae5a17fb893ce005026da2ca697e2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchCurrent": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "bcdd0fc6bd191c7058f732150ebaa1ebf977fc34d6860b7f8ce6cbee943d87a8"
+        }
+      },
+      "sourceSnapshotHashesMatch": true,
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 8,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 0,
+      "rawStatusCalls": 0,
+      "rawRewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 0,
+        "callsWithPriorStatusQuery": 0
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 0,
+      "reportedExplicitRewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 1,
+        "maxNodeStepRatio": 0.020833333333333332,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 1,
+      "stepSnapshotMatches": true,
+      "failureCounts": {
+        "TIMEOUT": 4,
+        "TRANSPORT": 4
+      },
+      "sanitizedErrorMessages": {
+        "Connection error.": 4,
+        "Request timed out.": 4
+      },
+      "providerInfrastructureFailureBeforeToolUse": true,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/report.json",
+          "sha256": "87b4f2662d32e47e3c57884422126e5ba75eecb28c4fa89c87d7baf4b5e6f4da"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/manifest.json",
+          "sha256": "1731bc234a33d3f0b6da288ebb07d41f603db734b4d2f55e4b9af0c1c3b30903"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/storage/atn_networks.json",
+          "sha256": "509f55fab660b6402a821965ca9c929ba8249a8113b39a60f30fcd1ca482a4ae"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "bce7e3de9e58f77f144458831d2670d128c31e712206a30d2e49cbf57551c8d0",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-09de406d-e4d7-4bbe-9d9b-02fd84519828/session.v4.jsonl",
+              "sha256": "27a34be34e8cdc2f855585eb8a44a7b7d176c2e0bd29c20e4f8321adf9cd9147"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-1efd829a-c7dc-4d39-8d12-cb0f644a5644/session.v4.jsonl",
+              "sha256": "63df4f9926417825c143ef75a77dfdcc4fdc30ff91a660a7a2054b2a5ff09e35"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-2af4691e-9901-4891-8af6-65e637c04722/session.v4.jsonl",
+              "sha256": "a2ce84c86cd03e5566291899ea6a0edc944e6d6b3fbd777586a88728dbfda391"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-37b19dcd-b84c-402f-86ca-443fee11749e/session.v4.jsonl",
+              "sha256": "6ba4b330766de99cbc37edd52ebcf4549b6d3be22be918934abb2334ff69e114"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-4fd56fa1-fc54-49cb-944d-d246bd19f4c3/session.v4.jsonl",
+              "sha256": "b01b38ca34ef8acdf60150a8661531808861834136954586002cff90de9dcaa6"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-6825d03f-a3d6-459e-8711-24652ed9ef84/session.v4.jsonl",
+              "sha256": "b963639732eccd8bdfde7d504ba557fc7347d307afe6f400b3cd0e707c2f44f9"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/atn-8ffd8bcc-84e7-4b12-9924-0d3b45cac826/session.v4.jsonl",
+              "sha256": "71f96c96368006f76bfc44a5975c037198ea7e3e3dfad053f42266efbd560f77"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-31--/shifting-02f7933f-6d7a-4a00-99db-6e6af637f04a/session.v4.jsonl",
+              "sha256": "ea0f7a268d2df5b4ba5c94294d6503ca34729eef82424161ac2806dfc534b71d"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "seed": 45,
+      "runId": "0152ecfa-e230-4884-847a-142158d2ecbe",
+      "model": "space-bunny-free",
+      "purpose": "comparison",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 45,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "2af0f489eb60bffdd7fdd17b8a39fc6e7dfae5a17fb893ce005026da2ca697e2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchCurrent": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "bcdd0fc6bd191c7058f732150ebaa1ebf977fc34d6860b7f8ce6cbee943d87a8"
+        }
+      },
+      "sourceSnapshotHashesMatch": true,
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 8,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 0,
+      "rawStatusCalls": 0,
+      "rawRewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 0,
+        "callsWithPriorStatusQuery": 0
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 0,
+      "reportedExplicitRewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 1,
+        "maxNodeStepRatio": 0.020833333333333332,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 1,
+      "stepSnapshotMatches": true,
+      "failureCounts": {
+        "TIMEOUT": 6,
+        "TRANSPORT": 2
+      },
+      "sanitizedErrorMessages": {
+        "Request timed out.": 6,
+        "Connection error.": 2
+      },
+      "providerInfrastructureFailureBeforeToolUse": true,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/report.json",
+          "sha256": "1795eec2730fb40cacd9f8f2c041fca7dfbcc966732bc0ed069fdf1712b63068"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/manifest.json",
+          "sha256": "fc7888dc51ebdd19b357b50e137f81fa2c1a1d0df5232cc7be6fb352135598f2"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/storage/atn_networks.json",
+          "sha256": "f7052f8444d67d2a24839f20faf2ffed1f9e859a4ee358ed76f27b78879dce3f"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "1445c7cf6c609a5da76d1b4e00ae6e4a24dcb01d2730a7bd3ddeb7006700c91e",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-09bdacb2-8345-44cd-ad56-61f0da89b398/session.v4.jsonl",
+              "sha256": "359e969b0aaaeccaedb004a21b5a08ff16a0f1a0dd81619793e40ac79272faa5"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-4ff8f971-3ca5-4640-b736-feb3acd6079e/session.v4.jsonl",
+              "sha256": "be6b152014f3bac39642cf7f9d4a8e1cf9a428b6fe1b09f094bb4973c7bd2548"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-6c3561a5-579d-408a-a848-286df6b550bf/session.v4.jsonl",
+              "sha256": "1ebed0ab3cb5178fa842a6f7ce60adf0c9d60e66c247b8eb399df3be50fcc4d9"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-919b105d-1acb-455b-9c7b-0c1a176639d0/session.v4.jsonl",
+              "sha256": "4756cfa2f289ebc88e7e2048b9d92130aabd9eb95b6ce07262197ae926106779"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-d1cdb6e6-d359-4843-bb56-692625797ece/session.v4.jsonl",
+              "sha256": "cda5d37047024c3f253073a35ab29d62668ac0d22bc9dfa0eddaa81a0059e1a9"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-dd74b5f0-a230-4c28-bf1f-b961cf6bf14e/session.v4.jsonl",
+              "sha256": "c26d49a0b4eee1d9feef63b945f0d91c808db783d84c275addd95db6be770ab6"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/atn-e64748f8-535d-4ffa-ae2f-c4b6ffe2f2a2/session.v4.jsonl",
+              "sha256": "bc2ff7f581c61d2a4d642316e62c2dfbaf7ed48be9cf33477eba946a4d8a5fb1"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-45--/shifting-0152ecfa-e230-4884-847a-142158d2ecbe/session.v4.jsonl",
+              "sha256": "e70d4dcaf610a87f23519f28136c09b79b13ee0c629cc68e066ebc45a3d90062"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "seed": 59,
+      "runId": "b151a34e-73f1-471c-b711-a7d46b220e0d",
+      "model": "space-bunny-free",
+      "purpose": "comparison",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 59,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "2af0f489eb60bffdd7fdd17b8a39fc6e7dfae5a17fb893ce005026da2ca697e2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchCurrent": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "bcdd0fc6bd191c7058f732150ebaa1ebf977fc34d6860b7f8ce6cbee943d87a8"
+        }
+      },
+      "sourceSnapshotHashesMatch": true,
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 15,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 14,
+      "rawStatusCalls": 6,
+      "rawRewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 6,
+        "callsWithPriorStatusQuery": 0
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 0,
+      "reportedExplicitRewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 3,
+        "maxNodeStepRatio": 0.0625,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 3,
+      "stepSnapshotMatches": true,
+      "failureCounts": {
+        "TIMEOUT": 5,
+        "TRANSPORT": 3
+      },
+      "sanitizedErrorMessages": {
+        "Connection error.": 3,
+        "opencode-go stream idle timeout": 4,
+        "Request timed out.": 1
+      },
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/report.json",
+          "sha256": "b226b2ccbd67e6e813e714bd2160bd4c3047b9f70031e1d64bd11c433fba9fa9"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/manifest.json",
+          "sha256": "e7d97ac62ea82b6a024e76a128c452f743cd75d9db4542548f677957be52c371"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/storage/atn_networks.json",
+          "sha256": "fc162cdc9b97276fdf3a767e7ab2dd02f36aab2dfdb4c2d018f2a159819e1ea2"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "25ab8ffa95f7a1cce94a97facb1784858a7aa262f554b22e7373c56e9cf02d4c",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-084b638e-2509-40f9-a574-ca507b323eca/session.v4.jsonl",
+              "sha256": "356c9a1e339b5d5146f6cb8eb726ec7100af9e6b06bdf9488d3efd7ff6192d99"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-56552d09-d0bb-48ef-a121-1d22407c9cbd/session.v4.jsonl",
+              "sha256": "6edf821e21e81d7ab83774126c41119d91bb9a9aea42abd001df2dbe6ba0bcce"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-57895e4d-5273-41dd-865b-e46274115b6d/session.v4.jsonl",
+              "sha256": "0a71c7ed818362f792055ebfd6c31e428001050937270aed001e8a44db3b8d13"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-762c3d68-388f-489d-86cc-123dd141c84a/session.v4.jsonl",
+              "sha256": "85ea4c0307c29814fadbae5db4a85f60ac142b1d9c319867d068f115b8d4c223"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-ae20437f-0006-4eb9-a1f8-c54aa711163b/session.v4.jsonl",
+              "sha256": "650efe6ca3ba429bf97e76c655eb52e49dbc7a991284298d0c534f81d35944f4"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-ed63c0d5-61c5-4f60-9b3e-3c920e1751d5/session.v4.jsonl",
+              "sha256": "69e1532218a2a1d7a0ed692ac0f1f35b4561d1ae4c05c9be16c6c789b848f694"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/atn-ff587e9d-b642-47af-a4b3-fb4ac5a46811/session.v4.jsonl",
+              "sha256": "3fb8a72ca176a5e963aaa5eb1333b27d1dc163212cc7f784f7997201ef6e82ed"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-59--/shifting-b151a34e-73f1-471c-b711-a7d46b220e0d/session.v4.jsonl",
+              "sha256": "5b5b054f6534d5645a67751a73b3395984e073b0d29fefc37800eb69916a0cd4"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "seed": 73,
+      "runId": "16c52f9f-6011-4f24-9fb1-0010faa662b2",
+      "model": "space-bunny-free",
+      "purpose": "comparison",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 73,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "2af0f489eb60bffdd7fdd17b8a39fc6e7dfae5a17fb893ce005026da2ca697e2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchCurrent": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "bcdd0fc6bd191c7058f732150ebaa1ebf977fc34d6860b7f8ce6cbee943d87a8"
+        }
+      },
+      "sourceSnapshotHashesMatch": true,
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 8,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 0,
+      "rawStatusCalls": 0,
+      "rawRewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 0,
+        "callsWithPriorStatusQuery": 0
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 0,
+      "reportedExplicitRewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 0,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 1,
+        "maxNodeStepRatio": 0.020833333333333332,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 1,
+      "stepSnapshotMatches": true,
+      "failureCounts": {
+        "TIMEOUT": 2,
+        "TRANSPORT": 6
+      },
+      "sanitizedErrorMessages": {
+        "Connection error.": 6,
+        "Request timed out.": 2
+      },
+      "providerInfrastructureFailureBeforeToolUse": true,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/report.json",
+          "sha256": "e4e705f6b09dcac070fdf787e368fb879eb037a267667c1dd61d199020c63a39"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/manifest.json",
+          "sha256": "563790d4cf15118197e75f6cd1106e89eae33b3945ba4610131e0c42483a55e0"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/storage/atn_networks.json",
+          "sha256": "791fcf83e409a8a8a50fa9f134eb5de2082220f65a0d56a430be6cc9f4ad1bfa"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "f128ecb088f157d6c2b2bfe47a975c9eab62071db4fe0809aa303904a9efc025",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-00ab87ab-1ccd-42d8-b232-87db0ed9e1a6/session.v4.jsonl",
+              "sha256": "e282179f4c2815bb40d54b47f1e89eccc18fe40ad98619f51410eca4df7ddeec"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-2a0789a6-1f7b-4d66-8c00-3077e25bcad8/session.v4.jsonl",
+              "sha256": "cba4f6151d37e16042c75f0354f632563c08ff1706674d914bbe0c14e9d4ffff"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-3fde8c1f-14b3-4985-b453-d97889bc86ac/session.v4.jsonl",
+              "sha256": "5e851311c1825d3c5f26f3bbe129d13ae36f3d166bd86d4dc59cb14ae8c6b013"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-8be40c14-5148-4c7f-9116-b7d85144f0ad/session.v4.jsonl",
+              "sha256": "662dcecaedce0dca5855a0b6f33aebde9401babcbc733834bbbb5e6f8a261e53"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-947d19ba-f25d-4c84-909e-bbb9e36f0da5/session.v4.jsonl",
+              "sha256": "94f38f6f18a667dffa936165c2d608177d74d1ed5dd7ed23472459f9d2699f17"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-a8ff3d02-3f71-4ca0-932b-cbf6b3d93b4e/session.v4.jsonl",
+              "sha256": "605c6c996e77d4b7b10889d939397dc9a2f7d912c142c496273f0169cdf79787"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/atn-acf1b0cf-b847-41e7-8114-a07fed07e7de/session.v4.jsonl",
+              "sha256": "af20d1bb2097b9c0b4278dda062c3ecd9bf05ccdbf340209a272db03f670472d"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-fixed-8m-20261006-v2/space-bunny-free-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-fixed-8m-20261006-v2-space-bunny-free-fixed-seed-73--/shifting-16c52f9f-6011-4f24-9fb1-0010faa662b2/session.v4.jsonl",
+              "sha256": "e96e3dad4b93619ba30579ea5772433b6a89ec3088bdf812b1bb8498ae73298e"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "allAuditedCountsMatch": true,
+  "realRejectedReviews": 0,
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Independent raw-session and durable-network reconciliation of a separate adaptive probe or fixed feasibility batch. Provider failures and unfinished checkpoints remain in the evidence; this audit does not constitute four-arm comparison results.",
+  "transportDiagnostic": {
+    "mode": "read-only fetch error observer; request arguments and network behavior unchanged",
+    "observer": {
+      "path": ".artifacts/peer-variance/transport-diagnostic.mjs",
+      "sha256": "16fb553bfb2df7bf59daadefe76522a6e7a48575f11ec6c1a57a5b67d63a6dd1"
+    },
+    "log": {
+      "path": ".artifacts/peer-variance/fixed-8m-v2.log",
+      "sha256": "8c842805f8758e2d64b51546c920d8b70914f2af0c62f5a34691276fed019fbd"
+    },
+    "errorCalls": 40,
+    "causeCounts": {
+      "UND_ERR_CONNECT_TIMEOUT": 16,
+      "UND_ERR_SOCKET": 20,
+      "AbortError": 4
+    },
+    "byRoute": [
+      {
+        "route": "https://opencode.ai/zen/go/v1/chat/completions",
+        "errorCalls": 40,
+        "causeCounts": {
+          "UND_ERR_CONNECT_TIMEOUT": 16,
+          "UND_ERR_SOCKET": 20,
+          "AbortError": 4
+        },
+        "minElapsedMs": 10139,
+        "maxElapsedMs": 60013
+      }
+    ]
+  },
+  "totals": {
+    "rawToolCalls": 14,
+    "rawStatusCalls": 6,
+    "issuedModelCalls": 47,
+    "rewireCounts": {
+      "statusRewireCalls": 0,
+      "successfulRewires": 0,
+      "unchangedRewires": 0,
+      "blockedRewires": 0,
+      "ablationBlockedRewires": 0,
+      "pendingRewires": 0,
+      "priorStatusQueryCalls": 6,
+      "callsWithPriorStatusQuery": 0
+    },
+    "feedback": {
+      "accepted": 0,
+      "rejected": 0,
+      "needsMore": 0
+    },
+    "providerFailures": {
+      "TIMEOUT": 20,
+      "TRANSPORT": 20
+    },
+    "twoPhaseCorrect": 0
+  }
+}

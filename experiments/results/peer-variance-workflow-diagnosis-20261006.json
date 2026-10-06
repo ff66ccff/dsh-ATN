@@ -1,0 +1,1180 @@
+{
+  "schemaVersion": 1,
+  "kind": "peer-variance-workflow-diagnosis",
+  "createdAt": "2026-10-05T17:51:27.094Z",
+  "status": "single-run-observational-diagnosis",
+  "scope": {
+    "runDirectory": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45",
+    "pathBase": "repository-root",
+    "pathFormat": "portable forward-slash relative paths",
+    "readOnlyInputs": true,
+    "providerInvoked": false,
+    "implementationOrTestsChanged": false
+  },
+  "originalFiles": [
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/events.jsonl",
+      "sha256": "027121eb350182dc3e305eb1e28947c9d97894a6f102c89c44cc24aab403a188",
+      "bytes": 972462
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/manifest.json",
+      "sha256": "e6e6452162d40e30a9d4ee755f4249518398f502db60b94ccb155f84caa8f841",
+      "bytes": 6187
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/report.json",
+      "sha256": "45d73d169f79b6f47a8f2fce35f0e410da944ba635f6e90012a35509fc619b29",
+      "bytes": 78937
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+      "sha256": "c112032de010e8764653f81581df5a93fd008065d0223de69186524c2bfe306f",
+      "bytes": 412406
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+      "sha256": "152374e39f76b8fa873440a08a23260c9952d83518e8b95b210292628ac12f49",
+      "bytes": 303383
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+      "sha256": "5d0d392eb79729f5996b0dcb9fac6bf54005647304c8c5dd007a0f6a482fc222",
+      "bytes": 464981
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+      "sha256": "b110f925bc4f003d6e539c0a8cdd2cbd121acaa62251463444a1fefce718eb8b",
+      "bytes": 629492
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+      "sha256": "21ec0ba6e2cc00c3b7a6fcf168b7b8eda23f41fcbef6bbe795e28d0935305157",
+      "bytes": 861295
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+      "sha256": "4ff2fc46048ff06799a009ff82f9ba9d4ddd6bb7e783c182f1d50202542605a2",
+      "bytes": 641750
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+      "sha256": "f6cda896c03b20d2fbf6437ebbfe478ab6388813ba0f90996d57115ff814cfe0",
+      "bytes": 705594
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+      "sha256": "6fe76102241ee8d788d5152231ee0d99f5df67fb9806ac70c1f0b13701ae0501",
+      "bytes": 594309
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/storage/atn_networks.json",
+      "sha256": "e5580bc3186fb40286bc74fcaaa8998b7f144ac78506bcebe7862a9991936983",
+      "bytes": 402640
+    },
+    {
+      "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/summary.json",
+      "sha256": "91989f8ee9b5dbb37e3babf6f875a2398c2377a79a34fcd0a11e057df53e6c42",
+      "bytes": 51757
+    }
+  ],
+  "identity": {
+    "runId": "ddeb0876-577e-4e46-8c29-8d383b479da3",
+    "networkId": "atn-11f46715-6758-4078-b0d8-292e36010f75",
+    "model": "space-bunny-free",
+    "mode": "adaptive",
+    "purpose": "adaptive-probe",
+    "execution": "live-provider",
+    "seed": 45,
+    "protocolRevision": 4,
+    "taskHash": "9e1a27e22570f91e820ecf00edf5d6dc48302818555d87f8f187ea6fcee06933",
+    "conditions": {
+      "agents": 8,
+      "seed": 45,
+      "chainLength": 2,
+      "perNodeSteps": 48,
+      "maxCalls": 384,
+      "maxOutputTokens": 4096,
+      "timeoutMs": 600000,
+      "observedTokenLimit": 8000000,
+      "autoAdvance": false
+    },
+    "recordedSourceHashes": {
+      "experiments/shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+      "experiments/shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+      "experiments/shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+      "experiments/shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+      "experiments/shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+      "experiments/shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+      "experiments/shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+      "experiments/reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+      "experiments/provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+      "experiments/budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+      "experiments/telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+      "experiments/atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+      "src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+      "src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+      "src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+      "src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+      "src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+      "src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+      "src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+      "src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+      "src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+      "src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+      "src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+      "package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+      "package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+    }
+  },
+  "outcome": {
+    "startedAt": 1791220903596,
+    "completedAt": 1791221136986,
+    "elapsedMs": 233390,
+    "stopReason": "observed-token-limit",
+    "phase1Submitted": true,
+    "phase1Correct": true,
+    "phase2Submitted": false,
+    "phase2Correct": false,
+    "passed": false,
+    "budget": {
+      "issued": 217,
+      "denied": 1,
+      "lastRejection": "observed-token-limit",
+      "unknownUsageCalls": 0,
+      "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+    },
+    "stepHeadroom": {
+      "perNodeSteps": 48,
+      "maxNodeSteps": 41,
+      "maxNodeStepRatio": 0.8541666666666666,
+      "limit": 0.8,
+      "observed": true,
+      "withinLimit": false
+    }
+  },
+  "measurements": {
+    "admittedModelCalls": 217,
+    "modelStartsInRawEvents": 217,
+    "settledModelCalls": 217,
+    "incompleteModelCalls": 7,
+    "assistantMessageRecords": 213,
+    "assistantMessageRecordsMeaning": "Includes 3 interrupted message records; this count is not the number of admitted provider calls.",
+    "entryAdmittedModelCalls": 22,
+    "respondingPeersAdmittedModelCalls": 195,
+    "respondingPeersFractionOfAdmittedCalls": 0.8986175115207373,
+    "modelStartsByPhaseCheckpointTimestamp": {
+      "phase1": 114,
+      "phase2": 103,
+      "caveat": "Calls may overlap the phase transition; these groups use invocation start timestamp, not semantic phase attribution."
+    },
+    "knownTokens": {
+      "inputTokens": {
+        "known": 534397,
+        "unknownCalls": 3
+      },
+      "outputTokens": {
+        "known": 120301,
+        "unknownCalls": 3
+      },
+      "cacheReadTokens": {
+        "known": 7424588,
+        "unknownCalls": 7
+      },
+      "cacheWriteTokens": {
+        "known": 0,
+        "unknownCalls": 217
+      },
+      "reasoningTokens": {
+        "known": 0,
+        "unknownCalls": 217
+      },
+      "totalTokens": {
+        "known": 8079286,
+        "unknownCalls": 3
+      }
+    },
+    "knownCacheReadFractionOfKnownTotalTokens": 0.9189658591118076,
+    "knownTokensAboveObservedLimit": 79286,
+    "toolCalls": 334,
+    "toolResults": 334,
+    "toolErrors": 21,
+    "toolDistribution": {
+      "read_evidence": {
+        "total": 26,
+        "phase1ByTimestamp": 18,
+        "phase2ByTimestamp": 8
+      },
+      "atn_status:query": {
+        "total": 38,
+        "phase1ByTimestamp": 21,
+        "phase2ByTimestamp": 17
+      },
+      "atn_board:publish": {
+        "total": 43,
+        "phase1ByTimestamp": 25,
+        "phase2ByTimestamp": 18
+      },
+      "atn_board:read": {
+        "total": 42,
+        "phase1ByTimestamp": 19,
+        "phase2ByTimestamp": 23
+      },
+      "atn_status:rewire": {
+        "total": 22,
+        "phase1ByTimestamp": 10,
+        "phase2ByTimestamp": 12
+      },
+      "atn_send:note": {
+        "total": 31,
+        "phase1ByTimestamp": 17,
+        "phase2ByTimestamp": 14
+      },
+      "atn_send:result": {
+        "total": 39,
+        "phase1ByTimestamp": 20,
+        "phase2ByTimestamp": 19
+      },
+      "atn_send:task": {
+        "total": 33,
+        "phase1ByTimestamp": 13,
+        "phase2ByTimestamp": 20
+      },
+      "atn_status:review": {
+        "total": 24,
+        "phase1ByTimestamp": 13,
+        "phase2ByTimestamp": 11
+      },
+      "submit_checkpoint": {
+        "total": 5,
+        "phase1ByTimestamp": 2,
+        "phase2ByTimestamp": 3
+      },
+      "atn_status:read": {
+        "total": 28,
+        "phase1ByTimestamp": 14,
+        "phase2ByTimestamp": 14
+      },
+      "atn_send:missing-kind": {
+        "total": 3,
+        "phase1ByTimestamp": 0,
+        "phase2ByTimestamp": 3
+      }
+    },
+    "successfulReadOnlyStatusCalls": 65,
+    "readOnlyStatusCallAttempts": 66,
+    "readOnlyStatusDifference": "66 read-only atn_status attempts include one unknown-task error; telemetry records 65 successful prior-query calls.",
+    "successfulBoardReads": 40,
+    "successfulBoardWrites": 35,
+    "durableChangedRewires": 22,
+    "unchangedRewires": 0,
+    "blockedRewires": 0,
+    "pendingRewires": 0,
+    "callsWithPriorStatusQuery": 22,
+    "requesterFeedback": {
+      "accepted": 23,
+      "rejected": 1,
+      "needsMore": 0
+    },
+    "deniedEvidenceReads": 0,
+    "nodeStats": [
+      {
+        "node": "node-1",
+        "sessionId": "shifting-ddeb0876-577e-4e46-8c29-8d383b479da3",
+        "metricSession": "session-1",
+        "stepsUsed": 22,
+        "admittedModelCalls": 22,
+        "assistantMessageRecords": 21,
+        "interruptedAssistantMessageRecords": 0,
+        "assistantAttemptRecordsWithoutMessage": 1,
+        "toolCalls": 37,
+        "toolErrors": 1,
+        "knownTotalTokens": 899973,
+        "totalTokenUnknownCalls": 0
+      },
+      {
+        "node": "node-3",
+        "sessionId": "atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b",
+        "metricSession": "session-2",
+        "stepsUsed": 40,
+        "admittedModelCalls": 40,
+        "assistantMessageRecords": 40,
+        "interruptedAssistantMessageRecords": 1,
+        "assistantAttemptRecordsWithoutMessage": 0,
+        "toolCalls": 51,
+        "toolErrors": 1,
+        "knownTotalTokens": 1585321,
+        "totalTokenUnknownCalls": 1
+      },
+      {
+        "node": "node-6",
+        "sessionId": "atn-941db838-b062-4802-aaed-256e9f115db1",
+        "metricSession": "session-3",
+        "stepsUsed": 35,
+        "admittedModelCalls": 35,
+        "assistantMessageRecords": 34,
+        "interruptedAssistantMessageRecords": 0,
+        "assistantAttemptRecordsWithoutMessage": 1,
+        "toolCalls": 56,
+        "toolErrors": 2,
+        "knownTotalTokens": 1773566,
+        "totalTokenUnknownCalls": 0
+      },
+      {
+        "node": "node-9",
+        "sessionId": "atn-1d000f0d-07f9-43de-b151-759b05eb6346",
+        "metricSession": "session-4",
+        "stepsUsed": 18,
+        "admittedModelCalls": 18,
+        "assistantMessageRecords": 17,
+        "interruptedAssistantMessageRecords": 0,
+        "assistantAttemptRecordsWithoutMessage": 1,
+        "toolCalls": 38,
+        "toolErrors": 5,
+        "knownTotalTokens": 474360,
+        "totalTokenUnknownCalls": 0
+      },
+      {
+        "node": "node-12",
+        "sessionId": "atn-af9bbcbd-06c9-453d-8127-0e919e7c9573",
+        "metricSession": "session-5",
+        "stepsUsed": 28,
+        "admittedModelCalls": 27,
+        "assistantMessageRecords": 27,
+        "interruptedAssistantMessageRecords": 0,
+        "assistantAttemptRecordsWithoutMessage": 1,
+        "toolCalls": 50,
+        "toolErrors": 3,
+        "knownTotalTokens": 1003575,
+        "totalTokenUnknownCalls": 0
+      },
+      {
+        "node": "node-15",
+        "sessionId": "atn-1af08278-479a-4fff-894e-f7876dba21b3",
+        "metricSession": "session-6",
+        "stepsUsed": 15,
+        "admittedModelCalls": 15,
+        "assistantMessageRecords": 15,
+        "interruptedAssistantMessageRecords": 1,
+        "assistantAttemptRecordsWithoutMessage": 0,
+        "toolCalls": 22,
+        "toolErrors": 2,
+        "knownTotalTokens": 285109,
+        "totalTokenUnknownCalls": 1
+      },
+      {
+        "node": "node-18",
+        "sessionId": "atn-ca62a078-9060-434b-a77e-f4f40800f25e",
+        "metricSession": "session-7",
+        "stepsUsed": 41,
+        "admittedModelCalls": 41,
+        "assistantMessageRecords": 41,
+        "interruptedAssistantMessageRecords": 1,
+        "assistantAttemptRecordsWithoutMessage": 0,
+        "toolCalls": 54,
+        "toolErrors": 2,
+        "knownTotalTokens": 1639488,
+        "totalTokenUnknownCalls": 1
+      },
+      {
+        "node": "node-21",
+        "sessionId": "atn-100d734c-123b-480a-b03a-7c34622d76a2",
+        "metricSession": "session-8",
+        "stepsUsed": 19,
+        "admittedModelCalls": 19,
+        "assistantMessageRecords": 18,
+        "interruptedAssistantMessageRecords": 0,
+        "assistantAttemptRecordsWithoutMessage": 1,
+        "toolCalls": 26,
+        "toolErrors": 5,
+        "knownTotalTokens": 417894,
+        "totalTokenUnknownCalls": 0
+      }
+    ]
+  },
+  "errorDistribution": {
+    "invalid-discovery-identifiers-or-topics": 8,
+    "missing-to-and-kind": 3,
+    "non-entry-checkpoint": 4,
+    "non-neighbour-send": 3,
+    "stale-board-cursor": 2,
+    "unknown-task": 1
+  },
+  "errorInstances": [
+    {
+      "category": "non-neighbour-send",
+      "node": "node-21",
+      "message": "Error: node node-1 is not in your collaboration neighbours; use atn_status to discover and its rewire option to connect first",
+      "tool": "atn_send",
+      "callId": "call_Uf2GheoC38eUFWcZFdxOIkOD",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 74,
+        "sequence": 72,
+        "type": "tool/call",
+        "at": 1791221019383
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 75,
+        "sequence": 73,
+        "type": "tool/result",
+        "at": 1791221019384
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-21",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_DcNTPGimC0x84Hh6RbE4G5DD",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 76,
+        "sequence": 74,
+        "type": "tool/call",
+        "at": 1791221019384
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 77,
+        "sequence": 75,
+        "type": "tool/result",
+        "at": 1791221019384
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-21",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_R9dgio0aHgqyUHxd4P7hJFO7",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 82,
+        "sequence": 80,
+        "type": "tool/call",
+        "at": 1791221026842
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 83,
+        "sequence": 81,
+        "type": "tool/result",
+        "at": 1791221026843
+      }
+    },
+    {
+      "category": "stale-board-cursor",
+      "node": "node-21",
+      "message": "Error: whiteboard or query changed; restart reading without a cursor",
+      "tool": "atn_board",
+      "callId": "call_KEOePFWSFmgVx0vmgkVorVAy",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 97,
+        "sequence": 95,
+        "type": "tool/call",
+        "at": 1791221045785
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 98,
+        "sequence": 96,
+        "type": "tool/result",
+        "at": 1791221045786
+      }
+    },
+    {
+      "category": "non-entry-checkpoint",
+      "node": "node-21",
+      "message": "Error: Only entry may submit a current phase checkpoint",
+      "tool": "submit_checkpoint",
+      "callId": "call_7Jvj24J51QTqZxoKLMOhRyDc",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 138,
+        "sequence": 136,
+        "type": "tool/call",
+        "at": 1791221126471
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+        "line": 139,
+        "sequence": 137,
+        "type": "tool/result",
+        "at": 1791221126471
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-15",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_5rZmPZnV1cVZlwWE5csZ2UB3",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+        "line": 25,
+        "sequence": 23,
+        "type": "tool/call",
+        "at": 1791220941354
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+        "line": 26,
+        "sequence": 24,
+        "type": "tool/result",
+        "at": 1791220941354
+      }
+    },
+    {
+      "category": "stale-board-cursor",
+      "node": "node-15",
+      "message": "Error: whiteboard or query changed; restart reading without a cursor",
+      "tool": "atn_board",
+      "callId": "call_YynKpHQTl7qnk66PZOgEP6nm",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+        "line": 93,
+        "sequence": 91,
+        "type": "tool/call",
+        "at": 1791221108520
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+        "line": 94,
+        "sequence": 92,
+        "type": "tool/result",
+        "at": 1791221108520
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-9",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_ZbmIujbR1sXR8f1yhY4qz8U7",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 24,
+        "sequence": 22,
+        "type": "tool/call",
+        "at": 1791220917860
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 25,
+        "sequence": 23,
+        "type": "tool/result",
+        "at": 1791220917861
+      }
+    },
+    {
+      "category": "non-entry-checkpoint",
+      "node": "node-9",
+      "message": "Error: Only entry may submit a current phase checkpoint",
+      "tool": "submit_checkpoint",
+      "callId": "call_n3Kwsh4cEPvXQ9IOXyFImo3Q",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 93,
+        "sequence": 91,
+        "type": "tool/call",
+        "at": 1791221023735
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 94,
+        "sequence": 92,
+        "type": "tool/result",
+        "at": 1791221023735
+      }
+    },
+    {
+      "category": "missing-to-and-kind",
+      "node": "node-9",
+      "message": "Error: invalid arguments: missing required property \"to\"; missing required property \"kind\"",
+      "tool": "atn_send",
+      "callId": "call_Cui6nDayWy3ZJSkIQK2PIVAn",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 140,
+        "sequence": 138,
+        "type": "tool/call",
+        "at": 1791221077405
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 141,
+        "sequence": 139,
+        "type": "tool/result",
+        "at": 1791221077406
+      }
+    },
+    {
+      "category": "missing-to-and-kind",
+      "node": "node-9",
+      "message": "Error: invalid arguments: missing required property \"to\"; missing required property \"kind\"",
+      "tool": "atn_send",
+      "callId": "call_ea6ZbBhDwLYYnGZTIAvsrFcw",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 171,
+        "sequence": 169,
+        "type": "tool/call",
+        "at": 1791221126623
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 172,
+        "sequence": 170,
+        "type": "tool/result",
+        "at": 1791221126623
+      }
+    },
+    {
+      "category": "missing-to-and-kind",
+      "node": "node-9",
+      "message": "Error: invalid arguments: missing required property \"to\"; missing required property \"kind\"",
+      "tool": "atn_send",
+      "callId": "call_l1BQdGDLLyJKhDpXSA9R99iw",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 173,
+        "sequence": 171,
+        "type": "tool/call",
+        "at": 1791221126623
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 174,
+        "sequence": 172,
+        "type": "tool/result",
+        "at": 1791221126624
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-3",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call-c7ed8c0e-f2aa-4192-b91e-21ce09844d39",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+        "line": 24,
+        "sequence": 22,
+        "type": "tool/call",
+        "at": 1791220913012
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+        "line": 25,
+        "sequence": 23,
+        "type": "tool/result",
+        "at": 1791220913012
+      }
+    },
+    {
+      "category": "unknown-task",
+      "node": "node-6",
+      "message": "Error: unknown task task-11",
+      "tool": "atn_status",
+      "callId": "call-a64e6e9d-1562-4a20-9238-0b6597a8cfc6",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+        "line": 38,
+        "sequence": 36,
+        "type": "tool/call",
+        "at": 1791220921910
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+        "line": 39,
+        "sequence": 37,
+        "type": "tool/result",
+        "at": 1791220921910
+      }
+    },
+    {
+      "category": "non-entry-checkpoint",
+      "node": "node-6",
+      "message": "Error: Only entry may submit a current phase checkpoint",
+      "tool": "submit_checkpoint",
+      "callId": "call-aa124b82-0f89-48a9-91ff-2257ea1012cc",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+        "line": 120,
+        "sequence": 118,
+        "type": "tool/call",
+        "at": 1791221000159
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+        "line": 121,
+        "sequence": 119,
+        "type": "tool/result",
+        "at": 1791221000159
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-12",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_function_8h9x5o85ci5l_1",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 29,
+        "sequence": 27,
+        "type": "tool/call",
+        "at": 1791220915847
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 30,
+        "sequence": 28,
+        "type": "tool/result",
+        "at": 1791220915848
+      }
+    },
+    {
+      "category": "non-neighbour-send",
+      "node": "node-12",
+      "message": "Error: node node-3 is not in your collaboration neighbours; use atn_status to discover and its rewire option to connect first",
+      "tool": "atn_send",
+      "callId": "call-770db242-4de3-4fce-9ba3-71a809a33cd5",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 95,
+        "sequence": 93,
+        "type": "tool/call",
+        "at": 1791220983971
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 96,
+        "sequence": 94,
+        "type": "tool/result",
+        "at": 1791220983971
+      }
+    },
+    {
+      "category": "non-neighbour-send",
+      "node": "node-12",
+      "message": "Error: node node-1 is not in your collaboration neighbours; use atn_status to discover and its rewire option to connect first",
+      "tool": "atn_send",
+      "callId": "call-801bd1ec-ad6e-4191-a879-f426ff47e4e7",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 129,
+        "sequence": 127,
+        "type": "tool/call",
+        "at": 1791221018315
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+        "line": 130,
+        "sequence": 128,
+        "type": "tool/result",
+        "at": 1791221018315
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-18",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call-b16248b4-8de3-42e8-9b3a-c7279bc315c9",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+        "line": 46,
+        "sequence": 44,
+        "type": "tool/call",
+        "at": 1791220935946
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+        "line": 47,
+        "sequence": 45,
+        "type": "tool/result",
+        "at": 1791220935947
+      }
+    },
+    {
+      "category": "non-entry-checkpoint",
+      "node": "node-18",
+      "message": "Error: Only entry may submit a current phase checkpoint",
+      "tool": "submit_checkpoint",
+      "callId": "call-9a0e4044-8ae8-4b12-95a0-0b10df8580fa",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+        "line": 288,
+        "sequence": 286,
+        "type": "tool/call",
+        "at": 1791221130724
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+        "line": 289,
+        "sequence": 287,
+        "type": "tool/result",
+        "at": 1791221130724
+      }
+    },
+    {
+      "category": "invalid-discovery-identifiers-or-topics",
+      "node": "node-1",
+      "message": "Error: Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body",
+      "tool": "atn_board",
+      "callId": "call_T3WW8S66E2TpOL7fl7J6uqq2",
+      "call": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 26,
+        "sequence": 24,
+        "type": "tool/call",
+        "at": 1791220928567
+      },
+      "result": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 27,
+        "sequence": 25,
+        "type": "tool/result",
+        "at": 1791220928567
+      }
+    }
+  ],
+  "phase2EndpointAndStop": {
+    "rootFact": {
+      "fact": {
+        "id": "phase-2:key-00",
+        "phase": 2,
+        "version": 2,
+        "key": "key-00",
+        "next": "key-08",
+        "proof": "witness-2n97hw",
+        "terminal": null
+      },
+      "source": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+        "line": 170,
+        "sequence": 168,
+        "type": "tool/result",
+        "at": 1791221028585
+      }
+    },
+    "endpointFact": {
+      "fact": {
+        "id": "phase-2:key-08",
+        "phase": 2,
+        "version": 2,
+        "key": "key-08",
+        "next": null,
+        "proof": "witness-falz8m",
+        "terminal": "release-2-4longp"
+      },
+      "source": {
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 103,
+        "sequence": 101,
+        "type": "tool/result",
+        "at": 1791221030624
+      }
+    },
+    "requestedTask": {
+      "id": "task-160",
+      "requester": "node-1",
+      "holder": "node-9",
+      "createdAt": 1791221077465,
+      "settledAt": 1791221135941,
+      "status": "completed",
+      "latencyMs": 58476
+    },
+    "timeline": [
+      {
+        "label": "phase-1-entry-checkpoint",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 101,
+        "sequence": 99,
+        "type": "tool/call",
+        "at": 1791221022017,
+        "millisecondsAfterPhase1Checkpoint": 0,
+        "excerpt": "{\"answer\":\"{\\\"phase\\\":1,\\\"chain\\\":[{\\\"key\\\":\\\"key-00\\\",\\\"proof\\\":\\\"witness-ekekxm\\\",\\\"document\\\":\\\"phase-1:key-00\\\"},{\\\"key\\\":\\\"key-01\\\",\\\"proof\\\":\\\"witness-9rhd00\\\",\\\"document\\\":\\\"phase-1:key-01\\\"}],\\\"terminal\\\":\\\"release-1-b2rfor\\\"}\",\"phase\":1}"
+      },
+      {
+        "label": "phase-2-entry-endpoint-request",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 158,
+        "sequence": 156,
+        "type": "tool/call",
+        "at": 1791221077464,
+        "millisecondsAfterPhase1Checkpoint": 55447,
+        "excerpt": "{\"body\":\"PHASE 2 hop request. You advertise phase-2:key-08 (next hop after root key-00). Reply via kind=result with your EXACT local copy: id, phase=2, version=2, key=key-08, next, proof, document, and terminal. Board phase-2:node-9 rev124 claims next=null, proof=witness-falz8m, terminal=release-2-4longp - confirm or correct strictly from your stored snapshot; no reconstruction, no phase-1 strings.\",\"kind\":\"task\",\"to\":\"node-9\"}"
+      },
+      {
+        "label": "phase-2-entry-root-review",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 169,
+        "sequence": 167,
+        "type": "tool/call",
+        "at": 1791221090833,
+        "millisecondsAfterPhase1Checkpoint": 68816,
+        "excerpt": "{\"review\":{\"comparisonKey\":\"versioned-fact:v1\",\"evidence\":[\"phase-2:key-00 phase=2 version=2 key=key-00 next=key-08 proof=witness-2n97hw terminal=null\",\"task-143 from node-18: verbatim stored snapshot, all required fields present, version=2 matches current phase-2 contract\"],\"status\":\"accepted\",\"summary\":\"node-18 returned the exact phase-2/version-2 root fact for key-00: id, phase=2, version=2, key=key-00, next=key-08, proof=witness-2n97hw, terminal correctly null since next!=null. Phase/version match the current contract after the host update, proof non-empty, requested key correct. Usable as the phase-2 chain head. Its explicit statement that it holds no key-08 proof and that only it adver"
+      },
+      {
+        "label": "phase-2-holder-endpoint-response-invalid",
+        "node": "node-9",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 171,
+        "sequence": 169,
+        "type": "tool/call",
+        "at": 1791221126623,
+        "millisecondsAfterPhase1Checkpoint": 104606,
+        "excerpt": "{\"body\":\"VERBATIM from my stored snapshot. No reconstruction, no phase-1 strings.\\n\\nPRIMARY — key-08 (confirmed, board rev124 matches exactly):\\nid=\\\"phase-2:key-08\\\", phase=2, version=2, key=\\\"key-08\\\", next=null, proof=\\\"witness-falz8m\\\", document=\\\"phase-2:key-08\\\", terminal=\\\"release-2-4longp\\\"\\n\\nI CONFIRM your quoted board metadata: next=null, proof=witness-falz8m, terminal=release-2-4longp. next is NULL, so key-08 is the chain endpoint.\\n\\nSECONDARY — key-00: I do NOT hold a phase-2/version-2 copy of key-00. My complete phase-2 snapshot is exactly three documents, listed below; key-00 is not among them. I cannot serve as a root cross-check. Do not take any key-00 value from me — use "
+      },
+      {
+        "label": "phase-2-holder-endpoint-response-invalid-result",
+        "node": "node-9",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 172,
+        "sequence": 170,
+        "type": "tool/result",
+        "at": 1791221126623,
+        "millisecondsAfterPhase1Checkpoint": 104606,
+        "excerpt": "Error: invalid arguments: missing required property \"to\"; missing required property \"kind\""
+      },
+      {
+        "label": "phase-2-holder-endpoint-response-valid",
+        "node": "node-9",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+        "line": 180,
+        "sequence": 178,
+        "type": "tool/call",
+        "at": 1791221135941,
+        "millisecondsAfterPhase1Checkpoint": 113924,
+        "excerpt": "{\"body\":\"VERBATIM from my stored snapshot.\\n\\nkey-08 PRIMARY: id=\\\"phase-2:key-08\\\", phase=2, version=2, key=\\\"key-08\\\", next=null, proof=\\\"witness-falz8m\\\", document=\\\"phase-2:key-08\\\", terminal=\\\"release-2-4longp\\\". CONFIRMS board rev124. next=null, so key-08 is the endpoint.\\n\\nkey-00 SECONDARY: I do NOT hold any phase-2/v2 key-00 copy. My snapshot has exactly 3 docs (below) and key-00 is not among them. Use node-18's copy; take nothing from me for the root.\\n\\nFull snapshot, verbatim:\\nphase-2:key-01 phase=2 version=2 next=null proof=witness-2rbw1r doc=phase-2:key-01 terminal=distractor\\nphase-2:key-08 phase=2 version=2 next=null proof=witness-falz8m doc=phase-2:key-08 terminal=release-2"
+      },
+      {
+        "label": "phase-2-entry-final-task-poll",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 211,
+        "sequence": 209,
+        "type": "tool/call",
+        "at": 1791221135963,
+        "millisecondsAfterPhase1Checkpoint": 113946,
+        "excerpt": "{\"taskIds\":[\"task-160\"]}"
+      },
+      {
+        "label": "phase-2-entry-final-task-poll-result",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 212,
+        "sequence": 210,
+        "type": "tool/result",
+        "at": 1791221135965,
+        "millisecondsAfterPhase1Checkpoint": 113948,
+        "excerpt": "{\"self\":\"node-1\",\"neighbours\":[\"node-9\",\"node-18\"],\"nodes\":[{\"id\":\"node-9\",\"lifecycle\":\"active\",\"openTasks\":1,\"pendingVotes\":0,\"taskSummaries\":[],\"recentResults\":[],\"verifiedFeedback\":{\"taskIds\":[\"task-160\"],\"omittedTasks\":0,\"openTasks\":0,\"passed\":0,\"failed\":0,\"unverified\":1,\"submittedFailed\":0,\"observations\":[{\"taskId\":\"task-160\",\"status\":\"unverified\",\"validatorId\":null,\"comparisonKey\":null,\"latencyMs\":58476,\"cost\":null,\"costUnit\":null,\"informationKeys\":[]}]},\"requesterFeedback\":{\"source\":\"requester\",\"taskIds\":[\"task-160\"],\"omittedTasks\":0,\"openTasks\":0,\"accepted\":0,\"rejected\":0,\"needsMore\":0,\"unrated\":1,\"acceptanceRate\":null,\"observations\":[{\"taskId\":\"task-160\",\"status\":\"unrated\",\"requeste"
+      },
+      {
+        "label": "phase-2-entry-endpoint-mail-delivered",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 218,
+        "sequence": 216,
+        "type": "user/message",
+        "at": 1791221135986,
+        "millisecondsAfterPhase1Checkpoint": 113969,
+        "excerpt": "[ATN result] network=atn-11f46715-6758-4078-b0d8-292e36010f75 mail=mail-194 from=node-9 task=task-160\nOutcome: completed\nVERBATIM from my stored snapshot.\n\nkey-08 PRIMARY: id=\"phase-2:key-08\", phase=2, version=2, key=\"key-08\", next=null, proof=\"witness-falz8m\", document=\"phase-2:key-08\", terminal=\"release-2-4longp\". CONFIRMS board rev124. next=null, so key-08 is the endpoint.\n\nkey-00 SECONDARY: I do NOT hold any phase-2/v2 key-00 copy. My snapshot has exactly 3 docs (below) and key-00 is not among them. Use node-18's copy; take nothing from me for the root.\n\nFull snapshot, verbatim:\nphase-2:key-01 phase=2 version=2 next=null proof=witness-2rbw1r doc=phase-2:key-01 terminal=distractor\nphase-2"
+      },
+      {
+        "label": "entry-follow-up-model-call-admitted",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/events.jsonl",
+        "line": 2809,
+        "sequence": 2809,
+        "type": "model.start",
+        "at": 1791221135987,
+        "call": "call-215",
+        "millisecondsAfterPhase1Checkpoint": 113970
+      },
+      {
+        "label": "phase-2-entry-empty-assistant-attempt",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 220,
+        "sequence": 218,
+        "type": "assistant/attempt",
+        "at": 1791221136954,
+        "millisecondsAfterPhase1Checkpoint": 114937,
+        "excerpt": ""
+      },
+      {
+        "label": "phase-2-entry-turn-aborted",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+        "line": 222,
+        "sequence": 220,
+        "type": "turn/end",
+        "at": 1791221136954,
+        "millisecondsAfterPhase1Checkpoint": 114937,
+        "excerpt": "{\"kind\":\"aborted\",\"reason\":{\"kind\":\"hook\",\"reason\":\"observed-token-limit\"}}"
+      },
+      {
+        "label": "entry-follow-up-model-call-interrupted",
+        "node": "node-1",
+        "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/events.jsonl",
+        "line": 2857,
+        "sequence": 2857,
+        "type": "model.end",
+        "at": 1791221136954,
+        "call": "call-215",
+        "status": "incomplete",
+        "durationMs": 967,
+        "usage": {
+          "inputTokens": 0,
+          "outputTokens": 0,
+          "cacheReadTokens": null,
+          "cacheWriteTokens": null,
+          "reasoningTokens": null,
+          "totalTokens": 0
+        },
+        "millisecondsAfterPhase1Checkpoint": 114937
+      }
+    ],
+    "preciseStopInterpretation": "The exact current endpoint was delivered to the entry. Its follow-up call-215 was admitted and then interrupted by the observed-token-limit hook with an empty assistant attempt and known totalTokens=0. The report also records one global admission denial; it must not be described as rejection of this already admitted entry call.",
+    "crossCheckCaveat": "Endpoint delivery does not establish that all phase-2 root cross-check obligations or requester reviews were complete. task-160 has no localFeedback before cancellation; the entry had not submitted phase 2."
+  },
+  "observations": [
+    {
+      "claim": "The maximum node step ratio failed the 80% headroom requirement before any node exhausted the 48-step cap.",
+      "evidence": {
+        "node": "node-18",
+        "steps": 41,
+        "cap": 48,
+        "ratio": 0.8541666666666666,
+        "anotherAbove80Percent": {
+          "node": "node-3",
+          "steps": 40,
+          "ratio": 0.8333333333333334
+        }
+      }
+    },
+    {
+      "claim": "Responding peers performed most model processing and repeated chain assembly: four non-entry checkpoint attempts were rejected, and peers created independent requests and assembled full-chain responses.",
+      "evidence": {
+        "peerCalls": 195,
+        "entryCalls": 22,
+        "rejectedNonEntryCheckpointAttempts": 4,
+        "assembledCoordinatorTask": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/storage/atn_networks.json",
+          "jsonPointer": "/tables/networks/atn-11f46715-6758-4078-b0d8-292e36010f75/tasks/task-191"
+        },
+        "entryReceivedUnsolicitedFullChainNote": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+          "line": 206,
+          "sequence": 204,
+          "type": "user/message",
+          "at": 1791221120042
+        }
+      }
+    },
+    {
+      "claim": "The historical prompt invites each peer to resolve the shared chain and choose its own role; the tool guard permits only entry checkpoints. This is a workflow coordination ambiguity supported by the rejected attempts.",
+      "evidence": [
+        {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+          "line": 9,
+          "sequence": 7,
+          "type": "user/message",
+          "at": 1791220904139,
+          "excerpt": "All nodes share the objective and may choose their own roles; the entry node submits checkpoints.\n\nWhen asked for a fact, truthfully ret"
+        },
+        {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+          "line": 10,
+          "sequence": 8,
+          "type": "user/message",
+          "at": 1791220904139,
+          "excerpt": "Inspect local evidence and help resolve the shared chain; choose useful collaborators."
+        }
+      ]
+    },
+    {
+      "claim": "No persisted rewire or evidence-access failure was observed in this run; all 22 rewires changed topology, committed durably, and had prior successful status queries.",
+      "evidence": {
+        "durableChangedRewires": 22,
+        "pending": 0,
+        "blocked": 0,
+        "deniedEvidenceReads": 0
+      }
+    },
+    {
+      "claim": "Additional tool calls include 8 invalid board discovery publications, 3 malformed result sends, 3 non-neighbour sends, 2 stale board cursors, and 1 unknown task. These guards rejected misuse rather than silently accepting it.",
+      "evidence": {
+        "invalid-discovery-identifiers-or-topics": 8,
+        "missing-to-and-kind": 3,
+        "non-entry-checkpoint": 4,
+        "non-neighbour-send": 3,
+        "stale-board-cursor": 2,
+        "unknown-task": 1
+      }
+    },
+    {
+      "claim": "The endpoint holder response to the entry required a retry for omitted to/kind fields and settled after 58.476 seconds. The observed latency includes concurrent work and model time and cannot be fully attributed to that retry.",
+      "evidence": {
+        "latencyMs": 58476,
+        "invalidResponse": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+          "line": 171,
+          "sequence": 169,
+          "type": "tool/call",
+          "at": 1791221126623
+        },
+        "validResponse": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+          "line": 180,
+          "sequence": 178,
+          "type": "tool/call",
+          "at": 1791221135941
+        }
+      }
+    },
+    {
+      "claim": "About 92% of the known total token count is cache-read input. Repeated turns still consume the observed-total-token admission threshold even when most context is cached.",
+      "evidence": {
+        "knownCacheReadTokens": 7424588,
+        "knownTotalTokens": 8079286,
+        "fraction": 0.9189658591118076,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      }
+    }
+  ],
+  "recommendations": {
+    "minimalPromptOnlyWorkflowChange": [
+      "Assign the host-owned entry responsibility for cross-copy current/stale validation, chain assembly and both checkpoints. A root holder or relay coordinator is still a responding peer.",
+      "Responding peers publish their own exact discoveryHints and concise local evidence once per phase, answer actual fact/relay tasks, and wait after settling them. They should not independently re-search the whole chain, broadcast unsolicited chain updates, poll while idle or rewrite unchanged board facts.",
+      "Return the exact local copy for a requested key even if phase/version is obsolete. Fetch a replacement only when the task explicitly requests relay to a named holder. Always include the actual requester in to, kind=result, and the actual taskId when returning a result."
+    ],
+    "retainedRequirements": [
+      "same model and tool capabilities for every node",
+      "same tools and permissions",
+      "entry requests two matching advertised root holders through actual mail",
+      "real stale/current field validation and requester reviews",
+      "metered evidence transfer",
+      "bounded graph degree and per-node steps"
+    ],
+    "fixedRingRelayRemainsValid": "When an actual relay task targets a non-neighbour holder, responding peers must forward to an unvisited outgoing ring neighbour, preserve original target/key/phase/version and visited nodes, then settle the upstream task with the unchanged exact result. Waiting applies after real work is settled, not while a requested relay is pending; host phase updates and incoming tasks can wake the peer.",
+    "validationNeeded": "Keep this old batch intact. After the prompt change, rerun the final scripted scan and a dedicated homogeneous 5-seed adaptive probe batch before the corresponding 5-seed fixed comparison. Confirm step headroom, actual durable changed rewires, stale rejection and submission discipline. This diagnosis alone does not show the fix will pass."
+  },
+  "limitations": [
+    "This is one stochastic live-provider adaptive probe, not a paired comparison or a causal effect estimate.",
+    "The tool distributions count attempts. Necessary cross-checks and ring relay work cannot be classified as waste solely from these totals.",
+    "Adapter usage has unknown fields: 3 total/input/output token calls and 7 cache-read calls are unknown; hidden HTTP retries are not observed. Known totals are not a subscription billing estimate.",
+    "The 8,000,000-token limit is an observed-total-token admission threshold, not a hard ceiling; in-flight calls can settle above it and then be cancelled.",
+    "An exact endpoint reached the entry before termination, but phase 2 was neither submitted nor host accepted. No counterfactual success after one extra call is claimed.",
+    "No source implementation or new tests were changed by this diagnosis, and no provider was called. Historical prompt evidence is quoted from hashed raw sessions rather than the possibly changed current source tree."
+  ]
+}

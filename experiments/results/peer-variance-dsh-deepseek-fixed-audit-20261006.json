@@ -1,0 +1,1916 @@
+{
+  "schema": 1,
+  "auditedAt": "2026-10-06T06:04:56.292Z",
+  "purpose": "comparison",
+  "complete": true,
+  "batch": {
+    "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/batch.json",
+    "sha256": "e1fd4e4f9980498c7e15bc68d9af221a7baecbcafb07cf754c2f9c6d9ac3b485"
+  },
+  "plan": {
+    "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/plan.json",
+    "sha256": "18c5a95d9e84b7ccddd8b53453ae10663a3d1352520e471e9d7c58e9bef69a49"
+  },
+  "priorProbe": {
+    "path": ".artifacts/experiments/peer-variance-dsh-deepseek-probe-20261006/batch.json",
+    "sha256": "afba6fb06ebb9ebc9456ea960b13989855681df4f68c2eb089d294dc5201724d"
+  },
+  "actualProfile": {
+    "sourceProfile": "desktop",
+    "node": "v24.18.1",
+    "plugins": {
+      "dsh-opencode-go": {
+        "name": "dsh-opencode-go",
+        "version": "0.1.20",
+        "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\dsh-opencode-go",
+        "packageHash": "b8a594c70873ecc53335b4e51b3b86b587acf0d32a259b2be1d62b1a32d0f072",
+        "entryHash": "c94753a4411b6da85e392e9ec0f7cd724ce01dac4586b4c3054bcdb8b9b9e4aa"
+      },
+      "opencode-go-pi-ai": {
+        "name": "@earendil-works/pi-ai",
+        "version": "0.87.1",
+        "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\opencode-go-pi-ai",
+        "packageHash": "0422fc7227a158c3c843c1540edfff017d2103be33ee48b882e2ff9032a5f7d2"
+      }
+    },
+    "helperHashes": {
+      "boot-profile-validation.mjs": "1eda9733ac2cd62e0f2574bbee1fa77942455c2dd967438510126c46c6efca13",
+      "profile-validation-observer.mjs": "54a4ef65d2dc1df6ec56a084ae8c0f662d025566907d4dfd6a680034b026d29c",
+      "profile-validation-audit.mjs": "fb3ea80f57bca2610bccad38fde1380907edba5cf2796ab628a59ce3553d8655"
+    },
+    "credentialConfigured": true,
+    "credentialSource": "file",
+    "installedLlmServiceInstanceMatches": true,
+    "installedLlmMarker": {
+      "schema": 1,
+      "modulePath": "D:/DeepSeekDesktop/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-llm/lib/index.js",
+      "actualServiceInstanceMatches": true,
+      "markerFunctions": [
+        "markAgentLoopRequest",
+        "isAgentLoopRequest"
+      ]
+    },
+    "originalProfileUnchanged": true,
+    "finalProfileAuditCompleted": true,
+    "profileIntegrityStage": "bridge-complete",
+    "beforeProfileHashes": {
+      "package.json": "3794bacbc9c4495dd378562d141eaf8e7e5274838d7978f5cf4a4635bbc52ec5",
+      "cordis.patch.yml": "4c3058ffb63585479c9b81ce3e7e2cad5523d50f87916b103c53dec645aef0b5",
+      "cordis.yml": "c300dcf2ebc5f02062d6591268d29d3db6fe45e0cb138f5467276fe2ba06076e"
+    },
+    "afterProfileHashes": {
+      "package.json": "3794bacbc9c4495dd378562d141eaf8e7e5274838d7978f5cf4a4635bbc52ec5",
+      "cordis.patch.yml": "4c3058ffb63585479c9b81ce3e7e2cad5523d50f87916b103c53dec645aef0b5",
+      "cordis.yml": "c300dcf2ebc5f02062d6591268d29d3db6fe45e0cb138f5467276fe2ba06076e"
+    },
+    "sources": [
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-fixed-20261006/profile-bootstrap.json",
+        "sha256": "09c0f41a2e536222e2516d94a22b0b9b01ddff9314204d519200be87d7a25d32"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-fixed-20261006/profile-credential-presence.json",
+        "sha256": "64a419e6c9ee901e1f0066f736fa92358acea32520662ba4fa9cc0afe9c90e3c"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-fixed-20261006/installed-llm-marker.json",
+        "sha256": "2f4d2bcbfb3148f2524216480c63a4893c4ea04171e403e8f9cd9c42de7a8ff8"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-fixed-20261006/observer-completion.json",
+        "sha256": "c8f6696a018eb9eeecd30e3b3d1480db23ed6834271b9d1a35a7afb2056e4d91"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-fixed-20261006/user-profile-integrity-final.json",
+        "sha256": "370f1c3d4ea442ecc2fc1dc6ad7c9fed1f9e75897ddbcc426599f25cd2c00116"
+      }
+    ]
+  },
+  "priorProbeRuntime": {
+    "checks": {
+      "priorStageCompleted": true,
+      "sourceProfileMatches": true,
+      "sourceProfilePathMatches": true,
+      "beforeProfileHashesMatch": true,
+      "installedPluginsAndSdkMatch": true,
+      "helperHashesMatch": true,
+      "nodeVersionMatches": true,
+      "actualMarkerModuleMatches": true,
+      "actualServiceInstanceMatchesBothStages": true,
+      "credentialConfiguredBothStages": true,
+      "credentialSourceMatches": true,
+      "childLoggedRequestConfigsMatch": true,
+      "originalProfileUnchangedBothStages": true
+    },
+    "allChecksPass": true,
+    "sourceProfile": "desktop",
+    "node": "v24.18.1",
+    "beforeProfileHashes": {
+      "package.json": "3794bacbc9c4495dd378562d141eaf8e7e5274838d7978f5cf4a4635bbc52ec5",
+      "cordis.patch.yml": "4c3058ffb63585479c9b81ce3e7e2cad5523d50f87916b103c53dec645aef0b5",
+      "cordis.yml": "c300dcf2ebc5f02062d6591268d29d3db6fe45e0cb138f5467276fe2ba06076e"
+    },
+    "priorChildRequestConfigHashes": [
+      "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+    ],
+    "currentChildRequestConfigHashes": [
+      "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+    ],
+    "plugins": {
+      "dsh-opencode-go": {
+        "name": "dsh-opencode-go",
+        "version": "0.1.20",
+        "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\dsh-opencode-go",
+        "packageHash": "b8a594c70873ecc53335b4e51b3b86b587acf0d32a259b2be1d62b1a32d0f072",
+        "entryHash": "c94753a4411b6da85e392e9ec0f7cd724ce01dac4586b4c3054bcdb8b9b9e4aa"
+      },
+      "opencode-go-pi-ai": {
+        "name": "@earendil-works/pi-ai",
+        "version": "0.87.1",
+        "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\opencode-go-pi-ai",
+        "packageHash": "0422fc7227a158c3c843c1540edfff017d2103be33ee48b882e2ff9032a5f7d2"
+      }
+    },
+    "helperHashes": {
+      "boot-profile-validation.mjs": "1eda9733ac2cd62e0f2574bbee1fa77942455c2dd967438510126c46c6efca13",
+      "profile-validation-observer.mjs": "54a4ef65d2dc1df6ec56a084ae8c0f662d025566907d4dfd6a680034b026d29c",
+      "profile-validation-audit.mjs": "fb3ea80f57bca2610bccad38fde1380907edba5cf2796ab628a59ce3553d8655"
+    },
+    "installedLlmMarker": {
+      "schema": 1,
+      "modulePath": "D:/DeepSeekDesktop/resources/app.asar/dsh/node_modules/@deepseek-ai/dsh-llm/lib/index.js",
+      "actualServiceInstanceMatches": true,
+      "markerFunctions": [
+        "markAgentLoopRequest",
+        "isAgentLoopRequest"
+      ]
+    },
+    "sources": [
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-probe-20261006/profile-bootstrap.json",
+        "sha256": "2fe2cf0310783cfe5536de1cf1fe6b0f7dd182c83ff4d07af09ca0a653c5ea1b"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-probe-20261006/profile-credential-presence.json",
+        "sha256": "64a419e6c9ee901e1f0066f736fa92358acea32520662ba4fa9cc0afe9c90e3c"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-probe-20261006/installed-llm-marker.json",
+        "sha256": "2f4d2bcbfb3148f2524216480c63a4893c4ea04171e403e8f9cd9c42de7a8ff8"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-probe-20261006/observer-completion.json",
+        "sha256": "18b1a7d3c31a77340c1628ee1c27bc4bb9a6beee975a0ccbb2969d0b9fe902fe"
+      },
+      {
+        "path": ".artifacts/peer-variance/dsh-deepseek-probe-20261006/user-profile-integrity-final.json",
+        "sha256": "d58c32b3a5820f6f13fabdfccf1372ed818239a14695c56928ea1fc7503a24a9"
+      }
+    ]
+  },
+  "parameterMeasurement": "Child request headers record a uniform route and request config; the actual parent prepareCall executes installed profile defaults. Parent trace measures route, output bound and loop markers. Effective reasoning and temperature defaults were not recorded per call.",
+  "runs": [
+    {
+      "runId": "4e7e3d81-3ccf-4919-99c1-5f2cb90c84ce",
+      "seed": 17,
+      "model": "deepseek-v4.1-flash",
+      "purpose": "comparison",
+      "mode": "fixed",
+      "startedAt": 1791265577863,
+      "completedAt": 1791265877037,
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 17,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "providerProvenance": {
+        "provider": "dsh-opencode-go",
+        "plugin": "dsh-opencode-go",
+        "profile": "desktop-import-validation",
+        "sourceProfile": "desktop",
+        "modelImport": "dsh-desktop-profile-llm",
+        "mount": "dsh-profile-import"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "checkpointsMatchRawSubmissions": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 181,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 165,
+      "rawStatusCalls": 33,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 16,
+        "callsWithPriorStatusQuery": 0
+      },
+      "rewireCountsMatch": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableRewireHistory": 0,
+      "durableChangedRewires": 0,
+      "durableRewireChecks": {
+        "oneCommitPerSuccessfulCall": true,
+        "everyDurableCommitHasRawCall": true,
+        "commitCallerMatches": true,
+        "desiredPeersMatch": true
+      },
+      "requesterFeedback": {
+        "accepted": 13,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawSuccessfulReviews": {
+        "accepted": 13,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "durableRequesterFeedback": {
+        "accepted": 13,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewsWithDurableCommit": {
+        "accepted": 13,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewCommitChecks": {
+        "everyFinalFeedbackHasExactRawCall": true,
+        "committedCountsMatchReported": true
+      },
+      "finalFeedbackWithOnlyErroredToolResult": 0,
+      "reviewCountMeaning": "Successful tool responses count calls; durable requesterFeedback counts final task opinions. Exact raw review arguments and caller identity corroborate each persisted opinion, including a commit followed by an aborted tool response.",
+      "durableFeedbackMatchesReported": true,
+      "rawReviewCountsEqualFinalFeedback": true,
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 31,
+        "maxNodeStepRatio": 0.6458333333333334,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 31,
+      "stepSnapshotMatches": true,
+      "runtimeUniformity": {
+        "nodes": 8,
+        "nodesExpected": 8,
+        "modelRoutesMatch": true,
+        "everySessionHasRequestHeader": true,
+        "distinctToolSchemaHashes": [
+          "146647d6b6e7dc0ad22e5884300391b1a0976a9ac222edc41dcc610731fa3272"
+        ],
+        "sameToolSchemas": true,
+        "childRequestConfigHashes": [
+          "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+        ],
+        "sameChildRequestConfig": true,
+        "samePermissionSeeds": true,
+        "permissionSeedHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "rawStoredPermissionSeedHashes": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "permissionSeedNormalization": "null and empty object carry no explicit delegated policy; compare durable permission events as well",
+        "samePermissionPolicyEvents": true,
+        "permissionPolicyEventHashes": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "samePreset": true,
+        "presetIds": [
+          null
+        ],
+        "violations": {
+          "wrongHeaderRoute": 0,
+          "wrongHeaderOutputBound": 0,
+          "wrongToolSet": 0,
+          "unknownSession": 0,
+          "wrongEvidenceOwner": 0,
+          "alteredEvidence": 0,
+          "invalidEvidenceResponse": 0,
+          "nonlocalEvidenceSelection": 0,
+          "nonEntryCheckpoint": 0
+        }
+      },
+      "evidenceAcl": {
+        "taskHashMatches": true,
+        "nodeCreationChainMatchesSlotOrder": true,
+        "successfulReadCalls": 16,
+        "successfulReadDocuments": 36,
+        "deniedReadCalls": 0,
+        "reportedDeniedReads": 0,
+        "returnedFactsAllOwnedAndUnmodified": true,
+        "bySlotPhase": {
+          "6:1": 1,
+          "6:2": 1,
+          "2:1": 1,
+          "2:2": 1,
+          "5:1": 1,
+          "5:2": 1,
+          "3:1": 1,
+          "3:2": 1,
+          "7:1": 1,
+          "7:2": 1,
+          "1:1": 1,
+          "1:2": 1,
+          "4:1": 1,
+          "4:2": 1,
+          "0:1": 1,
+          "0:2": 1
+        }
+      },
+      "parentProviderTrace": {
+        "starts": 181,
+        "prepared": 181,
+        "finishes": 179,
+        "thrown": 0,
+        "finishKinds": {
+          "tool-calls": 124,
+          "stop": 55
+        },
+        "failureCounts": {},
+        "checks": {
+          "issuedCallCountMatches": true,
+          "uniqueCallIds": true,
+          "everyPreparedCallHasStart": true,
+          "everyStartHasPreparedCall": true,
+          "everyCallHasTerminal": false,
+          "routeMatches": true,
+          "outputBoundMatches": true,
+          "childMarkerAlwaysTrue": true,
+          "actualInstalledMarkerAlwaysTrue": true,
+          "sameEightTools": true,
+          "allNodesCalled": true,
+          "providerFailureCountMatches": true
+        },
+        "callsWithoutProviderTerminal": [
+          {
+            "callId": "1803ba01-52cf-4185-9c03-470ff37c87f2",
+            "sessionId": "atn-d6d1a43d-ad3d-483d-81ed-52fd97169fde",
+            "ordinal": 31,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/attempt",
+              "interrupted": false,
+              "streamChunks": 0
+            }
+          },
+          {
+            "callId": "96ec0406-8d28-442f-b6fd-a1025d537ba7",
+            "sessionId": "atn-28bd4bc1-e0b0-4389-a9ed-485a4650b572",
+            "ordinal": 30,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/message",
+              "interrupted": true,
+              "streamChunks": 4
+            }
+          }
+        ],
+        "terminalCoverageMeaning": "Calls without a recorded provider finish or throw remain issued calls. Child interruption or an empty final attempt is shown separately; missing provider terminal telemetry is not counted as an observed provider error."
+      },
+      "maxTokenDiagnosis": {
+        "maxTokenFinishes": 0,
+        "matchedReasoningOnlyResponses": 0,
+        "unmatchedResponses": 0
+      },
+      "failureCounts": {},
+      "rawModelErrorCodes": {},
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchWorkingTreeAtAudit": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "981e46cb29bfbad015216310ea7d265c0f9b8e3e073124fd20c1fe65219fea5f"
+        }
+      },
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/report.json",
+          "sha256": "498c766b08e485418c3a9569955afc5776ce43147d55f4f1d1dae7faf569d7ea"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/manifest.json",
+          "sha256": "a71f74732b8f5df161c77330349979a1e062635511a77843b9d75c976d64976d"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/storage/atn_networks.json",
+          "sha256": "61053039331b65ae1c43ec96e9a4516a633a72097912667b717f4a82f2b1a76d"
+        },
+        "providerTrace": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/imported-provider-calls.jsonl",
+          "sha256": "ecaa094d03ecea190a4f2bd1093a7a67578eb99179efcb30af5cb754a75ca1d1"
+        },
+        "sessions": [
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-28bbf24b-1a8b-459e-aefe-44a669052213/session.v4.jsonl",
+            "sha256": "5bfc3d863a4c10d6bab0ad3d1cb2df727d373220864bfa3d2859ebdde9ef9136"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-28bd4bc1-e0b0-4389-a9ed-485a4650b572/session.v4.jsonl",
+            "sha256": "dc40c05155de1682c5c76d733c1e6b4996f3d4d3f836279b8466497fe604a017"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-63285f83-2581-4baa-a637-30e269240803/session.v4.jsonl",
+            "sha256": "f493541c0a808c3fd279fd2db1207df75ad8bc2c6876f5ba1a9be149868775b9"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-973a4048-3b4c-440e-9373-845cff792403/session.v4.jsonl",
+            "sha256": "b5c502f32e110311c64f411b1db52aaff4e527b985b5d83a395547976b8cab32"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-b318cbc9-3bbd-4728-a49a-df7e0116e188/session.v4.jsonl",
+            "sha256": "101ed6555b7faa4399a4e25e3e1c7d0f0b521d327fd5351fa68d69819c9ee24c"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-d6d1a43d-ad3d-483d-81ed-52fd97169fde/session.v4.jsonl",
+            "sha256": "487336bbabe3ee72b16a1bba75f417a3e1604ecba99f3d4084c1c5af8e5f7a21"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/atn-dd8708e2-b406-41e1-ada8-d91af006ad48/session.v4.jsonl",
+            "sha256": "592bc21ac16db722e62f50f5b489d8d296370fa6be162ded13a6b8063424525c"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-17--/shifting-4e7e3d81-3ccf-4919-99c1-5f2cb90c84ce/session.v4.jsonl",
+            "sha256": "115ac2a9028465dc97d5ca10afbc68531c1fb9cfce523111b9809b7eaa5daf6a"
+          }
+        ]
+      }
+    },
+    {
+      "runId": "2e75cf04-e938-443e-91c1-37397eb5feab",
+      "seed": 31,
+      "model": "deepseek-v4.1-flash",
+      "purpose": "comparison",
+      "mode": "fixed",
+      "startedAt": 1791265879919,
+      "completedAt": 1791266113012,
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 31,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "providerProvenance": {
+        "provider": "dsh-opencode-go",
+        "plugin": "dsh-opencode-go",
+        "profile": "desktop-import-validation",
+        "sourceProfile": "desktop",
+        "modelImport": "dsh-desktop-profile-llm",
+        "mount": "dsh-profile-import"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "checkpointsMatchRawSubmissions": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 188,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 185,
+      "rawStatusCalls": 44,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 21,
+        "callsWithPriorStatusQuery": 0
+      },
+      "rewireCountsMatch": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableRewireHistory": 0,
+      "durableChangedRewires": 0,
+      "durableRewireChecks": {
+        "oneCommitPerSuccessfulCall": true,
+        "everyDurableCommitHasRawCall": true,
+        "commitCallerMatches": true,
+        "desiredPeersMatch": true
+      },
+      "requesterFeedback": {
+        "accepted": 21,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawSuccessfulReviews": {
+        "accepted": 21,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "durableRequesterFeedback": {
+        "accepted": 21,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewsWithDurableCommit": {
+        "accepted": 21,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewCommitChecks": {
+        "everyFinalFeedbackHasExactRawCall": true,
+        "committedCountsMatchReported": true
+      },
+      "finalFeedbackWithOnlyErroredToolResult": 0,
+      "reviewCountMeaning": "Successful tool responses count calls; durable requesterFeedback counts final task opinions. Exact raw review arguments and caller identity corroborate each persisted opinion, including a commit followed by an aborted tool response.",
+      "durableFeedbackMatchesReported": true,
+      "rawReviewCountsEqualFinalFeedback": true,
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 33,
+        "maxNodeStepRatio": 0.6875,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 33,
+      "stepSnapshotMatches": true,
+      "runtimeUniformity": {
+        "nodes": 8,
+        "nodesExpected": 8,
+        "modelRoutesMatch": true,
+        "everySessionHasRequestHeader": true,
+        "distinctToolSchemaHashes": [
+          "146647d6b6e7dc0ad22e5884300391b1a0976a9ac222edc41dcc610731fa3272"
+        ],
+        "sameToolSchemas": true,
+        "childRequestConfigHashes": [
+          "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+        ],
+        "sameChildRequestConfig": true,
+        "samePermissionSeeds": true,
+        "permissionSeedHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "rawStoredPermissionSeedHashes": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "permissionSeedNormalization": "null and empty object carry no explicit delegated policy; compare durable permission events as well",
+        "samePermissionPolicyEvents": true,
+        "permissionPolicyEventHashes": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "samePreset": true,
+        "presetIds": [
+          null
+        ],
+        "violations": {
+          "wrongHeaderRoute": 0,
+          "wrongHeaderOutputBound": 0,
+          "wrongToolSet": 0,
+          "unknownSession": 0,
+          "wrongEvidenceOwner": 0,
+          "alteredEvidence": 0,
+          "invalidEvidenceResponse": 0,
+          "nonlocalEvidenceSelection": 0,
+          "nonEntryCheckpoint": 0
+        }
+      },
+      "evidenceAcl": {
+        "taskHashMatches": true,
+        "nodeCreationChainMatchesSlotOrder": true,
+        "successfulReadCalls": 20,
+        "successfulReadDocuments": 50,
+        "deniedReadCalls": 0,
+        "reportedDeniedReads": 0,
+        "returnedFactsAllOwnedAndUnmodified": true,
+        "bySlotPhase": {
+          "2:1": 1,
+          "2:2": 1,
+          "1:1": 1,
+          "1:2": 1,
+          "6:1": 1,
+          "6:2": 1,
+          "5:1": 1,
+          "5:2": 1,
+          "7:1": 1,
+          "7:2": 1,
+          "4:1": 1,
+          "4:2": 1,
+          "3:1": 1,
+          "3:2": 1,
+          "0:1": 2,
+          "0:2": 4
+        }
+      },
+      "parentProviderTrace": {
+        "starts": 188,
+        "prepared": 188,
+        "finishes": 187,
+        "thrown": 0,
+        "finishKinds": {
+          "tool-calls": 136,
+          "stop": 48,
+          "max-tokens": 3
+        },
+        "failureCounts": {},
+        "checks": {
+          "issuedCallCountMatches": true,
+          "uniqueCallIds": true,
+          "everyPreparedCallHasStart": true,
+          "everyStartHasPreparedCall": true,
+          "everyCallHasTerminal": false,
+          "routeMatches": true,
+          "outputBoundMatches": true,
+          "childMarkerAlwaysTrue": true,
+          "actualInstalledMarkerAlwaysTrue": true,
+          "sameEightTools": true,
+          "allNodesCalled": true,
+          "providerFailureCountMatches": true
+        },
+        "callsWithoutProviderTerminal": [
+          {
+            "callId": "f1c0181f-84da-4c63-b0a9-aa221745d718",
+            "sessionId": "atn-6242e3d1-a354-41c8-9a4a-29852b27691d",
+            "ordinal": 24,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/attempt",
+              "interrupted": false,
+              "streamChunks": 0
+            }
+          }
+        ],
+        "terminalCoverageMeaning": "Calls without a recorded provider finish or throw remain issued calls. Child interruption or an empty final attempt is shown separately; missing provider terminal telemetry is not counted as an observed provider error."
+      },
+      "maxTokenDiagnosis": {
+        "maxTokenFinishes": 3,
+        "matchedReasoningOnlyResponses": 3,
+        "unmatchedResponses": 0
+      },
+      "failureCounts": {},
+      "rawModelErrorCodes": {},
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchWorkingTreeAtAudit": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "981e46cb29bfbad015216310ea7d265c0f9b8e3e073124fd20c1fe65219fea5f"
+        }
+      },
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/report.json",
+          "sha256": "eec522576cf13b0a8ad335e74ca87190de27ac4cc91e66758c4d02d83a7d1eaa"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/manifest.json",
+          "sha256": "d9b7f49e64a0e04852337b5c33b4b689547dc367b69ebbe6709a08538ec0ae5c"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/storage/atn_networks.json",
+          "sha256": "7b598d767b0220fd22a321d8dac4dd83b0bd198f45c3d710f1b86e265a47888c"
+        },
+        "providerTrace": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/imported-provider-calls.jsonl",
+          "sha256": "47c4b8089c39e6035eee5325f23c8e5d4032891331e1e00caee1c905eccae142"
+        },
+        "sessions": [
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-0ef61985-4592-409a-98bb-16602da88df7/session.v4.jsonl",
+            "sha256": "24611e5f61f3ea4a1e577e9a05610884741d90d5bd38cbcf9022767b44fde670"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-6242e3d1-a354-41c8-9a4a-29852b27691d/session.v4.jsonl",
+            "sha256": "c126f5f04a6add75f2e1e0b1dbd3b546ba698e532cb95a2d9701fc1f816fc67e"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-72eae832-0c0d-4dec-aa7f-3bc1d2b83d20/session.v4.jsonl",
+            "sha256": "cde5a8289e04346074ae5535e576d872df6a1a9e253fc796a000405451a9f3cf"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-a45539f5-1f62-4658-9662-8ecf075b85b5/session.v4.jsonl",
+            "sha256": "533eeeee6ca1a3f6fb9c49de747e304cd8e492343a5c31a39b7116055da29bdf"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-ab4cc7c0-5ec2-407c-bcf6-158149ba849c/session.v4.jsonl",
+            "sha256": "533f7e2431893f9fe0d63ac7e6fed6a16a3fafbca19d7018fe8306d124573805"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-b2de1334-4507-45e0-b943-9c7bf4aeab37/session.v4.jsonl",
+            "sha256": "5fd055ce41bc35f4adae11172e874bc7062e9973f65668cd390b16ee39190763"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/atn-b7cce1c7-7e5a-4e04-aeae-6c5ef816ccdd/session.v4.jsonl",
+            "sha256": "7592ac13bd3c95c968ed560cbded02ddca2672ebe30ef717d866d3d6235b5686"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-31--/shifting-2e75cf04-e938-443e-91c1-37397eb5feab/session.v4.jsonl",
+            "sha256": "b01ae1bb12ba4885eb31d6f8a288914beb36772f58b7264ff3c58e1fdf64cd22"
+          }
+        ]
+      }
+    },
+    {
+      "runId": "c0da18a9-b918-4a12-ae59-79f51550ee3a",
+      "seed": 45,
+      "model": "deepseek-v4.1-flash",
+      "purpose": "comparison",
+      "mode": "fixed",
+      "startedAt": 1791266113690,
+      "completedAt": 1791266253193,
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 45,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "providerProvenance": {
+        "provider": "dsh-opencode-go",
+        "plugin": "dsh-opencode-go",
+        "profile": "desktop-import-validation",
+        "sourceProfile": "desktop",
+        "modelImport": "dsh-desktop-profile-llm",
+        "mount": "dsh-profile-import"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "checkpointsMatchRawSubmissions": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 134,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 120,
+      "rawStatusCalls": 24,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 13,
+        "callsWithPriorStatusQuery": 0
+      },
+      "rewireCountsMatch": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableRewireHistory": 0,
+      "durableChangedRewires": 0,
+      "durableRewireChecks": {
+        "oneCommitPerSuccessfulCall": true,
+        "everyDurableCommitHasRawCall": true,
+        "commitCallerMatches": true,
+        "desiredPeersMatch": true
+      },
+      "requesterFeedback": {
+        "accepted": 9,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawSuccessfulReviews": {
+        "accepted": 9,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "durableRequesterFeedback": {
+        "accepted": 9,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewsWithDurableCommit": {
+        "accepted": 9,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "rawReviewCommitChecks": {
+        "everyFinalFeedbackHasExactRawCall": true,
+        "committedCountsMatchReported": true
+      },
+      "finalFeedbackWithOnlyErroredToolResult": 0,
+      "reviewCountMeaning": "Successful tool responses count calls; durable requesterFeedback counts final task opinions. Exact raw review arguments and caller identity corroborate each persisted opinion, including a commit followed by an aborted tool response.",
+      "durableFeedbackMatchesReported": true,
+      "rawReviewCountsEqualFinalFeedback": true,
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 21,
+        "maxNodeStepRatio": 0.4375,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 21,
+      "stepSnapshotMatches": true,
+      "runtimeUniformity": {
+        "nodes": 8,
+        "nodesExpected": 8,
+        "modelRoutesMatch": true,
+        "everySessionHasRequestHeader": true,
+        "distinctToolSchemaHashes": [
+          "146647d6b6e7dc0ad22e5884300391b1a0976a9ac222edc41dcc610731fa3272"
+        ],
+        "sameToolSchemas": true,
+        "childRequestConfigHashes": [
+          "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+        ],
+        "sameChildRequestConfig": true,
+        "samePermissionSeeds": true,
+        "permissionSeedHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "rawStoredPermissionSeedHashes": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "permissionSeedNormalization": "null and empty object carry no explicit delegated policy; compare durable permission events as well",
+        "samePermissionPolicyEvents": true,
+        "permissionPolicyEventHashes": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "samePreset": true,
+        "presetIds": [
+          null
+        ],
+        "violations": {
+          "wrongHeaderRoute": 0,
+          "wrongHeaderOutputBound": 0,
+          "wrongToolSet": 0,
+          "unknownSession": 0,
+          "wrongEvidenceOwner": 0,
+          "alteredEvidence": 0,
+          "invalidEvidenceResponse": 0,
+          "nonlocalEvidenceSelection": 0,
+          "nonEntryCheckpoint": 0
+        }
+      },
+      "evidenceAcl": {
+        "taskHashMatches": true,
+        "nodeCreationChainMatchesSlotOrder": true,
+        "successfulReadCalls": 16,
+        "successfulReadDocuments": 36,
+        "deniedReadCalls": 0,
+        "reportedDeniedReads": 0,
+        "returnedFactsAllOwnedAndUnmodified": true,
+        "bySlotPhase": {
+          "4:1": 1,
+          "4:2": 1,
+          "5:1": 1,
+          "5:2": 1,
+          "6:1": 1,
+          "6:2": 1,
+          "2:1": 1,
+          "2:2": 1,
+          "3:1": 1,
+          "3:2": 1,
+          "1:1": 1,
+          "1:2": 1,
+          "7:1": 1,
+          "7:2": 1,
+          "0:1": 1,
+          "0:2": 1
+        }
+      },
+      "parentProviderTrace": {
+        "starts": 134,
+        "prepared": 134,
+        "finishes": 134,
+        "thrown": 0,
+        "finishKinds": {
+          "tool-calls": 94,
+          "stop": 40
+        },
+        "failureCounts": {},
+        "checks": {
+          "issuedCallCountMatches": true,
+          "uniqueCallIds": true,
+          "everyPreparedCallHasStart": true,
+          "everyStartHasPreparedCall": true,
+          "everyCallHasTerminal": true,
+          "routeMatches": true,
+          "outputBoundMatches": true,
+          "childMarkerAlwaysTrue": true,
+          "actualInstalledMarkerAlwaysTrue": true,
+          "sameEightTools": true,
+          "allNodesCalled": true,
+          "providerFailureCountMatches": true
+        },
+        "callsWithoutProviderTerminal": [],
+        "terminalCoverageMeaning": "Calls without a recorded provider finish or throw remain issued calls. Child interruption or an empty final attempt is shown separately; missing provider terminal telemetry is not counted as an observed provider error."
+      },
+      "maxTokenDiagnosis": {
+        "maxTokenFinishes": 0,
+        "matchedReasoningOnlyResponses": 0,
+        "unmatchedResponses": 0
+      },
+      "failureCounts": {},
+      "rawModelErrorCodes": {},
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchWorkingTreeAtAudit": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "981e46cb29bfbad015216310ea7d265c0f9b8e3e073124fd20c1fe65219fea5f"
+        }
+      },
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/report.json",
+          "sha256": "5570cfaf19e3f0edaef8f635ec351c53dbd59a0015d6ae63deeafaf2acf96585"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/manifest.json",
+          "sha256": "d064828d7bc1aba8a0e20ee145d6a362679c83afe9e6cb188e49db753bf496fd"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/storage/atn_networks.json",
+          "sha256": "3b18b8d33bb1c7eae3993cf1bf600b28eef9a56d6e16273acff27cf5878734af"
+        },
+        "providerTrace": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/imported-provider-calls.jsonl",
+          "sha256": "0d786e47408aa6e36049647bcc2ebd63246a492b3d55449e1be7683320c42de5"
+        },
+        "sessions": [
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-15d6162f-e17d-49d8-b2e4-324ac0b32141/session.v4.jsonl",
+            "sha256": "cea9de63dd876a1fe9644824ef56d95d2308e96d6de3db5bf34c3922e5f63963"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-177d0087-c75d-48fa-b38b-24b378051dc8/session.v4.jsonl",
+            "sha256": "c99c9e912e1c1ea8429de6af13b251bdac24636adfb41f043c390859bee52f64"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-33304dfb-c1a2-4292-991f-01e43fb4d970/session.v4.jsonl",
+            "sha256": "2a72a1e30bfe21974999a144a6300123e40aa61ce1e73f82ba8ff975c9a4bebd"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-536af65a-40bb-449a-89b1-cbbf70026768/session.v4.jsonl",
+            "sha256": "63d530fed0403f93a36417908a15b73ca300739251413413420ded2bb6645892"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-5c395f6b-52e9-451b-86ee-02bd91683542/session.v4.jsonl",
+            "sha256": "c2712b7ec8fc73e40851d4ae78506cd74d0ec5294c51c8bd47dfc309b5fd9d69"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-6a958442-1f32-4c7d-afde-e24d5443699f/session.v4.jsonl",
+            "sha256": "7dc4c9b7a9589d66decc13efde7d7eb113261bb9f71d6b9237a7a588701cabaa"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/atn-80a3206d-01aa-4d92-b04e-86e2a34daeab/session.v4.jsonl",
+            "sha256": "262efe5d56e3e5aa183c3f613f694400240dc7798df07f1d08506e0dda1cb60f"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-45--/shifting-c0da18a9-b918-4a12-ae59-79f51550ee3a/session.v4.jsonl",
+            "sha256": "3034cb54f752a2079ee902761b9e5ea2e0457d8ccf88171ac3cc922264581fee"
+          }
+        ]
+      }
+    },
+    {
+      "runId": "f21e2a46-eaa7-44ab-9362-8abe44007e31",
+      "seed": 59,
+      "model": "deepseek-v4.1-flash",
+      "purpose": "comparison",
+      "mode": "fixed",
+      "startedAt": 1791266255223,
+      "completedAt": 1791266446076,
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 59,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "providerProvenance": {
+        "provider": "dsh-opencode-go",
+        "plugin": "dsh-opencode-go",
+        "profile": "desktop-import-validation",
+        "sourceProfile": "desktop",
+        "modelImport": "dsh-desktop-profile-llm",
+        "mount": "dsh-profile-import"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "checkpointsMatchRawSubmissions": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 158,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 157,
+      "rawStatusCalls": 29,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 10,
+        "callsWithPriorStatusQuery": 0
+      },
+      "rewireCountsMatch": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableRewireHistory": 0,
+      "durableChangedRewires": 0,
+      "durableRewireChecks": {
+        "oneCommitPerSuccessfulCall": true,
+        "everyDurableCommitHasRawCall": true,
+        "commitCallerMatches": true,
+        "desiredPeersMatch": true
+      },
+      "requesterFeedback": {
+        "accepted": 15,
+        "rejected": 4,
+        "needsMore": 0
+      },
+      "rawSuccessfulReviews": {
+        "accepted": 15,
+        "rejected": 4,
+        "needsMore": 0
+      },
+      "durableRequesterFeedback": {
+        "accepted": 15,
+        "rejected": 4,
+        "needsMore": 0
+      },
+      "rawReviewsWithDurableCommit": {
+        "accepted": 15,
+        "rejected": 4,
+        "needsMore": 0
+      },
+      "rawReviewCommitChecks": {
+        "everyFinalFeedbackHasExactRawCall": true,
+        "committedCountsMatchReported": true
+      },
+      "finalFeedbackWithOnlyErroredToolResult": 0,
+      "reviewCountMeaning": "Successful tool responses count calls; durable requesterFeedback counts final task opinions. Exact raw review arguments and caller identity corroborate each persisted opinion, including a commit followed by an aborted tool response.",
+      "durableFeedbackMatchesReported": true,
+      "rawReviewCountsEqualFinalFeedback": true,
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 23,
+        "maxNodeStepRatio": 0.4791666666666667,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 23,
+      "stepSnapshotMatches": true,
+      "runtimeUniformity": {
+        "nodes": 8,
+        "nodesExpected": 8,
+        "modelRoutesMatch": true,
+        "everySessionHasRequestHeader": true,
+        "distinctToolSchemaHashes": [
+          "146647d6b6e7dc0ad22e5884300391b1a0976a9ac222edc41dcc610731fa3272"
+        ],
+        "sameToolSchemas": true,
+        "childRequestConfigHashes": [
+          "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+        ],
+        "sameChildRequestConfig": true,
+        "samePermissionSeeds": true,
+        "permissionSeedHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "rawStoredPermissionSeedHashes": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "permissionSeedNormalization": "null and empty object carry no explicit delegated policy; compare durable permission events as well",
+        "samePermissionPolicyEvents": true,
+        "permissionPolicyEventHashes": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "samePreset": true,
+        "presetIds": [
+          null
+        ],
+        "violations": {
+          "wrongHeaderRoute": 0,
+          "wrongHeaderOutputBound": 0,
+          "wrongToolSet": 0,
+          "unknownSession": 0,
+          "wrongEvidenceOwner": 0,
+          "alteredEvidence": 0,
+          "invalidEvidenceResponse": 0,
+          "nonlocalEvidenceSelection": 0,
+          "nonEntryCheckpoint": 0
+        }
+      },
+      "evidenceAcl": {
+        "taskHashMatches": true,
+        "nodeCreationChainMatchesSlotOrder": true,
+        "successfulReadCalls": 16,
+        "successfulReadDocuments": 36,
+        "deniedReadCalls": 2,
+        "reportedDeniedReads": 2,
+        "returnedFactsAllOwnedAndUnmodified": true,
+        "bySlotPhase": {
+          "7:1": 1,
+          "7:2": 1,
+          "2:1": 1,
+          "2:2": 1,
+          "1:1": 1,
+          "1:2": 1,
+          "5:1": 1,
+          "5:2": 1,
+          "6:1": 1,
+          "6:2": 1,
+          "3:1": 1,
+          "3:2": 1,
+          "4:1": 1,
+          "4:2": 1,
+          "0:1": 1,
+          "0:2": 1
+        }
+      },
+      "parentProviderTrace": {
+        "starts": 158,
+        "prepared": 158,
+        "finishes": 155,
+        "thrown": 0,
+        "finishKinds": {
+          "tool-calls": 109,
+          "stop": 44,
+          "max-tokens": 2
+        },
+        "failureCounts": {},
+        "checks": {
+          "issuedCallCountMatches": true,
+          "uniqueCallIds": true,
+          "everyPreparedCallHasStart": true,
+          "everyStartHasPreparedCall": true,
+          "everyCallHasTerminal": false,
+          "routeMatches": true,
+          "outputBoundMatches": true,
+          "childMarkerAlwaysTrue": true,
+          "actualInstalledMarkerAlwaysTrue": true,
+          "sameEightTools": true,
+          "allNodesCalled": true,
+          "providerFailureCountMatches": true
+        },
+        "callsWithoutProviderTerminal": [
+          {
+            "callId": "76de3fd9-7e58-4214-ae83-a09b6e39d11a",
+            "sessionId": "atn-f96684e1-59fb-4eb9-a7f0-4742e7604bb6",
+            "ordinal": 21,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/message",
+              "interrupted": true,
+              "streamChunks": 2
+            }
+          },
+          {
+            "callId": "60f88c82-7860-4ad5-8a6b-893a2ba26588",
+            "sessionId": "atn-fa4f74eb-a662-47d9-aab8-88387be07eb9",
+            "ordinal": 19,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/message",
+              "interrupted": true,
+              "streamChunks": 4
+            }
+          },
+          {
+            "callId": "1083077e-76c5-4d5a-af51-5cea96e6264d",
+            "sessionId": "atn-82a3682b-7272-4b53-922e-dc1671813efd",
+            "ordinal": 17,
+            "finalCallInSession": true,
+            "childOutcomeCountMatchesSessionCalls": true,
+            "childOutcome": {
+              "type": "assistant/message",
+              "interrupted": true,
+              "streamChunks": 2
+            }
+          }
+        ],
+        "terminalCoverageMeaning": "Calls without a recorded provider finish or throw remain issued calls. Child interruption or an empty final attempt is shown separately; missing provider terminal telemetry is not counted as an observed provider error."
+      },
+      "maxTokenDiagnosis": {
+        "maxTokenFinishes": 2,
+        "matchedReasoningOnlyResponses": 2,
+        "unmatchedResponses": 0
+      },
+      "failureCounts": {},
+      "rawModelErrorCodes": {},
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchWorkingTreeAtAudit": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "981e46cb29bfbad015216310ea7d265c0f9b8e3e073124fd20c1fe65219fea5f"
+        }
+      },
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/report.json",
+          "sha256": "b4bd154f4b47bc915909cf08ef28822fdbd0efc46e26f56f2fa86cc13ab6b7af"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/manifest.json",
+          "sha256": "ea43a387e2303da1329c4746969e5b591aa94761f52f9630e58b4bac52c6f3e9"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/storage/atn_networks.json",
+          "sha256": "89943f3f439d79b96f0c0851ab15fc68a8aa35d2c81127196050240c4e43bd0c"
+        },
+        "providerTrace": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/imported-provider-calls.jsonl",
+          "sha256": "f4e46375de48dddb48ce6f92c3541f4404457ab2d1325df7970ae7092929ff25"
+        },
+        "sessions": [
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-2b300cff-21a1-486f-9411-a75bd3338a08/session.v4.jsonl",
+            "sha256": "ac8b70c489877ada95908f57352096c7d36df848a3682542f3893c048f98be9c"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-3081f392-87aa-451d-98dd-da85a71dfe07/session.v4.jsonl",
+            "sha256": "c1ceb19775876fbda77f4ddf1648e53c7a631ef5a918353c4700673981cf7db8"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-81e9d02a-bd23-4864-90ea-3f9307aef574/session.v4.jsonl",
+            "sha256": "ab0dd4c315dec4daedce52bde7d187b6a5bd68689741b4af2924bfe9d7c9fe0c"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-82a3682b-7272-4b53-922e-dc1671813efd/session.v4.jsonl",
+            "sha256": "91386fa42a59e403a1bb400ce7b5d62ddbf13b73b289c7b04849fee58ccde6fc"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-a0b4bc56-ca09-45d8-bfce-95bd0908237a/session.v4.jsonl",
+            "sha256": "69538cf6bdc269358fb22a29b2a8df867dffd341d70ce6f47724b87a050e42d3"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-f96684e1-59fb-4eb9-a7f0-4742e7604bb6/session.v4.jsonl",
+            "sha256": "293258000332f5b93e818fc40efa3b1470e1eeace2e3561bfa33eae341ca2b56"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/atn-fa4f74eb-a662-47d9-aab8-88387be07eb9/session.v4.jsonl",
+            "sha256": "83638b122bcb27d627921aff223c184a9fca8f4ca8468c3db79ff5f842ed2042"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-59--/shifting-f21e2a46-eaa7-44ab-9362-8abe44007e31/session.v4.jsonl",
+            "sha256": "eeaca9236dfa1c3a53c883718aee0f08485297bb84489ce8112a79a0e7ec91b3"
+          }
+        ]
+      }
+    },
+    {
+      "runId": "5151d7b2-a45c-4bf6-ad06-1ebb2eca93b0",
+      "seed": 73,
+      "model": "deepseek-v4.1-flash",
+      "purpose": "comparison",
+      "mode": "fixed",
+      "startedAt": 1791266448211,
+      "completedAt": 1791266632974,
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 73,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "providerProvenance": {
+        "provider": "dsh-opencode-go",
+        "plugin": "dsh-opencode-go",
+        "profile": "desktop-import-validation",
+        "sourceProfile": "desktop",
+        "modelImport": "dsh-desktop-profile-llm",
+        "mount": "dsh-profile-import"
+      },
+      "passed": false,
+      "phase1Correct": false,
+      "phase2Correct": false,
+      "checkpointsMatchRawSubmissions": true,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "issuedModelCalls": 130,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 124,
+      "rawStatusCalls": 34,
+      "rewireCounts": {
+        "statusRewireCalls": 0,
+        "successfulRewires": 0,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 10,
+        "callsWithPriorStatusQuery": 0
+      },
+      "rewireCountsMatch": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableRewireHistory": 0,
+      "durableChangedRewires": 0,
+      "durableRewireChecks": {
+        "oneCommitPerSuccessfulCall": true,
+        "everyDurableCommitHasRawCall": true,
+        "commitCallerMatches": true,
+        "desiredPeersMatch": true
+      },
+      "requesterFeedback": {
+        "accepted": 24,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "rawSuccessfulReviews": {
+        "accepted": 24,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "durableRequesterFeedback": {
+        "accepted": 24,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "rawReviewsWithDurableCommit": {
+        "accepted": 24,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "rawReviewCommitChecks": {
+        "everyFinalFeedbackHasExactRawCall": true,
+        "committedCountsMatchReported": true
+      },
+      "finalFeedbackWithOnlyErroredToolResult": 0,
+      "reviewCountMeaning": "Successful tool responses count calls; durable requesterFeedback counts final task opinions. Exact raw review arguments and caller identity corroborate each persisted opinion, including a commit followed by an aborted tool response.",
+      "durableFeedbackMatchesReported": true,
+      "rawReviewCountsEqualFinalFeedback": true,
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 21,
+        "maxNodeStepRatio": 0.4375,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 21,
+      "stepSnapshotMatches": true,
+      "runtimeUniformity": {
+        "nodes": 8,
+        "nodesExpected": 8,
+        "modelRoutesMatch": true,
+        "everySessionHasRequestHeader": true,
+        "distinctToolSchemaHashes": [
+          "146647d6b6e7dc0ad22e5884300391b1a0976a9ac222edc41dcc610731fa3272"
+        ],
+        "sameToolSchemas": true,
+        "childRequestConfigHashes": [
+          "bb75398328573946694540b6b46dffc888eb1ccd65cf22e61a05d0837a5989cd"
+        ],
+        "sameChildRequestConfig": true,
+        "samePermissionSeeds": true,
+        "permissionSeedHashes": [
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "rawStoredPermissionSeedHashes": [
+          "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b",
+          "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+        ],
+        "permissionSeedNormalization": "null and empty object carry no explicit delegated policy; compare durable permission events as well",
+        "samePermissionPolicyEvents": true,
+        "permissionPolicyEventHashes": [
+          "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+        ],
+        "samePreset": true,
+        "presetIds": [
+          null
+        ],
+        "violations": {
+          "wrongHeaderRoute": 0,
+          "wrongHeaderOutputBound": 0,
+          "wrongToolSet": 0,
+          "unknownSession": 0,
+          "wrongEvidenceOwner": 0,
+          "alteredEvidence": 0,
+          "invalidEvidenceResponse": 0,
+          "nonlocalEvidenceSelection": 0,
+          "nonEntryCheckpoint": 0
+        }
+      },
+      "evidenceAcl": {
+        "taskHashMatches": true,
+        "nodeCreationChainMatchesSlotOrder": true,
+        "successfulReadCalls": 8,
+        "successfulReadDocuments": 18,
+        "deniedReadCalls": 0,
+        "reportedDeniedReads": 0,
+        "returnedFactsAllOwnedAndUnmodified": true,
+        "bySlotPhase": {
+          "3:1": 1,
+          "7:1": 1,
+          "5:1": 1,
+          "6:1": 1,
+          "4:1": 1,
+          "2:1": 1,
+          "1:1": 1,
+          "0:1": 1
+        }
+      },
+      "parentProviderTrace": {
+        "starts": 130,
+        "prepared": 130,
+        "finishes": 130,
+        "thrown": 0,
+        "finishKinds": {
+          "tool-calls": 85,
+          "stop": 39,
+          "max-tokens": 6
+        },
+        "failureCounts": {},
+        "checks": {
+          "issuedCallCountMatches": true,
+          "uniqueCallIds": true,
+          "everyPreparedCallHasStart": true,
+          "everyStartHasPreparedCall": true,
+          "everyCallHasTerminal": true,
+          "routeMatches": true,
+          "outputBoundMatches": true,
+          "childMarkerAlwaysTrue": true,
+          "actualInstalledMarkerAlwaysTrue": true,
+          "sameEightTools": true,
+          "allNodesCalled": true,
+          "providerFailureCountMatches": true
+        },
+        "callsWithoutProviderTerminal": [],
+        "terminalCoverageMeaning": "Calls without a recorded provider finish or throw remain issued calls. Child interruption or an empty final attempt is shown separately; missing provider terminal telemetry is not counted as an observed provider error."
+      },
+      "maxTokenDiagnosis": {
+        "maxTokenFinishes": 6,
+        "matchedReasoningOnlyResponses": 5,
+        "unmatchedResponses": 0
+      },
+      "failureCounts": {},
+      "rawModelErrorCodes": {},
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+        "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+        "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+        "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "sourceHashesMatchWorkingTreeAtAudit": true,
+      "differingSources": [],
+      "sourceSnapshot": {
+        "directory": ".artifacts/peer-variance/source-final",
+        "hashes": {
+          "path": ".artifacts/peer-variance/source-final-hashes.json",
+          "sha256": "981e46cb29bfbad015216310ea7d265c0f9b8e3e073124fd20c1fe65219fea5f"
+        }
+      },
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/report.json",
+          "sha256": "a2695abf22bc0b6a293dcd1d695d562d88ee6a0e033583eb512e41f0cec9fa60"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/manifest.json",
+          "sha256": "2eee407110a0bfdefdb6ef80275d0ee8e5dee2467acfb18845f0cddd9749242f"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/storage/atn_networks.json",
+          "sha256": "aba91b996f3225e0e8e36ae21c7dff20ea48444a3ab5378d2003505ca1653a69"
+        },
+        "providerTrace": {
+          "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/imported-provider-calls.jsonl",
+          "sha256": "1dd090cc0c1f6d8190bc2e5ff06378995fe745b77e418409bb1ed335f1c16418"
+        },
+        "sessions": [
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-02166358-1f11-4472-9018-26b078102a51/session.v4.jsonl",
+            "sha256": "713db76c2268e3289c22daf73ec6e5ce9459f7be390ab29baee98fa732d1f155"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-1be9d2a6-ddf7-4433-a73a-3c80c4e45c03/session.v4.jsonl",
+            "sha256": "e77842e1c95a588c47e2b52c7f34aee25990bc7b040ab520180d6ef4db83a24a"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-9d2aac00-d9b3-4880-b627-5c5ccaf9b28c/session.v4.jsonl",
+            "sha256": "fdf72b974850bd6fcdc41faedc436b06a1c7e804371a97bdd23e4824a4297aa9"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-b2035178-0636-4dee-992e-9b32c6e57079/session.v4.jsonl",
+            "sha256": "bd0d4f7bc1b251d3c15521942e6e7e048f067e5cb12697356667515c46c0a740"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-b486229e-3a0b-4eed-bcfa-31f643363139/session.v4.jsonl",
+            "sha256": "8e83fe36199729a61c37270518a489398328a261399560e49b3dec020f2b2ccb"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-b98ef2c7-06d6-4919-9a9b-a21fca270c61/session.v4.jsonl",
+            "sha256": "5f12aabbc6a198f2f08c1a53c327753e5fc071a41c11479fdeb21c5663eda7de"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/atn-fe8098a2-3987-4135-9cc2-9218c9df6ab3/session.v4.jsonl",
+            "sha256": "e591c96d000eb472394f57fd2327bb7f29d9d715f20e8fbad4a8c5fd5df14497"
+          },
+          {
+            "path": ".artifacts/experiments/peer-variance-dsh-deepseek-fixed-20261006/deepseek-v4.1-flash-fixed-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-dsh-deepseek-fixed-20261006-deepseek-v4.1-flash-fixed-seed-73--/shifting-5151d7b2-a45c-4bf6-ad06-1ebb2eca93b0/session.v4.jsonl",
+            "sha256": "45d56821984a4819f9f3e83ecb813e009131f0900e0567c19536187edea8f533"
+          }
+        ]
+      }
+    }
+  ],
+  "aggregate": {
+    "changedRewires": 0,
+    "attempts": 0,
+    "blocked": 0,
+    "noop": 0,
+    "realRejected": 10,
+    "twoPhaseCorrectRuns": 4,
+    "runsWithChangedRewire": 0,
+    "issuedModelCalls": 791,
+    "realAccepted": 82,
+    "priorStatusQueries": 70,
+    "maxTokenFinishes": 11,
+    "reasoningOnlyMaxTokenFinishes": 10,
+    "unmatchedMaxTokenFinishes": 0,
+    "providerErrorCounts": {}
+  },
+  "summary": {
+    "fixedGatePassed": true,
+    "calibrationGatePassed": false,
+    "everyArmRepeated": false,
+    "homogeneous": true,
+    "uniqueRuns": true,
+    "liveProvider": true,
+    "validComparisonRuns": true,
+    "adaptiveProbeGatePassed": false,
+    "probeMatchesComparison": true,
+    "separateProbeRuns": true,
+    "probePrecedesComparison": true,
+    "feedbackVarianceGatePassed": true,
+    "rejectedReviews": 10,
+    "comparisonRejectedReviews": 10,
+    "probeRejectedReviews": 6,
+    "stepHeadroom": {
+      "limit": 0.8,
+      "arms": [
+        {
+          "mode": "adaptive",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "fixed",
+          "runs": [
+            {
+              "runId": "4e7e3d81-3ccf-4919-99c1-5f2cb90c84ce",
+              "seed": 17,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 31,
+              "maxNodeStepRatio": 0.6458333333333334,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "2e75cf04-e938-443e-91c1-37397eb5feab",
+              "seed": 31,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 33,
+              "maxNodeStepRatio": 0.6875,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "c0da18a9-b918-4a12-ae59-79f51550ee3a",
+              "seed": 45,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 21,
+              "maxNodeStepRatio": 0.4375,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "f21e2a46-eaa7-44ab-9362-8abe44007e31",
+              "seed": 59,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 23,
+              "maxNodeStepRatio": 0.4791666666666667,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            },
+            {
+              "runId": "5151d7b2-a45c-4bf6-ad06-1ebb2eca93b0",
+              "seed": 73,
+              "perNodeSteps": 48,
+              "maxNodeSteps": 21,
+              "maxNodeStepRatio": 0.4375,
+              "limit": 0.8,
+              "observed": true,
+              "withinLimit": true
+            }
+          ],
+          "withinLimit": true
+        },
+        {
+          "mode": "no-feedback",
+          "runs": [],
+          "withinLimit": false
+        },
+        {
+          "mode": "no-board",
+          "runs": [],
+          "withinLimit": false
+        }
+      ],
+      "withinLimit": true
+    },
+    "mayInterpretTopology": false,
+    "interpretation": "feasibility-only",
+    "arms": [
+      {
+        "mode": "adaptive",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "fixed",
+        "repeats": 5,
+        "correct": 4,
+        "successRate": 0.8,
+        "phase1SubmittedRate": 0.8,
+        "phase2SubmittedRate": 0.8,
+        "submissionDisciplineFailures": 1,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-feedback",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      },
+      {
+        "mode": "no-board",
+        "repeats": 0,
+        "correct": 0,
+        "successRate": null,
+        "phase1SubmittedRate": null,
+        "phase2SubmittedRate": null,
+        "submissionDisciplineFailures": 0,
+        "solvingFailures": 0
+      }
+    ],
+    "probe": {
+      "probeGatePassed": false,
+      "repeats": 5,
+      "runsWithSuccessfulRewire": 2,
+      "successfulRewireRunRate": 0.4,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 7,
+        "successfulRewires": 7,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 68,
+        "callsWithPriorStatusQuery": 7
+      },
+      "interpretation": "rewire-discoverability-only",
+      "causalClaim": false
+    },
+    "excludedProbeRuns": 0,
+    "causalClaim": false
+  },
+  "rawCountsAllMatch": true,
+  "rawOutcomesAllReconciled": true,
+  "parentTraceAllChecksPass": false,
+  "sameRuntimeAndAclAcrossNodes": true,
+  "sourceAndStepSnapshotsMatch": true,
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Separate actual Desktop-profile imported-provider probe or fixed feasibility evidence. Successful changed rewires are independently reconciled with raw tool results and durable peer history. No provider errors, missing checkpoints, missing imported models or exhausted budgets are removed. This is not four-arm topology comparison evidence."
+}

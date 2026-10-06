@@ -1,0 +1,822 @@
+{
+  "version": 1,
+  "batch": {
+    "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/batch.json",
+    "sha256": "2d4d9057459d96fe64e5cfb39776c7f555fd0dd1cbe0b8e470ff9ce0b74db8e1"
+  },
+  "complete": true,
+  "summary": {
+    "probeGatePassed": true,
+    "repeats": 5,
+    "runsWithSuccessfulRewire": 5,
+    "successfulRewireRunRate": 1,
+    "validPurpose": true,
+    "liveProvider": true,
+    "completeTelemetry": true,
+    "homogeneous": true,
+    "uniqueRuns": true,
+    "rewireCounts": {
+      "statusRewireCalls": 94,
+      "successfulRewires": 94,
+      "unchangedRewires": 0,
+      "blockedRewires": 0,
+      "ablationBlockedRewires": 0,
+      "pendingRewires": 0,
+      "priorStatusQueryCalls": 235,
+      "callsWithPriorStatusQuery": 94
+    },
+    "interpretation": "rewire-discoverability-only",
+    "causalClaim": false
+  },
+  "runs": [
+    {
+      "seed": 17,
+      "runId": "9e455c20-0783-4466-b1b9-23df3deffdf1",
+      "model": "space-bunny-free",
+      "purpose": "adaptive-probe",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 17,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+        "shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+        "shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 149,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 257,
+      "rawStatusCalls": 71,
+      "rawRewireCounts": {
+        "statusRewireCalls": 16,
+        "successfulRewires": 16,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 35,
+        "callsWithPriorStatusQuery": 16
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 16,
+      "reportedExplicitRewires": 16,
+      "feedback": {
+        "accepted": 18,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 18,
+        "rejected": 2
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 28,
+        "maxNodeStepRatio": 0.5833333333333334,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 28,
+      "stepSnapshotMatches": true,
+      "failureCounts": {},
+      "sanitizedErrorMessages": {},
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/report.json",
+          "sha256": "d096bd165216adc8c2e10a292095e7ba9fb603979e9cf66663c9fa0fdfac78e0"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/manifest.json",
+          "sha256": "471555c24237fe5872976301d7d2acc37b6a31b399118e067de752b5d7724ee0"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/storage/atn_networks.json",
+          "sha256": "9189f08557921c8b49ed204912ae940137ee9545dbe99d247411113bde7518ab"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "56363907c3549f96185495de27116ff469f3ca6c5bf1d04f38a308c73ed27e95",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-063669ed-ea5f-4ffc-b49b-27f47f3df9bd/session.v4.jsonl",
+              "sha256": "368290142209f4f6aa23f30f2b567b93d3019c2492954dc653bf420c3939ce6d"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-3453d810-75a1-4076-8639-63cefd719600/session.v4.jsonl",
+              "sha256": "a5060c81860f20ed78d57144cf5957d0201323d1f0851d3b4604e769b54dbedb"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-35b30ead-77bb-483f-8569-2ead07776c40/session.v4.jsonl",
+              "sha256": "7ae47f97fa2aaa3f35a4b68955d26de2267dfc967fb35b897c10cfc268887160"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-9429cfeb-bc7b-4ab5-976e-33dff5b07091/session.v4.jsonl",
+              "sha256": "6706162f512b71d7c1e1afa469fd2328ac6b111673708bfb1706764756541bc4"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-a9f53cd1-becd-411c-ab82-30dcb6aeb01f/session.v4.jsonl",
+              "sha256": "9f84ac937efad7a68e55a34c7b9aa29bb83eae746ebf88f1f9596de32ad1870f"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-cbb19aea-f7ec-4fc4-9de7-cbf4863b0b54/session.v4.jsonl",
+              "sha256": "cc07056bf045512dc9c30642b548a6d5843424701755ce8ac34a49ce04ac137c"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/atn-d7928566-d5b8-49ed-9f12-bb1ad87ceb05/session.v4.jsonl",
+              "sha256": "d15c57a8bcf488b4e20794ecccbcba6e435ce58586a31d3b3ed61f2fc9cd44ac"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-17--/shifting-9e455c20-0783-4466-b1b9-23df3deffdf1/session.v4.jsonl",
+              "sha256": "aec010009cb9247ad5be21ad2b4032d52ff80e408ed3e223727a54ec4ac22244"
+            }
+          ]
+        }
+      },
+      "sourceHashesMatchedWorkingTreeAtOriginalAudit": true,
+      "differingWorkingTreeSourcesAtOriginalAudit": [],
+      "differingSnapshotSources": [],
+      "sourceSnapshotHashesMatch": true
+    },
+    {
+      "seed": 31,
+      "runId": "b8e6ffaa-32ee-4122-9be4-daec5b9471f2",
+      "model": "space-bunny-free",
+      "purpose": "adaptive-probe",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 31,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+        "shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+        "shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 154,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 251,
+      "rawStatusCalls": 66,
+      "rawRewireCounts": {
+        "statusRewireCalls": 14,
+        "successfulRewires": 14,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 39,
+        "callsWithPriorStatusQuery": 14
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 14,
+      "reportedExplicitRewires": 14,
+      "feedback": {
+        "accepted": 11,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 11,
+        "rejected": 0
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 25,
+        "maxNodeStepRatio": 0.5208333333333334,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": true
+      },
+      "durableMaxNodeSteps": 25,
+      "stepSnapshotMatches": true,
+      "failureCounts": {},
+      "sanitizedErrorMessages": {},
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/report.json",
+          "sha256": "a0fb723a0447802f6e10b56c74fdcccdfddd1eff14a2b149d6c91b6fae9f4f89"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/manifest.json",
+          "sha256": "792f28d27a3c5fe1d7ac31914513e15bffcc45782e735565939aa3c70d07609c"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/storage/atn_networks.json",
+          "sha256": "3ce4ebc8a14bdf69824a4c062c32ddd1c70bd67d1cf2cd69e4ff9512d2d6cf8f"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "cbcb8fd02d34746535742f33a641e59824d7f88dc2ebb74eb2687c46472aaed4",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-356d19a7-88c1-4d57-8780-40bbf911ae61/session.v4.jsonl",
+              "sha256": "334b0a5c0c5239210a2da07cecc264212c54e7775c6c3ffb2c6c33ef58052c12"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-4afde397-c335-49e7-ba57-a9a19329ee5f/session.v4.jsonl",
+              "sha256": "1fc68c91f19146e55cda8d22db0f815b498835eb3b749d86d4255e3af2657014"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-4b937b6e-af1c-444a-a6ec-0595228616fd/session.v4.jsonl",
+              "sha256": "e66e57e725e532f01eadc4c0a7ca8350f07fef8b423c44dfba6a24a7efb3e108"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-52cd9139-018f-4a71-831c-c579b7adc042/session.v4.jsonl",
+              "sha256": "e7c662ccbad03746e777dd3e11a4ba50d948bddac864278d2bbfd7384daa6a0a"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-79615798-a90f-4059-b648-470d099b1608/session.v4.jsonl",
+              "sha256": "7ff29f4b3d2e9dd444f32a262021b2fd1ec70593fae29cc9058691976b147dfb"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-7ddce673-4367-4d13-b013-81eee099cefa/session.v4.jsonl",
+              "sha256": "46f053e20d76570d70b17896df95ff2d666f416d7109de79bfee768e80560a84"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/atn-87570c6f-9c2e-4dc9-8af8-a2b330b5ccae/session.v4.jsonl",
+              "sha256": "490fb6814b11a05c301b8d56d7c6b4446b5149c5bcdc57d3b474418ab12bd3ca"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-31/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-31--/shifting-b8e6ffaa-32ee-4122-9be4-daec5b9471f2/session.v4.jsonl",
+              "sha256": "d05aa07586ce041b5765f121de34a63cfaa70047aae3882d7fb3a994ad0b2059"
+            }
+          ]
+        }
+      },
+      "sourceHashesMatchedWorkingTreeAtOriginalAudit": true,
+      "differingWorkingTreeSourcesAtOriginalAudit": [],
+      "differingSnapshotSources": [],
+      "sourceSnapshotHashesMatch": true
+    },
+    {
+      "seed": 45,
+      "runId": "ddeb0876-577e-4e46-8c29-8d383b479da3",
+      "model": "space-bunny-free",
+      "purpose": "adaptive-probe",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 45,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+        "shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+        "shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "passed": false,
+      "phase1Correct": true,
+      "phase2Correct": false,
+      "stopReason": "observed-token-limit",
+      "cleanup": "released",
+      "issuedModelCalls": 217,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 334,
+      "rawStatusCalls": 112,
+      "rawRewireCounts": {
+        "statusRewireCalls": 22,
+        "successfulRewires": 22,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 65,
+        "callsWithPriorStatusQuery": 22
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 22,
+      "reportedExplicitRewires": 22,
+      "feedback": {
+        "accepted": 23,
+        "rejected": 1,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 23,
+        "rejected": 1
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 41,
+        "maxNodeStepRatio": 0.8541666666666666,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": false
+      },
+      "durableMaxNodeSteps": 41,
+      "stepSnapshotMatches": true,
+      "failureCounts": {},
+      "sanitizedErrorMessages": {},
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/report.json",
+          "sha256": "45d73d169f79b6f47a8f2fce35f0e410da944ba635f6e90012a35509fc619b29"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/manifest.json",
+          "sha256": "e6e6452162d40e30a9d4ee755f4249518398f502db60b94ccb155f84caa8f841"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/storage/atn_networks.json",
+          "sha256": "e5580bc3186fb40286bc74fcaaa8998b7f144ac78506bcebe7862a9991936983"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "6fc9795aa04fcdef983235d2173809eabd244fb4f74b1b037ef1719c0c5fd6b9",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-100d734c-123b-480a-b03a-7c34622d76a2/session.v4.jsonl",
+              "sha256": "c112032de010e8764653f81581df5a93fd008065d0223de69186524c2bfe306f"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1af08278-479a-4fff-894e-f7876dba21b3/session.v4.jsonl",
+              "sha256": "152374e39f76b8fa873440a08a23260c9952d83518e8b95b210292628ac12f49"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-1d000f0d-07f9-43de-b151-759b05eb6346/session.v4.jsonl",
+              "sha256": "5d0d392eb79729f5996b0dcb9fac6bf54005647304c8c5dd007a0f6a482fc222"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-89c7ef8c-9743-4f5f-8658-06301ac25b6b/session.v4.jsonl",
+              "sha256": "b110f925bc4f003d6e539c0a8cdd2cbd121acaa62251463444a1fefce718eb8b"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-941db838-b062-4802-aaed-256e9f115db1/session.v4.jsonl",
+              "sha256": "21ec0ba6e2cc00c3b7a6fcf168b7b8eda23f41fcbef6bbe795e28d0935305157"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-af9bbcbd-06c9-453d-8127-0e919e7c9573/session.v4.jsonl",
+              "sha256": "4ff2fc46048ff06799a009ff82f9ba9d4ddd6bb7e783c182f1d50202542605a2"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/atn-ca62a078-9060-434b-a77e-f4f40800f25e/session.v4.jsonl",
+              "sha256": "f6cda896c03b20d2fbf6437ebbfe478ab6388813ba0f90996d57115ff814cfe0"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-45/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-45--/shifting-ddeb0876-577e-4e46-8c29-8d383b479da3/session.v4.jsonl",
+              "sha256": "6fe76102241ee8d788d5152231ee0d99f5df67fb9806ac70c1f0b13701ae0501"
+            }
+          ]
+        }
+      },
+      "sourceHashesMatchedWorkingTreeAtOriginalAudit": true,
+      "differingWorkingTreeSourcesAtOriginalAudit": [],
+      "differingSnapshotSources": [],
+      "sourceSnapshotHashesMatch": true
+    },
+    {
+      "seed": 59,
+      "runId": "353d1c8d-d259-4c15-918c-a40fcd5e1d14",
+      "model": "space-bunny-free",
+      "purpose": "adaptive-probe",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 59,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+        "shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+        "shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "passed": false,
+      "phase1Correct": true,
+      "phase2Correct": false,
+      "stopReason": "observed-token-limit",
+      "cleanup": "released",
+      "issuedModelCalls": 224,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 344,
+      "rawStatusCalls": 103,
+      "rawRewireCounts": {
+        "statusRewireCalls": 21,
+        "successfulRewires": 21,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 59,
+        "callsWithPriorStatusQuery": 21
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 21,
+      "reportedExplicitRewires": 21,
+      "feedback": {
+        "accepted": 21,
+        "rejected": 2,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 21,
+        "rejected": 2
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 43,
+        "maxNodeStepRatio": 0.8958333333333334,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": false
+      },
+      "durableMaxNodeSteps": 43,
+      "stepSnapshotMatches": true,
+      "failureCounts": {},
+      "sanitizedErrorMessages": {},
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/report.json",
+          "sha256": "699eece5d18a43f2235f91ee492a20862152330e8a1acdfd5a6b74c874fd8c67"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/manifest.json",
+          "sha256": "e93a4db25c35e44ea945e0459f42026fe9da47aabc4662228a446ada72142321"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/storage/atn_networks.json",
+          "sha256": "36ebd9eb326c9cb103c6cf5b455b59dee2d08dd6b48bed5c6be2b0e98839a380"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "e8da14b792196795717f6756db796f571f9cc2e61c8baf8c55030e9dec2d2dfc",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-091c3fe5-7e3e-43ea-b0e0-e6d51ff91070/session.v4.jsonl",
+              "sha256": "d9b949a6804e6754c2f174a8a7dfc2cbc92d7f9c2a7f66e29ac6e14900388c9e"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-1ead5422-2bb8-49e9-a8ee-2a0421c0c65c/session.v4.jsonl",
+              "sha256": "2952bba6ac96d9259de2c61cd55deb986b52b666bf4132a6f0e2da83382fef0d"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-2183152e-bbfa-4802-9828-f6c64c332d38/session.v4.jsonl",
+              "sha256": "b3adc7ce84e3c11afd85c215a7977f97d8a1489a0a516ee4272ce847768d6f81"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-327189bc-ef8f-4fd3-b1c1-9518b4105db7/session.v4.jsonl",
+              "sha256": "680a12911b055cc43e098a1031fa727cefe585e581eb7a2453a9d03c7721ded8"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-9229efd1-90da-4d94-ac15-a1a3a062f796/session.v4.jsonl",
+              "sha256": "32640e1f8df337714ba35a55bc16827d2f104d41bc2d5d694f30a9a9593215aa"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-c1964606-2adc-4fff-b94d-8cc240529d23/session.v4.jsonl",
+              "sha256": "dc925b83930f49ffb7617e2811f828c6ad7c81ed8abad73622332e5805d39a7a"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/atn-d590321b-8514-4a08-85a4-b4786eb21b8b/session.v4.jsonl",
+              "sha256": "3c45034a512d938201d0dbcd21e1532dfd444ccd12d5637b756f161051626007"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-59/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-59--/shifting-353d1c8d-d259-4c15-918c-a40fcd5e1d14/session.v4.jsonl",
+              "sha256": "d010197720cb9a00536e3c93a6a195c83cca4da7cc0e8bcbb608723cfb228455"
+            }
+          ]
+        }
+      },
+      "sourceHashesMatchedWorkingTreeAtOriginalAudit": true,
+      "differingWorkingTreeSourcesAtOriginalAudit": [],
+      "differingSnapshotSources": [],
+      "sourceSnapshotHashesMatch": true
+    },
+    {
+      "seed": 73,
+      "runId": "2a83c6bd-1deb-4ef8-9f47-30d539c72a0c",
+      "model": "space-bunny-free",
+      "purpose": "adaptive-probe",
+      "execution": "live-provider",
+      "conditions": {
+        "agents": 8,
+        "seed": 73,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "sourceHashes": {
+        "shifting-evidence-run.ts": "00170ca3cac778ba4b9f50eca112f14efdeb6ef14f0bb83835689ecb3e1fb437",
+        "shifting-evidence-task.ts": "623db28e0a86527072626012e2eb6691db4d07c04d56c4e4a59abf3ccaf89135",
+        "shifting-evidence-reference.ts": "c6fddc674e3cae8e75c645e8c1f32c43d1e1af97526d509502dc670e35dc2c4e",
+        "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+        "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+        "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+        "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+        "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+        "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+        "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+        "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+        "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+        "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+        "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+        "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+        "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+        "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+        "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+        "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+        "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+      },
+      "passed": true,
+      "phase1Correct": true,
+      "phase2Correct": true,
+      "stopReason": "phase-2-submitted",
+      "cleanup": "released",
+      "issuedModelCalls": 182,
+      "rawSessionFiles": 8,
+      "rawToolCalls": 305,
+      "rawStatusCalls": 77,
+      "rawRewireCounts": {
+        "statusRewireCalls": 21,
+        "successfulRewires": 21,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 37,
+        "callsWithPriorStatusQuery": 21
+      },
+      "countMatches": {
+        "statusRewireCalls": true,
+        "successfulRewires": true,
+        "unchangedRewires": true,
+        "blockedRewires": true,
+        "ablationBlockedRewires": true,
+        "pendingRewires": true,
+        "priorStatusQueryCalls": true,
+        "callsWithPriorStatusQuery": true
+      },
+      "durableStorageRewireHistory": 21,
+      "reportedExplicitRewires": 21,
+      "feedback": {
+        "accepted": 18,
+        "rejected": 1,
+        "needsMore": 0
+      },
+      "successfulRawReviewCalls": {
+        "accepted": 18,
+        "rejected": 1
+      },
+      "stepHeadroom": {
+        "perNodeSteps": 48,
+        "maxNodeSteps": 45,
+        "maxNodeStepRatio": 0.9375,
+        "limit": 0.8,
+        "observed": true,
+        "withinLimit": false
+      },
+      "durableMaxNodeSteps": 45,
+      "stepSnapshotMatches": true,
+      "failureCounts": {},
+      "sanitizedErrorMessages": {},
+      "providerInfrastructureFailureBeforeToolUse": false,
+      "sources": {
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/report.json",
+          "sha256": "058825699ca6a2241732c69c1700a5d22e9110dd7357deac5b486fd1ac6391f8"
+        },
+        "manifest": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/manifest.json",
+          "sha256": "3db979ce6f9c3cb0dfad53f590f702a70eb6617a3125cd1804f4129ce65afec2"
+        },
+        "storage": {
+          "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/storage/atn_networks.json",
+          "sha256": "5d33ffaa0b4430946896a0ed4bf9e4513647873dd2227304a9963c9b008601b0"
+        },
+        "sessionEvents": {
+          "files": 8,
+          "sha256": "2b102f80f391c953b809159e89452f864802108ba1f3337574d6dee32c246c5d",
+          "hashAlgorithm": "sha256 of JSON.stringify(sorted portable path + per-file SHA256 sources)",
+          "sources": [
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-0afbd117-61e7-4b33-a25c-bd2ace74a114/session.v4.jsonl",
+              "sha256": "159c818906490d35b564b8dda5a266ecd5907f14bab2d0cbd6dfbb56b5d7242a"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-28dd3e8b-dc59-4038-88e7-539e2ed8dac8/session.v4.jsonl",
+              "sha256": "91f45e6a782a397de0e561ff7d303dc5506ca3d1f064c8210b443debef8d6cce"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-479eccf0-8b4f-43e9-b7b5-855acb3b6ee6/session.v4.jsonl",
+              "sha256": "5b0d0b89d944e85c6c4c12448bc0adca4ce071e4a197fe7b256820c5c4f1daa5"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-8e209048-48c6-4566-b0dd-5710f4a1765e/session.v4.jsonl",
+              "sha256": "bc733e527e85c0af3daf4ffe29baf4b7706fcbdc35d8a27be888976865bae1d8"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-a5513ec5-da4e-4538-97ab-00b1275350e5/session.v4.jsonl",
+              "sha256": "7b9f1a821b48690334371fb039b5e4a0ba7102e243ff6fda09d7b0a2a59ef0cb"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-e3d9914e-e702-43ba-aa16-cc0e7b9afb4a/session.v4.jsonl",
+              "sha256": "40546f3e20aa936a58298f623a8d9a8e2e3a20fcd03aec0c107de1e292faf596"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/atn-e4582380-8f31-4123-bf83-72690baf8984/session.v4.jsonl",
+              "sha256": "0305d6fe0ec0ea03ee587a1cb82809a1f60f4dfa03de5a5914ff3bea0d40c4bc"
+            },
+            {
+              "path": ".artifacts/experiments/peer-variance-live-adaptive-probe-8m-20261006/space-bunny-free-adaptive-seed-73/sessions/--D-dsh-ATN-.artifacts-experiments-peer-variance-live-adaptive-probe-8m-20261006-space-bunny-free-adaptive-seed-73--/shifting-2a83c6bd-1deb-4ef8-9f47-30d539c72a0c/session.v4.jsonl",
+              "sha256": "08dfcff93f9ad163fc244d991d83e10493f2ad50f029cdedb2d1cf66c258ea52"
+            }
+          ]
+        }
+      },
+      "sourceHashesMatchedWorkingTreeAtOriginalAudit": true,
+      "differingWorkingTreeSourcesAtOriginalAudit": [],
+      "differingSnapshotSources": [],
+      "sourceSnapshotHashesMatch": true
+    }
+  ],
+  "allAuditedCountsMatch": true,
+  "realRejectedReviews": 6,
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Independent raw-session and durable-network reconciliation of a separate adaptive probe or fixed feasibility batch. Provider failures and unfinished checkpoints remain in the evidence; this audit does not constitute four-arm comparison results.",
+  "auditedAt": "2026-10-05T17:35:58.880Z",
+  "auditTimestampMeaning": "This reconciliation verifies immutable original-run reports/session logs/durable storage and the saved original source snapshot; working-tree identity observations are historical.",
+  "sourceSnapshot": {
+    "directory": ".artifacts/peer-variance/source-probe8m-initial",
+    "hashes": {
+      "path": ".artifacts/peer-variance/source-probe8m-initial-hashes.json",
+      "sha256": "5b128561d80b75b2da0f77d7d51037b22b0ea21661c8451d2bd05e9c10806205"
+    }
+  }
+}

@@ -1,0 +1,672 @@
+{
+  "schema": 1,
+  "reconciledAt": "2026-10-06T06:05:46.121Z",
+  "provider": "dsh-opencode-go",
+  "sourceProfile": "desktop",
+  "actualAtnRuns": 20,
+  "models": [
+    {
+      "model": "longcat-2.5-preview-free",
+      "provider": "dsh-opencode-go",
+      "execution": "live-provider",
+      "sourceProfile": "desktop",
+      "node": "v24.18.1",
+      "plugins": {
+        "dsh-opencode-go": {
+          "name": "dsh-opencode-go",
+          "version": "0.1.20",
+          "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\dsh-opencode-go",
+          "packageHash": "b8a594c70873ecc53335b4e51b3b86b587acf0d32a259b2be1d62b1a32d0f072",
+          "entryHash": "c94753a4411b6da85e392e9ec0f7cd724ce01dac4586b4c3054bcdb8b9b9e4aa"
+        },
+        "opencode-go-pi-ai": {
+          "name": "@earendil-works/pi-ai",
+          "version": "0.87.1",
+          "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\opencode-go-pi-ai",
+          "packageHash": "0422fc7227a158c3c843c1540edfff017d2103be33ee48b882e2ff9032a5f7d2"
+        }
+      },
+      "credentialConfigured": true,
+      "credentialSource": "file",
+      "sourceFiles": 26,
+      "conditions": {
+        "agents": 8,
+        "seed": 17,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "adaptiveProbe": {
+        "complete": true,
+        "repeats": 5,
+        "twoPhaseCorrect": 0,
+        "summary": {
+          "probeGatePassed": false,
+          "repeats": 5,
+          "runsWithSuccessfulRewire": 2,
+          "successfulRewireRunRate": 0.4,
+          "validPurpose": true,
+          "liveProvider": true,
+          "completeTelemetry": true,
+          "homogeneous": true,
+          "uniqueRuns": true,
+          "rewireCounts": {
+            "statusRewireCalls": 4,
+            "successfulRewires": 4,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "ablationBlockedRewires": 0,
+            "pendingRewires": 0,
+            "priorStatusQueryCalls": 87,
+            "callsWithPriorStatusQuery": 4
+          },
+          "interpretation": "rewire-discoverability-only",
+          "causalClaim": false
+        },
+        "aggregate": {
+          "changedRewires": 4,
+          "attempts": 4,
+          "blocked": 0,
+          "noop": 0,
+          "realRejected": 0,
+          "twoPhaseCorrectRuns": 0,
+          "runsWithChangedRewire": 2,
+          "issuedModelCalls": 268,
+          "realAccepted": 5,
+          "priorStatusQueries": 87,
+          "maxTokenFinishes": 27,
+          "reasoningOnlyMaxTokenFinishes": 27,
+          "unmatchedMaxTokenFinishes": 0,
+          "providerErrorCounts": {}
+        },
+        "maxNodeSteps": 48,
+        "maxNodeStepRatio": 1,
+        "sourceHashesMatchCurrent": true,
+        "cleanupAllReleased": true,
+        "rawOutcomesAllReconciled": true,
+        "parentTraceAllChecksPass": true,
+        "missingParentTerminals": 0,
+        "sameRuntimeAndAclAcrossNodes": true,
+        "sourceAndStepSnapshotsMatch": true
+      },
+      "fixed": {
+        "complete": true,
+        "repeats": 5,
+        "twoPhaseCorrect": 1,
+        "summary": {
+          "fixedGatePassed": false,
+          "calibrationGatePassed": false,
+          "everyArmRepeated": false,
+          "homogeneous": true,
+          "uniqueRuns": true,
+          "liveProvider": true,
+          "validComparisonRuns": true,
+          "adaptiveProbeGatePassed": false,
+          "probeMatchesComparison": true,
+          "separateProbeRuns": true,
+          "probePrecedesComparison": true,
+          "feedbackVarianceGatePassed": true,
+          "rejectedReviews": 1,
+          "comparisonRejectedReviews": 1,
+          "probeRejectedReviews": 0,
+          "stepHeadroom": {
+            "limit": 0.8,
+            "arms": [
+              {
+                "mode": "adaptive",
+                "runs": [],
+                "withinLimit": false
+              },
+              {
+                "mode": "fixed",
+                "runs": [
+                  {
+                    "runId": "b38ddbc5-33df-49f0-842e-09191e80be9c",
+                    "seed": 17,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 18,
+                    "maxNodeStepRatio": 0.375,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "149a48b6-9d89-4ce4-b2a6-024618e55db9",
+                    "seed": 31,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 9,
+                    "maxNodeStepRatio": 0.1875,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "1d875c6e-2da1-46cb-9d83-3d30baa9fbfc",
+                    "seed": 45,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 8,
+                    "maxNodeStepRatio": 0.16666666666666666,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "be599753-37f4-411b-bd6f-547344b44149",
+                    "seed": 59,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 13,
+                    "maxNodeStepRatio": 0.2708333333333333,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "19f67a61-5a12-4c46-a380-80ec76184863",
+                    "seed": 73,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 16,
+                    "maxNodeStepRatio": 0.3333333333333333,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  }
+                ],
+                "withinLimit": true
+              },
+              {
+                "mode": "no-feedback",
+                "runs": [],
+                "withinLimit": false
+              },
+              {
+                "mode": "no-board",
+                "runs": [],
+                "withinLimit": false
+              }
+            ],
+            "withinLimit": true
+          },
+          "mayInterpretTopology": false,
+          "interpretation": "feasibility-only",
+          "arms": [
+            {
+              "mode": "adaptive",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "fixed",
+              "repeats": 5,
+              "correct": 1,
+              "successRate": 0.2,
+              "phase1SubmittedRate": 0.2,
+              "phase2SubmittedRate": 0.2,
+              "submissionDisciplineFailures": 4,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "no-feedback",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "no-board",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            }
+          ],
+          "probe": {
+            "probeGatePassed": false,
+            "repeats": 5,
+            "runsWithSuccessfulRewire": 2,
+            "successfulRewireRunRate": 0.4,
+            "validPurpose": true,
+            "liveProvider": true,
+            "completeTelemetry": true,
+            "homogeneous": true,
+            "uniqueRuns": true,
+            "rewireCounts": {
+              "statusRewireCalls": 4,
+              "successfulRewires": 4,
+              "unchangedRewires": 0,
+              "blockedRewires": 0,
+              "ablationBlockedRewires": 0,
+              "pendingRewires": 0,
+              "priorStatusQueryCalls": 87,
+              "callsWithPriorStatusQuery": 4
+            },
+            "interpretation": "rewire-discoverability-only",
+            "causalClaim": false
+          },
+          "excludedProbeRuns": 0,
+          "causalClaim": false
+        },
+        "aggregate": {
+          "changedRewires": 0,
+          "attempts": 0,
+          "blocked": 0,
+          "noop": 0,
+          "realRejected": 1,
+          "twoPhaseCorrectRuns": 1,
+          "runsWithChangedRewire": 0,
+          "issuedModelCalls": 352,
+          "realAccepted": 32,
+          "priorStatusQueries": 55,
+          "maxTokenFinishes": 16,
+          "reasoningOnlyMaxTokenFinishes": 15,
+          "unmatchedMaxTokenFinishes": 0,
+          "providerErrorCounts": {}
+        },
+        "maxNodeSteps": 18,
+        "maxNodeStepRatio": 0.375,
+        "sourceHashesMatchCurrent": true,
+        "cleanupAllReleased": true,
+        "rawOutcomesAllReconciled": true,
+        "parentTraceAllChecksPass": true,
+        "missingParentTerminals": 0,
+        "sameRuntimeAndAclAcrossNodes": true,
+        "sourceAndStepSnapshotsMatch": true
+      },
+      "priorRuntimeMatches": true,
+      "originalProfileUnchanged": true,
+      "evidence": [
+        {
+          "path": "experiments/results/peer-variance-dsh-longcat-20261006.json",
+          "sha256": "0f3fc0dee1ce5ed59ee336408348557417b23a50680fe22c61adea1268cb65d7"
+        },
+        {
+          "path": "experiments/results/peer-variance-dsh-longcat-probe-audit-20261006.json",
+          "sha256": "587952886f2a435b937502475df5d05bf49d7aeaf9f56193f2f8a96abc6c5ed6"
+        },
+        {
+          "path": "experiments/results/peer-variance-dsh-longcat-fixed-audit-20261006.json",
+          "sha256": "3ca7f87e0bfe960d37a4d1a025f7d8610ce2be3a698199f23e853bb306b3aaac"
+        }
+      ]
+    },
+    {
+      "model": "deepseek-v4.1-flash",
+      "provider": "dsh-opencode-go",
+      "execution": "live-provider",
+      "sourceProfile": "desktop",
+      "node": "v24.18.1",
+      "plugins": {
+        "dsh-opencode-go": {
+          "name": "dsh-opencode-go",
+          "version": "0.1.20",
+          "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\dsh-opencode-go",
+          "packageHash": "b8a594c70873ecc53335b4e51b3b86b587acf0d32a259b2be1d62b1a32d0f072",
+          "entryHash": "c94753a4411b6da85e392e9ec0f7cd724ce01dac4586b4c3054bcdb8b9b9e4aa"
+        },
+        "opencode-go-pi-ai": {
+          "name": "@earendil-works/pi-ai",
+          "version": "0.87.1",
+          "directory": "C:\\Users\\66ccff\\.dsh\\profiles\\desktop\\node_modules\\opencode-go-pi-ai",
+          "packageHash": "0422fc7227a158c3c843c1540edfff017d2103be33ee48b882e2ff9032a5f7d2"
+        }
+      },
+      "credentialConfigured": true,
+      "credentialSource": "file",
+      "sourceFiles": 26,
+      "conditions": {
+        "agents": 8,
+        "seed": 17,
+        "chainLength": 2,
+        "perNodeSteps": 48,
+        "maxCalls": 384,
+        "maxOutputTokens": 4096,
+        "timeoutMs": 600000,
+        "observedTokenLimit": 8000000,
+        "autoAdvance": false
+      },
+      "adaptiveProbe": {
+        "complete": true,
+        "repeats": 5,
+        "twoPhaseCorrect": 3,
+        "summary": {
+          "probeGatePassed": false,
+          "repeats": 5,
+          "runsWithSuccessfulRewire": 2,
+          "successfulRewireRunRate": 0.4,
+          "validPurpose": true,
+          "liveProvider": true,
+          "completeTelemetry": true,
+          "homogeneous": true,
+          "uniqueRuns": true,
+          "rewireCounts": {
+            "statusRewireCalls": 7,
+            "successfulRewires": 7,
+            "unchangedRewires": 0,
+            "blockedRewires": 0,
+            "ablationBlockedRewires": 0,
+            "pendingRewires": 0,
+            "priorStatusQueryCalls": 68,
+            "callsWithPriorStatusQuery": 7
+          },
+          "interpretation": "rewire-discoverability-only",
+          "causalClaim": false
+        },
+        "aggregate": {
+          "changedRewires": 7,
+          "attempts": 7,
+          "blocked": 0,
+          "noop": 0,
+          "realRejected": 6,
+          "twoPhaseCorrectRuns": 3,
+          "runsWithChangedRewire": 2,
+          "issuedModelCalls": 547,
+          "realAccepted": 63,
+          "priorStatusQueries": 68,
+          "maxTokenFinishes": 6,
+          "reasoningOnlyMaxTokenFinishes": 5,
+          "unmatchedMaxTokenFinishes": 0,
+          "providerErrorCounts": {}
+        },
+        "maxNodeSteps": 30,
+        "maxNodeStepRatio": 0.625,
+        "sourceHashesMatchCurrent": true,
+        "cleanupAllReleased": true,
+        "rawOutcomesAllReconciled": true,
+        "parentTraceAllChecksPass": true,
+        "missingParentTerminals": 0,
+        "sameRuntimeAndAclAcrossNodes": true,
+        "sourceAndStepSnapshotsMatch": true
+      },
+      "fixed": {
+        "complete": true,
+        "repeats": 5,
+        "twoPhaseCorrect": 4,
+        "summary": {
+          "fixedGatePassed": true,
+          "calibrationGatePassed": false,
+          "everyArmRepeated": false,
+          "homogeneous": true,
+          "uniqueRuns": true,
+          "liveProvider": true,
+          "validComparisonRuns": true,
+          "adaptiveProbeGatePassed": false,
+          "probeMatchesComparison": true,
+          "separateProbeRuns": true,
+          "probePrecedesComparison": true,
+          "feedbackVarianceGatePassed": true,
+          "rejectedReviews": 10,
+          "comparisonRejectedReviews": 10,
+          "probeRejectedReviews": 6,
+          "stepHeadroom": {
+            "limit": 0.8,
+            "arms": [
+              {
+                "mode": "adaptive",
+                "runs": [],
+                "withinLimit": false
+              },
+              {
+                "mode": "fixed",
+                "runs": [
+                  {
+                    "runId": "4e7e3d81-3ccf-4919-99c1-5f2cb90c84ce",
+                    "seed": 17,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 31,
+                    "maxNodeStepRatio": 0.6458333333333334,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "2e75cf04-e938-443e-91c1-37397eb5feab",
+                    "seed": 31,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 33,
+                    "maxNodeStepRatio": 0.6875,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "c0da18a9-b918-4a12-ae59-79f51550ee3a",
+                    "seed": 45,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 21,
+                    "maxNodeStepRatio": 0.4375,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "f21e2a46-eaa7-44ab-9362-8abe44007e31",
+                    "seed": 59,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 23,
+                    "maxNodeStepRatio": 0.4791666666666667,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  },
+                  {
+                    "runId": "5151d7b2-a45c-4bf6-ad06-1ebb2eca93b0",
+                    "seed": 73,
+                    "perNodeSteps": 48,
+                    "maxNodeSteps": 21,
+                    "maxNodeStepRatio": 0.4375,
+                    "limit": 0.8,
+                    "observed": true,
+                    "withinLimit": true
+                  }
+                ],
+                "withinLimit": true
+              },
+              {
+                "mode": "no-feedback",
+                "runs": [],
+                "withinLimit": false
+              },
+              {
+                "mode": "no-board",
+                "runs": [],
+                "withinLimit": false
+              }
+            ],
+            "withinLimit": true
+          },
+          "mayInterpretTopology": false,
+          "interpretation": "feasibility-only",
+          "arms": [
+            {
+              "mode": "adaptive",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "fixed",
+              "repeats": 5,
+              "correct": 4,
+              "successRate": 0.8,
+              "phase1SubmittedRate": 0.8,
+              "phase2SubmittedRate": 0.8,
+              "submissionDisciplineFailures": 1,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "no-feedback",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            },
+            {
+              "mode": "no-board",
+              "repeats": 0,
+              "correct": 0,
+              "successRate": null,
+              "phase1SubmittedRate": null,
+              "phase2SubmittedRate": null,
+              "submissionDisciplineFailures": 0,
+              "solvingFailures": 0
+            }
+          ],
+          "probe": {
+            "probeGatePassed": false,
+            "repeats": 5,
+            "runsWithSuccessfulRewire": 2,
+            "successfulRewireRunRate": 0.4,
+            "validPurpose": true,
+            "liveProvider": true,
+            "completeTelemetry": true,
+            "homogeneous": true,
+            "uniqueRuns": true,
+            "rewireCounts": {
+              "statusRewireCalls": 7,
+              "successfulRewires": 7,
+              "unchangedRewires": 0,
+              "blockedRewires": 0,
+              "ablationBlockedRewires": 0,
+              "pendingRewires": 0,
+              "priorStatusQueryCalls": 68,
+              "callsWithPriorStatusQuery": 7
+            },
+            "interpretation": "rewire-discoverability-only",
+            "causalClaim": false
+          },
+          "excludedProbeRuns": 0,
+          "causalClaim": false
+        },
+        "aggregate": {
+          "changedRewires": 0,
+          "attempts": 0,
+          "blocked": 0,
+          "noop": 0,
+          "realRejected": 10,
+          "twoPhaseCorrectRuns": 4,
+          "runsWithChangedRewire": 0,
+          "issuedModelCalls": 791,
+          "realAccepted": 82,
+          "priorStatusQueries": 70,
+          "maxTokenFinishes": 11,
+          "reasoningOnlyMaxTokenFinishes": 10,
+          "unmatchedMaxTokenFinishes": 0,
+          "providerErrorCounts": {}
+        },
+        "maxNodeSteps": 33,
+        "maxNodeStepRatio": 0.6875,
+        "sourceHashesMatchCurrent": true,
+        "cleanupAllReleased": true,
+        "rawOutcomesAllReconciled": true,
+        "parentTraceAllChecksPass": false,
+        "missingParentTerminals": 6,
+        "sameRuntimeAndAclAcrossNodes": true,
+        "sourceAndStepSnapshotsMatch": true
+      },
+      "priorRuntimeMatches": true,
+      "originalProfileUnchanged": true,
+      "evidence": [
+        {
+          "path": "experiments/results/peer-variance-dsh-deepseek-20261006.json",
+          "sha256": "4f993c8bc5c73a1731d7a00ce1ccae62bdc89c9c3f1b4d5e2b00b6f129397a71"
+        },
+        {
+          "path": "experiments/results/peer-variance-dsh-deepseek-probe-audit-20261006.json",
+          "sha256": "27c0c0e65d127e041f0cc75deac8d22ed3e9ee735909f303d968649606662c56"
+        },
+        {
+          "path": "experiments/results/peer-variance-dsh-deepseek-fixed-audit-20261006.json",
+          "sha256": "2f242fcaf99878c2a91d5809eab4610a522f6e9ba5c2a0b0bc1e21bec360d259"
+        }
+      ]
+    }
+  ],
+  "calibration": {
+    "path": "experiments/results/peer-variance-calibration-dsh-profile-20261006.json",
+    "sha256": "c4a315d4cd702940da849537e7a110ba2f34f602e382d5796eb4199f2d1cd28f",
+    "execution": "scripted-test",
+    "providerCalls": 0,
+    "configurations": 9,
+    "selected": {
+      "chainLength": 2,
+      "perNodeSteps": 48,
+      "runIds": [
+        "c82d8f08-846b-4d38-9f6f-870ddf31594b",
+        "10fe084d-38a8-435d-ac25-ad84a7598586",
+        "9715ea5f-a81e-4131-b8b2-9657ff163cdc",
+        "0b24ec87-734e-49c7-9cf1-84b0d12e668d",
+        "7b7e354e-3ba3-4fa0-a9ea-2f53a827c687",
+        "50dc904d-334e-4bc6-8a47-839fde893416",
+        "7fc5b769-57fc-48d2-bd6f-f73b8d6e5b70",
+        "e5b8be07-7869-46f2-ade0-da380b4d5651",
+        "ccedbca7-e3d9-4525-9411-1eb2662dd825",
+        "39781b55-8cfc-436a-9d9a-dac47261a83c"
+      ],
+      "artifacts": [
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-fixed-seed-17",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-fixed-seed-31",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-fixed-seed-45",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-fixed-seed-59",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-fixed-seed-73",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-adaptive-seed-17",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-adaptive-seed-31",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-adaptive-seed-45",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-adaptive-seed-59",
+        ".artifacts/experiments/peer-variance-calibration-20261006-dsh-profile/chain-2-steps-48-adaptive-seed-73"
+      ]
+    }
+  },
+  "authorization": {
+    "path": "experiments/results/peer-variance-dsh-authorized-models-20261006.json",
+    "sha256": "514d8b5bcfab41bd1fa43a2aa3c8f098e73b8cd2c0e3f90fd47e83d9bc39740a"
+  },
+  "routeSmoke": {
+    "path": "experiments/results/peer-variance-dsh-imported-route-smoke-20261006.json",
+    "sha256": "776eae1d8995b03e7384d1da3cbe4d94e651ef4e5fda5a64cfec14bdfb2ba329",
+    "countsAsAtnRun": false
+  },
+  "fixedProtocol": {
+    "before": {
+      "source": {
+        "path": ".artifacts/peer-variance/context-before.json",
+        "sha256": "5fac6f564c6878e3a42e196250adb3a84fbb4a8e22c0b61cd063264b8399e74e"
+      },
+      "systemPromptBytes": 969,
+      "toolSchemaBytes": 6191,
+      "fixedContextBytes": 7160
+    },
+    "after": {
+      "source": {
+        "path": ".artifacts/peer-variance/context-after.json",
+        "sha256": "f247cde264e219cff7fe92d425704e8e4949afad33b1bcc9c76746017928158c"
+      },
+      "systemPromptBytes": 1112,
+      "toolSchemaBytes": 5948,
+      "fixedContextBytes": 7060
+    }
+  },
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Independent actual imported-model adaptive probes followed by fixed feasibility. No four-arm comparison. Completed failed runs remain in the denominators. Parent lifecycle coverage gaps and interrupted child attempts remain explicit in audits; call counts are observable LLM attempts, not HTTP request or billing limits."
+}

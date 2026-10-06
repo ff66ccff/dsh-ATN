@@ -1,0 +1,1735 @@
+{
+  "version": 1,
+  "reconciledAt": "2026-10-06T06:04:38.996Z",
+  "sourceMatchMeaning": "sourceHashesMatchCurrent compares against workspace files at reconciledAt; archived runs retain their own sourceHashes.",
+  "context": {
+    "before": {
+      "source": {
+        "path": ".artifacts/peer-variance/context-before.json",
+        "sha256": "5fac6f564c6878e3a42e196250adb3a84fbb4a8e22c0b61cd063264b8399e74e"
+      },
+      "systemPromptBytes": 969,
+      "toolSchemaBytes": 6191,
+      "fixedContextBytes": 7160
+    },
+    "after": {
+      "source": {
+        "path": ".artifacts/peer-variance/context-after.json",
+        "sha256": "f247cde264e219cff7fe92d425704e8e4949afad33b1bcc9c76746017928158c"
+      },
+      "systemPromptBytes": 1112,
+      "toolSchemaBytes": 5948,
+      "fixedContextBytes": 7060
+    }
+  },
+  "contextReduction": {
+    "toolSchemaBytes": 243,
+    "fixedContextBytes": 100
+  },
+  "calibration": null,
+  "adaptiveProbe": {
+    "source": {
+      "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/batch.json",
+      "sha256": "f9abb1f1d9abb17e0c6240014c206280f365e1282103c8beca5dbb3469debe33"
+    },
+    "planned": 5,
+    "complete": true,
+    "summary": {
+      "probeGatePassed": false,
+      "repeats": 5,
+      "runsWithSuccessfulRewire": 2,
+      "successfulRewireRunRate": 0.4,
+      "validPurpose": true,
+      "liveProvider": true,
+      "completeTelemetry": true,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "rewireCounts": {
+        "statusRewireCalls": 4,
+        "successfulRewires": 4,
+        "unchangedRewires": 0,
+        "blockedRewires": 0,
+        "ablationBlockedRewires": 0,
+        "pendingRewires": 0,
+        "priorStatusQueryCalls": 87,
+        "callsWithPriorStatusQuery": 4
+      },
+      "interpretation": "rewire-discoverability-only",
+      "causalClaim": false
+    },
+    "runs": [
+      {
+        "runId": "4a8ce0bc-99f0-47bb-be5b-1ab884958a38",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-17",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-17/report.json",
+          "sha256": "f39518d86e9ce2b3c27ce6d845f791cf0ee2bb18cc0a8b1a94fd04d1144d511d"
+        },
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "longcat-2.5-preview-free",
+        "seed": 17,
+        "execution": "live-provider",
+        "startedAt": 1791264198505,
+        "completedAt": 1791264399270,
+        "conditions": {
+          "agents": 8,
+          "seed": 17,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 34,
+        "maxNodeSteps": 6,
+        "budget": {
+          "issued": 34,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.125,
+        "requesterFeedback": {
+          "accepted": 0,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 8,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 1,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 2485.705882352941,
+        "knownMeanInputTokensPerCall": 2485.705882352941,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 84514,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 48356,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 180864,
+            "unknownCalls": 8
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 34
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 34
+          },
+          "totalTokens": {
+            "known": 313734,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "7c8a088f-93a7-4eae-b69b-592efd25d7f9",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-31",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-31/report.json",
+          "sha256": "bb23e6b6c3c91824b7c9f3722d929e78061b4916c9e30bcaaa15fad32193a1b9"
+        },
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "longcat-2.5-preview-free",
+        "seed": 31,
+        "execution": "live-provider",
+        "startedAt": 1791264400313,
+        "completedAt": 1791264919738,
+        "conditions": {
+          "agents": 8,
+          "seed": 31,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 90,
+        "maxNodeSteps": 48,
+        "budget": {
+          "issued": 90,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 1,
+        "requesterFeedback": {
+          "accepted": 0,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 3,
+          "successfulRewires": 3,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 44,
+          "callsWithPriorStatusQuery": 3,
+          "attempts": [
+            {
+              "callId": "call_da9d79cd37b249a6b8456eb6",
+              "sessionId": "shifting-7c8a088f-93a7-4eae-b69b-592efd25d7f9",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-40",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_44e72c1d141944c6a7d5f879",
+              "sessionId": "shifting-7c8a088f-93a7-4eae-b69b-592efd25d7f9",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-44",
+              "changed": true,
+              "durableCommitObserved": true
+            },
+            {
+              "callId": "call_f7a17541a4f1411fb21ef035",
+              "sessionId": "shifting-7c8a088f-93a7-4eae-b69b-592efd25d7f9",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-50",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "explicitRewires": [
+          {
+            "id": "rewire-40",
+            "changed": true,
+            "hostVerdict": "insufficient-evidence",
+            "requesterVerdict": "insufficient-evidence",
+            "causalClaim": false
+          },
+          {
+            "id": "rewire-44",
+            "changed": true,
+            "hostVerdict": "insufficient-evidence",
+            "requesterVerdict": "insufficient-evidence",
+            "causalClaim": false
+          },
+          {
+            "id": "rewire-50",
+            "changed": true,
+            "hostVerdict": "insufficient-evidence",
+            "requesterVerdict": "insufficient-evidence",
+            "causalClaim": false
+          }
+        ],
+        "failures": [],
+        "toolErrors": 4,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1952.2666666666667,
+        "knownMeanInputTokensPerCall": 1952.2666666666667,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 175704,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 83954,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 2216960,
+            "unknownCalls": 9
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 90
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 90
+          },
+          "totalTokens": {
+            "known": 2476618,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "45f8b3c1-95c5-4290-bcf5-73a9699067cf",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-45",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-45/report.json",
+          "sha256": "c228661871b6293b25c79d86a0472301b08d44748b9880070ce607588ed47cd9"
+        },
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "longcat-2.5-preview-free",
+        "seed": 45,
+        "execution": "live-provider",
+        "startedAt": 1791264921063,
+        "completedAt": 1791265046609,
+        "conditions": {
+          "agents": 8,
+          "seed": 45,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 52,
+        "maxNodeSteps": 8,
+        "budget": {
+          "issued": 52,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.16666666666666666,
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 13,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 5,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1806.0961538461538,
+        "knownMeanInputTokensPerCall": 1806.0961538461538,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 93917,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 35548,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 397568,
+            "unknownCalls": 1
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 52
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 52
+          },
+          "totalTokens": {
+            "known": 527033,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "23206d6a-2c4e-4e16-84db-fb7ec9c71ba2",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-59",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-59/report.json",
+          "sha256": "d17acceecae5d223bbdeaf7af6d758ad4212435732fbe63b249f1a4492981a4e"
+        },
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "longcat-2.5-preview-free",
+        "seed": 59,
+        "execution": "live-provider",
+        "startedAt": 1791265048375,
+        "completedAt": 1791265343058,
+        "conditions": {
+          "agents": 8,
+          "seed": 59,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 49,
+        "maxNodeSteps": 9,
+        "budget": {
+          "issued": 49,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.1875,
+        "requesterFeedback": {
+          "accepted": 0,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 1,
+          "successfulRewires": 1,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 13,
+          "callsWithPriorStatusQuery": 1,
+          "attempts": [
+            {
+              "callId": "call_2a32490549244d93af5b55d5",
+              "sessionId": "shifting-23206d6a-2c4e-4e16-84db-fb7ec9c71ba2",
+              "phase": 1,
+              "withPriorStatusQuery": true,
+              "outcome": "committed",
+              "ablationBlocked": false,
+              "rewireId": "rewire-42",
+              "changed": true,
+              "durableCommitObserved": true
+            }
+          ]
+        },
+        "explicitRewires": [
+          {
+            "id": "rewire-42",
+            "changed": true,
+            "hostVerdict": "insufficient-evidence",
+            "requesterVerdict": "insufficient-evidence",
+            "causalClaim": false
+          }
+        ],
+        "failures": [],
+        "toolErrors": 4,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1724.6122448979593,
+        "knownMeanInputTokensPerCall": 1724.6122448979593,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 84506,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 60115,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 353920,
+            "unknownCalls": 5
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 49
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 49
+          },
+          "totalTokens": {
+            "known": 498541,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "145a15cd-bf61-4018-930d-7f50a4be1bd9",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-73",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-probe-20261006/longcat-2.5-preview-free-adaptive-seed-73/report.json",
+          "sha256": "c3ff5eb1ae29caf6bf4868921a5d5df397df539dfbce96ee7892a7ed3e20c03c"
+        },
+        "mode": "adaptive",
+        "purpose": "adaptive-probe",
+        "model": "longcat-2.5-preview-free",
+        "seed": 73,
+        "execution": "live-provider",
+        "startedAt": 1791265346212,
+        "completedAt": 1791265515886,
+        "conditions": {
+          "agents": 8,
+          "seed": 73,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 43,
+        "maxNodeSteps": 7,
+        "budget": {
+          "issued": 43,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.14583333333333334,
+        "requesterFeedback": {
+          "accepted": 1,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 9,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 7,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1715.7441860465117,
+        "knownMeanInputTokensPerCall": 1715.7441860465117,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 73777,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 37546,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 268672,
+            "unknownCalls": 4
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 43
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 43
+          },
+          "totalTokens": {
+            "known": 379995,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      }
+    ]
+  },
+  "fixed": {
+    "source": {
+      "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/batch.json",
+      "sha256": "7b63ec86e67592848811c83643c85eea69ab78e94d001bafa55f07019b93bb39"
+    },
+    "planned": 5,
+    "complete": true,
+    "summary": {
+      "fixedGatePassed": false,
+      "calibrationGatePassed": false,
+      "everyArmRepeated": false,
+      "homogeneous": true,
+      "uniqueRuns": true,
+      "liveProvider": true,
+      "validComparisonRuns": true,
+      "adaptiveProbeGatePassed": false,
+      "probeMatchesComparison": true,
+      "separateProbeRuns": true,
+      "probePrecedesComparison": true,
+      "feedbackVarianceGatePassed": true,
+      "rejectedReviews": 1,
+      "comparisonRejectedReviews": 1,
+      "probeRejectedReviews": 0,
+      "stepHeadroom": {
+        "limit": 0.8,
+        "arms": [
+          {
+            "mode": "adaptive",
+            "runs": [],
+            "withinLimit": false
+          },
+          {
+            "mode": "fixed",
+            "runs": [
+              {
+                "runId": "b38ddbc5-33df-49f0-842e-09191e80be9c",
+                "seed": 17,
+                "perNodeSteps": 48,
+                "maxNodeSteps": 18,
+                "maxNodeStepRatio": 0.375,
+                "limit": 0.8,
+                "observed": true,
+                "withinLimit": true
+              },
+              {
+                "runId": "149a48b6-9d89-4ce4-b2a6-024618e55db9",
+                "seed": 31,
+                "perNodeSteps": 48,
+                "maxNodeSteps": 9,
+                "maxNodeStepRatio": 0.1875,
+                "limit": 0.8,
+                "observed": true,
+                "withinLimit": true
+              },
+              {
+                "runId": "1d875c6e-2da1-46cb-9d83-3d30baa9fbfc",
+                "seed": 45,
+                "perNodeSteps": 48,
+                "maxNodeSteps": 8,
+                "maxNodeStepRatio": 0.16666666666666666,
+                "limit": 0.8,
+                "observed": true,
+                "withinLimit": true
+              },
+              {
+                "runId": "be599753-37f4-411b-bd6f-547344b44149",
+                "seed": 59,
+                "perNodeSteps": 48,
+                "maxNodeSteps": 13,
+                "maxNodeStepRatio": 0.2708333333333333,
+                "limit": 0.8,
+                "observed": true,
+                "withinLimit": true
+              },
+              {
+                "runId": "19f67a61-5a12-4c46-a380-80ec76184863",
+                "seed": 73,
+                "perNodeSteps": 48,
+                "maxNodeSteps": 16,
+                "maxNodeStepRatio": 0.3333333333333333,
+                "limit": 0.8,
+                "observed": true,
+                "withinLimit": true
+              }
+            ],
+            "withinLimit": true
+          },
+          {
+            "mode": "no-feedback",
+            "runs": [],
+            "withinLimit": false
+          },
+          {
+            "mode": "no-board",
+            "runs": [],
+            "withinLimit": false
+          }
+        ],
+        "withinLimit": true
+      },
+      "mayInterpretTopology": false,
+      "interpretation": "feasibility-only",
+      "arms": [
+        {
+          "mode": "adaptive",
+          "repeats": 0,
+          "correct": 0,
+          "successRate": null,
+          "phase1SubmittedRate": null,
+          "phase2SubmittedRate": null,
+          "submissionDisciplineFailures": 0,
+          "solvingFailures": 0
+        },
+        {
+          "mode": "fixed",
+          "repeats": 5,
+          "correct": 1,
+          "successRate": 0.2,
+          "phase1SubmittedRate": 0.2,
+          "phase2SubmittedRate": 0.2,
+          "submissionDisciplineFailures": 4,
+          "solvingFailures": 0
+        },
+        {
+          "mode": "no-feedback",
+          "repeats": 0,
+          "correct": 0,
+          "successRate": null,
+          "phase1SubmittedRate": null,
+          "phase2SubmittedRate": null,
+          "submissionDisciplineFailures": 0,
+          "solvingFailures": 0
+        },
+        {
+          "mode": "no-board",
+          "repeats": 0,
+          "correct": 0,
+          "successRate": null,
+          "phase1SubmittedRate": null,
+          "phase2SubmittedRate": null,
+          "submissionDisciplineFailures": 0,
+          "solvingFailures": 0
+        }
+      ],
+      "probe": {
+        "probeGatePassed": false,
+        "repeats": 5,
+        "runsWithSuccessfulRewire": 2,
+        "successfulRewireRunRate": 0.4,
+        "validPurpose": true,
+        "liveProvider": true,
+        "completeTelemetry": true,
+        "homogeneous": true,
+        "uniqueRuns": true,
+        "rewireCounts": {
+          "statusRewireCalls": 4,
+          "successfulRewires": 4,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 87,
+          "callsWithPriorStatusQuery": 4
+        },
+        "interpretation": "rewire-discoverability-only",
+        "causalClaim": false
+      },
+      "excludedProbeRuns": 0,
+      "causalClaim": false
+    },
+    "runs": [
+      {
+        "runId": "b38ddbc5-33df-49f0-842e-09191e80be9c",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-17",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-17/report.json",
+          "sha256": "d221905ce07b21f5824092a519cec570d8b67854de0f18ba434587eec90145a9"
+        },
+        "mode": "fixed",
+        "purpose": "comparison",
+        "model": "longcat-2.5-preview-free",
+        "seed": 17,
+        "execution": "live-provider",
+        "startedAt": 1791265577819,
+        "completedAt": 1791265709516,
+        "conditions": {
+          "agents": 8,
+          "seed": 17,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": true,
+        "phase1Submitted": true,
+        "phase1Correct": true,
+        "phase2Submitted": true,
+        "phase2Correct": true,
+        "stopReason": "phase-2-submitted",
+        "cleanup": "released",
+        "issuedModelCalls": 112,
+        "maxNodeSteps": 18,
+        "budget": {
+          "issued": 112,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.375,
+        "requesterFeedback": {
+          "accepted": 15,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 14,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 2,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1794.7857142857142,
+        "knownMeanInputTokensPerCall": 1794.7857142857142,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 201016,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 72571,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 1683712,
+            "unknownCalls": 1
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 112
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 112
+          },
+          "totalTokens": {
+            "known": 1957299,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "149a48b6-9d89-4ce4-b2a6-024618e55db9",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-31",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-31/report.json",
+          "sha256": "fe4aa7b6387e55628b1909a65365b8d6532820d8943f28661f793b290e9657bf"
+        },
+        "mode": "fixed",
+        "purpose": "comparison",
+        "model": "longcat-2.5-preview-free",
+        "seed": 31,
+        "execution": "live-provider",
+        "startedAt": 1791265711164,
+        "completedAt": 1791265911062,
+        "conditions": {
+          "agents": 8,
+          "seed": 31,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 43,
+        "maxNodeSteps": 9,
+        "budget": {
+          "issued": 43,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.1875,
+        "requesterFeedback": {
+          "accepted": 2,
+          "rejected": 1,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 10,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 4,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 2350.5581395348836,
+        "knownMeanInputTokensPerCall": 2350.5581395348836,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 101074,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 55488,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 281728,
+            "unknownCalls": 6
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 43
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 43
+          },
+          "totalTokens": {
+            "known": 438290,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "1d875c6e-2da1-46cb-9d83-3d30baa9fbfc",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-45",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-45/report.json",
+          "sha256": "eb0a573a4fe6b5d0e76184b9176be96270ff114a3e131258cb57d9d756bf91d5"
+        },
+        "mode": "fixed",
+        "purpose": "comparison",
+        "model": "longcat-2.5-preview-free",
+        "seed": 45,
+        "execution": "live-provider",
+        "startedAt": 1791265913684,
+        "completedAt": 1791266116945,
+        "conditions": {
+          "agents": 8,
+          "seed": 45,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 44,
+        "maxNodeSteps": 8,
+        "budget": {
+          "issued": 44,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.16666666666666666,
+        "requesterFeedback": {
+          "accepted": 4,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 9,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 5,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1822.5681818181818,
+        "knownMeanInputTokensPerCall": 1822.5681818181818,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 80193,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 43190,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 304000,
+            "unknownCalls": 2
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 44
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 44
+          },
+          "totalTokens": {
+            "known": 427383,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "be599753-37f4-411b-bd6f-547344b44149",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-59",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-59/report.json",
+          "sha256": "3a42eae73931f8067ff9b5780405d6cd9f89fc8643da84579a1e66dec97537d1"
+        },
+        "mode": "fixed",
+        "purpose": "comparison",
+        "model": "longcat-2.5-preview-free",
+        "seed": 59,
+        "execution": "live-provider",
+        "startedAt": 1791266117774,
+        "completedAt": 1791266467588,
+        "conditions": {
+          "agents": 8,
+          "seed": 59,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 78,
+        "maxNodeSteps": 13,
+        "budget": {
+          "issued": 78,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.2708333333333333,
+        "requesterFeedback": {
+          "accepted": 1,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 13,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 7,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1510.7564102564102,
+        "knownMeanInputTokensPerCall": 1510.7564102564102,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 117839,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 65847,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 718464,
+            "unknownCalls": 1
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 78
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 78
+          },
+          "totalTokens": {
+            "known": 902150,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      },
+      {
+        "runId": "19f67a61-5a12-4c46-a380-80ec76184863",
+        "directory": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-73",
+        "report": {
+          "path": ".artifacts/experiments/peer-variance-dsh-longcat-fixed-20261006/longcat-2.5-preview-free-fixed-seed-73/report.json",
+          "sha256": "f9e69bc7b9ff11aade6e17e99589d82d6c24316f24ae9de17475df97d19a26db"
+        },
+        "mode": "fixed",
+        "purpose": "comparison",
+        "model": "longcat-2.5-preview-free",
+        "seed": 73,
+        "execution": "live-provider",
+        "startedAt": 1791266470341,
+        "completedAt": 1791266638027,
+        "conditions": {
+          "agents": 8,
+          "seed": 73,
+          "chainLength": 2,
+          "perNodeSteps": 48,
+          "maxCalls": 384,
+          "maxOutputTokens": 4096,
+          "timeoutMs": 600000,
+          "observedTokenLimit": 8000000,
+          "autoAdvance": false
+        },
+        "sourceHashes": {
+          "shifting-evidence-run.ts": "1b8ff631d1e1f1bdec9794486df6bce53fc868fcff6cfee9727fbd182e7105f2",
+          "shifting-evidence-task.ts": "cd4fd2c9f40494ceddabf21dbd17c71329cc21fc950de93cc17e14e81e2b89cb",
+          "shifting-evidence-reference.ts": "d4ee43c09b03ad1691dfea76ca149c5d1b2264c8bac9d970e131d2c526ae4bd0",
+          "shifting-evidence-profile-run.ts": "9e3c60b71a66907498113e504d0e9153b00a0addc04dc055b901e855ed580c13",
+          "shifting-evidence-access.ts": "c2722badd79e0169fa0bc9ee6e5658440456beb2888be9dd1b67d4f083a6e0cf",
+          "shifting-evidence-protocol.ts": "67213c021e297500edbb4d1fea0603a3d827a54ff09cd8fa3ed7eb7686a702c5",
+          "shifting-evidence-script.ts": "f4be0a6bae5efef2f11b9ad9079073b880ba4579ebedb869dfc51182d46c9682",
+          "shifting-evidence-calibration.ts": "212d8b271d6f2cd417cc7a4c18b668d147297d141c55e6b1a3f40a0be1df0c28",
+          "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+          "provider.ts": "c920db506bedd5c88c752073b770155727a30a576d0937e35e9c0819f4e386a1",
+          "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+          "telemetry.ts": "797a92f2601e173f3e1305ccb3eef4d220d4758802fe43bf568dc60e50a2a6c7",
+          "atn-cost.ts": "4de00a0f905a9e34bb95656460fdf877655da78364c550b2766af3633dc23fc4",
+          "../src/runtime.ts": "74e2c45715c9d30e0e1b6cc7f7af859ff8df1d89f651a5998e09a0172eeaf621",
+          "../src/schema.ts": "565b73051c81c686af2071deb34100e737099c6c8f78edc4dec6d726ecca5296",
+          "../src/config.ts": "4cc02cba99b6a9296b7e04121e9eddc32ee0f9fd047c5a36bca7d40c2144b131",
+          "../src/tools.ts": "4a68a17831095b86d10fa34d20da98025eab0b0cc82d8f50129a577cdadcbe1b",
+          "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+          "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+          "../src/knowledge.ts": "c13917387cc3f76417abc82cff3ffcb44d0f4ef5086ab4f8b697af3b506442cb",
+          "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+          "../src/topology.ts": "a75dea5f896b264e3907044d2336cef345226ef71467b6b9d22d939a497becbf",
+          "../src/topology-feedback.ts": "0edeec16cb888fa6aa7ce0c163dbe5e5bc23b5d020a722c08cf3e7431895ff42",
+          "../src/whiteboard.ts": "a1cdc373a03aadfeb123cabe5c5a2cc4002aa386a789ca11e4cee533b7499d68",
+          "../package.json": "22539143de85cae420a83c85ba272b9a31109493354fa6fe0fa66fa99f5aca83",
+          "../package-lock.json": "bdc478bfd13735b0b439eff4a0b876ec481568688f0b8c449f928ebeddcc0a5c"
+        },
+        "sourceHashesMatchCurrent": true,
+        "differingSources": [],
+        "passed": false,
+        "phase1Submitted": false,
+        "phase1Correct": false,
+        "phase2Submitted": false,
+        "phase2Correct": false,
+        "stopReason": "phase-1-quiescence",
+        "cleanup": "released",
+        "issuedModelCalls": 75,
+        "maxNodeSteps": 16,
+        "budget": {
+          "issued": 75,
+          "denied": 0,
+          "lastRejection": null,
+          "unknownUsageCalls": 0,
+          "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+        },
+        "maxNodeStepRatio": 0.3333333333333333,
+        "requesterFeedback": {
+          "accepted": 10,
+          "rejected": 0,
+          "needsMore": 0
+        },
+        "rewireTelemetry": {
+          "statusRewireCalls": 0,
+          "successfulRewires": 0,
+          "unchangedRewires": 0,
+          "blockedRewires": 0,
+          "ablationBlockedRewires": 0,
+          "pendingRewires": 0,
+          "priorStatusQueryCalls": 9,
+          "callsWithPriorStatusQuery": 0,
+          "attempts": []
+        },
+        "explicitRewires": [],
+        "failures": [],
+        "toolErrors": 6,
+        "fixedContextBytes": 7060,
+        "meanInputTokensPerCall": 1611.0133333333333,
+        "knownMeanInputTokensPerCall": 1611.0133333333333,
+        "inputTokenUnknownCalls": 0,
+        "tokenUsage": {
+          "inputTokens": {
+            "known": 120826,
+            "unknownCalls": 0
+          },
+          "outputTokens": {
+            "known": 51898,
+            "unknownCalls": 0
+          },
+          "cacheReadTokens": {
+            "known": 805632,
+            "unknownCalls": 0
+          },
+          "cacheWriteTokens": {
+            "known": 0,
+            "unknownCalls": 75
+          },
+          "reasoningTokens": {
+            "known": 0,
+            "unknownCalls": 75
+          },
+          "totalTokens": {
+            "known": 978356,
+            "unknownCalls": 0
+          }
+        },
+        "cost": {
+          "amount": 0,
+          "knownAmount": 0,
+          "unknownCalls": 0,
+          "currency": "USD"
+        },
+        "usageCoverage": {
+          "modelCalls": "llm/stream invocations, including observable retries and auxiliary calls",
+          "hiddenHttpRetries": "unknown",
+          "directExternalCalls": "not-observed",
+          "usageSource": "last adapter usage chunk per invocation; absent fields remain unknown",
+          "tokenUnits": "input excludes cache; reasoning is contained in output; total is not added to buckets",
+          "costMeaning": "reference tariff estimate, not actual billing or subscription consumption",
+          "content": "no prompts, completions, tool arguments/results, error text, or raw identifiers",
+          "priceTableId": "live-catalog-reference-not-subscription-bill",
+          "writeFailed": false,
+          "observationErrors": 0,
+          "closedWithInFlight": false
+        },
+        "automaticAdvanceOccurred": false
+      }
+    ]
+  },
+  "mayInterpretTopology": false,
+  "causalClaim": false,
+  "interpretation": "Separate deterministic calibration, live discoverability probe and fixed-arm feasibility. No four-arm comparison has been performed."
+}
