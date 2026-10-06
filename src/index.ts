@@ -18,6 +18,9 @@ export { Config, AtnRuntime }
 export { createExactJsonValidator, isTaskAccepted } from './tasks.ts'
 export type { TaskValidator, TaskValidationOutcome } from './tasks.ts'
 export type { TaskRecord, TaskAcceptance, TaskAcceptanceMetrics } from './schema.ts'
+export type { RequesterFeedbackInput } from './requester-feedback.ts'
+export type { PublishKnowledgeInput } from './knowledge.ts'
+export type { WhiteboardInput } from './whiteboard.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.

@@ -5,7 +5,7 @@ import { bindTypertRemote } from '@deepseek-ai/dsh-typert-protocol'
 import type TypertRegistry from '@deepseek-ai/dsh-typert-registry'
 import type {} from './runtime.ts'
 import type { NetworkRecord } from './schema.ts'
-import { collaborationPeers } from './topology.ts'
+import { collaborationPeers, collaborationPeerLimit } from './topology.ts'
 import { taskResultDigest } from './tasks.ts'
 import type { AtnEventView, AtnNetworkView, AtnObserverSnapshot } from './observer-types.ts'
 import {
@@ -43,7 +43,7 @@ function display(value: string): string {
 function peers(record: NetworkRecord, nodeId: string): string[] {
   const node = record.nodes[nodeId]
   if (node.lifecycle !== 'active' || node.creationState !== 'published') return []
-  return collaborationPeers(record.nodes, nodeId)
+  return collaborationPeers(record.nodes, nodeId, collaborationPeerLimit(record))
 }
 
 /** Human-readable history recoverable from the authoritative durable facts. */

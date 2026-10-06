@@ -35,7 +35,7 @@ import {
   type NetworkStore,
 } from './domain.ts'
 import { enqueueMail, markDelivered, markUndeliverable, pendingMails, MailIdentityError, type EnqueueInput } from './mailbox.ts'
-import { collaborationPeers, connectPublishedNode, reconcileTopology, rewireNode } from './topology.ts'
+import { collaborationPeers, collaborationPeerLimit, connectPublishedNode, reconcileTopology, rewireNode } from './topology.ts'
 import {
   canRelease,
   failProvisioning,
@@ -52,6 +52,9 @@ import { goalSnapshotMessage, mailMessage, proposalMessage, taskMessage } from '
 import { topologyFeedbackMessage } from './topology-feedback.ts'
 import { summarizeLocalFeedback, captureRewireObservations, refreshRewireObservations } from './local-feedback.ts'
 import { evaluateRewireEvidence, summarizeVerifiedFeedback, type RewireEvaluation } from './verified-feedback.ts'
+import { recordRequesterFeedback, summarizeRequesterFeedback, evaluateRequesterRewireEvidence, evaluateCumulativeRequesterRewire, refreshRequesterRewireEvidence, selectRequesterRewireSamples, type RequesterFeedbackInput } from './requester-feedback.ts'
+import { publishKnowledge, summarizeKnowledge, scoreKnowledgeQuery, type PublishKnowledgeInput } from './knowledge.ts'
+import { accessWhiteboard, type WhiteboardInput, type WhiteboardResult } from './whiteboard.ts'
 import type { GoalDocument, NetworkRecord, NodeRecord, TaskRecord } from './schema.ts'
 import { HandleReleaser, waitBounded, type HandleReleaseOutcome } from './handles.ts'
 import { randomUUID } from 'node:crypto'
@@ -175,6 +178,9 @@ export interface PeerSummary {
   readonly recentResults: readonly string[]
   /** Independent validation observations, kept separate from self-reported outcomes. */
   readonly verifiedFeedback: ReturnType<typeof summarizeVerifiedFeedback>
+  /** Requester judgements are local signals, not independent verification. */
+  readonly requesterFeedback: ReturnType<typeof summarizeRequesterFeedback>
+  readonly knowledgeFingerprint: ReturnType<typeof summarizeKnowledge>
   readonly telemetry: ReturnType<typeof summarizeLocalFeedback>
 }
 
@@ -197,6 +203,8 @@ export interface StatusInput {
   readonly query?: string
   readonly taskIds?: readonly string[]
   readonly claimTaskId?: string
+  readonly review?: RequesterFeedbackInput
+  readonly rewire?: RewireInput
 }
 
 /** Atomically replace the calling node's directed collaboration neighbourhood. */
@@ -207,12 +215,13 @@ export interface RewireInput {
   readonly candidateTaskIds?: readonly string[]
 }
 
-/** The neighbourhood committed by `atn_rewire`. */
+/** The neighbourhood committed by the rewire option of `atn_status`. */
 export interface RewireResult {
   readonly self: string
   readonly neighbours: readonly string[]
   readonly intent: 'exploration' | 'verified-improvement'
   readonly evaluation: RewireEvaluation
+  readonly requesterEvaluation: ReturnType<typeof evaluateRequesterRewireEvidence>
   readonly rewireId: string | null
 }
 
@@ -400,6 +409,9 @@ export interface AtnRuntimeDeps {
   cleanupTimeoutMs?: number
 }
 
+/** Host-only synchronous admission inside the same mutation as mail/task writes. */
+export type NetworkSendPolicy = (record: NetworkRecord, sender: NodeRecord, input: SendInput) => void
+
 /**
  * ATN runtime service. One instance exists per loaded plugin; it owns every
  * ATN-created Agent and every network record it has opened.
@@ -426,6 +438,7 @@ export class AtnRuntime extends Service<Config> {
   private readonly stopped = new Set<string>()
   /** Per-network mutation queue; one writer per network at a time. */
   private readonly mutationTails = new Map<string, Promise<unknown>>()
+  private readonly sendPolicies = new Map<string, NetworkSendPolicy>()
   /** Handle-release bookkeeping shared by retirement, completion and stop. */
   private readonly releaser: HandleReleaser
   /** Reports returned by earlier stop calls, so a repeat is idempotent. */
@@ -482,6 +495,13 @@ export class AtnRuntime extends Service<Config> {
 
   // ------------------------------------------------------- mutation queue
 
+  /** Install before network execution. This host API is never a model tool. */
+  installSendPolicy(networkId: string, policy: NetworkSendPolicy): () => void {
+    if (this.sendPolicies.has(networkId)) throw new Error('Network send policy already installed')
+    this.sendPolicies.set(networkId, policy)
+    return () => { if (this.sendPolicies.get(networkId) === policy) this.sendPolicies.delete(networkId) }
+  }
+
   /**
    * Run one network mutation as the network's single writer.
    *
@@ -522,7 +542,7 @@ export class AtnRuntime extends Service<Config> {
     const record = await store.update(networkId, (current) => {
       const outcome = fn(repairTopology ? reconcileTopology(current) : current)
       decided = outcome
-      const observed = refreshRewireObservations(outcome.record, this.now())
+      const observed = refreshRewireObservations(refreshRequesterRewireEvidence(outcome.record, this.now()), this.now())
       return repairTopology ? reconcileTopology(observed) : observed
     })
     this.syncIndex(record)
@@ -1043,7 +1063,7 @@ export class AtnRuntime extends Service<Config> {
             taskId: settled.taskId,
             mailId: enqueued.mailId,
             goalVersion: revision.version,
-            neighbours: collaborationPeers(settled.record.nodes, pending.id),
+            neighbours: collaborationPeers(settled.record.nodes, pending.id, collaborationPeerLimit(settled.record)),
           },
         }
       })
@@ -1055,7 +1075,8 @@ export class AtnRuntime extends Service<Config> {
       throw error
     }
 
-    const neighbours = collaborationPeers((await this.inspect(record.id)).nodes, published.nodeId)
+    const publishedRecord = await this.inspect(record.id)
+    const neighbours = collaborationPeers(publishedRecord.nodes, published.nodeId, collaborationPeerLimit(publishedRecord))
     let post: { taskId: string; goalVersion: number } | undefined
     try {
       // Context setup failures still compensate the creation. The assignment
@@ -1214,6 +1235,7 @@ export class AtnRuntime extends Service<Config> {
           throw new AtnRefusal('target-not-active', `node ${target.id} is ${target.lifecycle} and cannot take new tasks`)
         }
       }
+      this.sendPolicies.get(current.id)?.(current, sender, input)
       // New communication follows the caller's chosen edges. An existing open
       // task keeps a narrow discussion channel even after either endpoint rewires.
       // Check retries above this gate: changing edges never revokes accepted mail.
@@ -1222,10 +1244,10 @@ export class AtnRuntime extends Service<Config> {
         (task.holderId === sender.id && task.requesterId === target.id) ||
         (task.requesterId === sender.id && task.holderId === target.id)
       )
-      if (sender.id !== target.id && !taskDiscussion && !collaborationPeers(current.nodes, sender.id).includes(target.id)) {
+      if (sender.id !== target.id && !taskDiscussion && !collaborationPeers(current.nodes, sender.id, collaborationPeerLimit(current)).includes(target.id)) {
         throw new AtnRefusal(
           'not-a-neighbour',
-          `node ${target.id} is not in your collaboration neighbours; use atn_status to discover and atn_rewire to connect first`,
+          `node ${target.id} is not in your collaboration neighbours; use atn_status to discover and its rewire option to connect first`,
         )
       }
       const enqueueInput: EnqueueInput = {
@@ -1302,6 +1324,7 @@ export class AtnRuntime extends Service<Config> {
       if (current.tasks[taskId]?.kind === 'delivery') {
         throw new AtnRefusal('delivery-task', 'a delivery obligation is settled only by atn_finish with scope=network')
       }
+      this.sendPolicies.get(current.id)?.(current, sender, input)
       const settled = settleTask(current, taskId, senderId, {
         summary: input.summary ?? '',
         evidence: input.evidence ?? [],
@@ -1372,7 +1395,10 @@ export class AtnRuntime extends Service<Config> {
       const resultStatus = resultTask?.status
       const outcome = resultStatus === 'completed' || resultStatus === 'failed' ? resultStatus : undefined
       const relatedTask = mail.taskId === null ? undefined : record.tasks[mail.taskId]
-      const message = proposal === undefined ? mailMessage(mail, networkId, outcome, resultTask?.result, relatedTask) : proposalMessage(proposal, networkId)
+      const continuation = mail.taskId !== null && Object.values(record.mails).some(previous =>
+        previous.id !== mail.id && previous.toId === mail.toId && previous.taskId === mail.taskId &&
+        (previous.status === 'delivered' || this.hasLoggedInput(agent, this.messageMarker(mailMessage(previous, networkId))!)))
+      const message = proposal === undefined ? mailMessage(mail, networkId, outcome, resultTask?.result, relatedTask, continuation) : proposalMessage(proposal, networkId)
       const marker = this.messageMarker(message)
       if (agent.status === 'idle' && (marker === null || !this.hasLoggedInput(agent, marker))) {
         // A failed turn can strand injected input in nextStep, or lose its
@@ -1463,7 +1489,7 @@ export class AtnRuntime extends Service<Config> {
    */
   async peers(agent: Agent, query?: string): Promise<PeersResult> {
     const { record, node } = await this.callerContext(agent)
-    const ids = collaborationPeers(record.nodes, node.id)
+    const ids = collaborationPeers(record.nodes, node.id, collaborationPeerLimit(record))
     const tasks = Object.values(record.tasks)
     const summarize = (id: string): PeerSummary => {
       const peer = record.nodes[id]!
@@ -1481,6 +1507,8 @@ export class AtnRuntime extends Service<Config> {
         taskSummaries: [...ongoing, ...recent].slice(0, 3).map(task => task.description.slice(0, 240)),
         recentResults: recent.slice(0, 2).map(task => `[${task.status}] ${task.result?.summary ?? task.description}`.slice(0, 240)),
         verifiedFeedback: summarizeVerifiedFeedback(record, id, { observerId: node.id }),
+        requesterFeedback: summarizeRequesterFeedback(record, id, { observerId: node.id }),
+        knowledgeFingerprint: summarizeKnowledge(record, id),
         telemetry: summarizeLocalFeedback(record, id, { observerId: node.id, now: this.now() }),
       }
     }
@@ -1492,22 +1520,29 @@ export class AtnRuntime extends Service<Config> {
     }
     if (query !== undefined && query.trim().length > 0) {
       const needle = query.trim().toLowerCase()
-      const terms = needle.split(/\s+/)
       const ranked = Object.values(record.nodes)
         .filter((candidate) => candidate.id !== node.id && !ids.includes(candidate.id))
         .filter((candidate) => candidate.lifecycle === 'active' && candidate.creationState === 'published')
         .map(candidate => {
           const held = tasks.filter(task => task.holderId === candidate.id)
-          const text = [candidate.id, ...held.flatMap(task => [task.description, task.context, task.result?.summary ?? ''])].join('\n').toLowerCase()
+          const knowledge = summarizeKnowledge(record, candidate.id)
+          const local = summarizeRequesterFeedback(record, candidate.id, { observerId: node.id })
           return {
             id: candidate.id,
-            score: needle === '*' ? 1 : terms.filter(term => text.includes(term)).length,
+            score: scoreKnowledgeQuery(record, candidate.id, needle),
+            localAcceptance: local.acceptanceRate,
+            sharedAcceptance: knowledge.requesterAcceptanceRate,
+            accepted: knowledge.requesterAccepted,
             load: held.filter(task => task.status === 'open').length,
             createdAt: candidate.createdAt,
           }
         })
         .filter(candidate => candidate.score > 0)
-        .sort((left, right) => right.score - left.score || left.load - right.load || left.createdAt - right.createdAt || left.id.localeCompare(right.id))
+        // Relevance first, then source-labelled quality; unknown quality is neutral.
+        .sort((left, right) => right.score - left.score ||
+          (right.localAcceptance ?? 0.5) - (left.localAcceptance ?? 0.5) ||
+          (right.sharedAcceptance ?? 0.5) - (left.sharedAcceptance ?? 0.5) ||
+          right.accepted - left.accepted || left.load - right.load || left.createdAt - right.createdAt || left.id.localeCompare(right.id))
         .map((candidate) => candidate.id)
       let candidates = ranked.slice(0, 3)
       if (needle === '*' && ranked.length > 0) {
@@ -1531,6 +1566,44 @@ export class AtnRuntime extends Service<Config> {
       return { record: checked.record, value: checked.task }
     })
     return committed.value
+  }
+
+  /** Persist the live requester's judgement without mail or host acceptance. */
+  async feedback(agent: Agent, input: RequesterFeedbackInput): Promise<TaskRecord> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      const caller = current.nodes[node.id]!
+      if (current.status !== 'open' || this.now() >= current.deadlineAt ||
+        (caller.lifecycle !== 'active' && caller.lifecycle !== 'draining')) {
+        throw new AtnRefusal('feedback-unavailable', 'feedback requires a live requester in an open network')
+      }
+      const updated = recordRequesterFeedback(current, node.id, input, this.now())
+      return { record: updated.record, value: updated.task }
+    })
+    return structuredClone(committed.value)
+  }
+
+  /** Replace this node's bounded self-description without waking recipients. */
+  async publishKnowledge(agent: Agent, input: PublishKnowledgeInput): Promise<ReturnType<typeof summarizeKnowledge>> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      if (current.status !== 'open' || this.now() >= current.deadlineAt || current.nodes[node.id]?.lifecycle !== 'active') {
+        throw new AtnRefusal('knowledge-unavailable', 'knowledge publication requires an active node in an open network')
+      }
+      const updated = publishKnowledge(current, node.id, input, this.now())
+      return { record: updated, value: summarizeKnowledge(updated, node.id) }
+    })
+    return structuredClone(committed.value)
+  }
+
+  /** Metered shared-medium operations are atomic and never wake another node. */
+  async board(agent: Agent, input: WhiteboardInput): Promise<WhiteboardResult> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      const updated = accessWhiteboard(current, node.id, input, this.now())
+      return { record: updated.record, value: updated.result }
+    })
+    return structuredClone(committed.value)
   }
 
   /** Stage a host-defined recovery obligation before failing its current holder. No model tool exposes this API. */
@@ -1568,7 +1641,12 @@ export class AtnRuntime extends Service<Config> {
   async status(agent: Agent, input: StatusInput = {}) {
     // Validate read arguments before any optional mutation.
     await this.tasks(agent, input.taskIds)
+    if ([input.claimTaskId, input.review, input.rewire].filter(value => value !== undefined).length > 1) {
+      throw new AtnRefusal('multiple-status-mutations', 'status accepts only one of claimTaskId, review or rewire per call')
+    }
     const claimedTask = input.claimTaskId === undefined ? undefined : await this.claim(agent, input.claimTaskId)
+    const reviewedTask = input.review === undefined ? undefined : await this.feedback(agent, input.review)
+    const rewire = input.rewire === undefined ? undefined : await this.rewire(agent, input.rewire)
     const peers = await this.peers(agent, input.query)
     const tasks = await this.tasks(agent, input.taskIds)
     const { record, node } = await this.callerContext(agent)
@@ -1581,8 +1659,11 @@ export class AtnRuntime extends Service<Config> {
     return { ...peers, tasks, orphanTasks: structuredClone(relevant.slice(0, 16)),
       orphanTasksRemaining: Math.max(0, relevant.length - 16),
       budget: { stepsUsed: node.stepsUsed ?? 0, stepBudget: record.limits.stepBudget,
+        maxCollaborationPeers: collaborationPeerLimit(record),
         stepsRemaining: Math.max(0, record.limits.stepBudget - (node.stepsUsed ?? 0)), deadlineAt: record.deadlineAt },
-      ...(claimedTask === undefined ? {} : { claimedTask }) }
+      ...(claimedTask === undefined ? {} : { claimedTask }),
+      ...(reviewedTask === undefined ? {} : { reviewedTask }),
+      ...(rewire === undefined ? {} : { rewire }) }
   }
 
   /** Preserve the failed attempt and atomically create its single recovery task. */
@@ -1625,21 +1706,27 @@ export class AtnRuntime extends Service<Config> {
       if (this.now() >= current.deadlineAt) throw new AtnRefusal('network-expired', 'the network deadline has passed')
       const intent = input.intent ?? 'exploration'
       if (intent !== 'exploration' && intent !== 'verified-improvement') throw new AtnRefusal('invalid-rewire-intent', 'invalid rewire intent')
-      const previousPeers = collaborationPeers(current.nodes, node.id)
+      const previousPeers = collaborationPeers(current.nodes, node.id, collaborationPeerLimit(current))
       const rewired = rewireNode(current, node.id, input.peers)
+      const localSamples = input.baselineTaskIds === undefined && input.candidateTaskIds === undefined
+        ? selectRequesterRewireSamples(current, { requesterId: node.id, previousPeers, nextPeers: input.peers })
+        : { baselineTaskIds: input.baselineTaskIds ?? [], candidateTaskIds: input.candidateTaskIds ?? [] }
+      // Both layers inspect the same samples; only the host layer can establish
+      // verified quality/cost evidence. Neither layer grants rewire permission.
       const evaluation = evaluateRewireEvidence(current, {
-        requesterId: node.id, previousPeers, nextPeers: input.peers,
-        baselineTaskIds: input.baselineTaskIds ?? [], candidateTaskIds: input.candidateTaskIds ?? [],
+        requesterId: node.id, previousPeers, nextPeers: input.peers, ...localSamples,
       })
-      // Verification is an optional observation, never permission to change edges.
+      const requesterEvaluation = evaluateCumulativeRequesterRewire(current, {
+        requesterId: node.id, previousPeers, nextPeers: input.peers,
+      }, this.now())
       const allocated = allocateId(rewired, 'rewire')
       const rewireId = allocated.id
       const next = { ...allocated.next, rewireHistory: [...(current.rewireHistory ?? []), {
           id: rewireId, nodeId: node.id, createdAt: this.now(), previousPeers,
-          nextPeers: [...input.peers], intent, evaluation,
+          nextPeers: [...input.peers], intent, evaluation, requesterEvaluation,
           observations: captureRewireObservations(current, node.id, previousPeers, input.peers, this.now()),
         }] }
-      return { record: next, value: { self: node.id, neighbours: collaborationPeers(next.nodes, node.id), intent, evaluation, rewireId } }
+      return { record: next, value: { self: node.id, neighbours: collaborationPeers(next.nodes, node.id, collaborationPeerLimit(next)), intent, evaluation, requesterEvaluation, rewireId } }
     })
     return committed.value
   }

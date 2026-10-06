@@ -9,6 +9,7 @@
  * @module dsh-atn/schema
  */
 import { z } from 'zod'
+import { Buffer } from 'node:buffer'
 
 /** Stable network identifier. */
 export type NetworkId = string
@@ -98,6 +99,20 @@ export const modelRouteSchema = z
 /** {@link modelRouteSchema} value type. */
 export type ModelRoute = z.infer<typeof modelRouteSchema>
 
+/** Bounds on the self-published, descriptive knowledge index. */
+export const MAX_KNOWLEDGE_ITEMS = 16
+export const MAX_KNOWLEDGE_TEXT_LENGTH = 160
+
+/** Self-reported knowledge, never independent proof that a node is correct. */
+export const knowledgeFingerprintSchema = z.object({
+  documents: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
+  topics: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
+  contributions: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
+  updatedAt: z.number().int().nonnegative(),
+}).strict()
+
+export type KnowledgeFingerprint = z.infer<typeof knowledgeFingerprintSchema>
+
 /** One node of the network. */
 export const nodeRecordSchema = z
   .object({
@@ -115,6 +130,8 @@ export const nodeRecordSchema = z
      * means the node has chosen no neighbours and must never restore that lineage.
      */
     peerIds: z.array(z.string()).max(4).optional(),
+    /** Optional self-published discovery index; legacy nodes have no published knowledge. */
+    knowledgeFingerprint: knowledgeFingerprintSchema.optional(),
     /** Current lifecycle. */
     lifecycle: z.enum(NODE_LIFECYCLES),
     /** Durable lease deadline in epoch ms; `null` when the node holds no lease. */
@@ -185,6 +202,19 @@ export const taskAcceptanceSchema = z
 /** {@link taskAcceptanceSchema} value type. */
 export type TaskAcceptance = z.infer<typeof taskAcceptanceSchema>
 
+/** One requester's local assessment, kept separate from host verification. */
+export const requesterFeedbackSchema = z.object({
+  status: z.enum(['accepted', 'rejected', 'needs-more']),
+  requesterId: z.string().min(1),
+  summary: z.string().trim().min(1).max(1024),
+  evidence: z.array(z.string().trim().min(1).max(512)).min(1).max(8),
+  comparisonKey: z.string().trim().min(1).max(160).nullable(),
+  resultDigest: z.string().regex(/^[a-f0-9]{64}$/),
+  checkedAt: z.number().int().nonnegative(),
+}).strict()
+
+export type RequesterFeedback = z.infer<typeof requesterFeedbackSchema>
+
 /** One unit of local work. */
 export const taskRecordSchema = z
   .object({
@@ -210,6 +240,8 @@ export const taskRecordSchema = z
     holderStepsAtSettlement: z.number().int().nonnegative().optional(),
     /** Host-only verdict. Missing/null means unverified, including legacy completed tasks. */
     acceptance: taskAcceptanceSchema.nullable().optional(),
+    /** Requester opinion, never host acceptance; absent on legacy/unreviewed tasks. */
+    localFeedback: requesterFeedbackSchema.optional(),
     /** Submission state; `completed` is a holder claim, not acceptance. */
     status: z.enum(['open', 'completed', 'failed', 'unreachable']),
     /** Declared result; required once settled. */
@@ -319,6 +351,10 @@ export type ProposalRecord = z.infer<typeof proposalRecordSchema>
 /** Effective bounds of one network. Every bound is a positive integer count or a duration. */
 export const networkLimitsSchema = z
   .object({
+    /** Effective directed out-degree; absent legacy records keep the original bound of four. */
+    maxCollaborationPeers: z.number().int().min(1).max(4).optional(),
+    /** Terminal requester ratings required on each compared edge; legacy default is two. */
+    requesterMinSamples: z.number().int().positive().optional(),
     /** Resident working nodes (`provisioning` and `draining` included). */
     maxResidentNodes: z.number().int().positive(),
     /** Cumulative nodes ever created in this network. */
@@ -394,6 +430,89 @@ export const rewireObservationsSchema = z.object({
 
 export type RewireObservations = z.infer<typeof rewireObservationsSchema>
 
+/** Cumulative distinct submissions on a requester/holder/contract edge. */
+export const requesterEdgeSchema = z.object({
+  requesterId: z.string(), holderId: z.string(), comparisonKey: z.string().nullable(),
+  taskIds: z.array(z.string()),
+  accepted: z.number().int().nonnegative(), rejected: z.number().int().nonnegative(),
+  needsMore: z.number().int().nonnegative(), unrated: z.number().int().nonnegative(),
+  sampleCount: z.number().int().nonnegative(),
+  acceptanceRate: z.number().nullable(),
+  state: z.enum(['unobserved', 'observed']),
+}).strict()
+export type RequesterEdge = z.infer<typeof requesterEdgeSchema>
+
+/** Comparable local ratings only: no cost, independent-verification or causal claim. */
+export const requesterRewireEvaluationSchema = z.object({
+  source: z.literal('requester'),
+  qualityOnly: z.literal(true),
+  causalClaim: z.literal(false),
+  verdict: z.enum(['observed-improvement', 'observed-regression', 'unchanged', 'insufficient-evidence']),
+  requesterId: z.string(),
+  baselineTaskIds: z.array(z.string()).max(8),
+  candidateTaskIds: z.array(z.string()).max(8),
+  comparisonKey: z.string().nullable(),
+  baseline: z.object({ accepted: z.number().int().nonnegative(), rejected: z.number().int().nonnegative(),
+    needsMore: z.number().int().nonnegative(), unrated: z.number().int().nonnegative(), acceptanceRate: z.number().nullable() }).strict(),
+  candidate: z.object({ accepted: z.number().int().nonnegative(), rejected: z.number().int().nonnegative(),
+    needsMore: z.number().int().nonnegative(), unrated: z.number().int().nonnegative(), acceptanceRate: z.number().nullable() }).strict(),
+  delta: z.object({ acceptanceRate: z.number().nullable() }).strict(),
+  reasons: z.array(z.string()),
+  /** Frozen removed-edge evidence and cumulatively refreshed added-edge evidence. */
+  baselineEdges: z.array(requesterEdgeSchema).optional(),
+  candidateEdges: z.array(requesterEdgeSchema).optional(),
+  minimumSamples: z.number().int().positive().optional(),
+  evaluatedAt: z.number().int().nonnegative().optional(),
+}).strict()
+
+export type RequesterRewireEvaluation = z.infer<typeof requesterRewireEvaluationSchema>
+
+/** Fixed shared-medium bounds; payloads include persisted entry metadata. */
+export const MAX_WHITEBOARD_ENTRIES = 64
+export const MAX_WHITEBOARD_ENTRY_BYTES = 4096
+export const MAX_WHITEBOARD_TOTAL_BYTES = 64 * 1024
+
+export const whiteboardEntrySchema = z.object({
+  key: z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,95}$/),
+  /** Authenticated publisher, immutable for the life of this entry. */
+  authorId: z.string().min(1),
+  body: z.string().min(1).max(MAX_WHITEBOARD_ENTRY_BYTES).refine(body => body.trim().length > 0),
+  topics: z.array(z.string().trim().min(1).max(80)).max(8),
+  documents: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS).optional(),
+  /** Network-wide monotonically allocated revision; deletion never recycles it. */
+  revision: z.number().int().positive(),
+  createdAt: z.number().int().nonnegative(),
+  updatedAt: z.number().int().nonnegative(),
+}).strict().refine(entry => entry.updatedAt >= entry.createdAt &&
+  Buffer.byteLength(JSON.stringify(entry), 'utf8') <= MAX_WHITEBOARD_ENTRY_BYTES,
+  'whiteboard entry exceeds its byte bound or has reversed timestamps')
+
+export type WhiteboardEntry = z.infer<typeof whiteboardEntrySchema>
+
+/** Successful operations only; byte totals measure UTF-8 JSON payloads, not provider tokens. */
+export const whiteboardUsageSchema = z.object({
+  reads: z.number().int().nonnegative(),
+  writes: z.number().int().nonnegative(),
+  /** Serialized returned entry arrays, including empty-array framing. */
+  readBytes: z.number().int().nonnegative(),
+  /** Serialized stored entries or successful deletion receipts. */
+  writeBytes: z.number().int().nonnegative(),
+}).strict()
+
+export type WhiteboardUsage = z.infer<typeof whiteboardUsageSchema>
+
+export const whiteboardSchema = z.object({
+  /** Last committed write revision; read accounting never changes a paging snapshot. */
+  generation: z.number().int().nonnegative(),
+  entries: z.array(whiteboardEntrySchema).max(MAX_WHITEBOARD_ENTRIES),
+  usage: whiteboardUsageSchema,
+}).strict().refine(board => new Set(board.entries.map(entry => entry.key)).size === board.entries.length &&
+  board.entries.every(entry => entry.revision <= board.generation) &&
+  Buffer.byteLength(JSON.stringify(board.entries), 'utf8') <= MAX_WHITEBOARD_TOTAL_BYTES,
+  'whiteboard keys, revisions or total payload violate durable bounds')
+
+export type Whiteboard = z.infer<typeof whiteboardSchema>
+
 /** One complete ATN network: the atomic persistence unit. */
 export const networkRecordSchema = z
   .object({
@@ -419,6 +538,10 @@ export const networkRecordSchema = z
     mails: z.record(z.string(), mailRecordSchema),
     /** Proposals by id. */
     proposals: z.record(z.string(), proposalRecordSchema),
+    /** Bounded shared medium. Absent legacy records behave as an empty, unused board. */
+    whiteboard: whiteboardSchema.optional(),
+    /** Durable edge totals, reconstructed from digest-bound opinions when loading legacy data. */
+    requesterEdges: z.array(requesterEdgeSchema).optional(),
     /** Audit of explicit rewires. Birth and failed-node repair are separate. */
     rewireHistory: z.array(z.object({
       id: z.string(),
@@ -429,6 +552,8 @@ export const networkRecordSchema = z
       intent: z.enum(['exploration', 'verified-improvement']),
       /** Optional on legacy rows; refreshed automatically until the node next rewires. */
       observations: rewireObservationsSchema.optional(),
+      /** Optional local requester quality comparison; host evaluation remains authoritative and separate. */
+      requesterEvaluation: requesterRewireEvaluationSchema.optional(),
       evaluation: z.object({
         verdict: z.enum(['observed-improvement', 'observed-regression', 'mixed', 'unchanged', 'insufficient-evidence']),
         causalClaim: z.literal(false),

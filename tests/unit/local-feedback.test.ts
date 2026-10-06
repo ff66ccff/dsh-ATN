@@ -9,12 +9,26 @@ import {
 import { networkRecordSchema, nodeRecordSchema, taskRecordSchema, type NetworkRecord } from '../../src/schema.ts'
 import { topologyFeedbackMessage } from '../../src/topology-feedback.ts'
 import { evaluateRewireEvidence } from '../../src/verified-feedback.ts'
+import { recordRequesterFeedback } from '../../src/requester-feedback.ts'
+import { taskResultDigest } from '../../src/tasks.ts'
 import { makeChain, makeNode, makeTask } from '../fixtures/network.ts'
 
 function text(message: UserMessage | undefined): string {
   assert.ok(message)
   return message.content.map(part => part.type === 'text' ? part.text : '').join('\n')
 }
+
+test('RECOVERY-FEEDBACK: byte cap truncates detail without altering peer ids or counters', () => {
+  const record = makeChain(['A', 'B'])
+  const taskId = '证据'.repeat(5000)
+  record.tasks[taskId] = makeTask(taskId, { status: 'completed', settledAt: 10 })
+  const message = text(topologyFeedbackMessage(record, 'A', [], 20))
+  assert.ok(Buffer.byteLength(message) <= 4096)
+  assert.match(message, /B: assigned=1, open=0, completed=1, failed=0, unreachable=0/)
+  assert.match(message, /B quality: requester accepted=0, rejected=0, needs-more=0/)
+  assert.match(message, /truncated/)
+  assert.ok(!message.includes('\uFFFD'), 'UTF-8 truncation keeps code points intact')
+})
 
 function appendRewire(record: NetworkRecord, id: string, at: number, nextPeers: string[]): NetworkRecord {
   const previousPeers = ['B']
@@ -134,6 +148,36 @@ test('material fingerprint ignores ordering, continuous metrics and open task ev
   }
   assert.notEqual(materialFingerprint([current]), materialFingerprint([{ ...current, lifecycle: 'draining' }]))
   assert.notEqual(materialFingerprint([current]), materialFingerprint([{ ...current, terminalTaskIds: ['different-task'] }]))
+})
+
+test('requester feedback after settlement changes the next snapshot without manufacturing host passes', () => {
+  let record = makeChain(['A', 'B'])
+  record.nodes.A.stepsUsed = 1
+  record.tasks.result = makeTask('result', { status: 'completed', settledBy: 'B', settledAt: 10,
+    result: { summary: '42', evidence: ['calculation'] } })
+  const initial = topologyFeedbackMessage(record, 'A', [], 11)
+  const events = [{ type: 'user/message', data: initial }]
+  record = recordRequesterFeedback(record, 'A', { taskId: 'result', status: 'needs-more',
+    summary: 'Please provide the check.', evidence: ['missing-check'], comparisonKey: 'same-work' }, 12).record
+  record.nodes.A.stepsUsed = 4
+  const pending = topologyFeedbackMessage(record, 'A', events, 13)
+  assert.match(text(pending), /requester accepted=0, rejected=0, needs-more=1/)
+  events.push({ type: 'user/message', data: pending })
+  record = recordRequesterFeedback(record, 'A', { taskId: 'result', status: 'accepted',
+    summary: 'Checked calculation.', evidence: ['independent-local-calculation'], comparisonKey: 'same-work' }, 14).record
+  record.nodes.A.stepsUsed = 7
+  const accepted = topologyFeedbackMessage(record, 'A', events, 15)
+  assert.match(text(accepted), /requester accepted=1, rejected=0, needs-more=0/)
+  assert.match(text(accepted), /host passed=0, failed=0, unverified=1/)
+  events.push({ type: 'user/message', data: accepted })
+  record.nodes.A.stepsUsed = 10
+  assert.equal(topologyFeedbackMessage(record, 'A', events, 16), undefined)
+  const task = record.tasks.result
+  task.acceptance = { status: 'failed', validatorId: 'stronger-check', summary: 'Rejected by oracle',
+    evidence: ['oracle'], checkedAt: 17, resultDigest: taskResultDigest(task) }
+  const rejectedByHost = topologyFeedbackMessage(record, 'A', events, 18)
+  assert.match(text(rejectedByHost), /requester accepted=0/)
+  assert.match(text(rejectedByHost), /host passed=0, failed=1, unverified=0/)
 })
 
 test('material changes merge across three admitted steps and only accepted snapshots advance the window', () => {

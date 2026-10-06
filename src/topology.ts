@@ -16,8 +16,20 @@ import type { NetworkRecord, NodeId, NodeRecord } from './schema.ts'
 /** How many neighbours each direction holds. */
 export const NEIGHBOURS_PER_DIRECTION = 2
 
-/** Maximum outgoing collaboration links selected by one node. */
+/** Hard compatibility ceiling; a network may freeze a lower outgoing limit. */
 export const MAX_COLLABORATION_PEERS = 4
+
+function checkedPeerLimit(limit: number): number {
+  if (!Number.isInteger(limit) || limit < 1 || limit > MAX_COLLABORATION_PEERS) {
+    throw new TopologyError('invalid-peer-limit', `maxCollaborationPeers must be an integer from 1 to ${MAX_COLLABORATION_PEERS}`)
+  }
+  return limit
+}
+
+/** Legacy records that omit the frozen network limit retain four outgoing slots. */
+export function collaborationPeerLimit(record: Pick<NetworkRecord, 'limits'>): number {
+  return checkedPeerLimit(record.limits.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS)
+}
 
 /** Ordered neighbour slots of one node. */
 export interface Neighbourhood {
@@ -40,6 +52,7 @@ export type TopologyErrorCode =
   | 'self-link'
   | 'duplicate-peer'
   | 'too-many-peers'
+  | 'invalid-peer-limit'
 
 /** Raised when stored lineage cannot describe a valid path. */
 export class TopologyError extends Error {
@@ -154,13 +167,18 @@ function recordedPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, node: NodeRe
  * links. Active nodes stop traversal: repair never explores through a live
  * collaborator or adds links merely because unused capacity is available.
  */
-export function collaborationPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, nodeId: NodeId): NodeId[] {
+export function collaborationPeers(
+  nodes: Readonly<Record<NodeId, NodeRecord>>,
+  nodeId: NodeId,
+  limit = MAX_COLLABORATION_PEERS,
+): NodeId[] {
+  checkedPeerLimit(limit)
   const self = nodes[nodeId]
   if (self === undefined) throw new TopologyError('unknown-node', `node ${nodeId} is not part of this network`)
   const peers: NodeId[] = []
   const inactive: NodeId[] = []
   const seen = new Set<NodeId>([nodeId])
-  for (const id of recordedPeers(nodes, self)) {
+  for (const id of recordedPeers(nodes, self).slice(0, limit)) {
     if (seen.has(id)) continue
     seen.add(id)
     const peer = resolve(nodes, id, nodeId, 'collaboration')
@@ -168,11 +186,11 @@ export function collaborationPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, 
     else inactive.push(id)
   }
 
-  const capacity = Math.min(MAX_COLLABORATION_PEERS, peers.length + inactive.length)
+  const capacity = Math.min(limit, peers.length + inactive.length)
   const queue = [...inactive]
   for (let index = 0; index < queue.length && peers.length < capacity; index += 1) {
     const current = nodes[queue[index]]!
-    for (const id of recordedPeers(nodes, current)) {
+    for (const id of recordedPeers(nodes, current).slice(0, limit)) {
       if (seen.has(id)) continue
       seen.add(id)
       const peer = resolve(nodes, id, current.id, 'collaboration')
@@ -181,7 +199,7 @@ export function collaborationPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, 
       if (peers.length >= capacity) break
     }
   }
-  return peers.slice(0, MAX_COLLABORATION_PEERS)
+  return peers.slice(0, limit)
 }
 
 function requireOpen(record: NetworkRecord): void {
@@ -207,8 +225,9 @@ function samePeers(left: readonly NodeId[] | undefined, right: readonly NodeId[]
 export function rewireNode(record: NetworkRecord, nodeId: NodeId, peers: readonly NodeId[]): NetworkRecord {
   requireOpen(record)
   const self = requireActiveNode(record, nodeId)
-  if (peers.length > MAX_COLLABORATION_PEERS) {
-    throw new TopologyError('too-many-peers', `a node may choose at most ${MAX_COLLABORATION_PEERS} collaborators`)
+  const limit = collaborationPeerLimit(record)
+  if (peers.length > limit) {
+    throw new TopologyError('too-many-peers', `a node may choose at most ${limit} collaborators`)
   }
   const seen = new Set<NodeId>()
   for (const id of peers) {
@@ -233,11 +252,19 @@ export function rewireNode(record: NetworkRecord, nodeId: NodeId, peers: readonl
  */
 export function reconcileTopology(record: NetworkRecord): NetworkRecord {
   if (record.status !== 'open') return record
+  const limit = collaborationPeerLimit(record)
   let nodes = record.nodes
   for (const node of Object.values(record.nodes)) {
-    if (node.creationState !== 'published') continue
-    if (node.lifecycle !== 'active' && node.peerIds !== undefined) continue
-    const peers = collaborationPeers(record.nodes, node.id)
+    // Preserve departed nodes' exit links for local repair, within this network's
+    // frozen cap. Pending nodes still wait for publication to acquire any links.
+    if (node.creationState !== 'published' || (node.lifecycle !== 'active' && node.peerIds !== undefined)) {
+      if (node.peerIds !== undefined && node.peerIds.length > limit) {
+        if (nodes === record.nodes) nodes = { ...record.nodes }
+        nodes[node.id] = { ...node, peerIds: node.peerIds.slice(0, limit) }
+      }
+      continue
+    }
+    const peers = collaborationPeers(record.nodes, node.id, limit)
     if (samePeers(node.peerIds, peers)) continue
     if (nodes === record.nodes) nodes = { ...record.nodes }
     nodes[node.id] = { ...node, peerIds: peers }
@@ -254,18 +281,19 @@ export function reconcileTopology(record: NetworkRecord): NetworkRecord {
 export function connectPublishedNode(record: NetworkRecord, nodeId: NodeId): NetworkRecord {
   requireOpen(record)
   const node = requireActiveNode(record, nodeId)
+  const limit = collaborationPeerLimit(record)
   if (node.peerIds !== undefined) return record
   if (node.creatorId === null) {
     return { ...record, nodes: { ...record.nodes, [nodeId]: { ...node, peerIds: [] } } }
   }
   const creator = resolve(record.nodes, node.creatorId, nodeId, 'creator')
-  const creatorPeers = collaborationPeers(record.nodes, creator.id)
+  const creatorPeers = collaborationPeers(record.nodes, creator.id, limit)
   const peers = [...new Set([creator.id, ...creatorPeers])]
     .filter(id => id !== nodeId && isCollaborator(record.nodes[id]!))
-    .slice(0, MAX_COLLABORATION_PEERS)
+    .slice(0, limit)
   const nodes = { ...record.nodes, [nodeId]: { ...node, peerIds: peers } }
   if (isCollaborator(creator)) {
-    const nextCreatorPeers = creatorPeers.includes(nodeId) || creatorPeers.length >= MAX_COLLABORATION_PEERS
+    const nextCreatorPeers = creatorPeers.includes(nodeId) || creatorPeers.length >= limit
       ? creatorPeers
       : [...creatorPeers, nodeId]
     if (!samePeers(creator.peerIds, nextCreatorPeers)) nodes[creator.id] = { ...creator, peerIds: nextCreatorPeers }

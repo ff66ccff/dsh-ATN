@@ -9,9 +9,14 @@
  */
 import z from '@deepseek-ai/schemastery'
 import { ATN_DOMAIN_NAME, type NetworkLimits } from './schema.ts'
+import { MAX_COLLABORATION_PEERS } from './topology.ts'
 
 /** Plugin configuration of the ATN runtime service. */
 export interface Config {
+  /** Maximum outgoing collaborators, 1–4; omitted legacy configurations retain four. */
+  maxCollaborationPeers?: number
+  /** Minimum terminal requester ratings on each compared edge. Defaults to two. */
+  requesterMinSamples?: number
   /** Resident working nodes; `provisioning` and `draining` nodes still consume a slot. */
   maxResidentNodes: number
   /** Cumulative nodes ever created in one network. */
@@ -44,6 +49,8 @@ export interface Config {
 
 /** Validated plugin configuration. */
 export const Config: z<Config> = z.object({
+  maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),
+  requesterMinSamples: z.natural().default(2),
   maxResidentNodes: z.natural().default(8),
   maxTotalNodes: z.natural().default(32),
   maxTasks: z.natural().default(256),
@@ -75,6 +82,8 @@ export const Config: z<Config> = z.object({
 export function assertConfigRelations(config: Config): void {
   const problems: string[] = []
   const positive: [string, number][] = [
+    ['maxCollaborationPeers', config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS],
+    ['requesterMinSamples', config.requesterMinSamples ?? 2],
     ['maxResidentNodes', config.maxResidentNodes],
     ['maxTotalNodes', config.maxTotalNodes],
     ['maxTasks', config.maxTasks],
@@ -93,6 +102,9 @@ export function assertConfigRelations(config: Config): void {
     if (!Number.isInteger(value) || value <= 0) {
       problems.push(`${field} must be a positive integer, got ${String(value)}`)
     }
+  }
+  if ((config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS) > MAX_COLLABORATION_PEERS) {
+    problems.push(`maxCollaborationPeers must not exceed ${MAX_COLLABORATION_PEERS}`)
   }
   if (!/^[a-z][a-z0-9_]*$/.test(config.domainName)) {
     problems.push(`domainName must match [a-z][a-z0-9_]*, got "${config.domainName}"`)
@@ -125,6 +137,8 @@ export function assertConfigRelations(config: Config): void {
  */
 export function limitsFromConfig(config: Config): NetworkLimits {
   return {
+    maxCollaborationPeers: config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS,
+    requesterMinSamples: config.requesterMinSamples ?? 2,
     maxResidentNodes: config.maxResidentNodes,
     maxTotalNodes: config.maxTotalNodes,
     maxTasks: config.maxTasks,

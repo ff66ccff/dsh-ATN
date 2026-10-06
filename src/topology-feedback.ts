@@ -1,11 +1,28 @@
 /** Bounded local graph feedback, acknowledged only by the normal session log. */
 import { createUserMessage, type UserMessage } from '@deepseek-ai/dsh-llm'
 import type { NetworkRecord } from './schema.ts'
-import { collaborationPeers, MAX_COLLABORATION_PEERS } from './topology.ts'
+import { collaborationPeers, collaborationPeerLimit, MAX_COLLABORATION_PEERS } from './topology.ts'
 import { materialFingerprint, summarizeLocalFeedback } from './local-feedback.ts'
+import { summarizeRequesterFeedback } from './requester-feedback.ts'
+import { summarizeVerifiedFeedback } from './verified-feedback.ts'
+import { createHash } from 'node:crypto'
 
 const SNAPSHOT_SECTION = 'atn/topology-snapshot'
 export const MIN_FEEDBACK_STEP_INTERVAL = 3
+/** Model-visible local feedback is bounded independently of task text length. */
+export const MAX_TOPOLOGY_FEEDBACK_BYTES = 4096
+
+function truncateUtf8(text: string, bytes: number): string {
+  let result = ''
+  let used = 0
+  for (const point of text) {
+    const size = Buffer.byteLength(point)
+    if (used + size > bytes) break
+    result += point
+    used += size
+  }
+  return result
+}
 
 interface TopologySnapshot {
   networkId: string
@@ -53,10 +70,20 @@ export function topologyFeedbackMessage(
   events: readonly { type: string; data?: unknown }[],
   now: number = Date.now(),
 ): UserMessage | undefined {
-  const peers = collaborationPeers(record.nodes, nodeId).toSorted()
+  const peers = collaborationPeers(record.nodes, nodeId, collaborationPeerLimit(record)).toSorted()
   const previous = previousSnapshot(events, record.id, nodeId)
   const telemetry = peers.map(peerId => summarizeLocalFeedback(record, peerId, { observerId: nodeId, now }))
-  const telemetryFingerprint = materialFingerprint(telemetry)
+  const quality = peers.map(peerId => ({ peerId,
+    requester: summarizeRequesterFeedback(record, peerId, { observerId: nodeId }),
+    host: summarizeVerifiedFeedback(record, peerId, { observerId: nodeId }),
+  }))
+  // Feedback arriving after settlement is a material change even without new mail.
+  const telemetryFingerprint = createHash('sha256').update(JSON.stringify({
+    runtime: materialFingerprint(telemetry),
+    quality: quality.map(({ peerId, requester, host }) => ({ peerId,
+      requester: requester.observations, host: host.observations,
+    })),
+  })).digest('hex')
   if (previous !== undefined && previous.peers.length === peers.length && previous.peers.every(id => peers.includes(id)) &&
     previous.telemetryFingerprint === telemetryFingerprint) {
     return undefined
@@ -65,6 +92,7 @@ export function topologyFeedbackMessage(
   if (previous?.admittedStep !== undefined && Number.isSafeInteger(previous.admittedStep) && previous.admittedStep >= 0 &&
     admittedStep - previous.admittedStep < MIN_FEEDBACK_STEP_INTERVAL) return undefined
   const lines = [`[ATN local changes] network=${record.id} node=${nodeId}`]
+  const details: string[] = []
   if (previous === undefined) {
     lines.push(`Initial neighbours: ${peers.join(', ') || '(none)'}`)
   } else {
@@ -73,9 +101,8 @@ export function topologyFeedbackMessage(
     if (removed.length > 0) {
       lines.push(`Removed: ${removed.map(id => {
         const peer = record.nodes[id]
-        const reason = peer?.lifecycle !== 'active' && peer?.note
-          ? `: ${peer.note.replace(/\s+/g, ' ').slice(0, 160)}` : ''
-        return `${id} (${peer?.lifecycle ?? 'unavailable'}${reason})`
+        if (peer?.lifecycle !== 'active' && peer?.note) details.push(`${id} exit reason: ${peer.note.replace(/\s+/g, ' ')}`)
+        return `${id} (${peer?.lifecycle ?? 'unavailable'})`
       }).join('; ')}`)
     }
     if (added.length > 0) lines.push(`Added: ${added.join(', ')}`)
@@ -89,12 +116,27 @@ export function topologyFeedbackMessage(
         `${task.taskId}:${task.status},elapsed=${mean(task.elapsedMs)}ms,holderSteps=${mean(task.holderSteps)}`).join('; ')
       lines.push(`${row.peerId}: assigned=${row.assigned}, open=${row.open}, completed=${row.completed}, failed=${row.failed}, unreachable=${row.unreachable}; ` +
         `retries=${row.retries}, recoveries=${row.recoveries}, downstreamFailures=${row.downstreamFailures}; ` +
-        `recentMeanLatency=${mean(row.meanLatencyMs)}ms, recentMeanHolderSteps=${mean(row.meanHolderSteps)}` +
-        (recent.length > 0 ? `; recent=[${recent}]` : ''))
+        `recentMeanLatency=${mean(row.meanLatencyMs)}ms, recentMeanHolderSteps=${mean(row.meanHolderSteps)}`)
+      if (recent.length > 0) details.push(`${row.peerId} recent=[${recent}]`)
+    }
+    for (const row of quality) {
+      lines.push(`${row.peerId} quality: requester accepted=${row.requester.accepted}, rejected=${row.requester.rejected}, needs-more=${row.requester.needsMore}; ` +
+        `host passed=${row.host.passed}, failed=${row.host.failed}, unverified=${row.host.unverified}. Requester judgement is not host verification.`)
     }
   }
+  // Keep every peer id and numerical summary intact; only optional detail may
+  // be cut. An invalid imported record whose identifiers alone exceed the cap
+  // is not injected or acknowledged, rather than silently changing identities.
+  const core = lines.join('\n')
+  if (Buffer.byteLength(core) > MAX_TOPOLOGY_FEEDBACK_BYTES) return undefined
+  const detail = details.length === 0 ? '' : `\n${details.join('\n')}`
+  const suffix = '\n[detail truncated]'
+  const available = MAX_TOPOLOGY_FEEDBACK_BYTES - Buffer.byteLength(core)
+  const bounded = Buffer.byteLength(detail) <= available ? detail
+    : available >= Buffer.byteLength(suffix)
+      ? truncateUtf8(detail, available - Buffer.byteLength(suffix)) + suffix : ''
   return createUserMessage({
-    content: [{ type: 'text', text: lines.join('\n') }],
+    content: [{ type: 'text', text: core + bounded }],
     source: {
       kind: 'atn', form: 'snapshot',
       sections: [{ name: SNAPSHOT_SECTION, text: JSON.stringify({ networkId: record.id, nodeId, peers, telemetryFingerprint, admittedStep }) }],
