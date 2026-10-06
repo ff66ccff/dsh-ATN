@@ -31,6 +31,7 @@ import { evaluatePilotTask } from './evaluation.ts'
 import { installTelemetry, type PriceTable, type TelemetrySnapshot } from './telemetry.ts'
 import { assertAllowedPilotModel, discoverPilotModels, type PilotModel } from './provider.ts'
 import { isTaskAccepted, taskResultDigest } from '../src/tasks.ts'
+import { observeRequesterTask, summarizeRequesterFeedback } from '../src/requester-feedback.ts'
 import { createExperimentBudget, installExperimentOutputCap } from './budget.ts'
 import { ExperimentSessionQuery } from './session-query.ts'
 import { extractFinalTextSubmission, installAtnSubmissionBridge } from './submission.ts'
@@ -46,7 +47,8 @@ const sourceFiles = ['run.ts', 'budget.ts', 'submission.ts', 'tasks.ts', 'evalua
   'reference-run.ts', 'reference-policy.ts', 'reference-kernel.ts', 'measurement-gate.ts', 'measurement-summary.ts', 'calibration.ts', 'atn-cost.ts',
   '../src/runtime.ts', '../src/mailbox.ts', '../src/messages.ts', '../src/topology.ts', '../src/topology-feedback.ts',
   '../src/tasks.ts', '../src/governance.ts', '../src/proposals.ts', '../src/verified-feedback.ts', '../src/local-feedback.ts',
-  '../src/config.ts', '../src/schema.ts', '../src/tools.ts', '../package-lock.json']
+  '../src/requester-feedback.ts', '../src/knowledge.ts',
+  '../src/config.ts', '../src/schema.ts', '../src/tools.ts', '../package.json', '../package-lock.json']
 const diskSourceHashesAtModuleLoad = Object.fromEntries(await Promise.all(sourceFiles.map(async path =>
   [path, createHash('sha256').update(await readFile(new URL(path, import.meta.url))).digest('hex')])))
 
@@ -224,7 +226,7 @@ export async function runPilot(options: RunOptions) {
       `Run bounds: at most ${options.maxAgents} total agents including the entry, ${options.maxCalls} model calls across all agents, ${options.maxOutputTokens} output tokens per call. Keep coordination concise.`,
       options.mode.startsWith('atn-') ? `Each node, including the entry, has ${perNodeSteps} admitted model steps. Exhausted nodes retire; the global call cap is a separate experiment safety limit.` : '',
       options.mode === 'native-team' ? 'The user explicitly requests use of Agent Teams. Choose your own collaborators and task strategy using the native Team tools.' : '',
-      options.mode.includes('no-rewire') ? 'Experimental ablation: voluntary atn_rewire is disabled. Birth connections and inactive-neighbour repair still operate. All other ATN rules apply.' : '',
+      options.mode.includes('no-rewire') ? 'Experimental ablation: voluntary atn_status rewire is disabled. Birth connections and inactive-neighbour repair still operate. All other ATN rules apply.' : '',
     ].filter(Boolean).join('\n')
     ctx.systemPrompt.section({ name: 'pilot-common', order: 10, text: policy })
     const output = { schema: { type: 'json' } as const, render: (_: unknown, value: unknown) => [{ type: 'text' as const, text: JSON.stringify(value) }] }
@@ -387,7 +389,37 @@ export async function runPilot(options: RunOptions) {
             rejected: Object.values(record.tasks).filter(item => item.acceptance?.status === 'failed' && item.acceptance.resultDigest === taskResultDigest(item)).length,
             submittedUnverified: Object.values(record.tasks).filter(item => item.status === 'completed' && item.acceptance == null).length,
           },
-          explicitRewires: (record.rewireHistory ?? []).map(item => ({ intent: item.intent, verdict: item.evaluation.verdict, causalClaim: false })),
+          requesterFeedback: Object.values(record.nodes).map(node => ({ nodeId: node.id,
+            ...summarizeRequesterFeedback(record, node.id) })),
+          localFeedback: {
+            recordedOpinions: {
+              accepted: Object.values(record.tasks).filter(item => item.localFeedback?.status === 'accepted').length,
+              rejected: Object.values(record.tasks).filter(item => item.localFeedback?.status === 'rejected').length,
+              needsMore: Object.values(record.tasks).filter(item => item.localFeedback?.status === 'needs-more').length,
+            },
+            effectiveSelectionEligible: {
+              accepted: Object.values(record.tasks).filter(item => {
+                const observed = observeRequesterTask(item, item.id)
+                return observed.status === 'accepted' && observed.comparisonKey !== null
+              }).length,
+              rejected: Object.values(record.tasks).filter(item => {
+                const observed = observeRequesterTask(item, item.id)
+                return observed.status === 'rejected' && observed.comparisonKey !== null
+              }).length,
+            },
+          },
+          knowledgePublications: Object.values(record.nodes).filter(node => node.knowledgeFingerprint !== undefined).length,
+          explicitRewires: (record.rewireHistory ?? []).map(item => ({
+            intent: item.intent,
+            evidenceSource: item.evaluation.verdict !== 'insufficient-evidence' ? 'host'
+              : item.requesterEvaluation?.verdict !== undefined && item.requesterEvaluation.verdict !== 'insufficient-evidence' ? 'requester' : 'none',
+            verdict: item.evaluation.verdict !== 'insufficient-evidence' ? item.evaluation.verdict
+              : item.requesterEvaluation?.verdict ?? item.evaluation.verdict,
+            hostVerdict: item.evaluation.verdict, hostReasons: item.evaluation.reasons,
+            requesterVerdict: item.requesterEvaluation?.verdict ?? 'insufficient-evidence',
+            requesterReasons: item.requesterEvaluation?.reasons ?? ['not-recorded'],
+            causalClaim: false,
+          })),
           governanceProposals: Object.values(record.proposals).map(item => ({ status: item.status, voters: item.voters.length })),
         }
       }
@@ -425,6 +457,7 @@ export async function runPilot(options: RunOptions) {
     limits: { ...calibrationKey, observedTokenLimit, maxCalls: options.maxCalls, maxTasks: 128, timeoutMs: options.timeoutMs },
     primaryMetrics: PRIMARY_METRICS, reference,
     atnMessages: metrics?.atnMessages ?? 0, atnPayloadBytes: metrics?.atnPayloadBytes ?? 0,
+    fixedContextBytes: metrics?.fixedContextBytes ?? null, meanInputTokensPerCall: metrics?.meanInputTokensPerCall ?? null,
     relativeMetrics: reference && metrics ? relativeAtnMetrics(metrics.atnMessages, metrics.atnPayloadBytes, reference) : null }
   await writeFile(join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n')
   return report

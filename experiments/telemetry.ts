@@ -5,11 +5,13 @@ import type { Session, SessionEvent } from '@deepseek-ai/dsh-session'
 import { mkdir, open, writeFile } from 'node:fs/promises'
 import { resolve, join } from 'node:path'
 import type { NetworkRecord } from '../src/schema.ts'
-import { collaborationPeers } from '../src/topology.ts'
+import { collaborationPeers, collaborationPeerLimit } from '../src/topology.ts'
 import { taskResultDigest } from '../src/tasks.ts'
+import { observeRequesterTask } from '../src/requester-feedback.ts'
 import type {} from '../src/observer.ts'
 import type {} from '@deepseek-ai/dsh-experimental-agent-team'
 import { createAtnCostMeter } from './atn-cost.ts'
+import { measureAtnFixedContext } from '../src/tools.ts'
 
 export interface RoutePrice {
   provider: string
@@ -69,6 +71,19 @@ export interface TelemetrySnapshot {
   atnPayloadBytes: number
   /** Largest cumulative delivered payload for any single network/node pair. */
   atnMaxContextBytes: number
+  /** Shared-medium operations are network-wide; no payload text is exported. */
+  atnBoard: { reads: number; writes: number; readBytes: number; writeBytes: number }
+  /** Mail plus board operations, so publication cannot masquerade as free communication. */
+  atnTotalInteractions: number
+  atnTotalTransferBytes: number
+  /** Null when there were no ATN-bearing model calls. */
+  fixedContextBytes: number | null
+  /** Null if any settled invocation lacks input usage; never impute zero. */
+  meanInputTokensPerCall: number | null
+  knownMeanInputTokensPerCall: number | null
+  inputTokenUnknownCalls: number
+  callCosts: Array<{ call: string; session: string; systemPromptBytes: number; toolSchemaBytes: number;
+    fixedContextBytes: number; inputTokens: number | null }>
   totals: TelemetryTotals
   sessions: Record<string, TelemetryTotals>
   coverage: {
@@ -170,6 +185,7 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
   const pendingTools = new Map<string, { at: number; session: string; tool: string }>()
   const networks = new Map<string, Map<string, string>>()
   const atnCost = createAtnCostMeter()
+  const callCosts: TelemetrySnapshot['callCosts'] = []
   const alias = (type: string, raw: string): string => {
     let entries = aliases.get(type)
     if (!entries) { entries = new Map(); aliases.set(type, entries) }
@@ -202,11 +218,15 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     const tariff = prices?.routes.find(row => row.provider === request.provider && row.model === request.model)
     const started = now()
     const counters = [all, group(session)]
+    const fixed = request.tools?.some(tool => tool.name.startsWith('atn_')) ? measureAtnFixedContext(request.tools)
+      : { systemPromptBytes: 0, toolSchemaBytes: 0, fixedContextBytes: 0 }
+    const callCost = { call, session, ...fixed, inputTokens: null as number | null }
+    callCosts.push(callCost)
     let usage: TokenUsage | undefined
     let status: 'completed' | 'error' | 'aborted' | 'incomplete' = 'incomplete'
     for (const counter of counters) { counter.attempts++; counter.inFlight++ }
     const purpose = request.purpose === 'compaction' || request.purpose === 'session-title' ? request.purpose : 'conversation'
-    emit('model.start', { call, session, route, purpose })
+    emit('model.start', { call, session, route, purpose, ...fixed })
     try {
       for await (const chunk of next()) {
         if (chunk.type === 'usage') usage = chunk.usage
@@ -220,6 +240,7 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
       if (!closed) {
         const durationMs = Math.max(0, now() - started)
         const normalized = normalizeUsage(usage)
+        callCost.inputTokens = normalized.inputTokens
         const amount = price(normalized, tariff)
         for (const counter of counters) {
           counter.inFlight--; counter.settledAttempts++; counter.modelDurationMs += durationMs
@@ -304,14 +325,25 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
       if (old.get(key) !== encoded) emit(kind, { network, ...data, ...(kind === 'topology.changed' ? { initial: !old.has(key) } : {}) }, at)
     }
     fact('network', 'network.state', { status: record.status, goalVersion: record.goalHistory.at(-1)?.version ?? null, stepsUsed: record.stepsUsed })
+    if (record.whiteboard) fact('whiteboard', 'whiteboard.state', {
+      entries: record.whiteboard.entries.length, generation: record.whiteboard.generation,
+      ...record.whiteboard.usage,
+    })
     for (const node of members) {
       const nodeId = alias('node', `${record.id}:${node.id}`)
       fact(`node:${node.id}`, 'node.state', { node: nodeId, session: sessionName(node.sessionId), entry: node.isEntry, lifecycle: node.lifecycle,
         creationState: node.creationState, stepsUsed: node.stepsUsed ?? null, stepBudget: record.limits.stepBudget })
       fact(`edges:${node.id}`, 'topology.changed', {
         node: nodeId,
-        peers: (node.lifecycle === 'active' && node.creationState === 'published' ? collaborationPeers(record.nodes, node.id) : [])
+        peers: (node.lifecycle === 'active' && node.creationState === 'published' ? collaborationPeers(record.nodes, node.id, collaborationPeerLimit(record)) : [])
           .filter(peer => selected.has(peer)).map(peer => alias('node', `${record.id}:${peer}`)),
+      })
+      const knowledge = node.knowledgeFingerprint
+      if (knowledge) fact(`knowledge:${node.id}`, 'node.knowledge', {
+        node: nodeId, source: 'self-reported', updatedAt: knowledge.updatedAt,
+        documents: knowledge.documents.map(id => alias('document', id)),
+        topics: knowledge.topics.map(topic => alias('topic', topic)),
+        contributions: knowledge.contributions.map(contribution => alias('contribution', contribution)),
       })
     }
     for (const task of Object.values(record.tasks)) {
@@ -343,10 +375,25 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
           informationKeys: (metrics?.informationKeys ?? []).map(key => alias('information', key)),
         })
       }
+      const feedback = task.localFeedback
+      if (feedback) {
+        const observed = observeRequesterTask(task, task.id)
+        fact(`requester-feedback:${task.id}`, 'task.requester-feedback', {
+          task: taskId, source: 'requester', status: feedback.status,
+          effectiveStatus: observed.status, hostRejected: observed.hostRejected,
+          eligibleForSelection: (observed.status === 'accepted' || observed.status === 'rejected') && observed.comparisonKey !== null,
+          requester: alias('node', `${record.id}:${feedback.requesterId}`),
+          resultBound: task.status === 'completed' && task.result !== null && task.settledBy === task.holderId
+            && feedback.requesterId === task.requesterId && feedback.resultDigest === taskResultDigest(task),
+          checkedAt: feedback.checkedAt, evidenceCount: feedback.evidence.length,
+          comparison: feedback.comparisonKey === null ? null : alias('comparison', feedback.comparisonKey),
+        })
+      }
     }
     for (const rewire of record.rewireHistory ?? []) {
       if (!selected.has(rewire.nodeId)) continue
       const evaluation = rewire.evaluation
+      const requesterEvaluation = rewire.requesterEvaluation
       const observations = rewire.observations
       const observationSnapshot = (snapshot: NonNullable<typeof observations>['before']) => ({
         observedAt: snapshot.observedAt,
@@ -358,7 +405,14 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
         committedAt: rewire.createdAt,
         previousPeers: rewire.previousPeers.map(id => alias('node', `${record.id}:${id}`)),
         nextPeers: rewire.nextPeers.map(id => alias('node', `${record.id}:${id}`)),
-        intent: rewire.intent, verdict: evaluation.verdict, causalClaim: false,
+        intent: rewire.intent,
+        evidenceSource: evaluation.verdict !== 'insufficient-evidence' ? 'host'
+          : requesterEvaluation?.verdict !== undefined && requesterEvaluation.verdict !== 'insufficient-evidence' ? 'requester' : 'none',
+        verdict: evaluation.verdict !== 'insufficient-evidence' ? evaluation.verdict
+          : requesterEvaluation?.verdict ?? evaluation.verdict,
+        hostVerdict: evaluation.verdict, hostReasons: evaluation.reasons,
+        requesterVerdict: requesterEvaluation?.verdict ?? 'insufficient-evidence',
+        causalClaim: false,
         baselineTasks: evaluation.baselineTaskIds.map(id => alias('task', `${record.id}:${id}`)),
         candidateTasks: evaluation.candidateTaskIds.map(id => alias('task', `${record.id}:${id}`)),
         comparison: evaluation.comparisonKey === null ? null : alias('comparison', evaluation.comparisonKey),
@@ -368,6 +422,14 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
           passRate: evaluation.delta.passRate, meanLatencyMs: evaluation.delta.meanLatencyMs,
           meanCost: evaluation.delta.meanCost,
         },
+        requesterEvaluation: requesterEvaluation ? {
+          source: 'requester', qualityOnly: true, causalClaim: false,
+          verdict: requesterEvaluation.verdict, reasons: requesterEvaluation.reasons,
+          baselineTasks: requesterEvaluation.baselineTaskIds.map(id => alias('task', `${record.id}:${id}`)),
+          candidateTasks: requesterEvaluation.candidateTaskIds.map(id => alias('task', `${record.id}:${id}`)),
+          comparison: requesterEvaluation.comparisonKey === null ? null : alias('comparison', requesterEvaluation.comparisonKey),
+          baseline: requesterEvaluation.baseline, candidate: requesterEvaluation.candidate, delta: requesterEvaluation.delta,
+        } : null,
       })
       // Changing observations are separate from the immutable rewire fact, so
       // one committed action is counted once while outcomes remain inspectable.
@@ -399,10 +461,16 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
   const snapshot = (): TelemetrySnapshot => {
     const observedAt = closedAt ?? now()
     const cost = atnCost.snapshot()
+    const knownInput = callCosts.filter(row => row.inputTokens !== null)
+    const knownMean = knownInput.length ? knownInput.reduce((sum, row) => sum + row.inputTokens!, 0) / knownInput.length : null
     const result: TelemetrySnapshot = structuredClone({
       version: 1, runId: options.runId, startedAt, observedAt, elapsedMs: Math.max(0, observedAt - startedAt),
       events: sequence, totals: all, sessions: Object.fromEntries(sessionTotals),
       atnMessages: cost.messages, atnPayloadBytes: cost.payloadBytes, atnMaxContextBytes: cost.maxContextBytes,
+      atnBoard: cost.board, atnTotalInteractions: cost.totalInteractions, atnTotalTransferBytes: cost.totalTransferBytes,
+      fixedContextBytes: callCosts.some(row => row.fixedContextBytes > 0) ? Math.max(...callCosts.map(row => row.fixedContextBytes)) : null,
+      meanInputTokensPerCall: callCosts.length && knownInput.length === callCosts.length ? knownMean : null,
+      knownMeanInputTokensPerCall: knownMean, inputTokenUnknownCalls: callCosts.length - knownInput.length, callCosts,
       coverage: {
         modelCalls: 'llm/stream invocations, including observable retries and auxiliary calls', hiddenHttpRetries: 'unknown',
         directExternalCalls: 'not-observed', usageSource: 'last adapter usage chunk per invocation; absent fields remain unknown',

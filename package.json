@@ -44,7 +44,12 @@
     "smoke:visualization": "node --import tsx/esm tests/smoke/visualization-smoke.ts",
     "experiment:catalog": "node --import tsx/esm experiments/provider.ts",
     "experiment:pilot": "node --import tsx/esm experiments/run.ts",
-    "experiment:reference": "node --import tsx/esm experiments/reference-run.ts"
+    "experiment:reference": "node --import tsx/esm experiments/reference-run.ts",
+    "experiment:feedback-milestone": "node --import tsx/esm experiments/feedback-milestone.ts",
+    "experiment:calibrate": "node --import tsx/esm experiments/shifting-evidence-calibration.ts",
+    "experiment:topology-proof": "node --import tsx/esm experiments/topology-binding-proof.ts",
+    "experiment:binding-reference": "node --import tsx/esm experiments/topology-binding-reference.ts",
+    "experiment:audit-errors": "node --import tsx/esm experiments/tool-error-audit.ts"
   },
   "dsh": {
     "bundle": {

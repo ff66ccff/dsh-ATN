@@ -14,9 +14,8 @@ import * as StorageDomain from '@deepseek-ai/dsh-storage-domain'
 import { join } from 'node:path'
 import AtnRuntimePlugin from '../src/index.ts'
 import { Config } from '../src/config.ts'
-import type { TopologyScenario } from './topology-task.ts'
 
-export async function referenceKernel(directory: string, scenario: TopologyScenario, limits: Partial<Config> = {}) {
+export async function referenceKernel(directory: string, scenario: { task: { agents: number }; register(sessionId: string): number }, limits: Partial<Config> = {}) {
   const ctx = new Context()
   ctx.baseUrl = import.meta.url
   let issuedModelCalls = 0

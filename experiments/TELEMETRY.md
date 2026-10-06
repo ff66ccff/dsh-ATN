@@ -72,6 +72,14 @@ Native Team continuation also requires the public `sessionQuery` service to resu
 
 ## Budget middleware ordering
 
+Shared-board operations are exported as `whiteboard.state` with entry count,
+generation and cumulative successful reads/writes/readBytes/writeBytes only.
+No key, body, topic or author is exported by this event. `atnBoard` reports these
+network-wide costs separately; `atnTotalInteractions` and `atnTotalTransferBytes`
+add them to mail accounting. Repeated or older snapshots cannot reduce totals,
+and deleting entries does not erase prior transfers. `atnMaxContextBytes` remains
+mail-only; provider token usage measures the complete model request separately.
+
 `budget.ts` provides `createExperimentBudget(options)`, a synchronous admission check. `admit(request, { ended, knownTotalTokens, unknownUsageCalls })` reserves one call only after checking the exact provider/model, a positive integer output cap, the hard visible-call count, and the observed-total-token threshold. It returns an explicit acceptance or rejection reason. Unknown token calls remain separately visible and do not disable the hard call count. Call the helper immediately before `next()` without awaiting another operation between reservation and dispatch.
 
 Install the admission middleware **after** telemetry, using `{ global: true, prepend: true }`, so it wraps telemetry and refuses requests without entering the measurement stream. Otherwise denied invocations could be counted as failed adapter attempts. This ceiling bounds public Harness invocations; it cannot bound hidden HTTP retries within an adapter. The output cap is a request constraint passed to the provider, not an independent provider-output truncator. Record any provider violation separately.
@@ -85,5 +93,9 @@ Use `installExperimentOutputCap(ctx, maxOutputTokens)` before starting any Agent
 Only visible text is extracted; reasoning is never graded and a message containing tool calls or other non-text content is refused. Reasoning plus visible final text is allowed, with reasoning discarded. Multiple visible text blocks are joined by a newline. No JSON parsing, correctness checks, fallback candidates, or oracle selection occur in extraction. Even invalid JSON from the final eligible message must be passed unchanged to the evaluator, rather than replaced with a more promising earlier answer. Record the returned rule, turn, step and message sequence, or the refusal reason. Final-text extraction is an experiment submission convenience, not proof that ATN protocol obligations were settled.
 
 ## Verification
+
+Requester feedback is exported as `task.requester-feedback`, separately from host-produced `task.acceptance`. It includes the recorded opinion `status`, authenticated requester alias, exact-submission binding, comparison alias, and evidence count; review text and evidence strings are excluded. `effectiveStatus`, `hostRejected`, and `eligibleForSelection` expose current validity: a host-rejected local acceptance remains a recorded opinion but loses selection credit. Eligibility here means a valid terminal opinion with a comparison key for matched rewire sampling. The pilot's `localFeedback` separates `recordedOpinions` from `effectiveSelectionEligible` counts. `node.knowledge` records self-reported publications using aliases for document, topic, and contribution text. A publication never becomes verified evidence by being exported.
+
+`topology.rewire.verdict` and the pilot report's `explicitRewires[].verdict` now prefer a sufficient host verdict, then a sufficient requester verdict. Always read `evidenceSource`, `hostVerdict`, and `requesterVerdict` with that summary. The original top-level `baselineTasks`, `candidateTasks`, `delta`, and validator fields remain host measurements. Requester samples and acceptance-rate delta live in the separate `requesterEvaluation` object, which declares `qualityOnly: true` and `causalClaim: false`. No requester opinion fills unknown host cost, latency, or correctness values. Old records without this field retain an insufficient requester verdict.
 
 `node --import tsx/esm --test tests/integration/experiment-telemetry.test.ts tests/unit/experiment-budget.test.ts` runs entirely on deterministic fixtures. It checks entry/worker accounting, visible attempts and auxiliary calls, unknown usage/prices, tariff arithmetic, sensitive-content exclusion, native Team and ATN domain export, host acceptance, dependency/retry links, rewires with both observed improvement and regression, unchanged state after immutable acceptance rejection, close behavior, and synchronous admission. These tests validate measurement plumbing, not real-model quality or subscription billing.
