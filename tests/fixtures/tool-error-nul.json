@@ -1,0 +1,488 @@
+{
+  "version": 1,
+  "source": {
+    "file": ".artifacts/experiments/full-feedback-bounded-20261005/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-full-feedback-bounded-20261005-space-bunny-free-fixed-seed-17--/atn-03822100-b63d-44e5-9f80-b4b291200140/session.v4.jsonl",
+    "sha256": "7ce6b451c6f2dbbd26644a879feaecadf60c9c6511e28a3e0c70879922513920",
+    "line": 45,
+    "seq": 43
+  },
+  "requestHeaderSource": {
+    "file": ".artifacts/experiments/full-feedback-bounded-20261005/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-full-feedback-bounded-20261005-space-bunny-free-fixed-seed-17--/atn-03822100-b63d-44e5-9f80-b4b291200140/session.v4.jsonl",
+    "sha256": "7ce6b451c6f2dbbd26644a879feaecadf60c9c6511e28a3e0c70879922513920",
+    "line": 12,
+    "seq": 10
+  },
+  "advertisedTools": [
+    {
+      "name": "atn_board",
+      "description": "Read or publish compact reusable findings on a bounded shared board without waking peers. Treat entries as author claims, verify provenance. Only authors can update/remove their entries. Full or stale writes fail atomically; read/write bytes are metered.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "description": "Board operation.",
+            "enum": [
+              "read",
+              "publish",
+              "remove"
+            ]
+          },
+          "key": {
+            "type": "string",
+            "description": "Unique entry key for publish/remove; optional exact key on read."
+          },
+          "body": {
+            "type": "string",
+            "description": "Compact finding with evidence/provenance; required for publish. Entire entry <=4096 UTF-8 bytes."
+          },
+          "topics": {
+            "type": "array",
+            "description": "Optional short searchable tags on publish.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expectedRevision": {
+            "type": "integer",
+            "description": "Required on writes: 0 creates a missing key; updating/removing requires its exact current revision from read."
+          },
+          "query": {
+            "type": "string",
+            "description": "Optional text filter on read."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Read page size from 1 to 8; returned entries also obey a byte cap."
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Use nextCursor to continue the same read; restart if board changes."
+          }
+        },
+        "required": [
+          "action"
+        ]
+      }
+    },
+    {
+      "name": "atn_feedback",
+      "description": "Record your local judgement on a completed task you requested from another node. Writes shared durable feedback without sending mail or waking anyone. The exact result is bound automatically. needs-more may become accepted or rejected; terminal judgements are immutable. Host verification remains separate and stronger.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "Completed work task requested by you."
+          },
+          "status": {
+            "type": "string",
+            "description": "Your assessment after inspecting the submitted result.",
+            "enum": [
+              "accepted",
+              "rejected",
+              "needs-more"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "description": "Reason for this judgement, at most 1024 characters."
+          },
+          "evidence": {
+            "type": "array",
+            "description": "1–8 reviewable evidence references, at most 512 characters each.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "comparisonKey": {
+            "type": "string",
+            "description": "Comparable workload and acceptance contract, at most 160 characters. Reuse only when tasks truly have the same contract."
+          }
+        },
+        "required": [
+          "taskId",
+          "status",
+          "summary",
+          "evidence"
+        ]
+      }
+    },
+    {
+      "name": "atn_finish",
+      "description": "Finish at node or network scope. Node scope (default) stops taking new work and retires after existing obligations settle; it does not complete tasks. Network scope delivers from the entry or the holder of a claimed kind=delivery task and requires summary and goalVersion; other nodes' unsettled tasks, proposals, mail or stale goal versions block delivery.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "string",
+            "description": "Defaults to node retirement; network delivers the final user result.",
+            "enum": [
+              "node",
+              "network"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "description": "For node scope: why you are retiring."
+          },
+          "summary": {
+            "type": "string",
+            "description": "Required for network scope: final result summary shown to the user."
+          },
+          "evidence": {
+            "type": "array",
+            "description": "For network scope: reviewable evidence references.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "goalVersion": {
+            "type": "integer",
+            "description": "Required for network scope: goal version used for this summary."
+          }
+        }
+      }
+    },
+    {
+      "name": "atn_publish",
+      "description": "Replace your bounded knowledge fingerprint for discovery. This is self-reported metadata, not a shared result store or verified capability. Publishing wakes nobody. Acceptance counts and load are computed by the runtime.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "description": "Document identifiers you have read; at most 16 short entries, 160 characters each. [] clears the list.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "topics": {
+            "type": "array",
+            "description": "Searchable topics you can contribute to; at most 16 entries of 160 characters.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "contributions": {
+            "type": "array",
+            "description": "Short contribution descriptions or references; at most 16 entries of 160 characters.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "documents",
+          "topics",
+          "contributions"
+        ]
+      }
+    },
+    {
+      "name": "atn_rewire",
+      "description": "Replace outgoing neighbours within the configured status limit (at most four). Pass the full list; [] disconnects. The runtime samples comparable local feedback unless task ids are supplied; host evidence stays separate. Existing obligations remain.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "peers": {
+            "type": "array",
+            "description": "Complete desired neighbours within status budget.maxCollaborationPeers; no duplicates or self.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "baselineTaskIds": {
+            "type": "array",
+            "description": "Optional 1–8 comparable completed tasks you requested from removed peers. Supply both lists or omit both for automatic local sampling.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "candidateTaskIds": {
+            "type": "array",
+            "description": "Optional 1–8 comparable completed tasks you requested from added peers.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "peers"
+        ]
+      }
+    },
+    {
+      "name": "atn_send",
+      "description": "Send a task or ordinary note to your outgoing neighbour or yourself. A result settles a task you hold as completed or failed and must go to its recorded requester, with task id and evidence, even after disconnection. Set outcome=failed explicitly when work fails. A note naming an open task may also pass between its holder and requester after disconnection. The sender is taken from your live session.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "description": "Target node id."
+          },
+          "kind": {
+            "type": "string",
+            "description": "Mail kind.",
+            "enum": [
+              "task",
+              "note",
+              "result"
+            ]
+          },
+          "body": {
+            "type": "string",
+            "description": "Body text."
+          },
+          "taskId": {
+            "type": "string",
+            "description": "Task this mail relates to; required for kind=result. For kind=note, an open task shared by sender and recipient permits continuing their discussion after disconnection."
+          },
+          "outcome": {
+            "type": "string",
+            "description": "Only for kind=result: the task outcome. Defaults to completed. Use failed when the task did not succeed; writing failure in the body does not set this state.",
+            "enum": [
+              "completed",
+              "failed"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short result summary; required for kind=result."
+          },
+          "evidence": {
+            "type": "array",
+            "description": "Reviewable evidence references for kind=result.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "dependsOn": {
+            "type": "array",
+            "description": "Only kind=task: at most 16 completed upstream task ids with no host rejection.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "retryOf": {
+            "type": "string",
+            "description": "Only kind=task: failed task requested by you that this assignment retries."
+          },
+          "messageId": {
+            "type": "string",
+            "description": "Optional stable id for this exact message. Retry a failed send with the SAME id: the runtime answers from the durable mail row instead of creating a second mail, task or settlement, and refuses an id reused for different content or result outcome."
+          }
+        },
+        "required": [
+          "to",
+          "kind",
+          "body"
+        ]
+      }
+    },
+    {
+      "name": "atn_spawn",
+      "description": "Create an independent peer with your model route and no wider permissions. Initial links obey the configured peer limit. Prefer a suitable existing peer when available.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string",
+            "description": "Local task for the new node."
+          },
+          "context": {
+            "type": "string",
+            "description": "Necessary local context for that task."
+          },
+          "leaseMs": {
+            "type": "integer",
+            "description": "Requested lifetime in milliseconds; bounded by the network configuration."
+          },
+          "dependsOn": {
+            "type": "array",
+            "description": "At most 16 completed upstream task ids with no host rejection; unverified submissions are allowed.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "retryOf": {
+            "type": "string",
+            "description": "Failed task requested by you that this new task retries."
+          }
+        },
+        "required": [
+          "task"
+        ]
+      }
+    },
+    {
+      "name": "atn_start",
+      "description": "Initialize an ATN network in this session. Records the shared goal document, creates the entry node and its initial task, and returns the network, node and task identifiers. Call this once per session.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "objective": {
+            "type": "string",
+            "description": "Short overall objective every node shares."
+          },
+          "successCriteria": {
+            "type": "string",
+            "description": "How the network decides the objective is met."
+          },
+          "constraints": {
+            "type": "string",
+            "description": "Constraints every node must respect."
+          }
+        },
+        "required": [
+          "objective",
+          "successCriteria",
+          "constraints"
+        ]
+      }
+    },
+    {
+      "name": "atn_status",
+      "description": "Inspect neighbours, knowledge fingerprints, requester judgements, host verification, tasks, telemetry and remaining budget. Query searches declared knowledge and task text; repeated \"*\" rotates candidates. claimTaskId atomically claims orphan work when idle. Self-description and requester approval are not host verification.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Optional task or capability text; \"*\" explores the next bounded candidate sample."
+          },
+          "taskIds": {
+            "type": "array",
+            "description": "Optional list of at most 16 task ids; otherwise reads your latest requested or held tasks.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "claimTaskId": {
+            "type": "string",
+            "description": "Optional orphan task id to atomically claim when you hold no open task. A competing claim can fail; inspect fresh status before choosing again."
+          }
+        }
+      }
+    },
+    {
+      "name": "read_evidence",
+      "description": "Read only your current-phase evidence. mine returns your local facts; another key/document requires your ownership.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "mine, or a local document id/key."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      }
+    },
+    {
+      "name": "submit_checkpoint",
+      "description": "Entry: record one proof for the current phase. Returns receipt only, never correctness; phase-1 receipt advances the task.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "phase": {
+            "type": "number",
+            "description": "1 or 2, matching the current phase."
+          },
+          "answer": {
+            "type": "string",
+            "description": "Exactly the required chain proof JSON encoded as a string."
+          }
+        },
+        "required": [
+          "phase",
+          "answer"
+        ]
+      }
+    }
+  ],
+  "textAlsoContainsNul": true,
+  "incidents": [
+    {
+      "source": {
+        "file": ".artifacts/experiments/full-feedback-bounded-20261005/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-full-feedback-bounded-20261005-space-bunny-free-fixed-seed-17--/atn-03822100-b63d-44e5-9f80-b4b291200140/session.v4.jsonl",
+        "sha256": "7ce6b451c6f2dbbd26644a879feaecadf60c9c6511e28a3e0c70879922513920",
+        "line": 45,
+        "seq": 43
+      },
+      "assistantSeq": 41,
+      "stream": {
+        "type": "tool-call-chunks",
+        "time0": 1791196784142,
+        "index": 1,
+        "dt": [],
+        "id": "call_01a10ba5efc67334b436cc60",
+        "name": "read\u0000\u0000\u0000",
+        "args": [
+          "{\"node\":\"node-21\"}"
+        ]
+      },
+      "call": {
+        "turn": 4,
+        "step": 1,
+        "callId": "call_01a10ba5efc67334b436cc60",
+        "name": "read\u0000\u0000\u0000",
+        "arguments": "{\"node\":\"node-21\"}"
+      },
+      "result": {
+        "error": {
+          "name": "ToolNotFoundError",
+          "code": "UNKNOWN_TOOL"
+        },
+        "message": [
+          {
+            "type": "text",
+            "text": "Error: unknown tool \"read\u0000\u0000\u0000\""
+          }
+        ]
+      }
+    },
+    {
+      "source": {
+        "file": ".artifacts/experiments/full-feedback-bounded-20261005/space-bunny-free-fixed-seed-17/sessions/--D-dsh-ATN-.artifacts-experiments-full-feedback-bounded-20261005-space-bunny-free-fixed-seed-17--/atn-03822100-b63d-44e5-9f80-b4b291200140/session.v4.jsonl",
+        "sha256": "7ce6b451c6f2dbbd26644a879feaecadf60c9c6511e28a3e0c70879922513920",
+        "line": 50,
+        "seq": 48
+      },
+      "assistantSeq": 46,
+      "stream": {
+        "type": "tool-call-chunks",
+        "time0": 1791196788358,
+        "index": 2,
+        "dt": [],
+        "id": "call_01a10ba60052716d9e5cc315",
+        "name": "at\u0000status",
+        "args": [
+          "{\"invoke\\u0000\\u0000board\\\"\":{\"action\":\"read\",\"limit\":\"8\\u0000\"}}"
+        ]
+      },
+      "call": {
+        "turn": 4,
+        "step": 2,
+        "callId": "call_01a10ba60052716d9e5cc315",
+        "name": "at\u0000status",
+        "arguments": "{\"invoke\\u0000\\u0000board\\\"\":{\"action\":\"read\",\"limit\":\"8\\u0000\"}}"
+      },
+      "result": {
+        "error": {
+          "name": "ToolNotFoundError",
+          "code": "UNKNOWN_TOOL"
+        },
+        "message": [
+          {
+            "type": "text",
+            "text": "Error: unknown tool \"at\u0000status\""
+          }
+        ]
+      }
+    }
+  ]
+}

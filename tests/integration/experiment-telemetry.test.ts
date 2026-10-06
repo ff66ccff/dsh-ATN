@@ -70,6 +70,10 @@ test('TELEMETRY-01: entry and workers count once; topology/tasks persist without
     assert.equal(current.totals.tokens.totalTokens.known, current.totals.attempts * 165)
     assert.equal(current.totals.tokens.reasoningTokens.known, current.totals.attempts * 10)
     assert.equal(current.totals.tokens.totalTokens.unknownCalls, 0)
+    assert.equal(current.meanInputTokensPerCall, 100)
+    assert.equal(current.inputTokenUnknownCalls, 0)
+    assert.equal(current.callCosts.length, current.totals.attempts)
+    assert.ok(current.callCosts.every(row => row.inputTokens === 100 && row.fixedContextBytes > 0))
     assert.ok(Math.abs(current.totals.cost.amount! - current.totals.attempts * .00017) < 1e-12)
     assert.equal(current.totals.toolsStarted, 2)
     assert.equal(current.totals.toolsFinished, 2)
@@ -411,6 +415,10 @@ test('TELEMETRY-08: independent acceptance, task provenance and explicit rewire 
       baselineTaskIds: [candidate.taskId], candidateTaskIds: [baseline.taskId],
     })
     assert.equal(regression.evaluation.verdict, 'observed-regression', 'optional validation describes a regression without vetoing exploration')
+    // Finish independently scheduled mail before taking the no-side-effect
+    // baseline. A rejected verification must not be compared across a delivery.
+    await kernel.atn.tick()
+    await settle(kernel)
     const afterRewire = await kernel.atn.network(started.networkId)
     await telemetry.flush()
     const beforeEvents = telemetry.snapshot().events
@@ -466,6 +474,82 @@ test('TELEMETRY-08: independent acceptance, task provenance and explicit rewire 
       changed.rewireId!, before.tasks[baseline.taskId]!.acceptance!.resultDigest]) {
       assert.equal(raw.includes(privateValue), false, privateValue)
     }
+  } finally {
+    await telemetry.close()
+    await kernel.ctx.fiber.dispose()
+    await rm(scratch, { recursive: true, force: true })
+  }
+})
+
+test('TELEMETRY-09: requester feedback and knowledge preserve source boundaries and exclude declared text', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'atn-experiment-requester-'))
+  const kernel = await bootKernel(scratch, { clock: () => 1_000_000 })
+  const telemetry = await installTelemetry(kernel.ctx, { directory: join(scratch, 'experiment'), runId: 'requester-feedback' })
+  try {
+    const host = await createHostAgent(kernel, 'SECRET_REQUESTER')
+    const started = await kernel.atn.start(host, {
+      objective: 'SECRET_GOAL', successCriteria: 'SECRET_CRITERIA', constraints: 'SECRET_CONSTRAINTS',
+    })
+    const peers = []
+    for (const status of ['rejected', 'accepted'] as const) {
+      const peer = await kernel.atn.spawn(host, { task: 'SECRET_TASK', context: 'SECRET_CONTEXT' })
+      peers.push(peer)
+      await settle(kernel)
+      const agent = kernel.ctx.agents.get(SessionId(peer.sessionId))!
+      await kernel.atn.publishKnowledge(agent, {
+        documents: ['SECRET_DOCUMENT'], topics: ['SECRET_TOPIC'], contributions: ['SECRET_CONTRIBUTION'],
+      })
+      await kernel.atn.send(agent, {
+        to: started.nodeId, kind: 'result', taskId: peer.taskId,
+        body: 'SECRET_RESULT', summary: 'SECRET_SUMMARY', evidence: ['SECRET_RESULT_EVIDENCE'],
+      })
+      await settle(kernel)
+      await kernel.atn.feedback(host, { taskId: peer.taskId, status,
+        summary: 'SECRET_REVIEW', evidence: ['SECRET_REVIEW_EVIDENCE'], comparisonKey: 'SECRET_COMPARISON' })
+      const repeat = await kernel.atn.send(host, { to: peer.nodeId, kind: 'task', body: 'SECRET_REPEAT_TASK' })
+      await kernel.atn.send(agent, { to: started.nodeId, kind: 'result', taskId: repeat.settledTaskId!,
+        body: 'SECRET_REPEAT_RESULT', summary: 'SECRET_REPEAT_SUMMARY', evidence: ['SECRET_REPEAT_EVIDENCE'] })
+      await settle(kernel)
+      await kernel.atn.status(host, { review: { taskId: repeat.settledTaskId!, status,
+        summary: 'SECRET_REVIEW', evidence: ['SECRET_REVIEW_EVIDENCE'], comparisonKey: 'SECRET_COMPARISON' } })
+    }
+    await kernel.atn.rewire(host, { peers: [peers[0].nodeId] })
+    const changed = await kernel.atn.rewire(host, { peers: [peers[1].nodeId] })
+    assert.equal(changed.requesterEvaluation.verdict, 'observed-improvement')
+    await kernel.atn.verifyTask(started.networkId, peers[1].taskId, {
+      id: 'SECRET_HOST_VALIDATOR',
+      validate: () => ({ passed: false, summary: 'SECRET_HOST_REJECTION', evidence: ['SECRET_HOST_EVIDENCE'] }),
+    })
+    const final = await telemetry.close()
+    assert.equal(final.coverage.observationErrors, 0)
+    const raw = await readFile(telemetry.paths.events, 'utf8')
+    const rows = raw.trim().split('\n').map(line => JSON.parse(line))
+    const feedback = rows.filter(row => row.kind === 'task.requester-feedback')
+    assert.equal(feedback.length, 5, 'later rewires preserve four feedback samples; host rejection changes its effective status')
+    assert.deepEqual(feedback.filter(row => !row.hostRejected).map(row => row.status).sort(), ['accepted', 'accepted', 'rejected', 'rejected'])
+    assert.ok(feedback.every(row => row.source === 'requester' && row.resultBound && row.evidenceCount === 1))
+    const suppressed = feedback.find(row => row.hostRejected)
+    assert.ok(suppressed)
+    assert.equal(suppressed.status, 'accepted', 'the recorded local opinion is retained')
+    assert.equal(suppressed.effectiveStatus, 'unrated', 'host rejection suppresses selection credit')
+    assert.equal(suppressed.eligibleForSelection, false)
+    assert.ok(feedback.filter(row => !row.hostRejected).every(row => row.eligibleForSelection))
+    assert.equal(rows.filter(row => row.kind === 'task.acceptance').length, 1)
+    const knowledge = rows.filter(row => row.kind === 'node.knowledge')
+    assert.equal(knowledge.length, 2)
+    assert.ok(knowledge.every(row => row.source === 'self-reported' && row.documents[0].startsWith('document-')
+      && row.topics[0].startsWith('topic-') && row.contributions[0].startsWith('contribution-')))
+    const rewire = rows.find(row => row.kind === 'topology.rewire' && row.verdict === 'observed-improvement')
+    assert.ok(rewire)
+    assert.equal(rewire.evidenceSource, 'requester')
+    assert.equal(rewire.hostVerdict, 'insufficient-evidence')
+    assert.equal(rewire.requesterVerdict, 'observed-improvement')
+    assert.equal(rewire.causalClaim, false)
+    assert.equal(rewire.requesterEvaluation.qualityOnly, true)
+    assert.deepEqual(rewire.requesterEvaluation.delta, { acceptanceRate: 1 })
+    assert.ok(rewire.requesterEvaluation.baselineTasks.every((id: string) => id.startsWith('task-')))
+    assert.equal(raw.includes('SECRET_'), false)
+    assert.equal(raw.includes(started.networkId), false)
   } finally {
     await telemetry.close()
     await kernel.ctx.fiber.dispose()
