@@ -32,23 +32,25 @@ const summarizeProbe = (runs: ReturnType<typeof makeRun>[]) => {
   return (protocol as any).summarizeAdaptiveProbe(runs)
 }
 
-test('adaptive probe counts attempted, blocked and unchanged rewires separately and fails without changed successes', () => {
+test('adaptive probe reports attempted, blocked and unchanged rewires without gating on counters', () => {
   for (const kind of ['none', 'blocked', 'unchanged']) {
     const rows = probe().map(row => ({ ...row, protocol: { ...row.protocol,
       explicitRewires: kind === 'unchanged' ? [{ id: 'rewire-1', changed: false }] : [], rewireTelemetry: {
       ...row.protocol.rewireTelemetry, statusRewireCalls: kind === 'none' ? 0 : 1,
       successfulRewires: 0, unchangedRewires: kind === 'unchanged' ? 1 : 0,
       blockedRewires: kind === 'blocked' ? 1 : 0, ablationBlockedRewires: kind === 'blocked' ? 1 : 0,
+      callsWithPriorStatusQuery: kind === 'none' ? 0 : 1,
     } } }))
     const summary = summarizeProbe(rows)
-    assert.equal(summary.probeGatePassed, false)
+    assert.equal(summary.probeGatePassed, true, 'valid observations remain reportable regardless of mechanism counters')
+    assert.equal(summary.discovery.passed, false)
     assert.equal(summary.runsWithSuccessfulRewire, 0)
     assert.equal(summary.rewireCounts.statusRewireCalls, kind === 'none' ? 0 : 5)
     assert.equal(summary.rewireCounts.successfulRewires, 0)
   }
 })
 
-test('adaptive probe requires successful attempts, distinct homogeneous runs, capability and headroom', () => {
+test('adaptive probe requires distinct homogeneous telemetry and reports discovery and headroom separately', () => {
   const rows = probe()
   rows[0].protocol.rewireTelemetry.successfulRewires = 0
   rows[0].protocol.rewireTelemetry.statusRewireCalls = 0
@@ -61,27 +63,29 @@ test('adaptive probe requires successful attempts, distinct homogeneous runs, ca
   assert.equal(summary.discovery.successRate, 1)
   const blocked = rows.map((row, i) => i ? row : ({ ...row, protocol: { ...row.protocol,
     rewireTelemetry: { ...row.protocol.rewireTelemetry, statusRewireCalls: 1, blockedRewires: 1 } } }))
-  assert.equal(summarizeProbe(blocked).probeGatePassed, false, 'one blocked attempt closes admission')
+  assert.equal(summarizeProbe(blocked).probeGatePassed, true, 'a blocked attempt is retained as a diagnostic')
+  assert.equal(summarizeProbe(blocked).discovery.status, 'blocked')
   assert.equal(summarizeProbe(rows.slice(1)).probeGatePassed, false)
   assert.equal(summarizeProbe([...rows, rows[0]]).probeGatePassed, false)
   assert.equal(summarizeProbe(rows.map(row => ({ ...row, execution: 'scripted-test' }))).probeGatePassed, false)
   assert.equal(summarizeProbe(rows.map((row, i) => i ? row : ({ ...row, sourceHashes: { source: 'changed' } }))).probeGatePassed, false)
 })
 
-test('topology admission requires separate matching probe, nonzero real rejection, repeats and 80 percent step headroom', () => {
+test('comparison runs directly with five paired arms and preserves identity, telemetry and outcome checks', () => {
   const rows = comparison(), probes = probe()
   assert.equal(summarize(rows, probes).mayInterpretTopology, true)
-  assert.equal(summarize(rows).mayInterpretTopology, false, 'comparison rewires cannot stand in for a prior separate probe')
-  assert.equal(summarize([...rows, ...probes], probes).runs.length, 20, 'probe observations never count toward comparison arms')
+  assert.equal(summarize(rows).mayInterpretTopology, true, 'a separate capability probe is no longer a comparison gate')
+  assert.equal(summarize([...rows, ...probes], probes).runs.length, 25, 'probe observations never count toward comparison arms')
   assert.equal(summarize(rows.slice(1), probes).mayInterpretTopology, false)
-  assert.equal(summarize(rows, probes.map(row => ({ ...row, conditions: { ...row.conditions, perNodeSteps: 32 } }))).mayInterpretTopology, false)
-  assert.equal(summarize(rows, probes.map(row => ({ ...row, sourceHashes: { source: 'changed' } }))).mayInterpretTopology, false)
+  assert.equal(summarize(rows, probes.map(row => ({ ...row, conditions: { ...row.conditions, perNodeSteps: 32 } }))).probeMatchesComparison, false)
+  assert.equal(summarize(rows, probes.map(row => ({ ...row, sourceHashes: { source: 'changed' } }))).probeMatchesComparison, false)
+  assert.equal(summarize(rows.map((row, i) => i ? row : ({ ...row, sourceHashes: { source: 'changed' } })), probes).mayInterpretTopology, false)
   assert.equal(summarize(rows.map(row => ({ ...row, sourceHashes: {} })), probes.map(row => ({ ...row, sourceHashes: {} }))).mayInterpretTopology, false)
-  assert.equal(summarize(rows, probes.map(row => ({ ...row, completedAt: 3000 }))).mayInterpretTopology, false)
-  assert.equal(summarize(rows, probes.map(row => ({ ...row, protocol: { ...row.protocol, explicitRewires: [] } }))).mayInterpretTopology, false)
+  assert.equal(summarize(rows, probes.map(row => ({ ...row, completedAt: 3000 }))).probePrecedesComparison, false)
+  assert.equal(summarizeProbe(probes.map(row => ({ ...row, protocol: { ...row.protocol, explicitRewires: [] } }))).completeTelemetry, false)
   assert.equal(summarize(rows.map(row => ({ ...row, protocol: { ...row.protocol,
     requesterFeedback: { accepted: 1, rejected: 0, needsMore: 0 } } })), probes.map(row => ({ ...row,
-      protocol: { ...row.protocol, requesterFeedback: { accepted: 1, rejected: 0, needsMore: 0 } } }))).mayInterpretTopology, false)
+      protocol: { ...row.protocol, requesterFeedback: { accepted: 1, rejected: 0, needsMore: 0 } } }))).mayInterpretTopology, true)
   assert.equal(summarize(rows.map((row, i) => i ? row : ({ ...row, protocol: { ...row.protocol,
     stepUse: [{ id: 'node', stepsUsed: 17 }] } })), probes).mayInterpretTopology, false)
 })
@@ -107,14 +111,16 @@ test('malformed or missing identities, review counts, correctness and node cover
   const malformed = (run: ReturnType<typeof makeRun>) => ({ ...run, protocol: { ...run.protocol,
     requesterFeedback: { ...run.protocol.requesterFeedback, rejected: '1' } } })
   assert.equal(summarize(rows.map(malformed), probes.map(malformed)).feedbackVarianceGatePassed, false)
+  assert.equal(summarize(rows.map(malformed), probes.map(malformed)).mayInterpretTopology, false, 'malformed telemetry is not a valid zero-rejection diagnostic')
 })
 
-test('comparison preflight refuses missing, unsuccessful, mismatched or later probes', () => {
+test('probe quality refuses missing identity, mismatched source and later data; comparison has no capability threshold', () => {
   const expected = { model: 'test', conditions: makeRun('adaptive', 0).conditions, sourceHashes: { source: 'same' } }
   assert.ok(protocol.assertAdaptiveProbeAdmission(probe() as any, expected, 1000).probeGatePassed)
   assert.throws(() => protocol.assertAdaptiveProbeAdmission([], expected), /admission failed/)
   assert.throws(() => protocol.assertAdaptiveProbeAdmission(probe() as any, { ...expected, model: 'other' }), /model, configuration or source/)
   assert.throws(() => protocol.assertAdaptiveProbeAdmission(probe() as any, expected, 50), /completed before/)
+  assert.equal(protocol.assertTopologyComparisonPreflight([], expected, probe().map(row => row.conditions.seed), 1000).preflightPassed, true)
 })
 
 test('probe rejection statistics stay separate and cannot supply comparison feedback variance', () => {
@@ -122,7 +128,7 @@ test('probe rejection statistics stay separate and cannot supply comparison feed
     requesterFeedback: { ...row.protocol.requesterFeedback, rejected: 0 } } }))
   const summary = summarize(rows, probe())
   assert.equal(summary.feedbackVarianceGatePassed, false)
-  assert.equal(summary.mayInterpretTopology, false)
+  assert.equal(summary.mayInterpretTopology, true, 'zero rejected reviews cannot block comparison')
   assert.equal(summary.comparisonRejectedReviews, 0)
   assert.equal(summary.probeRejectedReviews, 5)
 })
@@ -131,19 +137,18 @@ test('structural admission recomputes fixtures and requires constructive confirm
   const probes = probe(), rows = comparison()
   const expected = { model: 'test', conditions: probes[0].conditions, sourceHashes: { source: 'same' } }
   const seeds = probes.map(row => row.conditions.seed)
-  assert.ok(protocol.assertTopologyComparisonPreflight(probes as any, expected, seeds, 1000).probeGatePassed)
-  assert.throws(() => protocol.assertTopologyComparisonPreflight(probes.map(row => ({ ...row, topologyProof: null })) as any,
-    expected, seeds, 1000), /structural proof/)
+  assert.ok(protocol.assertTopologyComparisonPreflight(probes as any, expected, seeds, 1000).preflightPassed)
+  assert.throws(() => protocol.assertTopologyComparisonPreflight(probes as any,
+    { ...expected, conditions: { ...expected.conditions, topologyBinding: false } }, seeds, 1000), /reachable or unbound/)
   assert.equal(summarize(rows, probes).bindingReferenceGatePassed, true)
   assert.equal(summarize(rows, probes).factFlowAuditGatePassed, true)
-  assert.throws(() => protocol.assertTopologyComparisonPreflight(probes.map(row => ({ ...row,
-    bindingReference: null })) as any, expected, seeds, 1000), /constructive binding/)
-  assert.throws(() => protocol.assertTopologyComparisonPreflight(probes.map(row => ({ ...row,
-    factFlowAudit: { ...row.factFlowAudit, passed: false } })) as any, expected, seeds, 1000), /fact-flow/)
+  assert.equal(summarizeProbe(probes.map(row => ({ ...row, bindingReference: null })) as any).bindingReferenceGatePassed, false)
+  assert.equal(summarizeProbe(probes.map(row => ({ ...row, factFlowAudit: { ...row.factFlowAudit, passed: false } }))).factFlowAuditGatePassed, false)
+  assert.equal(summarize(rows.map(row => ({ ...row, bindingReference: null })), probes).mayInterpretTopology, false)
   const unaudited = rows.map((row, i) => i ? row : ({ ...row, factFlowAudit: { ...row.factFlowAudit, passed: false } }))
   assert.equal(summarize(unaudited, probes).mayInterpretTopology, false)
   assert.equal(summarize(unaudited, probes).excludedFactFlowRuns.length, 1)
-  assert.equal(summarize(unaudited, probes).runs.length, 20, 'failed provenance runs are preserved but excluded from counted arms')
+  assert.equal(summarize(unaudited, probes).runs.length, 25, 'failed provenance runs remain in the failure denominator and raw details')
   assert.equal(summarize(rows.map(row => ({ ...row, topologyProof: null })), probes).mayInterpretTopology, false)
   assert.equal(summarize(rows.map(row => ({ ...row, topologyBinding: null })), probes).mayInterpretTopology, false)
   assert.equal(summarize(rows.map((row, i) => i ? row : ({ ...row, conditions: { ...row.conditions, seed: 99 } })), probes).mayInterpretTopology, false)

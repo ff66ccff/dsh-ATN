@@ -3,21 +3,22 @@ import { isDeepStrictEqual } from 'node:util'
 import type { NetworkRecord } from '../src/schema.ts'
 import type { EvidenceFact, ShiftingEvidenceTask } from './shifting-evidence-task.ts'
 import { createShiftingEvidenceTask, evaluateChain, validateRequestedEvidence } from './shifting-evidence-task.ts'
-import { isComparisonSeed, proveTopologyBinding } from './topology-binding-proof.ts'
+import { isComparisonSeed, proveTopologyBinding, verifyTopologyBindingProof } from './topology-binding-proof.ts'
 import type { runShiftingReference } from './shifting-evidence-reference.ts'
+import { selectStaticWidePeers, STATIC_WIDE_POLICY } from './static-wide-topology.ts'
 
 export interface FactCheckpoint { phase: number; at: number; answer: string }
 function parse(text: string | undefined): any { try { return JSON.parse(text ?? '') } catch { return null } }
 const sequence = (id: string) => Number(id.match(/-(\d+)$/)?.[1] ?? NaN)
 
 /** Audit the answer that was actually submitted, including incorrect/stale facts. */
-export function auditFactFlow(task: ShiftingEvidenceTask, record: NetworkRecord, checkpoints: readonly FactCheckpoint[]) {
+export function auditFactFlow(task: ShiftingEvidenceTask, record: NetworkRecord, checkpoints: readonly FactCheckpoint[], initialEntryPeers?: readonly string[]) {
   const nodes = Object.values(record.nodes)
   const entrySlot = nodes.findIndex(node => node.id === record.entryNodeId)
   const violations: Array<{ phase: number; document: string | null; reason: string }> = []
   const facts: Array<{ phase: number; key: string; document: string; ownerSlot: number; ownerNodeId: string;
     taskId: string; requestMailId: string; resultMailId: string; deliveredAt: number; directPeers: string[] }> = []
-  const initialPeers = [nodes[(entrySlot - 1 + nodes.length) % nodes.length]?.id, nodes[(entrySlot + 1) % nodes.length]?.id]
+  const initialPeers = initialEntryPeers ?? [nodes[(entrySlot - 1 + nodes.length) % nodes.length]?.id, nodes[(entrySlot + 1) % nodes.length]?.id]
   for (const checkpoint of checkpoints) {
     const answer = parse(checkpoint.answer)
     if (![1, 2].includes(checkpoint.phase) || !Number.isSafeInteger(checkpoint.at) || checkpoint.at < 0 ||
@@ -69,7 +70,7 @@ export type FactFlowAudit = ReturnType<typeof auditFactFlow>
 export type BindingReferenceRun = Awaited<ReturnType<typeof runShiftingReference>>
 export interface BindingReferencePair {
   conditions: { agents: number; seed: number; chainLength: number; topologyBinding: true; perNodeSteps: number; maxCalls: number; timeoutMs: number }
-  sourceHashes: Record<string, string>; adaptive: BindingReferenceRun; fixed: BindingReferenceRun
+  sourceHashes: Record<string, string>; adaptive: BindingReferenceRun; fixed: BindingReferenceRun; 'fixed-wide'?: BindingReferenceRun
 }
 
 /** Recompute fixture and obtained facts; do not trust a saved `confirmed` flag. */
@@ -96,6 +97,20 @@ export function bindingReferenceGate(pair: BindingReferencePair | null | undefin
       if (!isDeepStrictEqual(obtained, run.obtainedRequiredFacts) || run.obtainedRequiredFactCount !== obtained.length ||
         !isDeepStrictEqual(evaluation, run.evaluation) || run.passed !== evaluation.every(row => row.passed)) return false
       if (mode === 'adaptive' ? !run.passed || obtained.length !== proof.requiredFacts.length : run.passed || obtained.length >= proof.requiredFacts.length) return false
+    }
+    if (pair['fixed-wide']) {
+      const run = pair['fixed-wide'], selection = run.staticSelection
+      if (!selection || !isDeepStrictEqual(selection.peers, selectStaticWidePeers(selection.publicNodeIds)) ||
+        !isDeepStrictEqual(Object.fromEntries(Object.keys(STATIC_WIDE_POLICY).map(key => [key, selection[key as keyof typeof selection]])), STATIC_WIDE_POLICY) ||
+        !isDeepStrictEqual(run.initialPeerIds, selection.peers) || run.topology.maxPeers !== 4 || run.topology.nodes !== agents ||
+        run.seed !== seed || run.topologyMode !== 'fixed-wide' || run.issuedModelCalls !== 0 || run.maxNodeActions > perNodeSteps ||
+        run.actions > maxCalls || run.factFlowAudit?.passed !== true || !isComparisonSeed(task, run.topologyProof) ||
+        !verifyTopologyBindingProof(task, run.staticTopologyProof, { entrySlot: 0, maxCollaborationPeers: 4, initialPeers: [agents - 1, 1, 2, 3] })) return false
+      const obtained = proof.requiredFacts.filter(row => run.receivedFacts.some(received => received.phase === row.phase &&
+        received.ownerSlot === row.holder && isDeepStrictEqual(received.fact, task.phases[row.phase - 1].facts.find(fact => fact.id === row.document))))
+      const evaluation = ([1, 2] as const).map(phase => evaluateChain(task, phase, run.checkpoints.find(row => row.phase === phase)?.answer))
+      if (!isDeepStrictEqual(obtained, run.obtainedRequiredFacts) || obtained.length !== run.obtainedRequiredFactCount ||
+        !isDeepStrictEqual(evaluation, run.evaluation) || run.passed !== evaluation.every(row => row.passed)) return false
     }
     return true
   } catch { return false }

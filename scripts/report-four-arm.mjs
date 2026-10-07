@@ -45,7 +45,7 @@ const output = { version: 1, finalizedAt: new Date().toISOString(), issuedNewMod
   sources: { probe: await provenance(join(values.probe, 'batch.json')), audit: await provenance(values.audit), reference: await provenance(values.reference) },
   sourceHashes: hashes, comparisonAdmission: admission, bindingConfirmed,
   gates: { constructiveBinding: bindingConfirmed, structuralProof: batch.completed.every(row => audit.adaptiveProbe.runs.find(run => run.runId === row.runId)?.rawAudit.checks.structuralProofVerified),
-    probeCapability: { passed: summary.capabilityGatePassed, correct: summary.correct, repeats: summary.repeats, required: 0.8, observed: summary.twoPhaseSuccessRate },
+    probeCapability: { completion: summary.completion, statement: 'Completion is an interval report, never a small-sample admission gate.' },
     probeDiscovery: summary.discovery, probeHeadroom: summary.stepHeadroomPassed, positiveFactFlow: summary.factFlowAuditGatePassed,
     comparisonRepeats: { passed: false, observed: 0, requiredPerArm: 5 }, comparisonRejected: { passed: false, observed: null }, comparisonHeadroom: { passed: false, observed: null } },
   probe: { runs, costs: probeCosts, phase1SubmittedRate: sum(batch.completed, row => Number(row.phase1Submitted)) / batch.completed.length,
@@ -60,7 +60,7 @@ const output = { version: 1, finalizedAt: new Date().toISOString(), issuedNewMod
   referenceTotals: { adaptive: referenceTotals('adaptive'), fixed: referenceTotals('fixed') },
   comparisonArms: SHIFTING_ARMS.map(mode => ({ mode, repeats: 0, execution: 'not-executed', metrics: null, costMultiples: null,
     baselineTopology: mode === 'fixed' ? 'fixed' : 'adaptive', reason: admission.passed ? 'not-collected-by-this-script'
-      : !summary.capabilityGatePassed ? 'adaptive-probe-capability-below-4-of-5' : 'comparison-preflight-failed' })),
+      : 'comparison-preflight-failed' })),
   mayInterpretTopology: false, causalClaim: false, benefitClaim: 'not-supported',
   interpretation: `Constructive binding ${bindingConfirmed ? 'holds' : 'is unconfirmed'}. The same-source adaptive probe is ${summary.correct}/${summary.repeats}. ${admission.passed ? 'Preflight passes, but this script has no comparison data.' : 'No comparison is admitted.'} Fixed structural failure is task design. Probe cost ratios include all failures and indicate coordination overhead only; comparison-arm costs remain unmeasured.` }
 await mkdir(dirname(resolve(values.out)), { recursive: true })

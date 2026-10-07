@@ -11,7 +11,8 @@ export async function runBindingReferencePair(conditions: BindingReferencePair['
     topologyBinding: true, steps: conditions.perNodeSteps, maxCalls: conditions.maxCalls, timeoutMs: conditions.timeoutMs }
   const adaptive = await runShiftingReference({ ...options, topology: 'adaptive' })
   const fixed = await runShiftingReference({ ...options, topology: 'fixed' })
-  const pair = { conditions, sourceHashes, adaptive, fixed }
+  const fixedWide = await runShiftingReference({ ...options, topology: 'fixed-wide' })
+  const pair = { conditions, sourceHashes, adaptive, fixed, 'fixed-wide': fixedWide }
   if (!bindingReferenceGate(pair, { conditions, sourceHashes })) throw new Error('Constructive binding confirmation failed: require adaptive completion with every required fact and fixed failure with missing required facts')
   return pair
 }
@@ -27,7 +28,8 @@ async function main() {
     const pair = await runBindingReferencePair(conditions, sourceHashes); runs.push(pair)
     console.log(JSON.stringify({ seed, adaptive: { passed: pair.adaptive.passed, facts: pair.adaptive.obtainedRequiredFactCount,
       entrySteps: pair.adaptive.entrySteps }, fixed: { passed: pair.fixed.passed, facts: pair.fixed.obtainedRequiredFactCount,
-      entrySteps: pair.fixed.entrySteps }, confirmed: true }))
+      entrySteps: pair.fixed.entrySteps }, fixedWide: { passed: pair['fixed-wide']!.passed,
+        facts: pair['fixed-wide']!.obtainedRequiredFactCount, entrySteps: pair['fixed-wide']!.entrySteps }, confirmed: true }))
   }
   await mkdir(dirname(resolve(values.out)), { recursive: true })
   await writeFile(resolve(values.out), JSON.stringify({ version: 1, issuedModelCalls: 0, sourceHashes, runs,

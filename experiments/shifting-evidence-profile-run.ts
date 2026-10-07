@@ -4,19 +4,22 @@ import type LlmRuntime from '@deepseek-ai/dsh-llm'
 import { LlmAdapter, isAgentLoopRequest, markAgentLoopRequest, type GenerateOptions,
   type LlmModelInfo, type ResolvedRetryPolicy } from '@deepseek-ai/dsh-llm'
 import { appendFile, mkdir, readFile, writeFile } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { isDeepStrictEqual } from 'node:util'
 import { PROVIDER_ID } from 'dsh-opencode-go'
 import { assertAllowedPilotModel, discoverPilotModels, type PilotModel } from './provider.ts'
 import { runShiftingEvidence, shiftingSourceHashes, type ShiftingMode, type ShiftingLiveProviderMount } from './shifting-evidence-run.ts'
 import { summarizeAdaptiveProbe, summarizeShiftingRuns,
-  type ShiftingRunObservation, assertTopologyComparisonPreflight } from './shifting-evidence-protocol.ts'
+  type ShiftingRunObservation, assertTopologyComparisonPreflight, SHIFTING_ARMS } from './shifting-evidence-protocol.ts'
+import { assertSimplificationDesign, registeredSimplificationArms, summarizeSimplificationRuns, type SimplificationDesign } from './simplification-protocol.ts'
 
 export interface ImportedProfileOptions {
   directory: string; models?: string[]; modes?: ShiftingMode[]; purpose: 'adaptive-probe' | 'comparison'
   priorProbe?: string; repeats?: number; seed?: number; agents?: number; chainLength?: number; topologyBinding?: boolean
   perNodeSteps?: number; maxCalls?: number; maxOutputTokens?: number; observedTokenLimit?: number; timeoutMs?: number
   profile?: string; sourceProfile?: string
+  studyDesign?: string
 }
 type ImportedLlm = Pick<LlmRuntime, 'listProviders' | 'listModels' | 'resolveModelInfo' | 'prepareCall'>
 export interface ImportedRequestIdentity {
@@ -90,6 +93,21 @@ export function selectImportedValidationModels(imported: readonly LlmModelInfo[]
 }
 
 export async function runImportedProfileValidation(parent: Context, options: ImportedProfileOptions, sourceIdentity: ImportedRequestIdentity) {
+  const study: SimplificationDesign | null = options.studyDesign ? JSON.parse(await readFile(resolve(options.studyDesign), 'utf8')) : null
+  if (study) {
+    assertSimplificationDesign(study)
+    const designRoot = dirname(resolve(options.studyDesign!))
+    const reference = JSON.parse(await readFile(join(designRoot, 'reference.json'), 'utf8'))
+    const criterion = JSON.parse(await readFile(join(designRoot, 'criterion-validation.json'), 'utf8'))
+    const referenceModes = registeredSimplificationArms(study)
+    if (!reference.passed || reference.issuedModelCalls !== 0 || !isDeepStrictEqual(reference.seeds, study.seeds) ||
+      referenceModes.some(mode => study.seeds.some(seed => reference.rows.filter((row: { mode: string; seed: number; configurationPassed: boolean }) =>
+        row.mode === mode && row.seed === seed && row.configurationPassed).length !== 1)) ||
+      Date.parse(reference.generatedAt) > Date.parse(study.frozenAt)) throw new Error('Every registered arm needs its pre-run zero-model reference')
+    if (criterion.passed !== true || criterion.issuedModelCalls !== 0 ||
+      !['SIMPLIFICATION-BRIEF-REJECT', 'SIMPLIFICATION-BRIEF-ACCEPT'].every(name => criterion.requiredCases.includes(name)) ||
+      !(Date.parse(criterion.completedAt) <= Date.parse(study.frozenAt))) throw new Error('Revised-brief criterion tests must pass before live runs')
+  }
   if (!sourceIdentity?.markAgentLoopRequest || !sourceIdentity.isAgentLoopRequest) throw new Error('The installed profile request identity is required')
   const source = parent.get('llm') as ImportedLlm | undefined
   if (!source?.listProviders().some(row => row.id === PROVIDER_ID)) throw new Error('Actual dsh profile has not imported OpenCode Go')
@@ -97,7 +115,7 @@ export async function runImportedProfileValidation(parent: Context, options: Imp
   const selected = selectImportedValidationModels(imported, catalog.models, options.models)
   if (options.topologyBinding && selected.some(model => model.id === 'longcat-2.5-preview-free')) throw new Error('LongCat is capability-insufficient and excluded from topology-binding arms')
   const repeats = options.repeats ?? 5
-  const modes = options.modes ?? (options.purpose === 'adaptive-probe' ? ['adaptive'] : options.topologyBinding ? ['adaptive', 'fixed', 'no-feedback', 'no-board'] : ['fixed'])
+  const modes = options.modes ?? (study ? registeredSimplificationArms(study) : options.purpose === 'adaptive-probe' ? ['adaptive'] : options.topologyBinding ? [...SHIFTING_ARMS] : ['fixed'])
   if (!Number.isSafeInteger(repeats) || repeats < 5) throw new Error('At least five independent repeats are required')
   if (options.purpose === 'adaptive-probe' && (modes.length !== 1 || modes[0] !== 'adaptive')) throw new Error('Separate probe contains only adaptive')
   if (new Set(modes).size !== modes.length) throw new Error('Duplicate experiment arm')
@@ -109,6 +127,11 @@ export async function runImportedProfileValidation(parent: Context, options: Imp
   const root = resolve(options.directory)
   await mkdir(root)
   const hashes = await shiftingSourceHashes()
+  if (study && (options.purpose !== 'comparison' || !isDeepStrictEqual(modes, registeredSimplificationArms(study)) ||
+    !isDeepStrictEqual(hashes, study.sourceHashes) || !isDeepStrictEqual(conditions, { ...study.conditions, seed: study.seeds[0] }) ||
+    repeats !== study.seeds.length || selected.length !== 1 || selected[0].id !== study.model)) {
+    throw new Error('Live study differs from the registered mechanisms, seeds, source, model or budget')
+  }
   const prior: ShiftingRunObservation[] = options.priorProbe
     ? (JSON.parse(await readFile(resolve(options.priorProbe), 'utf8')).completed ?? []) : []
   if (modes.length > 1 || options.topologyBinding && options.purpose === 'comparison') for (const model of selected) assertTopologyComparisonPreflight(prior.filter(row => row.model === model.id),
@@ -118,7 +141,8 @@ export async function runImportedProfileValidation(parent: Context, options: Imp
   await writeFile(join(root, 'plan.json'), JSON.stringify({ execution: 'live-provider', provider: PROVIDER_ID,
     profile: options.profile ?? 'desktop-import-validation', sourceProfile: options.sourceProfile ?? 'desktop',
     selectedModels: selected, purpose: options.purpose, repeats, modes, conditions,
-    sourceHashes: hashes, node: process.version, providerMountedByProfile: true, directHttpInference: false }, null, 2) + '\n')
+    sourceHashes: hashes, node: process.version, providerMountedByProfile: true, directHttpInference: false,
+    ...(study ? { studyDesign: study, primaryMetric: 'all-run coordination cost (including failures)', causalClaim: false } : {}) }, null, 2) + '\n')
   const completed: Array<Awaited<ReturnType<typeof runShiftingEvidence>> & { directory: string }> = []
   for (const model of selected) for (let repeat = 0; repeat < repeats; repeat++) for (const mode of modes) {
     const directory = join(root, `${model.id}-${mode}-seed-${common.seed + repeat * 14}`)
@@ -140,7 +164,8 @@ export async function runImportedProfileValidation(parent: Context, options: Imp
       planned: selected.length * repeats * modes.length,
       summaries: selected.map(model => ({ model: model.id, ...(options.purpose === 'adaptive-probe'
         ? summarizeAdaptiveProbe(completed.filter(row => row.model === model.id))
-        : summarizeShiftingRuns(completed.filter(row => row.model === model.id), prior.filter(row => row.model === model.id))) })),
+        : study ? summarizeSimplificationRuns(completed.filter(row => row.model === model.id), study)
+          : summarizeShiftingRuns(completed.filter(row => row.model === model.id), prior.filter(row => row.model === model.id))) })),
       causalClaim: false }, null, 2) + '\n')
     console.log('DSH_IMPORTED_ATN_RUN ' + JSON.stringify({ model: model.id, mode, seed: report.seed, passed: report.passed,
       steps: report.protocol.stepHeadroom, rewires: report.protocol.rewireTelemetry.successfulRewires,

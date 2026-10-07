@@ -1,6 +1,6 @@
 {
   "name": "dsh-atn",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": false,
   "type": "module",
   "description": "Standalone ATN Agent preset for DeepSeek Harness: same-capability nodes, local discovery, four neighbours and unanimous shared-goal voting.",
@@ -49,6 +49,12 @@
     "experiment:calibrate": "node --import tsx/esm experiments/shifting-evidence-calibration.ts",
     "experiment:topology-proof": "node --import tsx/esm experiments/topology-binding-proof.ts",
     "experiment:binding-reference": "node --import tsx/esm experiments/topology-binding-reference.ts",
+    "experiment:five-arm-reference": "node --import tsx/esm experiments/topology-binding-reference.ts --out experiments/results/five-arm-reference-20261006.json",
+    "experiment:five-arm-report": "node --import tsx/esm scripts/report-five-arm.mjs",
+    "experiment:simplification-power": "node --import tsx/esm scripts/simplification-power.mjs",
+    "experiment:simplification-reference": "node --import tsx/esm experiments/simplification-reference.ts",
+    "experiment:simplification-prepare": "node --import tsx/esm scripts/prepare-simplification.mjs",
+    "experiment:simplification-report": "node --import tsx/esm scripts/report-simplification.mjs",
     "experiment:audit-errors": "node --import tsx/esm experiments/tool-error-audit.ts"
   },
   "dsh": {

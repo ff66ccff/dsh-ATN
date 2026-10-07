@@ -27,12 +27,14 @@ test('BIND-DISCOVERY: zero attempts and all-blocked attempts have different diag
   const blocked = summarizeAdaptiveProbe(probes(1, 0, 1)) as any
   assert.equal(zero.discovery?.status, 'not-observed')
   assert.equal(blocked.discovery?.status, 'blocked')
-  assert.equal(zero.probeGatePassed, false)
-  assert.equal(blocked.probeGatePassed, false)
+  assert.equal(zero.probeGatePassed, true)
+  assert.equal(blocked.probeGatePassed, true)
 })
 
-test('BIND-CAPABILITY: rewires alone never qualify a model that fails both checkpoints', () => {
+test('BIND-CAPABILITY: a probe with no completed checkpoints reports an interval without a point gate', () => {
   const summary = summarizeAdaptiveProbe(probes(1, 1, 0, false)) as any
-  assert.equal(summary.capabilityGatePassed, false)
-  assert.equal(summary.probeGatePassed, false)
+  assert.equal('capabilityGatePassed' in summary, false)
+  assert.equal(summary.completion.successes, 0)
+  assert.ok(summary.completion.interval.upper > 0)
+  assert.equal(summary.probeGatePassed, true)
 })

@@ -35,9 +35,10 @@ import { installShiftingEvidenceAccess } from './shifting-evidence-access.ts'
 import { proveTopologyBinding } from './topology-binding-proof.ts'
 import type { installTopologyBindingAccess } from './topology-binding-access.ts'
 import { summarizeAdaptiveProbe, summarizeShiftingRuns, shiftingStepHeadroom, type ShiftingRunObservation,
-  type ShiftingProtocolObservation, assertTopologyComparisonPreflight } from './shifting-evidence-protocol.ts'
+  type ShiftingProtocolObservation, assertTopologyComparisonPreflight, SHIFTING_ARMS } from './shifting-evidence-protocol.ts'
+import { shiftingMechanisms } from './simplification-arms.ts'
 
-export const SHIFTING_MODES = ['adaptive', 'fixed', 'no-feedback', 'no-board'] as const
+export const SHIFTING_MODES = [...SHIFTING_ARMS, 'minimal'] as const
 export type ShiftingMode = typeof SHIFTING_MODES[number]
 export interface ShiftingOptions {
   model: PilotModel; mode: ShiftingMode; directory: string; agents: number; seed: number
@@ -75,10 +76,11 @@ function publicProviderProvenance(testSeam: { adapter: LlmAdapter } | undefined,
 }
 
 const sourceFiles = ['shifting-evidence-run.ts', 'shifting-evidence-task.ts', 'shifting-evidence-reference.ts',
-  'shifting-evidence-profile-run.ts',
+  'shifting-evidence-profile-run.ts', 'simplification-arms.ts', 'simplification-protocol.ts', 'simplification-statistics.ts', 'simplification-reference.ts',
   'shifting-evidence-access.ts', 'shifting-evidence-protocol.ts', 'shifting-evidence-script.ts', 'shifting-evidence-calibration.ts',
   'topology-binding-proof.ts', 'topology-binding-access.ts',
   'topology-binding-audit.ts', 'topology-binding-reference.ts',
+  'static-wide-topology.ts', 'comparison-statistics.ts',
   'reference-kernel.ts', 'provider.ts', 'budget.ts', 'telemetry.ts', 'atn-cost.ts',
   '../src/runtime.ts', '../src/schema.ts', '../src/config.ts', '../src/tools.ts', '../src/tasks.ts', '../src/messages.ts',
   '../src/knowledge.ts', '../src/requester-feedback.ts', '../src/topology.ts', '../src/topology-feedback.ts', '../src/whiteboard.ts',
@@ -109,12 +111,21 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
   const providerProvenance = publicProviderProvenance(testSeam, liveProvider)
   validateOptions(options)
   const hashes = await shiftingSourceHashes()
+  const mechanisms = shiftingMechanisms(options.mode)
   // A fresh same-bound real-runtime reference is required before provider installation.
   const bindingReference = options.topologyBinding ? await runBindingReferencePair({ agents: options.agents, seed: options.seed,
     chainLength: options.chainLength ?? 4, topologyBinding: true, perNodeSteps: options.perNodeSteps,
     maxCalls: options.maxCalls, timeoutMs: options.timeoutMs }, hashes) : null
-  const reference = bindingReference ? bindingReference[options.mode === 'fixed' ? 'fixed' : 'adaptive'] : await runShiftingReference({ agents: options.agents, seed: options.seed,
-    chainLength: options.chainLength, topologyBinding: options.topologyBinding, steps: options.perNodeSteps, maxCalls: options.maxCalls, timeoutMs: options.timeoutMs })
+  const reference = options.topologyBinding && ['no-feedback', 'no-board', 'minimal'].includes(options.mode)
+    ? await runShiftingReference({ agents: options.agents, seed: options.seed, chainLength: options.chainLength,
+      topologyBinding: true, steps: options.perNodeSteps, maxCalls: options.maxCalls, timeoutMs: options.timeoutMs, topology: options.mode })
+    : bindingReference ? bindingReference[options.mode === 'fixed' ? 'fixed' : options.mode === 'fixed-wide' ? 'fixed-wide' : 'adaptive']!
+      : await runShiftingReference({ agents: options.agents, seed: options.seed, chainLength: options.chainLength,
+        topologyBinding: options.topologyBinding, steps: options.perNodeSteps, maxCalls: options.maxCalls, timeoutMs: options.timeoutMs })
+  if (options.topologyBinding && !['fixed', 'fixed-wide'].includes(options.mode) &&
+    (!reference.passed || reference.obtainedRequiredFactCount !== reference.requiredFactCount || reference.issuedModelCalls !== 0)) {
+    throw new Error('Mechanism ablation reference failed before live provider installation')
+  }
   const task = createShiftingEvidenceTask(options.agents, options.seed, options.chainLength, options.topologyBinding)
   const scenario = new ShiftingEvidenceScenario(task)
   const directory = resolve(options.directory)
@@ -248,9 +259,9 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     ctx.on('agent/created', ({ agent }) => { scenario.register(agent.id); return undefined })
     ctx.systemPrompt.section({ name: 'shifting-experiment', order: 10, text: [
       shiftingPrompt(task, options), `Each node has ${options.perNodeSteps} steps across BOTH phases. Global bounds: ${options.maxCalls} calls, ${options.maxOutputTokens} output tokens/call.`,
-      options.mode === 'fixed' ? 'Ablation: atn_status.rewire is disabled; use the fixed ring and available shared board.' : '',
-      options.mode === 'no-feedback' ? 'Ablation: atn_status.review is disabled; collect evidence without requester ratings.' : '',
-      options.mode === 'no-board' ? 'Ablation: atn_board is disabled; use actual directed task/result mail and discovery.' : '',
+      options.mode === 'fixed' || options.mode === 'fixed-wide' ? `Ablation: atn_status.rewire is disabled; use the fixed ${options.mode === 'fixed-wide' ? 'four-peer public-roster topology' : 'ring'} and available shared board.` : '',
+      !mechanisms.requesterFeedback ? 'Ablation: atn_status.review is disabled; collect evidence without requester ratings.' : '',
+      !mechanisms.sharedBoard ? 'Ablation: atn_board is disabled; use actual directed task/result mail and discovery.' : '',
     ].filter(Boolean).join('\n') })
     const output = { schema: { type: 'json' } as const, render: (_: unknown, value: unknown) => [{ type: 'text' as const, text: JSON.stringify(value) }] }
     ctx.tools.register(defineTool({ name: 'read_evidence', description: 'Read your local evidence snapshots, including any stale copies. mine returns all local snapshots; inspect phase/version/key/required fields. Another key/document requires local ownership.',
@@ -275,33 +286,37 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
       },
     }))
     await ctx.plugin(Storage); await ctx.plugin(JsonStorageBackend, { root: join(directory, 'storage') }); await ctx.plugin(StorageDomain, { backend: 'json' })
-    await ctx.plugin(AtnRuntimePlugin, shiftingConfig(options.agents, options.perNodeSteps, options.timeoutMs)); await ctx.plugin(AtnTools)
+    await ctx.plugin(AtnRuntimePlugin, shiftingConfig(options.agents, options.perNodeSteps, options.timeoutMs, options.mode === 'fixed-wide' ? 4 : 2)); await ctx.plugin(AtnTools)
     const handle = await ctx.agents.create({ sessionId: SessionId(`shifting-${runId}`),
       agentOptions: { provider: OpenCodeGo.PROVIDER_ID, model: options.model.id, maxTokens: options.maxOutputTokens }, meta: { cwd: directory } })
     entry = handle.agent
     network = await provisionShifting(ctx, entry, scenario, options)
-    const fixedPeers = options.mode === 'fixed' ? Object.fromEntries(network.ids.map((id, i) =>
-      [id, [network!.ids[(i - 1 + network!.ids.length) % network!.ids.length], network!.ids[(i + 1) % network!.ids.length]]])) : undefined
+    const fixedPeers = options.mode === 'fixed' || options.mode === 'fixed-wide' ? network.initialPeerIds : undefined
     binding = installShiftingEvidenceAccess(ctx.atn, network.networkId, sessionId => scenario.knowledgeHints(sessionId), scenario, fixedPeers)
-    if (options.mode === 'fixed') ctx.atn.rewire = async () => { throw new Error('Rewiring disabled by fixed-topology ablation') }
-    if (options.mode === 'no-feedback') ctx.atn.feedback = async () => { throw new Error('Requester ratings disabled by no-feedback ablation') }
-    if (options.mode === 'no-board') ctx.atn.board = async () => { throw new Error('Shared board disabled by no-board ablation') }
+    if (fixedPeers) ctx.atn.rewire = async () => { throw new Error('Rewiring disabled by fixed-topology ablation') }
+    if (!mechanisms.requesterFeedback) ctx.atn.feedback = async () => { throw new Error('Requester ratings disabled by no-feedback ablation') }
+    if (!mechanisms.sharedBoard) ctx.atn.board = async () => { throw new Error('Shared board disabled by no-board ablation') }
     ctx.atn.deliver = async () => { throw new Error('This two-phase experiment records proof with submit_checkpoint; keep the network open for host-managed measurement and cleanup') }
-    await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, experiment: task.id, protocolRevision: task.topologyBinding ? 7 : 4, mode: options.mode,
+    await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, experiment: task.id, protocolRevision: task.topologyBinding ? 8 : 4, mode: options.mode,
       purpose: options.purpose ?? 'comparison',
       execution: testSeam ? 'scripted-test' : 'live-provider', providerProvenance,
       taskHash: createHash('sha256').update(JSON.stringify(task)).digest('hex'), seed: options.seed, model: options.model,
       topologyProof: task.topologyBinding ? proveTopologyBinding(task) : null,
-      limits: { agents: options.agents, degree: 2, steps: options.perNodeSteps, calls: options.maxCalls,
+      staticTopologyProof: fixedPeers && task.topologyBinding ? proveTopologyBinding(task, { entrySlot: 0,
+        maxCollaborationPeers: options.mode === 'fixed-wide' ? 4 : 2,
+        initialPeers: fixedPeers[network.nodeId].map(id => network!.ids.indexOf(id)) }) : null,
+      limits: { agents: options.agents, degree: options.mode === 'fixed-wide' ? 4 : 2, steps: options.perNodeSteps, calls: options.maxCalls,
         chainLength: task.chainLength, autoAdvance: options.autoAdvance ?? false,
         outputTokens: options.maxOutputTokens, timeoutMs: options.timeoutMs, observedTokenLimit: options.observedTokenLimit },
       reference, bindingReference, sourceHashes: hashes, initialTopology: network.topology,
+      initialPeerIds: network.initialPeerIds, staticSelection: network.staticSelection,
       fixedContext: AtnTools.measureAtnFixedContext(ctx.tools.schemas()),
       phaseTrigger: options.autoAdvance ? 'checkpoint or automatic half-budget/quiescence advance' : 'phase-1 checkpoint only',
       evidenceAccess: 'host-enforced local snapshot holder ACL, including stable stale copies; no fixture file tool access',
       discoveryAccess: 'canonical current local metadata only; no task/result prose or content search; task reads restricted to holder/requester; no orphan claims or early retirement',
       transportAccess: task.topologyBinding ? 'JSON phase/key requests and exact local-owner results only; no notes, relays or board facts; ACL runs inside mail/task mutation' : 'legacy ring relays and metered board evidence',
-      primaryMetrics: ['phase1Correct && phase2Correct', 'phase1Submitted', 'phase2Submitted', 'atnTotalInteractions', 'atnTotalTransferBytes', 'meanInputTokensPerCall'],
+      primaryMetrics: ['issuedModelCalls conditional on phase1Correct && phase2Correct'],
+      secondaryMetrics: ['atnTotalInteractions', 'atnTotalTransferBytes', 'entrySteps', 'two-phase completion with Wilson interval and paired power statement'],
       experimentClass: 'bounded efficacy smoke, not calibrated effect-size measurement', causalClaim: false,
     }, null, 2) + '\n')
     ready()
@@ -376,7 +391,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
   protocol ??= { requesterFeedback: { accepted: 0, rejected: 0, needsMore: 0 }, rewireTelemetry: rewireTelemetry(), stepUse: [] }
   protocol.rewireTelemetry = rewireTelemetry()
   protocol.stepHeadroom = shiftingStepHeadroom({ conditions: { seed: options.seed, perNodeSteps: options.perNodeSteps }, protocol })
-  const factFlowAudit = task.topologyBinding && measuredRecord ? auditFactFlow(task, measuredRecord, attempts) : null
+  const factFlowAudit = task.topologyBinding && measuredRecord ? auditFactFlow(task, measuredRecord, attempts, network?.initialPeerIds[network.nodeId]) : null
   const entrySteps = measuredRecord?.nodes[measuredRecord.entryNodeId]?.stepsUsed ?? null
   const costRelativeToReference = referenceCostRatios({ issuedModelCalls: budget.snapshot().issued,
     atnTotalInteractions: metrics?.atnTotalInteractions ?? 0, atnTotalTransferBytes: metrics?.atnTotalTransferBytes ?? 0, entrySteps }, reference)
@@ -391,9 +406,13 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
       timeoutMs: options.timeoutMs, observedTokenLimit: options.observedTokenLimit, autoAdvance: options.autoAdvance ?? false },
     sourceHashes: hashes,
     topologyProof: task.topologyBinding ? proveTopologyBinding(task) : null,
+    staticTopologyProof: task.topologyBinding && network && ['fixed', 'fixed-wide'].includes(options.mode) ? proveTopologyBinding(task, { entrySlot: 0,
+      maxCollaborationPeers: options.mode === 'fixed-wide' ? 4 : 2,
+      initialPeers: network.initialPeerIds[network.nodeId].map(id => network!.ids.indexOf(id)) }) : null,
     topologyBinding: binding?.snapshot() ?? null,
     bindingReference, factFlowAudit, comparisonEligible: !task.topologyBinding || factFlowAudit?.passed === true,
-    entrySteps, costRelativeToReference,
+    initialPeerIds: network?.initialPeerIds ?? null, staticSelection: network?.staticSelection ?? null,
+    entrySteps, costRelativeToReference, mechanisms,
     checkpointObligations, protocolAfterCleanup,
     checkpointMeaning: 'Correct proof submission is measured separately from unresolved ATN obligations and network closure.',
     metrics, atnMessages: metrics?.atnMessages ?? 0, atnPayloadBytes: metrics?.atnPayloadBytes ?? 0,
@@ -407,7 +426,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     relativeInteractions: metrics ? metrics.atnTotalInteractions / reference.totalInteractions : null,
     relativeTransferBytes: metrics ? metrics.atnTotalTransferBytes / reference.totalTransferBytes : null,
     attempts, failures, causalClaim: false,
-    interpretation: testSeam ? 'Deterministic scripted adapter through real runtime, not evidence of real-model solving ability or topology benefit.' : 'Comparison requires constructive adaptive/fixed binding confirmation, recomputed structural proof, positive fact provenance, a separate same-source/model/config >=4/5 adaptive probe with successful rewire attempts and <=80% steps, comparison rejected reviews and >=5 paired runs per arm with <=80% steps. Fixed structural failure is task design, not adaptive benefit. Coordination cost ratios are not topology benefit.',
+    interpretation: testSeam ? 'Deterministic scripted adapter through real runtime, not evidence of real-model solving ability or topology benefit.' : 'Five arms run directly with matched source/model/budget/fixture and paired seeds. Completion uses Wilson intervals and exact paired power; efficiency includes two-phase completions only, failed consumption remains separate. Zero adaptive completions means no comparable signal. Fixed and fixed-wide structural failure is task design. Rejected reviews, rewiring and headroom are diagnostics, not admission gates. Causal claims remain false.',
   }
   await writeFile(join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n')
   return report
@@ -429,7 +448,7 @@ async function main() {
     ...(values['topology-binding'] ? { topologyBinding: true } : {}),
     maxCalls: Number(values['max-calls']), maxOutputTokens: Number(values['max-output-tokens']),
     timeoutMs: Number(values['timeout-ms']), observedTokenLimit: Number(values['observed-token-limit']) }
-  const modes = (values.modes ?? (values.probe ? 'adaptive' : SHIFTING_MODES.join(','))).split(',') as ShiftingMode[]
+  const modes = (values.modes ?? (values.probe ? 'adaptive' : SHIFTING_ARMS.join(','))).split(',') as ShiftingMode[]
   if (modes.some(mode => !SHIFTING_MODES.includes(mode))) throw new Error('Unknown mode')
   if (values.probe && (modes.length !== 1 || modes[0] !== 'adaptive')) throw new Error('--probe runs only the adaptive arm')
   const modelIds = values.models.split(',')
@@ -444,9 +463,6 @@ async function main() {
     if (!Array.isArray(probeRuns)) throw new Error('Invalid --probe-report: expected a dedicated probe batch with completed runs')
   }
   const requiresProbe = modes.length > 1 || values['topology-binding'] && !values.probe
-  if (values.execute && requiresProbe && !values['probe-report']) {
-    throw new Error('A live multi-arm comparison requires --probe-report from a completed separate adaptive probe')
-  }
   await mkdir(dirname(root), { recursive: true })
   await mkdir(root, { recursive: !values.execute })
   const reference = await runShiftingReference({ agents: common.agents, seed: common.seed, steps: common.perNodeSteps,

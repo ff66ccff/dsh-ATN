@@ -12,16 +12,18 @@ import { referenceKernel } from './reference-kernel.ts'
 import { installShiftingEvidenceAccess } from './shifting-evidence-access.ts'
 import { proveTopologyBinding } from './topology-binding-proof.ts'
 import { auditFactFlow } from './topology-binding-audit.ts'
+import { selectStaticWidePeers, STATIC_WIDE_POLICY } from './static-wide-topology.ts'
+import { shiftingMechanisms, type SimplificationArm } from './simplification-arms.ts'
 import { ShiftingEvidenceScenario, createShiftingEvidenceTask, evaluateChain, shiftingPrompt, validateRequestedEvidence, BINDING_SETUP_TASK, type ChainAnswer, type EvidenceFact } from './shifting-evidence-task.ts'
 
-export function shiftingConfig(agents: number, steps: number, timeoutMs: number): Config {
-  return Config({ ...Config(), maxResidentNodes: agents, maxTotalNodes: agents, maxCollaborationPeers: 2,
+export function shiftingConfig(agents: number, steps: number, timeoutMs: number, maxCollaborationPeers = 2): Config {
+  return Config({ ...Config(), maxResidentNodes: agents, maxTotalNodes: agents, maxCollaborationPeers,
     maxTasks: 128, maxRetainedMail: 256, maxPendingMailPerNode: 32, maxMessageBytes: 8192,
     stepBudget: steps, networkDeadlineMs: timeoutMs, defaultLeaseMs: timeoutMs,
     maxLeaseExtensionMs: timeoutMs, proposalDeadlineMs: Math.min(timeoutMs, 60_000) })
 }
 
-export async function provisionShifting(ctx: Context, entry: Agent, scenario: ShiftingEvidenceScenario, options: { perNodeSteps?: number; autoAdvance?: boolean } = {}) {
+export async function provisionShifting(ctx: Context, entry: Agent, scenario: ShiftingEvidenceScenario, options: { perNodeSteps?: number; autoAdvance?: boolean; mode?: string } = {}) {
   const started = await ctx.atn.start(entry, { objective: 'Prove both versions of the changing distributed dependency chain.',
     successCriteria: 'Submit ordered current-phase proofs and terminal for both checkpoints.', constraints: shiftingPrompt(scenario.task, options) })
   const agents = [entry]
@@ -35,9 +37,10 @@ export async function provisionShifting(ctx: Context, entry: Agent, scenario: Sh
   const store = await ctx.atn.openStore()
   const record = await store.update(started.networkId, current => {
     const ordered = agents.map(agent => Object.values(current.nodes).find(node => node.sessionId === agent.id)!)
+    const widePeers = options.mode === 'fixed-wide' ? selectStaticWidePeers(ordered.map(node => node.id)) : null
     const nodes = { ...current.nodes }
     ordered.forEach((node, index) => { nodes[node.id] = { ...node,
-      peerIds: [ordered[(index - 1 + agents.length) % agents.length].id, ordered[(index + 1) % agents.length].id] } })
+      peerIds: widePeers?.[node.id] ?? [ordered[(index - 1 + agents.length) % agents.length].id, ordered[(index + 1) % agents.length].id] } })
     return { ...current, nodes }
   })
   const ids = agents.map(agent => Object.values(record.nodes).find(node => node.sessionId === agent.id)!.id)
@@ -54,8 +57,10 @@ export async function provisionShifting(ctx: Context, entry: Agent, scenario: Sh
     }
   }
   const topology = { nodes: agents.length, maxPeers: Math.max(...ids.map(id => collaborationPeers(record.nodes, id, record.limits.maxCollaborationPeers).length)), reachableFromEntry: reached.size, diameter }
-  assert.equal(topology.maxPeers, 2); assert.equal(topology.reachableFromEntry, agents.length)
-  return { ...started, agents, ids, topology }
+  assert.equal(topology.maxPeers, options.mode === 'fixed-wide' ? 4 : 2); assert.equal(topology.reachableFromEntry, agents.length)
+  const initialPeerIds = Object.fromEntries(ids.map(id => [id, [...record.nodes[id].peerIds!]]))
+  return { ...started, agents, ids, topology, initialPeerIds,
+    staticSelection: options.mode === 'fixed-wide' ? { ...STATIC_WIDE_POLICY, publicNodeIds: ids, peers: initialPeerIds } : null }
 }
 
 /** Resolve received documents, never inspect the hidden task fixture to choose an answer. */
@@ -73,27 +78,30 @@ export function assembleChain(rootKey: string, phase: 1 | 2, facts: readonly Evi
 
 export interface ShiftingReferenceOptions {
   agents?: number; seed?: number; chainLength?: number; topologyBinding?: boolean
-  steps?: number; maxCalls?: number; timeoutMs?: number; topology?: 'adaptive' | 'fixed'
+  steps?: number; maxCalls?: number; timeoutMs?: number; topology?: SimplificationArm | 'fixed' | 'fixed-wide'
 }
 export async function runShiftingReference(options: ShiftingReferenceOptions = {}) {
   const task = createShiftingEvidenceTask(options.agents ?? 8, options.seed ?? 17, options.chainLength, options.topologyBinding)
   const scenario = new ShiftingEvidenceScenario(task)
+  const topologyMode = options.topology ?? (task.topologyBinding ? 'adaptive' : 'fixed')
+  const mechanisms = shiftingMechanisms(topologyMode)
+  const staticTopology = topologyMode === 'fixed' || topologyMode === 'fixed-wide'
   const scratch = await mkdtemp(join(tmpdir(), 'atn-shifting-reference-'))
-  const kernel = await referenceKernel(scratch, scenario, shiftingConfig(task.agents, options.steps ?? 16, options.timeoutMs ?? 240_000))
+  const kernel = await referenceKernel(scratch, scenario, shiftingConfig(task.agents, options.steps ?? 16, options.timeoutMs ?? 240_000, topologyMode === 'fixed-wide' ? 4 : 2))
   const costs = createAtnCostMeter()
   const actionsByNode: Record<string, number> = {}
   const receivedFacts: Array<{ phase: 1 | 2; taskId: string; ownerSlot: number; fact: EvidenceFact }> = []
   const unavailable: Array<{ phase: number; key: string; ownerSlot: number }> = []
   const checkpoints: Array<{ phase: 1 | 2; at: number; answer: string }> = []
-  const topologyMode = options.topology ?? (task.topologyBinding ? 'adaptive' : 'fixed')
   let actions = 0
   try {
     kernel.ctx.on('atn/network-updated', ({ record }) => { costs.observe(record) }, { global: true })
-    const network = await provisionShifting(kernel.ctx, kernel.entry, scenario, { perNodeSteps: options.steps ?? 16 })
-    const fixedPeers = task.topologyBinding && topologyMode === 'fixed' ? Object.fromEntries(network.ids.map((id, i) =>
-      [id, [network.ids[(i - 1 + network.ids.length) % network.ids.length], network.ids[(i + 1) % network.ids.length]]])) : undefined
+    const network = await provisionShifting(kernel.ctx, kernel.entry, scenario, { perNodeSteps: options.steps ?? 16, mode: topologyMode })
+    const fixedPeers = task.topologyBinding && staticTopology ? network.initialPeerIds : undefined
     installShiftingEvidenceAccess(kernel.ctx.atn, network.networkId, sessionId => scenario.knowledgeHints(sessionId), scenario, fixedPeers)
     if (fixedPeers) kernel.ctx.atn.rewire = async () => { throw new Error('Rewiring disabled by fixed-topology ablation') }
+    if (!mechanisms.requesterFeedback) kernel.ctx.atn.feedback = async () => { throw new Error('Requester ratings disabled by no-feedback ablation') }
+    if (!mechanisms.sharedBoard) kernel.ctx.atn.board = async () => { throw new Error('Shared board disabled by no-board ablation') }
     const step = async (index: number) => {
       if (++actions > (options.maxCalls ?? task.agents * 16)) throw new Error('Reference global action budget exhausted')
       if (!await kernel.ctx.atn.admitStep(network.networkId, network.agents[index].id)) throw new Error('Reference per-node step budget exhausted')
@@ -122,7 +130,7 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
             const index = network.ids.indexOf(peer.id)
             assert.ok(index >= 0)
             if (!(await kernel.ctx.atn.peers(kernel.entry)).neighbours.includes(peer.id)) {
-              if (topologyMode === 'fixed') { unavailable.push({ phase, key, ownerSlot: index }); continue }
+              if (staticTopology) { unavailable.push({ phase, key, ownerSlot: index }); continue }
               await step(0); await kernel.ctx.atn.rewire(kernel.entry, { peers: [peer.id] })
             }
             await step(0)
@@ -136,13 +144,15 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
             const received = JSON.parse(record.tasks[sent.settledTaskId!].result!.summary) as EvidenceFact
             receivedFacts.push({ phase, taskId: sent.settledTaskId!, ownerSlot: index, fact: received })
             const verdict = validateRequestedEvidence(received, { phase, key })
-            await step(0)
-            await kernel.ctx.atn.feedback(kernel.entry, { taskId: sent.settledTaskId!, status: verdict.status,
-              summary: verdict.reasons.join(',') || 'Current local fields match.', evidence: [received.id], comparisonKey: 'versioned-fact:v1' })
+            if (mechanisms.requesterFeedback) {
+              await step(0)
+              await kernel.ctx.atn.feedback(kernel.entry, { taskId: sent.settledTaskId!, status: verdict.status,
+                summary: verdict.reasons.join(',') || 'Current local fields match.', evidence: [received.id], comparisonKey: 'versioned-fact:v1' })
+            }
             if (verdict.status === 'accepted') facts.push(received)
           }
           const current = facts.find(fact => fact.key === key)!
-          if (!current) { assert.equal(topologyMode, 'fixed'); break }
+          if (!current) { assert.ok(staticTopology); break }
           key = current.next
         }
         if (key === null) {
@@ -169,11 +179,13 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
           body: `Phase ${phase} ring-segment facts are in the result summary.`, summary: JSON.stringify(child), evidence: child.map(row => row.id) })
         const persisted = await kernel.ctx.atn.network(network.networkId)
         const received = JSON.parse(persisted.tasks[sent.settledTaskId!].result!.summary) as EvidenceFact[]
-        await step(index)
-        const stale = received.some(fact => validateRequestedEvidence(fact, { phase, key: fact.key }).status === 'rejected')
-        await kernel.ctx.atn.feedback(network.agents[index], { taskId: sent.settledTaskId!, status: stale ? 'rejected' : 'accepted',
-          summary: stale ? 'Received segment contains phase/version mismatch; use only locally validated records.' : 'Received current-phase facts with document keys and proofs; final oracle remains separate.',
-          evidence: [received[0]?.id ?? 'empty-ring-segment'], comparisonKey: 'ring-segment-facts:v1' })
+        if (mechanisms.requesterFeedback) {
+          await step(index)
+          const stale = received.some(fact => validateRequestedEvidence(fact, { phase, key: fact.key }).status === 'rejected')
+          await kernel.ctx.atn.feedback(network.agents[index], { taskId: sent.settledTaskId!, status: stale ? 'rejected' : 'accepted',
+            summary: stale ? 'Received segment contains phase/version mismatch; use only locally validated records.' : 'Received current-phase facts with document keys and proofs; final oracle remains separate.',
+            evidence: [received[0]?.id ?? 'empty-ring-segment'], comparisonKey: 'ring-segment-facts:v1' })
+        }
         return [...own, ...received]
       }
       const received = await gather(0)
@@ -182,19 +194,25 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
     }
     const evaluation = ([1, 2] as const).map(phase => evaluateChain(task, phase, scenario.submissions.get(phase)))
     const passed = evaluation.every(row => row.passed)
-    if (!task.topologyBinding || topologyMode === 'adaptive') assert.ok(passed)
+    if (!task.topologyBinding || !staticTopology) assert.ok(passed)
     assert.equal(kernel.modelCalls(), 0)
     const proof = task.topologyBinding ? proveTopologyBinding(task) : null
+    const staticTopologyProof = task.topologyBinding && staticTopology ? proveTopologyBinding(task, { entrySlot: 0,
+      maxCollaborationPeers: topologyMode === 'fixed-wide' ? 4 : 2,
+      initialPeers: network.initialPeerIds[network.nodeId].map(id => network.ids.indexOf(id)) }) : null
     const obtainedRequiredFacts = proof?.requiredFacts.filter(row => receivedFacts.some(received => received.phase === row.phase &&
       received.ownerSlot === row.holder && received.fact.id === row.document && received.fact.key === row.key &&
       validateRequestedEvidence(received.fact, { phase: row.phase, key: row.key }).status === 'accepted')) ?? []
-    const factFlowAudit = task.topologyBinding ? auditFactFlow(task, await kernel.ctx.atn.network(network.networkId), checkpoints) : null
-    return { seed: task.seed, topologyMode,
-      policy: task.topologyBinding ? topologyMode === 'fixed' ? 'direct-owner-synthesis-with-fixed-edges' : 'direct-owner-synthesis-with-sequential-rewiring' : 'hub-synthesis-via-fixed-ring', evaluation, passed,
+    const factFlowAudit = task.topologyBinding ? auditFactFlow(task, await kernel.ctx.atn.network(network.networkId), checkpoints, network.initialPeerIds[network.nodeId]) : null
+    const finalRecord = await kernel.ctx.atn.network(network.networkId)
+    const requesterRatings = Object.values(finalRecord.tasks).filter(task => task.localFeedback).length
+    return { seed: task.seed, topologyMode, mechanisms, requesterRatings,
+      policy: task.topologyBinding ? staticTopology ? 'direct-owner-synthesis-with-fixed-edges' : 'direct-owner-synthesis-with-sequential-rewiring' : 'hub-synthesis-via-fixed-ring', evaluation, passed,
       issuedModelCalls: 0, actions, actionsByNode, maxNodeActions: Math.max(...Object.values(actionsByNode)),
-      entrySteps: actionsByNode[network.nodeId] ?? 0, receivedFacts, unavailable, checkpoints, topologyProof: proof,
+      entrySteps: actionsByNode[network.nodeId] ?? 0, receivedFacts, unavailable, checkpoints, topologyProof: proof, staticTopologyProof,
       requiredFactCount: proof?.requiredFacts.length ?? 0, obtainedRequiredFacts, obtainedRequiredFactCount: obtainedRequiredFacts.length, factFlowAudit,
-      topology: network.topology, manipulation: scenario.snapshot(), ...costs.snapshot(),
+      topology: network.topology, initialPeerIds: network.initialPeerIds, staticSelection: network.staticSelection,
+      manipulation: scenario.snapshot(), ...costs.snapshot(),
       interpretation: task.topologyBinding ? 'Zero-model direct-owner policy using public metadata and actual task/results only. Fixed failure is a task-design constraint, not evidence of adaptive benefit. Diagnostic phase advancement after a missing checkpoint is not a success.' : 'Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count.' }
   } finally {
     await kernel.ctx.fiber.dispose()

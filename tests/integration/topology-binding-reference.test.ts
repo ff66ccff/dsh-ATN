@@ -11,6 +11,19 @@ test('BIND-REFERENCE: all five seeds complete adaptively and miss required facts
     assert.equal(pair.fixed.passed, false)
     assert.equal(pair.adaptive.obtainedRequiredFactCount, 4)
     assert.ok(pair.fixed.obtainedRequiredFactCount < 4)
+    const wide = pair['fixed-wide']!
+    assert.equal(wide.topology.maxPeers, 4)
+    assert.equal(wide.issuedModelCalls, 0)
+    assert.equal(wide.factFlowAudit?.passed, true)
+    assert.equal(wide.staticSelection!.usesPhaseInformation, false)
+    assert.equal(wide.staticSelection!.usesFixture, false)
+    assert.ok(wide.entrySteps <= 48)
+    assert.equal(wide.requiredFactCount, 4)
+    assert.equal(wide.passed, false, 'the chosen public static strategy cannot cover both phases in these seeds')
+    assert.deepEqual(wide.initialPeerIds[wide.staticSelection!.publicNodeIds[0]],
+      [7, 1, 2, 3].map(slot => wide.staticSelection!.publicNodeIds[slot]))
+    assert.equal(bindingReferenceGate({ ...pair, 'fixed-wide': { ...wide, staticSelection: { ...wide.staticSelection!, usesPhaseInformation: true } } } as any,
+      { conditions, sourceHashes }), false)
     for (const run of [pair.adaptive, pair.fixed]) {
       assert.equal(run.issuedModelCalls, 0)
       assert.ok(run.entrySteps <= 48)

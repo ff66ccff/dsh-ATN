@@ -28,7 +28,7 @@ export function installTopologyBindingAccess(atn: AtnRuntime, networkId: string,
       if (input.kind === 'task') {
         parseFactRequest(input.body)
         if (fixedPeers && sender.id !== input.to && !fixedPeers[sender.id]?.includes(input.to)) {
-          throw new AtnRefusal('fixed-edge-required', 'fixed-edge-required: topology repair cannot grant a new fact channel outside the initial fixed ring')
+          throw new AtnRefusal('fixed-edge-required', 'fixed-edge-required: topology repair cannot grant a new fact channel outside the initial static edge set')
         }
         if (input.summary !== undefined || (input.evidence?.length ?? 0) > 0) throw new AtnRefusal('invalid-fact-request', 'invalid-fact-request: no result payload on a request')
         return

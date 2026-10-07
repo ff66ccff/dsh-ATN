@@ -37,7 +37,7 @@ class RewireProbeScript extends ScriptedModel {
   }
 }
 
-test('CLI separates adaptive probe planning and refuses unprobed live comparisons before any provider work', async () => {
+test('CLI separates probe planning, plans five comparison arms directly and rejects invalid repeats before provider work', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-peer-variance-probe-cli-'))
   const execute = promisify(execFile)
   try {
@@ -46,16 +46,19 @@ test('CLI separates adaptive probe planning and refuses unprobed live comparison
     const plan = JSON.parse(stdout)
     assert.equal(plan.purpose, 'adaptive-probe')
     assert.deepEqual(plan.plannedModes, ['adaptive'])
+    const comparison = await execute(process.execPath, ['--import', 'tsx/esm', 'experiments/shifting-evidence-run.ts',
+      '--models', 'deepseek-v4.1-flash', '--out', join(scratch, 'comparison')], { cwd: process.cwd() })
+    assert.deepEqual(JSON.parse(comparison.stdout).plannedModes, ['adaptive', 'fixed', 'fixed-wide', 'no-feedback', 'no-board'])
     await assert.rejects(execute(process.execPath, ['--import', 'tsx/esm', 'experiments/shifting-evidence-run.ts',
-      '--execute', '--models', 'space-bunny-free', '--modes', 'fixed,adaptive', '--out', join(scratch, 'comparison')],
-      { cwd: process.cwd() }), /requires --probe-report/)
+      '--execute', '--repeats', '4', '--models', 'deepseek-v4.1-flash', '--out', join(scratch, 'invalid')],
+      { cwd: process.cwd() }), /at least five repeats/)
   } finally { await rm(scratch, { recursive: true, force: true }) }
 })
 
 test('runner audits actual status.rewire attempts, changed successes, same-list commits, refusals and prior query', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-peer-variance-reporting-'))
   try {
-    for (const mode of ['adaptive', 'fixed'] as const) {
+    for (const mode of ['adaptive', 'fixed', 'fixed-wide'] as const) {
       const report = await runShiftingEvidence({ model: { id: 'deepseek-v4.1-flash', name: 'Script only', api: 'test', catalogFree: false,
         referenceCostPerMillion: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } },
       mode, directory: join(scratch, mode), agents: 8, seed: 17, chainLength: 2,
@@ -68,7 +71,10 @@ test('runner audits actual status.rewire attempts, changed successes, same-list 
       assert.equal(telemetry.successfulRewires, mode === 'adaptive' ? 1 : 0)
       assert.equal(telemetry.unchangedRewires, mode === 'adaptive' ? 1 : 0)
       assert.equal(telemetry.blockedRewires, mode === 'adaptive' ? 1 : 3)
-      assert.equal(telemetry.ablationBlockedRewires, mode === 'fixed' ? 3 : 0)
+      assert.equal(telemetry.ablationBlockedRewires, mode === 'adaptive' ? 0 : 3)
+      const manifest = JSON.parse(await readFile(join(scratch, mode, 'manifest.json'), 'utf8'))
+      assert.equal(manifest.limits.degree, mode === 'fixed-wide' ? 4 : 2)
+      assert.equal(manifest.initialTopology.maxPeers, mode === 'fixed-wide' ? 4 : 2)
       assert.equal(telemetry.callsWithPriorStatusQuery, 3)
       assert.equal(telemetry.pendingRewires, 0)
       assert.equal(recorded.protocol.stepHeadroom.maxNodeStepRatio,

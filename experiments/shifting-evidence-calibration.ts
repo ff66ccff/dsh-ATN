@@ -21,7 +21,7 @@ export async function runShiftingCalibration(options: { directory: string; repea
   // Freeze the complete grid, seeds and ordering before observing the first result.
   const plan = { version: 2, execution: 'scripted-test', repeats, seeds: Array.from({ length: repeats }, (_, i) => 17 + i * 14),
     arms: ['fixed', 'adaptive'] as const,
-    configurations: configs, selection: 'lowest chainLength, then lowest perNodeSteps with fixed >=80% two-phase correct, >=5 adaptive repeats and every measured fixed/adaptive node <=80% of its step budget',
+    configurations: configs, selection: 'Legacy deterministic configuration scan: lowest chainLength, then lowest perNodeSteps with >=5 fixed/adaptive observations and every measured node <=80% of its step budget. No small-sample completion threshold.',
     limits: { agents: 8, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000, autoAdvance: false },
     maxCalls: 'agents * perNodeSteps, explicitly matched to node allocations', providerCalls: 0,
     interpretation: 'Deterministic policy feasibility through real tools and ACLs. Not a real-model calibration or topology-effect comparison.', causalClaim: false }

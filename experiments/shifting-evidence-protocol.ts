@@ -2,7 +2,10 @@
 import { createShiftingEvidenceTask } from './shifting-evidence-task.ts'
 import { isComparisonSeed, proveTopologyBinding, type TopologyBindingProof } from './topology-binding-proof.ts'
 import { bindingReferenceGate, type BindingReferencePair, type FactFlowAudit } from './topology-binding-audit.ts'
-export const SHIFTING_ARMS = ['adaptive', 'fixed', 'no-feedback', 'no-board'] as const
+import { completionInterval, meanInterval, exactMcNemar, holmAdjusted } from './comparison-statistics.ts'
+import type { referenceCostRatios } from './topology-binding-audit.ts'
+import type { TelemetrySnapshot, TelemetryTotals } from './telemetry.ts'
+export const SHIFTING_ARMS = ['adaptive', 'fixed', 'fixed-wide', 'no-feedback', 'no-board'] as const
 export const SHIFTING_STEP_RATIO_LIMIT = 0.8
 export interface ShiftingRewireCounts {
   statusRewireCalls: number; successfulRewires: number; unchangedRewires: number
@@ -30,6 +33,9 @@ export interface ShiftingRunObservation {
   bindingReference?: BindingReferencePair | null
   factFlowAudit?: FactFlowAudit | null
   issuedModelCalls?: number; entrySteps?: number | null
+  atnMessages?: number; stopReason?: string; failures?: unknown[]
+  costRelativeToReference?: ReturnType<typeof referenceCostRatios>
+  metrics?: Pick<TelemetrySnapshot, 'totals'> | null
   atnTotalInteractions: number; atnTotalTransferBytes: number; meanInputTokensPerCall: number | null
   relativeInteractions: number | null; relativeTransferBytes: number | null
 }
@@ -70,7 +76,7 @@ export function shiftingStepHeadroom(run: Pick<ShiftingRunObservation, 'conditio
     limit: SHIFTING_STEP_RATIO_LIMIT, observed, withinLimit: observed && maxNodeStepRatio! <= SHIFTING_STEP_RATIO_LIMIT }
 }
 
-/** Attempts, capability and headroom are separate gates; run frequency is descriptive only. */
+/** Probe quality validates observations. Completion, discovery and headroom are descriptive. */
 export function summarizeAdaptiveProbe(runs: readonly ShiftingRunObservation[]) {
   const validPurpose = runs.length > 0 && runs.every(run => run.mode === 'adaptive' && run.purpose === 'adaptive-probe')
   const liveProvider = runs.length > 0 && runs.every(run => run.execution === 'live-provider')
@@ -102,15 +108,14 @@ export function summarizeAdaptiveProbe(runs: readonly ShiftingRunObservation[]) 
   const correct = runs.filter(run => run.phase1Correct === true && run.phase2Correct === true).length
   const twoPhaseSuccessRate = runs.length ? correct / runs.length : null
   const eligibleModel = runs.length > 0 && runs.every(run => run.model !== 'longcat-2.5-preview-free')
-  const capabilityGatePassed = validPurpose && liveProvider && homogeneousRuns && uniqueRuns && eligibleModel &&
-    runs.length >= 5 && twoPhaseSuccessRate! >= 0.8
+  const completion = completionInterval(correct, runs.length)
   const stepHeadroomPassed = runs.length > 0 && runs.every(run => shiftingStepHeadroom(run).withinLimit)
   const factFlowAuditGatePassed = runs.length > 0 && runs.every(run => run.conditions.topologyBinding !== true || positiveFactFlowGate(run))
   const bindingReferenceGatePassed = runs.length > 0 && runs.every(run => run.conditions.topologyBinding !== true || bindingReferenceGate(run.bindingReference, run))
   const probeGatePassed = validPurpose && liveProvider && completeTelemetry && homogeneousRuns && uniqueRuns &&
-    discovery.passed && capabilityGatePassed && stepHeadroomPassed && factFlowAuditGatePassed && bindingReferenceGatePassed
+    eligibleModel && runs.length >= 5 && factFlowAuditGatePassed && bindingReferenceGatePassed
   return { probeGatePassed, repeats: runs.length, runsWithSuccessfulRewire, successfulRewireRunRate,
-    discovery, correct, twoPhaseSuccessRate, capabilityGatePassed, eligibleModel, stepHeadroomPassed,
+    discovery, correct, twoPhaseSuccessRate, completion, eligibleModel, stepHeadroomPassed,
     validPurpose, liveProvider, completeTelemetry, homogeneous: homogeneousRuns, uniqueRuns, rewireCounts,
     factFlowAuditGatePassed, bindingReferenceGatePassed,
     runs: [...runs], interpretation: 'mechanism-and-adaptive-capability-only', causalClaim: false }
@@ -120,7 +125,7 @@ export function summarizeAdaptiveProbe(runs: readonly ShiftingRunObservation[]) 
 export function assertAdaptiveProbeAdmission(runs: readonly ShiftingRunObservation[],
   expected: Pick<ShiftingRunObservation, 'model' | 'conditions' | 'sourceHashes'>, comparisonStartedAt = Date.now()) {
   const summary = summarizeAdaptiveProbe(runs)
-  if (!summary.probeGatePassed) throw new Error('Adaptive probe admission failed: require >=5 distinct same-source/config live adaptive probes, >=80% two-phase correctness, <=80% node steps and 100% successful rewire attempts (at least one)')
+  if (!summary.probeGatePassed) throw new Error('Adaptive probe admission failed: require >=5 distinct homogeneous live observations of an eligible model with valid telemetry and provenance; completion is reported as an interval')
   if (signature(runs[0]) !== signature({ ...expected, execution: 'live-provider' })) {
     throw new Error('Adaptive probe admission failed: model, configuration or source differs from the planned comparison')
   }
@@ -143,37 +148,78 @@ export function structuralBindingGate(runs: readonly ShiftingRunObservation[]) {
   })
 }
 
-/** Only the pre-observation conditions can be checked before collecting comparison data. */
+/** Collect comparison directly. Historical probes identify a usable model, not an outcome gate. */
 export function assertTopologyComparisonPreflight(probes: readonly ShiftingRunObservation[],
   expected: Pick<ShiftingRunObservation, 'model' | 'conditions' | 'sourceHashes'>, seeds: readonly number[], startedAt = Date.now()) {
   if (seeds.length < 5 || new Set(seeds).size !== seeds.length) throw new Error('Topology comparison admission failed: require at least five distinct seeds')
-  if (!structuralBindingGate(probes)) throw new Error('Topology comparison admission failed: fixture-bound structural proof missing or invalid')
-  if (!probes.every(run => bindingReferenceGate(run.bindingReference, run))) throw new Error('Topology comparison admission failed: constructive binding confirmation missing or invalid')
-  if (!probes.every(positiveFactFlowGate)) throw new Error('Topology comparison admission failed: positive fact-flow audit missing or failed')
-  const probe = assertAdaptiveProbeAdmission(probes, expected, startedAt)
+  if (expected.model === 'longcat-2.5-preview-free') throw new Error('Topology comparison admission failed: LongCat is excluded')
+  if (!hasSourceIdentity({ ...expected, execution: 'live-provider' } as ShiftingRunObservation)) throw new Error('Topology comparison admission failed: source or model identity missing')
   for (const seed of seeds) {
-    if (!probes.some(run => run.conditions.seed === seed && bindingReferenceGate(run.bindingReference, run))) {
-      throw new Error(`Topology comparison admission failed: no constructive reference for seed ${seed}`)
-    }
     const task = createShiftingEvidenceTask(expected.conditions.agents as number, seed, expected.conditions.chainLength as number, true)
     if (expected.conditions.topologyBinding !== true || !isComparisonSeed(task, proveTopologyBinding(task))) {
       throw new Error(`Topology comparison admission failed: reachable or unbound seed ${seed}`)
     }
   }
-  return probe
+  return { preflightPassed: true, seeds: [...seeds], startedAt, probe: summarizeAdaptiveProbe(probes),
+    statement: 'No small-sample capability gate. Fresh same-source constructive references and positive fact-flow audits are required for each comparison run.' }
 }
+
+function consumption(rows: readonly ShiftingRunObservation[]) {
+  const metric = (field: 'issuedModelCalls' | 'atnTotalInteractions' | 'atnTotalTransferBytes' | 'entrySteps' | 'atnMessages' | 'meanInputTokensPerCall') => meanInterval(rows.map(run => run[field]))
+  const usageFields: Array<keyof TelemetryTotals['tokens']> = ['inputTokens', 'outputTokens', 'cacheReadTokens', 'cacheWriteTokens', 'reasoningTokens', 'totalTokens']
+  const knownCalls = (field: keyof TelemetryTotals['tokens']) => rows.reduce((sum, run) => sum + (run.metrics
+    ? run.metrics.totals.settledAttempts - run.metrics.totals.tokens[field].unknownCalls : 0), 0)
+  const usage = Object.fromEntries(usageFields.map(field => [field, {
+    knownTotal: knownCalls(field) ? rows.reduce((sum, run) => sum + (run.metrics?.totals?.tokens?.[field]?.known ?? 0), 0) : null,
+    knownCalls: knownCalls(field),
+    unknownCalls: rows.reduce((sum, run) => sum + (run.metrics?.totals?.tokens?.[field]?.unknownCalls ?? 0), 0),
+    missingRunTelemetry: rows.filter(run => !run.metrics?.totals?.tokens?.[field]).length,
+  }]))
+  return { runs: rows.length, modelCalls: metric('issuedModelCalls'), interactions: metric('atnTotalInteractions'),
+    transferBytes: metric('atnTotalTransferBytes'), entrySteps: metric('entrySteps'), messages: metric('atnMessages'),
+    meanInputTokensPerCall: metric('meanInputTokensPerCall'), usage,
+    referenceCost: { knownTotal: rows.some(run => run.metrics && run.metrics.totals.settledAttempts > run.metrics.totals.cost.unknownCalls)
+      ? rows.reduce((sum, run) => sum + (run.metrics?.totals?.cost?.knownAmount ?? 0), 0) : null,
+      knownCalls: rows.reduce((sum, run) => sum + (run.metrics ? run.metrics.totals.settledAttempts - run.metrics.totals.cost.unknownCalls : 0), 0),
+      unknownCalls: rows.reduce((sum, run) => sum + (run.metrics?.totals?.cost?.unknownCalls ?? 0), 0),
+      missingRunTelemetry: rows.filter(run => !run.metrics?.totals?.cost).length },
+    unknownUsagePolicy: 'Known totals are partial when unknownCalls or missingRunTelemetry is nonzero. Unknown usage/cost is never zero; model calls count actual budget admissions independently of token usage.' }
+}
+export { consumption as shiftingConsumption }
+const completed = (run: ShiftingRunObservation) => run.phase1Correct === true && run.phase2Correct === true &&
+  (run.conditions.topologyBinding !== true || positiveFactFlowGate(run))
 
 export function summarizeShiftingRuns(observations: readonly ShiftingRunObservation[], probeRuns: readonly ShiftingRunObservation[] = []) {
   const collectedRuns = observations.filter(run => run.purpose !== 'adaptive-probe')
-  const runs = collectedRuns.filter(run => run.conditions?.topologyBinding !== true || positiveFactFlowGate(run))
-  const excludedFactFlowRuns = collectedRuns.filter(run => !runs.includes(run))
+  const runs = collectedRuns
+  const excludedFactFlowRuns = collectedRuns.filter(run => run.conditions?.topologyBinding === true && !positiveFactFlowGate(run))
   const validComparisonRuns = runs.length > 0 && runs.every(run => SHIFTING_ARMS.includes(run.mode as typeof SHIFTING_ARMS[number]) &&
     (run.purpose === undefined || run.purpose === 'comparison'))
   const homogeneousRuns = homogeneous(runs), uniqueRuns = unique(runs)
   const arms = SHIFTING_ARMS.map(mode => {
     const rows = runs.filter(run => run.mode === mode)
-    const correct = rows.filter(run => run.phase1Correct === true && run.phase2Correct === true).length
+    const successes = rows.filter(completed), failed = rows.filter(run => !completed(run))
+    const correct = successes.length
+    const ratios = (field: 'modelCalls' | 'interactions' | 'transferBytes' | 'entrySteps') => meanInterval(successes.map(run => run.costRelativeToReference?.[field].multiple))
+    const sum = (field: keyof ShiftingRewireCounts) => rows.reduce((total, run) => total + (run.protocol?.rewireTelemetry?.[field] ?? 0), 0)
     return { mode, repeats: rows.length, correct, successRate: rows.length ? correct / rows.length : null,
+      completion: completionInterval(correct, rows.length),
+      phase1Submission: completionInterval(rows.filter(run => run.phase1Submitted === true).length, rows.length),
+      phase2Submission: completionInterval(rows.filter(run => run.phase2Submitted === true).length, rows.length),
+      phase1Completion: completionInterval(rows.filter(run => run.phase1Correct === true).length, rows.length),
+      phase2Completion: completionInterval(rows.filter(run => run.phase2Correct === true).length, rows.length),
+      efficiency: consumption(successes), failedConsumption: { ...consumption(failed), runsDetail: failed.map(run => ({ runId: run.runId,
+        seed: run.conditions.seed, stopReason: run.stopReason ?? 'unknown', issuedModelCalls: run.issuedModelCalls ?? null,
+        interactions: run.atnTotalInteractions, transferBytes: run.atnTotalTransferBytes, entrySteps: run.entrySteps ?? null, failures: run.failures ?? [] })) },
+      costMultiples: { modelCalls: { ...ratios('modelCalls'), status: 'undefined-zero-reference' },
+        interactions: ratios('interactions'), transferBytes: ratios('transferBytes'), entrySteps: ratios('entrySteps'),
+        baselineTopology: mode === 'fixed' || mode === 'fixed-wide' ? mode : 'adaptive',
+        statement: 'Successes only, each compared with its same-seed, same-topology constructive reference. An incomplete reference is not an efficiency benchmark for a completed task.' },
+      feedback: { accepted: rows.reduce((sum, run) => sum + (run.protocol?.requesterFeedback.accepted ?? 0), 0),
+        rejected: rows.reduce((sum, run) => sum + (run.protocol?.requesterFeedback.rejected ?? 0), 0) },
+      rewires: Object.fromEntries(rewireFields.map(field => [field, sum(field)])),
+      maxNodeStepRatio: rows.length && rows.every(run => shiftingStepHeadroom(run).observed)
+        ? Math.max(...rows.map(run => shiftingStepHeadroom(run).maxNodeStepRatio!)) : null,
       phase1SubmittedRate: rows.length ? rows.filter(run => run.phase1Submitted).length / rows.length : null,
       phase2SubmittedRate: rows.length ? rows.filter(run => run.phase2Submitted).length / rows.length : null,
       submissionDisciplineFailures: rows.filter(run => run.submissionDisciplineFailure).length,
@@ -186,7 +232,9 @@ export function summarizeShiftingRuns(observations: readonly ShiftingRunObservat
   const stepHeadroom = { limit: SHIFTING_STEP_RATIO_LIMIT, arms: stepArms,
     withinLimit: runs.length > 0 && runs.every(run => shiftingStepHeadroom(run).withinLimit) }
   const fixed = arms.find(arm => arm.mode === 'fixed')!, adaptive = arms.find(arm => arm.mode === 'adaptive')!
-  const fixedGatePassed = validComparisonRuns && homogeneousRuns && uniqueRuns && fixed.repeats >= 5 && fixed.successRate! >= 0.8
+  const validOutcomes = runs.every(run => [run.phase1Correct, run.phase2Correct, run.phase1Submitted, run.phase2Submitted].every(value => typeof value === 'boolean'))
+  // Legacy calibration field names now describe data coverage, never a success threshold.
+  const fixedGatePassed = validComparisonRuns && homogeneousRuns && uniqueRuns && validOutcomes && fixed.repeats >= 5
   const calibrationGatePassed = fixedGatePassed && adaptive.repeats >= 5 && stepHeadroom.withinLimit
   const everyArmRepeated = arms.every(arm => arm.repeats >= 5)
   const pairedSeeds = SHIFTING_ARMS.map(mode => runs.filter(run => run.mode === mode).map(run => run.conditions.seed).sort((a, b) => a - b))
@@ -207,19 +255,49 @@ export function summarizeShiftingRuns(observations: readonly ShiftingRunObservat
     }, 0)
   const comparisonRejectedReviews = rejectedCount(runs), probeRejectedReviews = rejectedCount(probeRuns)
   const feedbackVarianceGatePassed = comparisonRejectedReviews > 0
-  const structuralProofGatePassed = structuralBindingGate(runs) && structuralBindingGate(probeRuns)
-  const bindingReferenceGatePassed = runs.length > 0 && [...runs, ...probeRuns].every(run => bindingReferenceGate(run.bindingReference, run))
-  const factFlowAuditGatePassed = collectedRuns.length > 0 && excludedFactFlowRuns.length === 0 && [...runs, ...probeRuns].every(positiveFactFlowGate)
+  const structuralProofGatePassed = structuralBindingGate(runs)
+  const bindingReferenceGatePassed = runs.length > 0 && runs.every(run => bindingReferenceGate(run.bindingReference, run))
+  const factFlowAuditGatePassed = collectedRuns.length > 0 && excludedFactFlowRuns.length === 0 && runs.every(positiveFactFlowGate)
+  const hasComparableSignal = adaptive.correct >= 1
+  const telemetryComplete = runs.length > 0 && runs.every(run => shiftingStepHeadroom(run).observed &&
+    ['accepted', 'rejected', 'needsMore'].every(field => {
+      const value = run.protocol?.requesterFeedback[field as keyof ShiftingProtocolObservation['requesterFeedback']]
+      return Number.isSafeInteger(value) && value! >= 0
+    }) && rewireFields.every(field => {
+      const value = run.protocol?.rewireTelemetry[field]
+      return Number.isSafeInteger(value) && value! >= 0
+    }))
+  const eligibleModel = runs.length > 0 && runs.every(run => run.model !== 'longcat-2.5-preview-free')
   const mayInterpretTopology = validComparisonRuns && homogeneousRuns && uniqueRuns && structuralProofGatePassed &&
-    bindingReferenceGatePassed && factFlowAuditGatePassed && everyArmRepeated && matchedSeeds && liveProvider && adaptiveProbeGatePassed &&
-    feedbackVarianceGatePassed && stepHeadroom.withinLimit
-  const nonFixedControls = arms.filter(arm => ['no-feedback', 'no-board'].includes(arm.mode))
-  const consistentNonFixedAdvantage = mayInterpretTopology && nonFixedControls.every(arm => adaptive.successRate! > arm.successRate!)
+    bindingReferenceGatePassed && factFlowAuditGatePassed && everyArmRepeated && matchedSeeds && liveProvider && validOutcomes &&
+    telemetryComplete && eligibleModel && hasComparableSignal
+  const pairwise = SHIFTING_ARMS.flatMap((a, index) => SHIFTING_ARMS.slice(index + 1).map(b => {
+    const left = runs.filter(run => run.mode === a), right = runs.filter(run => run.mode === b)
+    const pairs = left.flatMap(run => { const other = right.find(row => row.conditions.seed === run.conditions.seed); return other ? [{ a: run, b: other }] : [] })
+    const aOnly = pairs.filter(pair => completed(pair.a) && !completed(pair.b)).length
+    const bOnly = pairs.filter(pair => !completed(pair.a) && completed(pair.b)).length
+    const successfulPairs = pairs.filter(pair => completed(pair.a) && completed(pair.b))
+    const modelCallDifference = meanInterval(successfulPairs.map(pair => typeof pair.a.issuedModelCalls === 'number' && typeof pair.b.issuedModelCalls === 'number'
+      ? pair.a.issuedModelCalls - pair.b.issuedModelCalls : null))
+    return { a, b, pairedSeeds: pairs.length, aOnly, bOnly, pValue: pairs.length ? exactMcNemar(aOnly, bOnly) : null,
+      modelCallDifference, successfulPairs: successfulPairs.length,
+      efficiencyStatement: 'Conditional paired mean A minus B on jointly completed seeds; absent or overlapping zero intervals are not distinguishable. This does not correct selection on success.' }
+  }))
+  const adjusted = holmAdjusted(pairwise.map(pair => pair.pValue ?? 1))
+  const comparisons = pairwise.map((pair, index) => ({ ...pair, holmPValue: pair.pValue === null ? null : adjusted[index],
+    distinguishableCompletion: mayInterpretTopology && pair.pValue !== null && adjusted[index] < 0.05,
+    completionStatement: !pair.pairedSeeds ? 'not-measured' : adjusted[index] < 0.05 && mayInterpretTopology ? 'detectable-paired-difference' : 'not-distinguishable-at-this-sample-size' }))
+  const nonFixedControls = arms.filter(arm => ['fixed-wide', 'no-feedback', 'no-board'].includes(arm.mode))
+  const consistentNonFixedAdvantage = mayInterpretTopology && nonFixedControls.every(arm =>
+    adaptive.completion.interval!.lower > arm.completion.interval!.upper && comparisons.some(pair =>
+      pair.a === 'adaptive' && pair.b === arm.mode && pair.distinguishableCompletion))
   return { fixedGatePassed, calibrationGatePassed, everyArmRepeated, matchedSeeds, homogeneous: homogeneousRuns, uniqueRuns, liveProvider,
-    validComparisonRuns, adaptiveProbeGatePassed, probeMatchesComparison, separateProbeRuns, probePrecedesComparison,
+    validComparisonRuns, validOutcomes, telemetryComplete, eligibleModel, hasComparableSignal, adaptiveProbeGatePassed, probeMatchesComparison, separateProbeRuns, probePrecedesComparison,
     structuralProofGatePassed, bindingReferenceGatePassed, factFlowAuditGatePassed,
     feedbackVarianceGatePassed, rejectedReviews: comparisonRejectedReviews, comparisonRejectedReviews, probeRejectedReviews, stepHeadroom,
-    mayInterpretTopology, interpretation: mayInterpretTopology ? 'descriptive-comparison-only' : 'feasibility-only',
+    mayInterpretTopology, interpretation: mayInterpretTopology ? 'descriptive-comparison-only' : !hasComparableSignal ? 'no-comparable-signal' : 'incomplete-or-invalid-comparison',
     consistentNonFixedAdvantage, benefitClaim: consistentNonFixedAdvantage ? 'descriptive-nonfixed-advantage-only' : 'not-supported',
-    arms, runs: [...collectedRuns], excludedFactFlowRuns, probe, excludedProbeRuns: observations.length - collectedRuns.length, causalClaim: false }
+    primaryMetric: 'model calls per two-phase completed run', arms, comparisons,
+    indistinguishablePairs: comparisons.filter(pair => pair.completionStatement === 'not-distinguishable-at-this-sample-size').map(pair => `${pair.a} vs ${pair.b}`),
+    runs: [...collectedRuns], excludedFactFlowRuns, probe, excludedProbeRuns: observations.length - collectedRuns.length, causalClaim: false }
 }

@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "generatedAt": "2026-10-06T14:52:18.491Z",
+  "issuedModelCalls": 0,
+  "pairedSeeds": 12,
+  "margin": 0.25,
+  "confidenceLevel": 0.95,
+  "oneSidedAlpha": 0.025,
+  "targetPower": 0.8,
+  "test": "paired-multinomial-efficient-score-95% (Tango 1998)",
+  "source": "https://www.site.uottawa.ca/~nat/Courses/csi5388/Tango.paired.pdf",
+  "minimumPossibleP": 0.00048828125,
+  "alphaAttainable": true,
+  "alphaAttainabilityStatement": "该 n 下双侧精确 McNemar 的 α=0.05 可达。",
+  "mcNemarDiagnostic": {
+    "method": "two-sided-exact-McNemar",
+    "pairedSeeds": 12,
+    "alpha": 0.05,
+    "targetPower": 0.8,
+    "minimumDetectableEffect": 0.5779388568649757,
+    "minimumDetectableEffectPercentagePoints": 57.79388568649757,
+    "status": "optimistic-lower-bound",
+    "assumptions": "All discordant pairs favor the same arm. Opposite discordance and multiplicity can only reduce power. This is a design calculation, not observed post-hoc power.",
+    "bestCasePValue": 0.00048828125,
+    "maximumPowerAtThisN": 1,
+    "caution": "在 n=5 下，约 60 个百分点以下的效果不可靠区分；这不是一个可通过的能力闸门。",
+    "statement": "The optimistic minimum detectable effect is a lower bound under the stated paired alternative.",
+    "use": "Design diagnostic only; never used to support mechanism removal."
+  },
+  "nonInferiority": {
+    "definition": "completion(ablation) minus completion(adaptive)",
+    "criterion": "lower 95% bound > -margin (equivalently upper loss bound < margin)",
+    "planningAlternative": {
+      "trueDifference": 0,
+      "discordance": 1,
+      "assumption": "No true completion loss; q=1 is a stated planning scenario, not an estimate from five historical seeds. q=1 is deliberately demanding."
+    },
+    "power": 0.1938476562500003,
+    "marginDistinguishable": true,
+    "targetPowerReached": false,
+    "minimumDetectableMarginAt80Power": 0.6134793726928796,
+    "minimumDetectableMarginPercentagePoints": 61.347937269287954,
+    "zeroDiscordanceInterval": {
+      "n": 12,
+      "gains": 0,
+      "losses": 0,
+      "discordantPairs": 0,
+      "concordantPairs": 12,
+      "estimate": 0,
+      "interval": {
+        "lower": -0.2424940066552409,
+        "upper": 0.2424940066552409
+      },
+      "lossInterval": {
+        "lower": -0.2424940066552409,
+        "upper": 0.2424940066552409
+      },
+      "definition": "completion(ablation) minus completion(adaptive)",
+      "method": "paired-multinomial-efficient-score-95% (Tango 1998)",
+      "source": "https://www.site.uottawa.ca/~nat/Courses/csi5388/Tango.paired.pdf",
+      "margin": 0.25,
+      "criterion": "lower 95% bound > -margin (equivalently upper loss bound < margin)",
+      "nonInferiorityPassed": true,
+      "scoreAtMargin": 2,
+      "criticalValue": 1.959963984540054,
+      "assumptions": "Independent paired seeds; nominal asymptotic score coverage, not an exact finite-sample interval. Zero discordances still have a nonzero-width interval. McNemar superiority p values do not decide removal."
+    },
+    "sensitivity": [
+      {
+        "discordance": 0,
+        "trueDifference": 0,
+        "power": 1,
+        "nullBoundaryDiscordance": 0.25,
+        "nullBoundaryRejectionRate": 0.031676352024078376
+      },
+      {
+        "discordance": 0.2,
+        "trueDifference": 0,
+        "power": 0.418438435354001,
+        "nullBoundaryDiscordance": 0.25,
+        "nullBoundaryRejectionRate": 0.031676352024078376
+      },
+      {
+        "discordance": 0.4,
+        "trueDifference": 0,
+        "power": 0.30013980262400075,
+        "nullBoundaryDiscordance": 0.4,
+        "nullBoundaryRejectionRate": 0.029579555656341593
+      },
+      {
+        "discordance": 0.6,
+        "trueDifference": 0,
+        "power": 0.23137154943400065,
+        "nullBoundaryDiscordance": 0.6,
+        "nullBoundaryRejectionRate": 0.0318660406347477
+      },
+      {
+        "discordance": 0.8,
+        "trueDifference": 0,
+        "power": 0.1827650314240004,
+        "nullBoundaryDiscordance": 0.8,
+        "nullBoundaryRejectionRate": 0.029844734853702867
+      },
+      {
+        "discordance": 1,
+        "trueDifference": 0,
+        "power": 0.1938476562500003,
+        "nullBoundaryDiscordance": 1,
+        "nullBoundaryRejectionRate": 0.03899451965116903
+      }
+    ],
+    "caveat": "Power is an exact enumeration of the nominal score decision rule, not a claim that its finite-sample size is exact. Null-boundary rejection rates are reported by scenario."
+  },
+  "readyToRun": true,
+  "lowPowerAcknowledgementRequired": true,
+  "causalClaim": false,
+  "benefitClaim": "not-claimed"
+}

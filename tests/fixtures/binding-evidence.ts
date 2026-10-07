@@ -41,11 +41,13 @@ export function bindingEvidence(conditions: BindingReferencePair['conditions'], 
   const run = (topologyMode: 'fixed' | 'adaptive') => {
     const adaptive = topologyMode === 'adaptive', checkpoints = adaptive ? fixture.checkpoints : []
     return { seed: conditions.seed, topologyMode, passed: adaptive, issuedModelCalls: 0,
+      mechanisms: { requesterFeedback: true, sharedBoard: true }, requesterRatings: 0,
       policy: 'synthetic-unit-fixture', interpretation: 'Synthetic gate input only.', unavailable: [],
       messages: 0, hops: 0, payloadBytes: 0, maxContextBytes: 0, totalInteractions: 0, totalTransferBytes: 0,
       board: { reads: 0, writes: 0, readBytes: 0, writeBytes: 0 }, contextBytesByNode: {}, manipulation: new ShiftingEvidenceScenario(fixture.task).snapshot(),
       actions: 16, entrySteps: 16, actionsByNode: { entry: 16 }, maxNodeActions: 16,
       topology: { nodes: 8, maxPeers: 2, reachableFromEntry: 8, diameter: 4 }, topologyProof: proof,
+      initialPeerIds: {}, staticSelection: null, staticTopologyProof: null,
       requiredFactCount: proof.requiredFacts.length, obtainedRequiredFacts: adaptive ? proof.requiredFacts : [],
       obtainedRequiredFactCount: adaptive ? proof.requiredFacts.length : 0,
       receivedFacts: adaptive ? proof.requiredFacts.map(row => ({ phase: row.phase, taskId: 'fixture-task', ownerSlot: row.holder,

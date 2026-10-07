@@ -55,6 +55,8 @@ test('PRESET-02: the UI roster exposes ATN; Standard has no ATN tools or prompt'
     assert.match(document.content, /atn-tools/)
     const standard = await createHostAgent(kernel, 'standard', 'standard')
     const atn = await createHostAgent(kernel, 'atn', 'atn')
+    // Domain initialization is asynchronous; inspect only after it is open.
+    await kernel.ctx.atn.openStore()
     assert.deepEqual(await kernel.ctx.atn.networkIds(), [], 'selecting a mode does not start a network')
     await drive(standard, 'hello')
     await drive(atn, 'hello')

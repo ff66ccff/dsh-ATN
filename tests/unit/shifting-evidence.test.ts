@@ -87,8 +87,8 @@ test('correct phase 2 without phase 1 is a submission discipline failure, separa
   assert.equal(wrong.failureClass, 'incorrect-proof')
 })
 
-test('topology interpretation requires matching prior live probe, real rejection, headroom and five repeats in every arm', () => {
-  const rows: ShiftingRunObservation[] = ['fixed', 'adaptive', 'no-feedback', 'no-board'].flatMap(mode => Array.from({ length: 5 }, (_, i) => ({
+test('descriptive topology interpretation requires paired live runs, same source/config and five repeats in every arm', () => {
+  const rows: ShiftingRunObservation[] = ['fixed', 'adaptive', 'fixed-wide', 'no-feedback', 'no-board'].flatMap(mode => Array.from({ length: 5 }, (_, i) => ({
     runId: `${mode}-${i}`, mode, model: 'test', execution: 'live-provider', passed: i !== 0,
     phase1Submitted: true, phase1Correct: i !== 0, phase2Submitted: true, phase2Correct: i !== 0,
     purpose: 'comparison' as const, startedAt: 1000, completedAt: 2000,
@@ -106,10 +106,10 @@ test('topology interpretation requires matching prior live probe, real rejection
     protocol: { ...row.protocol!, explicitRewires: [{ id: 'rewire', changed: true }], rewireTelemetry: {
       ...row.protocol!.rewireTelemetry, statusRewireCalls: 1, successfulRewires: 1 } } }))
   assert.equal(summarizeShiftingRuns(rows, probes).mayInterpretTopology, true)
-  assert.equal(summarizeShiftingRuns(rows).mayInterpretTopology, false)
+  assert.equal(summarizeShiftingRuns(rows).mayInterpretTopology, true)
   assert.equal(summarizeShiftingRuns(rows.slice(1), probes).mayInterpretTopology, false)
   assert.equal(summarizeShiftingRuns(rows.map(row => ({ ...row, execution: 'scripted-test' })), probes).mayInterpretTopology, false)
   assert.equal(summarizeShiftingRuns(rows.map((row, i) => i === 0 ? { ...row, conditions: { ...row.conditions, perNodeSteps: 32 } } : row), probes).mayInterpretTopology, false)
   assert.equal(summarizeShiftingRuns([...rows, rows[0]], probes).mayInterpretTopology, false)
-  assert.equal(summarizeShiftingRuns(rows).runs.length, 20, 'failures remain in per-run details')
+  assert.equal(summarizeShiftingRuns(rows).runs.length, 25, 'failures remain in per-run details')
 })
