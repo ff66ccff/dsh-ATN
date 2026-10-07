@@ -1,6 +1,6 @@
 # dsh-ATN：DeepSeek Harness 自适应拓扑智能体网络
 
-[![Version](https://img.shields.io/badge/version-0.4.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.4.1-blue.svg)](package.json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-450%2B%20passed-brightgreen.svg)](tests/)
 
@@ -43,7 +43,7 @@
 
 ```bash
 # 1. 安装指定版本到 web profile
-dsh plugin --profile web add dsh-atn@0.4.0
+dsh plugin --profile web add dsh-atn@0.4.1
 
 # 2. 检查配置输出中是否包含 atn 与 preset-atn
 dsh --profile web --dump-config
@@ -61,7 +61,7 @@ cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.4.0.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.4.1.tgz
 ```
 
 ### 3. 开始使用
