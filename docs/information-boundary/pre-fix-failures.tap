@@ -1,0 +1,50 @@
+TAP version 13
+# Subtest: BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+not ok 1 - BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+  ---
+  duration_ms: 105.9882
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\information-boundary.test.ts:1:888'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'evidence-not-owned'
+  operator: 'rejects'
+  stack: |-
+    async <anonymous> (D:\dsh-ATN\tests\integration\information-boundary.test.ts:35:5)
+    async withKernel (D:\dsh-ATN\tests\integration\information-boundary.test.ts:17:9)
+    async TestContext.<anonymous> (D:\dsh-ATN\tests\integration\information-boundary.test.ts:22:3)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+not ok 2 - BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+  ---
+  duration_ms: 59.0293
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\information-boundary.test.ts:1:1904'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected rejection.'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    code: 'evidence-not-owned'
+  operator: 'rejects'
+  stack: |-
+    async <anonymous> (D:\dsh-ATN\tests\integration\information-boundary.test.ts:52:5)
+    async withKernel (D:\dsh-ATN\tests\integration\information-boundary.test.ts:17:9)
+    async TestContext.<anonymous> (D:\dsh-ATN\tests\integration\information-boundary.test.ts:42:3)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 746.6102
