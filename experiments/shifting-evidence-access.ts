@@ -1,7 +1,8 @@
 /** Experiment-only information channels: discovery carries metadata, proofs use metered transport. */
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { AtnRuntime, PeerSummary, PeersResult } from '../src/runtime.ts'
-import type { PublishKnowledgeInput } from '../src/knowledge.ts'
+import type { KnowledgeMetadata } from '../src/knowledge.ts'
+import { defineCustodyPolicy } from '../src/information-boundary.ts'
 import { knowledgeFingerprintSchema } from '../src/schema.ts'
 import type { ShiftingEvidenceScenario } from './shifting-evidence-task.ts'
 import { installTopologyBindingAccess } from './topology-binding-access.ts'
@@ -10,9 +11,9 @@ const publicationSchema = knowledgeFingerprintSchema.omit({ updatedAt: true })
 const fields = ['documents', 'topics', 'contributions'] as const
 const normalize = (value: string) => value.normalize('NFKC').trim().toLowerCase().replace(/\s+/g, ' ')
 
-function canonical(input: PublishKnowledgeInput): PublishKnowledgeInput {
+function canonical(input: KnowledgeMetadata): KnowledgeMetadata {
   const parsed = publicationSchema.parse(input)
-  return Object.fromEntries(fields.map(field => [field, [...new Set(parsed[field])].sort()])) as PublishKnowledgeInput
+  return Object.fromEntries(fields.map(field => [field, [...new Set(parsed[field])].sort()])) as KnowledgeMetadata
 }
 
 /**
@@ -23,47 +24,26 @@ function canonical(input: PublishKnowledgeInput): PublishKnowledgeInput {
 export function installShiftingEvidenceAccess(
   atn: AtnRuntime,
   networkId: string,
-  metadata: (sessionId: string) => PublishKnowledgeInput,
+  metadata: (sessionId: string) => KnowledgeMetadata,
   scenario?: ShiftingEvidenceScenario,
   fixedPeers?: Readonly<Record<string, readonly string[]>>,
 ) {
   const binding = scenario?.task.topologyBinding ? installTopologyBindingAccess(atn, networkId, scenario, fixedPeers) : null
+  if (!binding) atn.installOutboundPolicy(networkId, defineCustodyPolicy({
+    custody: (id, record) => canonical(metadata(record.nodes[id].sessionId)).documents,
+    extractClaims: () => [], // Revision 2 historically allows fact relays.
+    describeArtifact: (id, record) => ({ topics: Object.values(record.nodes)
+      .map(node => canonical(metadata(node.sessionId))).filter(row => row.documents.includes(id)).flatMap(row => row.topics) }),
+  }))
   const original = {
-    publishKnowledge: atn.publishKnowledge.bind(atn), peers: atn.peers.bind(atn),
+    peers: atn.peers.bind(atn),
     tasks: atn.tasks.bind(atn), status: atn.status.bind(atn), rewire: atn.rewire.bind(atn),
-    board: atn.board.bind(atn),
   }
   const cursors = new Map<string, string>()
   const context = async (agent: Agent) => {
     const caller = await atn.callerContext(agent)
     if (caller.record.id !== networkId) throw new Error('Shifting-evidence access requires membership in the experiment network')
     return caller
-  }
-
-  atn.publishKnowledge = async (agent, input) => {
-    await context(agent)
-    const supplied = publicationSchema.parse(input)
-    const allowed = canonical(metadata(String(agent.id)))
-    if (fields.some(field => supplied[field].some(value => !allowed[field].includes(value)))) {
-      throw new Error('Discovery accepts only your current local snapshot document identifiers, keys and fixed phase metadata; send proofs through mail or the board')
-    }
-    // Selection, duplicates and ordering cannot turn legal metadata into another
-    // payload channel. A publication always writes the full canonical index.
-    return original.publishKnowledge(agent, allowed)
-  }
-
-  atn.board = async (agent, input) => {
-    const { node } = await context(agent)
-    if (input.action !== 'publish') return original.board(agent, input)
-    const allowed = canonical(metadata(String(agent.id)))
-    if (binding && (input.body !== JSON.stringify(allowed) || input.key !== `phase-${scenario!.phase}:${node.id}`)) {
-      throw new Error('metadata-only: bound experiment board key must be phase-N:YOUR-NODE and body must be JSON.stringify(discoveryHints); facts travel only in owner task/results')
-    }
-    if ((input.documents ?? []).some(value => !allowed.documents.includes(value)) ||
-      (input.topics ?? []).some(value => !allowed.topics.includes(value))) {
-      throw new Error('Board discovery accepts only your current local snapshot document identifiers and phase/key topics; put evidence in the metered body')
-    }
-    return original.board(agent, { ...input, documents: allowed.documents, topics: allowed.topics })
   }
 
   atn.peers = async (agent, query) => {
@@ -75,7 +55,7 @@ export function installShiftingEvidenceAccess(
         requesterFeedback: binding ? { ...peer.requesterFeedback, observations: peer.requesterFeedback.observations.map(row =>
           ({ ...row, comparisonKey: row.comparisonKey === 'versioned-fact:v1' ? row.comparisonKey : null })) } : peer.requesterFeedback,
         knowledgeFingerprint: { ...knowledge,
-        // An old publication does not automatically announce new phase owners.
+        // Current ownership comes from the host, never an old agent publication.
         documents: knowledge.documents.filter(value => allowed.documents.includes(value)).sort(),
         topics: knowledge.topics.filter(value => allowed.topics.includes(value)).sort(),
         contributions: knowledge.contributions.filter(value => allowed.contributions.includes(value)).sort(),

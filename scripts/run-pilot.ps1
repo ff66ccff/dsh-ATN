@@ -1,5 +1,5 @@
 param(
-  [ValidateSet('pilot', 'shifting-evidence')]
+  [ValidateSet('pilot', 'shifting-evidence', 'equal-budget')]
   [string]$Experiment = 'pilot',
   [Parameter(ValueFromRemainingArguments = $true)]
   [string[]]$PilotArguments
@@ -17,7 +17,7 @@ try {
     try { $env:OPENCODE_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($keyPointer) }
     finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($keyPointer) }
   }
-  $entryScript = if ($Experiment -eq 'shifting-evidence') { '../experiments/shifting-evidence-run.ts' } else { '../experiments/run.ts' }
+  $entryScript = if ($Experiment -eq 'shifting-evidence') { '../experiments/shifting-evidence-run.ts' } elseif ($Experiment -eq 'equal-budget') { '../experiments/equal-budget-run.ts' } else { '../experiments/run.ts' }
   & node --import tsx/esm (Join-Path $PSScriptRoot $entryScript) @PilotArguments
   $pilotExit = $LASTEXITCODE
 } finally {

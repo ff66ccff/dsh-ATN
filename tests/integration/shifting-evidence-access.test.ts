@@ -7,10 +7,10 @@ import { tmpdir } from 'node:os'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { installShiftingEvidenceAccess } from '../../experiments/shifting-evidence-access.ts'
-import type { PublishKnowledgeInput } from '../../src/knowledge.ts'
+import type { KnowledgeMetadata } from '../../src/knowledge.ts'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 
-const goal = { objective: 'Find the requested versioned evidence.', successCriteria: 'Return proof via mail or board.', constraints: 'Scripted decisions only.' }
+const goal = { objective: 'Find the requested versioned evidence.', successCriteria: 'Return proof via mail.', constraints: 'Scripted decisions only.' }
 const proof = 'witness-PRIVATE_PROOF'
 
 async function withKernel(run: (kernel: Kernel) => Promise<void>) {
@@ -24,7 +24,7 @@ async function setup(kernel: Kernel, workers = 3) {
   const host = await createHostAgent(kernel, 'access-host')
   const started = await kernel.atn.start(host, goal)
   const peers = []
-  const hints = new Map<string, PublishKnowledgeInput>([[String(host.id), { documents: [], topics: ['phase-1'], contributions: [] }]])
+  const hints = new Map<string, KnowledgeMetadata>([[String(host.id), { documents: [], topics: ['phase-1'], contributions: [] }]])
   for (let index = 0; index < workers; index++) {
     const born = await kernel.atn.spawn(host, { task: `Lookup request ${index}.`, context: `PRIVATE_CONTEXT_${index}` })
     await settle(kernel)
@@ -53,7 +53,7 @@ test('ACCESS-01: third parties cannot read result/context through tasks, discove
     await assert.rejects(() => kernel.atn.status(observer.agent, { taskIds: [holder.taskId] }), /only to the holder and requester/)
 
     await kernel.atn.rewire(observer.agent, { peers: [] })
-    await kernel.atn.publishKnowledge(holder.agent, { documents: ['phase-1:key-0'], topics: ['key-0'], contributions: [] })
+    await kernel.atn.refreshCustody(started.networkId)
     const discovered = await kernel.atn.status(observer.agent, { query: 'key-0' })
     assert.equal(discovered.candidates?.[0], holder.nodeId)
     assert.equal(JSON.stringify(discovered).includes(proof), false)
@@ -78,61 +78,58 @@ test('ACCESS-01: third parties cannot read result/context through tasks, discove
   })
 })
 
-test('ACCESS-02: publication validates metadata and writes a canonical complete index; phase changes never invent publication', async () => {
+test('ACCESS-02: agents cannot publish metadata; host phase changes update actual custody without a publication', async () => {
   await withKernel(async kernel => {
     const { started, peers, hints } = await setup(kernel, 2)
     const [holder, observer] = peers
     await kernel.atn.rewire(observer.agent, { peers: [] })
+    const before = (await kernel.atn.network(started.networkId)).nodes[holder.nodeId].knowledgeFingerprint
     kernel.model.enqueue(holder.sessionId, [{ tool: 'atn_board', args: {
       action: 'publish', key: 'phase-1:private', body: proof, expectedRevision: 0, documents: ['phase-1:key-0'], topics: [proof],
     } }])
     await drive(holder.agent, 'Attempt to publish a proof through discovery.')
     await settle(kernel)
-    assert.equal((await kernel.atn.network(started.networkId)).nodes[holder.nodeId].knowledgeFingerprint, undefined)
+    assert.deepEqual((await kernel.atn.network(started.networkId)).nodes[holder.nodeId].knowledgeFingerprint, before)
     const errors = holder.agent.session.snapshotEvents().filter(event => event.type === 'tool/result')
       .map(event => (event.data as { message: { isError?: boolean } }).message.isError)
     assert.equal(errors.at(-1), true)
-    await kernel.atn.publishKnowledge(holder.agent, { documents: [], topics: ['phase-1', 'phase-1'], contributions: [] })
+    await kernel.atn.refreshCustody(started.networkId)
     const published = (await kernel.atn.network(started.networkId)).nodes[holder.nodeId].knowledgeFingerprint!
     assert.deepEqual(published.documents, ['phase-1:key-0'])
     assert.deepEqual(published.topics, ['key-0', 'phase-1'])
     assert.deepEqual(published.contributions, [])
     assert.deepEqual((await kernel.atn.peers(observer.agent, 'key-0')).candidates, [holder.nodeId])
     hints.set(holder.sessionId, { documents: ['phase-2:key-9'], topics: ['key-9', 'phase-2'], contributions: [] })
-    assert.deepEqual((await kernel.atn.peers(observer.agent, 'key-9')).candidates, [], 'old publication does not reveal new owned keys')
+    assert.deepEqual((await kernel.atn.peers(observer.agent, 'key-9')).candidates, [holder.nodeId], 'the host advertises actual custody immediately')
     assert.deepEqual((await kernel.atn.peers(observer.agent, 'key-0')).candidates, [], 'stale ownership metadata is hidden')
-    await kernel.atn.publishKnowledge(holder.agent, hints.get(holder.sessionId)!)
+    await kernel.atn.refreshCustody(started.networkId)
     assert.deepEqual((await kernel.atn.peers(observer.agent, 'key-9')).candidates, [holder.nodeId])
-    await assert.rejects(() => kernel.atn.publishKnowledge(holder.agent, { documents: [], topics: [], contributions: [proof] }), /Discovery accepts only/)
+    assert.equal('publishKnowledge' in kernel.atn, false)
   })
 })
 
-test('ACCESS-04: board discovery metadata is canonical while proof bodies stay on the metered board', async () => {
+test('ACCESS-04: no board can reveal proof bodies; host discovery still returns canonical metadata', async () => {
   await withKernel(async kernel => {
     const { peers, started, hints } = await setup(kernel, 2)
     const [holder, observer] = peers
     await kernel.atn.rewire(observer.agent, { peers: [] })
-    await assert.rejects(() => kernel.atn.board(holder.agent, { action: 'publish', key: 'phase-1:proof', expectedRevision: 0,
-      body: proof, documents: [proof] }), /Board discovery accepts only/)
-    await kernel.atn.board(holder.agent, { action: 'publish', key: 'phase-1:proof', expectedRevision: 0,
-      body: proof, documents: [], topics: ['phase-1'] })
+    assert.equal(kernel.ctx.tools.schemas(holder.agent.id).some(tool => tool.name === 'atn_board'), false)
+    await kernel.atn.refreshCustody(started.networkId)
     const discovered = await kernel.atn.status(observer.agent, { query: 'key-0' })
     assert.deepEqual(discovered.candidates, [holder.nodeId])
     assert.equal(JSON.stringify(discovered).includes(proof), false)
     assert.deepEqual((await kernel.atn.peers(observer.agent, proof)).candidates, [])
-    const board = await kernel.atn.board(observer.agent, { action: 'read', key: 'phase-1:proof' })
-    assert.ok(board.action === 'read')
-    assert.equal(board.entries[0].body, proof)
-    assert.deepEqual(board.entries[0].documents, hints.get(holder.sessionId)!.documents)
-    assert.ok((await kernel.atn.network(started.networkId)).whiteboard!.usage.readBytes > 0)
+    assert.deepEqual(discovered.candidateNodes?.[0].knowledgeFingerprint.documents, hints.get(holder.sessionId)!.documents)
+    assert.equal('board' in kernel.atn, false)
+    assert.equal('whiteboard' in await kernel.atn.network(started.networkId), false)
   })
 })
 
 test('ACCESS-03: wildcard discovery stays bounded and rotates independently of text queries; caller authentication stays intact', async () => {
   await withKernel(async kernel => {
-    const { host, peers, hints } = await setup(kernel, 5)
+    const { host, started, peers } = await setup(kernel, 5)
     await kernel.atn.rewire(host, { peers: [] })
-    for (const peer of peers) await kernel.atn.publishKnowledge(peer.agent, hints.get(peer.sessionId)!)
+    await kernel.atn.refreshCustody(started.networkId)
     const first = await kernel.atn.peers(host, '*')
     assert.equal(first.candidates?.length, 3)
     const byText = await kernel.atn.peers(host, 'key-4')
@@ -144,7 +141,7 @@ test('ACCESS-03: wildcard discovery stays bounded and rotates independently of t
     const forged = { id: host.id } as Agent
     await assert.rejects(() => kernel.atn.peers(forged, '*'), /not the live agent/)
     await assert.rejects(() => kernel.atn.tasks(forged), /not the live agent/)
-    await assert.rejects(() => kernel.atn.publishKnowledge(forged, hints.get(String(host.id))!), /not the live agent/)
+    await assert.rejects(() => kernel.atn.status(forged, {}), /not the live agent/)
     const outsider = await createHostAgent(kernel, 'access-outsider')
     await assert.rejects(() => kernel.atn.status(outsider, {}), /not part of an ATN network/)
     await assert.rejects(() => kernel.atn.finish(outsider), /not part of an ATN network/)

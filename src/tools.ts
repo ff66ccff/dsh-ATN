@@ -25,7 +25,7 @@ export const inject = ['tools', 'systemPrompt', 'agents', 'atn']
 /** Shared-rules text every node receives in its system prompt. */
 export const SHARED_RULES = [
   'You are in ATN mode with equal peers and one goal. For new user work call atn_start once; received work already belongs to a network.',
-  'Read evidence, search atn_status and read atn_board before asking a relevant neighbour. Publish compact findings and provenance to the board.',
+  'Read local evidence and search host custody metadata with atn_status before asking a relevant neighbour. Discovery hints are host-derived; messages must respect the installed custody policy.',
   'Check requested results: phase/version, key and required fields. Reject phase/version mismatch, missing required fields or wrong key via atn_status review with evidence. comparisonKey groups comparable work. Ratings are not host verification or human permission.',
   'Query atn_status before rewiring; call atn_status rewire={peers:[nodeIds]} with the full list. Choose by relevance, ratings, load and cost; explore unobserved peers. Gains are not causal proof. Reuse before spawning.',
   'Settle held tasks with atn_send kind=result, taskId, summary and evidence; use outcome=failed on failure. Completed means submitted. Keep messages short.',
@@ -180,7 +180,7 @@ export function apply(ctx: Context): void {
   ctx.effect(
     () => ctx.tools.register(defineTool({
       name: 'atn_status',
-      description: 'Discover peers, board/tasks, ratings and budget. To reconnect call rewire={peers:[nodeIds]}. Optionally perform ONE atomic write: claimTaskId, review or rewire. Ratings are separate from host verification.',
+      description: 'Discover peers, host custody metadata/tasks, ratings and budget. To reconnect call rewire={peers:[nodeIds]}. Optionally perform ONE atomic write: claimTaskId, review or rewire. Ratings are separate from host verification.',
       parameters: {
         query: { type: 'string', description: 'Search metadata/tasks; "*" rotates candidates.' },
         taskIds: { type: 'array', items: { type: 'string' }, description: 'Up to 16 task ids; default your recent tasks.' },
@@ -201,28 +201,6 @@ export function apply(ctx: Context): void {
       async execute(args, exec) { return toJson(await atn().status(requireCaller(ctx, exec), args)) },
     })),
     'atn_status',
-  )
-
-  ctx.effect(
-    () => ctx.tools.register(defineTool({
-      name: 'atn_board',
-      description: 'Bounded shared findings and searchable metadata; wakes nobody. Author-only updates/removal require exact revisions. Claims need verification; all read/write bytes are metered.',
-      parameters: {
-        action: { type: 'string', required: true, enum: ['read', 'publish', 'remove'], description: 'publish requires key/body/expectedRevision; remove requires key/expectedRevision.' },
-        key: { type: 'string', description: 'Entry key; optional exact filter on read.' },
-        body: { type: 'string', description: 'Finding/provenance; entire entry <=4096 UTF-8 bytes.' },
-        topics: { type: 'array', items: { type: 'string' }, description: 'Optional short searchable tags on publish.' },
-        documents: { type: 'array', items: { type: 'string' }, description: 'Publish: up to 16 document ids, <=160 characters each.' },
-        expectedRevision: { type: 'integer', description: 'Writes require 0 for creation or exact revision from read.' },
-        query: { type: 'string', description: 'Optional text filter on read.' },
-        limit: { type: 'integer', description: 'Read page size 1–8, also byte capped.' },
-        cursor: { type: 'string', description: 'Continue nextCursor; restart after board changes.' },
-      },
-      output: jsonOutput,
-      isConcurrencySafe: () => false,
-      async execute(args, exec) { return toJson(await atn().board(requireCaller(ctx, exec), args)) },
-    })),
-    'atn_board',
   )
 
   ctx.effect(

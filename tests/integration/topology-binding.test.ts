@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { mkdtemp, rm } from 'node:fs/promises'
+import { mkdtemp, rm, readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { referenceKernel } from '../../experiments/reference-kernel.ts'
@@ -9,6 +9,12 @@ import { installShiftingEvidenceAccess } from '../../experiments/shifting-eviden
 import { createShiftingEvidenceTask, ShiftingEvidenceScenario, validateRequestedEvidence } from '../../experiments/shifting-evidence-task.ts'
 import { installTopologyBindingAccess } from '../../experiments/topology-binding-access.ts'
 import * as AtnTools from '../../src/tools.ts'
+import { recordBindingRefusals } from '../../scripts/record-binding-refusals.ts'
+
+test('BIND-COMPATIBILITY: custody factory preserves the recorded pre-rewrite mail refusals exactly', async () => {
+  const before = JSON.parse(await readFile(new URL('../../docs/information-boundary/binding-before.json', import.meta.url), 'utf8'))
+  assert.deepEqual(await recordBindingRefusals(), before)
+})
 
 async function fixture(run: (k: Awaited<ReturnType<typeof referenceKernel>>, s: ShiftingEvidenceScenario,
   n: Awaited<ReturnType<typeof provisionShifting>>) => Promise<void>) {
@@ -47,17 +53,17 @@ test('BIND-ACL: a relayed result fails atomically; a directly connected genuine 
       assert.deepEqual(JSON.parse(JSON.stringify(node.permissionSeed ?? {})), {}, 'no node acquires permission overrides')
     }
     const toolSets = network.agents.map(agent => ctx.tools.schemas(agent.id).map(tool => tool.name).sort())
-    assert.equal(toolSets[0].length, 6)
+    assert.equal(toolSets[0].length, 5)
     for (const tools of toolSets) assert.deepEqual(tools, toolSets[0])
     for (const agent of network.agents) assert.deepEqual(JSON.parse(JSON.stringify(agent.options)), JSON.parse(JSON.stringify(entry.options)))
   })
 })
 
-test('BIND-CHANNELS: board bodies, notes and extra request fields cannot carry relayed facts', async () => {
+test('BIND-CHANNELS: removed board, notes and extra request fields cannot carry relayed facts', async () => {
   await fixture(async ({ ctx, entry }, scenario, network) => {
-    const fact = scenario.task.phases[0].facts[0], hints = scenario.knowledgeHints(entry.id)
-    await assert.rejects(ctx.atn.board(entry, { action: 'publish', key: `phase-1:${network.nodeId}`, expectedRevision: 0,
-      body: JSON.stringify(fact), documents: hints.documents, topics: hints.topics }), /metadata-only/)
+    const fact = scenario.task.phases[0].facts[0]
+    assert.equal(ctx.tools.schemas(entry.id).some(tool => tool.name === 'atn_board'), false)
+    assert.equal('board' in ctx.atn, false)
     await assert.rejects(ctx.atn.send(entry, { to: network.ids[1], kind: 'note', body: JSON.stringify(fact) }), /fact-requests-and-owner-results-only/)
     await assert.rejects(ctx.atn.send(entry, { to: network.ids[1], kind: 'task', body: JSON.stringify({ phase: 1, key: fact.key, proof: fact.proof }) }), /invalid-fact-request/)
   })

@@ -30,7 +30,7 @@ export async function provisionShifting(ctx: Context, entry: Agent, scenario: Sh
   for (let slot = 1; slot < scenario.task.agents; slot++) {
     const born = await ctx.atn.spawn(agents[slot - 1], { task: scenario.task.topologyBinding
       ? BINDING_SETUP_TASK
-      : 'Publish your local evidence snapshot once per phase when the board is enabled, then respond to actual fact tasks or relay to the named holder. Return your own exact copy even if obsolete; preserve target and phase/version when relaying. Retrieve a bounded fragment only when explicitly assigned. With no assigned work, end the current turn and wait for mail or the phase update; keep the node available. Only the entry assembles the full chain and submits checkpoints.', context: '' })
+      : 'Read your local evidence snapshot once per phase; the host derives discovery metadata. Then respond to actual fact tasks or relay to the named holder. Return your own exact copy even if obsolete; preserve target and phase/version when relaying. Retrieve a bounded fragment only when explicitly assigned. With no assigned work, end the current turn and wait for mail or the phase update; keep the node available. Only the entry assembles the full chain and submits checkpoints.', context: '' })
     const agent = ctx.agents.list().find(row => row.id === born.sessionId)
     assert.ok(agent); agents.push(agent)
   }
@@ -84,7 +84,7 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
   const task = createShiftingEvidenceTask(options.agents ?? 8, options.seed ?? 17, options.chainLength, options.topologyBinding)
   const scenario = new ShiftingEvidenceScenario(task)
   const topologyMode = options.topology ?? (task.topologyBinding ? 'adaptive' : 'fixed')
-  const mechanisms = shiftingMechanisms(topologyMode)
+  const mechanisms = { ...shiftingMechanisms(topologyMode), sharedBoard: false }
   const staticTopology = topologyMode === 'fixed' || topologyMode === 'fixed-wide'
   const scratch = await mkdtemp(join(tmpdir(), 'atn-shifting-reference-'))
   const kernel = await referenceKernel(scratch, scenario, shiftingConfig(task.agents, options.steps ?? 16, options.timeoutMs ?? 240_000, topologyMode === 'fixed-wide' ? 4 : 2))
@@ -101,7 +101,6 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
     installShiftingEvidenceAccess(kernel.ctx.atn, network.networkId, sessionId => scenario.knowledgeHints(sessionId), scenario, fixedPeers)
     if (fixedPeers) kernel.ctx.atn.rewire = async () => { throw new Error('Rewiring disabled by fixed-topology ablation') }
     if (!mechanisms.requesterFeedback) kernel.ctx.atn.feedback = async () => { throw new Error('Requester ratings disabled by no-feedback ablation') }
-    if (!mechanisms.sharedBoard) kernel.ctx.atn.board = async () => { throw new Error('Shared board disabled by no-board ablation') }
     const step = async (index: number) => {
       if (++actions > (options.maxCalls ?? task.agents * 16)) throw new Error('Reference global action budget exhausted')
       if (!await kernel.ctx.atn.admitStep(network.networkId, network.agents[index].id)) throw new Error('Reference per-node step budget exhausted')
@@ -114,7 +113,7 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
       if (task.topologyBinding) {
         for (let i = 0; i < network.agents.length; i++) {
           await step(i); scenario.read(network.agents[i].id)
-          await step(i); await kernel.ctx.atn.publishKnowledge(network.agents[i], scenario.knowledgeHints(network.agents[i].id))
+          await kernel.ctx.atn.refreshCustody(network.networkId)
         }
         const facts: EvidenceFact[] = []
         let key: string | null = task.rootKey
@@ -167,8 +166,7 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
       const gather = async (index: number): Promise<EvidenceFact[]> => {
         await step(index)
         const own = scenario.read(network.agents[index].id).documents
-        await step(index)
-        await kernel.ctx.atn.publishKnowledge(network.agents[index], scenario.knowledgeHints(network.agents[index].id))
+        await kernel.ctx.atn.refreshCustody(network.networkId)
         if (index === task.agents - 1) return own
         await step(index)
         const sent = await kernel.ctx.atn.send(network.agents[index], { to: network.ids[index + 1], kind: 'task',

@@ -9,7 +9,6 @@
  * @module dsh-atn/schema
  */
 import { z } from 'zod'
-import { Buffer } from 'node:buffer'
 
 /** Stable network identifier. */
 export type NetworkId = string
@@ -99,12 +98,13 @@ export const modelRouteSchema = z
 /** {@link modelRouteSchema} value type. */
 export type ModelRoute = z.infer<typeof modelRouteSchema>
 
-/** Bounds on the self-published, descriptive knowledge index. */
+/** Bounds on the host-derived discovery projection. */
 export const MAX_KNOWLEDGE_ITEMS = 16
 export const MAX_KNOWLEDGE_TEXT_LENGTH = 160
 
-/** Self-reported knowledge, never independent proof that a node is correct. */
+/** Host custody projection; unmarked legacy self-reports are not authoritative. */
 export const knowledgeFingerprintSchema = z.object({
+  source: z.literal('host-custody').optional(),
   documents: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
   topics: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
   contributions: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS),
@@ -130,7 +130,7 @@ export const nodeRecordSchema = z
      * means the node has chosen no neighbours and must never restore that lineage.
      */
     peerIds: z.array(z.string()).max(4).optional(),
-    /** Optional self-published discovery index; legacy nodes have no published knowledge. */
+    /** Optional host-derived custody snapshot, refreshed from the host registry. */
     knowledgeFingerprint: knowledgeFingerprintSchema.optional(),
     /** Current lifecycle. */
     lifecycle: z.enum(NODE_LIFECYCLES),
@@ -467,54 +467,15 @@ export const requesterRewireEvaluationSchema = z.object({
 
 export type RequesterRewireEvaluation = z.infer<typeof requesterRewireEvaluationSchema>
 
-/** Fixed shared-medium bounds; payloads include persisted entry metadata. */
-export const MAX_WHITEBOARD_ENTRIES = 64
-export const MAX_WHITEBOARD_ENTRY_BYTES = 4096
-export const MAX_WHITEBOARD_TOTAL_BYTES = 64 * 1024
-
-export const whiteboardEntrySchema = z.object({
-  key: z.string().regex(/^[a-zA-Z0-9][a-zA-Z0-9._:/-]{0,95}$/),
-  /** Authenticated publisher, immutable for the life of this entry. */
-  authorId: z.string().min(1),
-  body: z.string().min(1).max(MAX_WHITEBOARD_ENTRY_BYTES).refine(body => body.trim().length > 0),
-  topics: z.array(z.string().trim().min(1).max(80)).max(8),
-  documents: z.array(z.string().trim().min(1).max(MAX_KNOWLEDGE_TEXT_LENGTH)).max(MAX_KNOWLEDGE_ITEMS).optional(),
-  /** Network-wide monotonically allocated revision; deletion never recycles it. */
-  revision: z.number().int().positive(),
-  createdAt: z.number().int().nonnegative(),
-  updatedAt: z.number().int().nonnegative(),
-}).strict().refine(entry => entry.updatedAt >= entry.createdAt &&
-  Buffer.byteLength(JSON.stringify(entry), 'utf8') <= MAX_WHITEBOARD_ENTRY_BYTES,
-  'whiteboard entry exceeds its byte bound or has reversed timestamps')
-
-export type WhiteboardEntry = z.infer<typeof whiteboardEntrySchema>
-
-/** Successful operations only; byte totals measure UTF-8 JSON payloads, not provider tokens. */
-export const whiteboardUsageSchema = z.object({
-  reads: z.number().int().nonnegative(),
-  writes: z.number().int().nonnegative(),
-  /** Serialized returned entry arrays, including empty-array framing. */
-  readBytes: z.number().int().nonnegative(),
-  /** Serialized stored entries or successful deletion receipts. */
-  writeBytes: z.number().int().nonnegative(),
-}).strict()
-
-export type WhiteboardUsage = z.infer<typeof whiteboardUsageSchema>
-
-export const whiteboardSchema = z.object({
-  /** Last committed write revision; read accounting never changes a paging snapshot. */
-  generation: z.number().int().nonnegative(),
-  entries: z.array(whiteboardEntrySchema).max(MAX_WHITEBOARD_ENTRIES),
-  usage: whiteboardUsageSchema,
-}).strict().refine(board => new Set(board.entries.map(entry => entry.key)).size === board.entries.length &&
-  board.entries.every(entry => entry.revision <= board.generation) &&
-  Buffer.byteLength(JSON.stringify(board.entries), 'utf8') <= MAX_WHITEBOARD_TOTAL_BYTES,
-  'whiteboard keys, revisions or total payload violate durable bounds')
-
-export type Whiteboard = z.infer<typeof whiteboardSchema>
-
 /** One complete ATN network: the atomic persistence unit. */
-export const networkRecordSchema = z
+export const networkRecordSchema = z.preprocess(value => {
+  // Discard the removed channel when reading pre-0.5 durable records.
+  if (value !== null && typeof value === 'object' && !Array.isArray(value) && Object.hasOwn(value, 'whiteboard')) {
+    const { whiteboard: _removed, ...record } = value as Record<string, unknown>
+    return record
+  }
+  return value
+}, z
   .object({
     /** Stable network id. */
     id: z.string(),
@@ -538,8 +499,6 @@ export const networkRecordSchema = z
     mails: z.record(z.string(), mailRecordSchema),
     /** Proposals by id. */
     proposals: z.record(z.string(), proposalRecordSchema),
-    /** Bounded shared medium. Absent legacy records behave as an empty, unused board. */
-    whiteboard: whiteboardSchema.optional(),
     /** Durable edge totals, reconstructed from digest-bound opinions when loading legacy data. */
     requesterEdges: z.array(requesterEdgeSchema).optional(),
     /** Audit of explicit rewires. Birth and failed-node repair are separate. */
@@ -577,7 +536,7 @@ export const networkRecordSchema = z
     /** Human-readable terminal reason, when the network is not open. */
     note: z.string().nullable(),
   })
-  .strict()
+  .strict())
 
 /** {@link networkRecordSchema} value type. */
 export type NetworkRecord = z.infer<typeof networkRecordSchema>

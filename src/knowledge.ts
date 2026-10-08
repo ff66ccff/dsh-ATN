@@ -1,26 +1,16 @@
-/** Bounded self-reported discovery hints, with separately sourced outcome counts. */
+/** Bounded host custody metadata, with separately sourced outcome counts. */
 import {
-  knowledgeFingerprintSchema, type KnowledgeFingerprint, type NetworkRecord,
+  MAX_KNOWLEDGE_ITEMS, MAX_KNOWLEDGE_TEXT_LENGTH, type KnowledgeFingerprint, type NetworkRecord,
 } from './schema.ts'
 import { summarizeRequesterFeedback } from './requester-feedback.ts'
 import { summarizeVerifiedFeedback } from './verified-feedback.ts'
+import type { NetworkOutboundPolicy } from './information-boundary.ts'
 
-/** Each publication replaces the entire prior index; empty arrays clear a field. */
-export type PublishKnowledgeInput = Omit<KnowledgeFingerprint, 'updatedAt'>
+/** Trusted host metadata; never an agent publication input. */
+export type KnowledgeMetadata = Pick<KnowledgeFingerprint, 'documents' | 'topics' | 'contributions'>
 
-export class KnowledgeError extends Error {
-  constructor(
-    readonly code: 'not-open' | 'unknown-node' | 'not-active' | 'invalid-knowledge',
-    message: string,
-  ) {
-    super(message)
-    this.name = 'KnowledgeError'
-  }
-}
-
-export interface KnowledgeSummary extends PublishKnowledgeInput {
-  /** Only the descriptive arrays above are self-reported. They never prove correctness. */
-  source: 'self-reported'
+export interface KnowledgeSummary extends KnowledgeMetadata {
+  source: 'host-custody'
   updatedAt: number | null
   /** Runtime-derived unfinished obligations, not a self-published availability claim. */
   currentLoad: number
@@ -42,63 +32,49 @@ function normalize(text: string): string {
   return text.normalize('NFKC').toLowerCase().trim().replace(/\s+/g, ' ')
 }
 
-function deduplicate(items: string[]): string[] {
-  const seen = new Set<string>()
-  return items.filter(item => {
-    const key = normalize(item)
-    if (seen.has(key)) return false
-    seen.add(key)
-    return true
-  })
+function bounded(items: readonly string[]): string[] {
+  return [...new Set(items)].filter(item => item.trim().length > 0 && item.length <= MAX_KNOWLEDGE_TEXT_LENGTH)
+    .sort().slice(0, MAX_KNOWLEDGE_ITEMS)
 }
 
-/**
- * Publish only the authenticated caller's index. The runtime supplies nodeId and
- * time and commits this transform atomically. No mail, task, step or wakeup is
- * created; this is an index update, not a request to another agent.
- */
-export function publishKnowledge(
-  record: NetworkRecord,
-  nodeId: string,
-  input: PublishKnowledgeInput,
-  now: number,
-): NetworkRecord {
-  if (record.status !== 'open' || now >= record.deadlineAt) {
-    throw new KnowledgeError('not-open', 'knowledge publication requires an open network')
+function metadata(record: NetworkRecord, nodeId: string, policy?: NetworkOutboundPolicy): KnowledgeMetadata {
+  if (policy?.custody !== undefined) {
+    const documents = bounded([...policy.custody(nodeId, record)])
+    const topics = bounded(documents.flatMap(id => policy.describeArtifact?.(id, record).topics ??
+      id.split(/[\s/.:_-]+/).filter(Boolean)))
+    return { documents, topics, contributions: [] }
   }
-  const node = record.nodes[nodeId]
-  if (node === undefined) throw new KnowledgeError('unknown-node', `node ${nodeId} is not part of the network`)
-  if (node.lifecycle !== 'active' || node.creationState !== 'published') {
-    throw new KnowledgeError('not-active', 'only an active published node may publish knowledge')
-  }
-  const parsed = knowledgeFingerprintSchema.safeParse({ ...input, updatedAt: now })
-  if (!parsed.success) throw new KnowledgeError('invalid-knowledge', parsed.error.message)
-  const fingerprint = {
-    ...parsed.data,
-    documents: deduplicate(parsed.data.documents),
-    topics: deduplicate(parsed.data.topics),
-    contributions: deduplicate(parsed.data.contributions),
-  }
-  const prior = node.knowledgeFingerprint
-  if (prior !== undefined && (['documents', 'topics', 'contributions'] as const).every(key =>
-    prior[key].length === fingerprint[key].length && prior[key].every((value, index) => value === fingerprint[key][index]))) {
-    return record
-  }
-  return { ...record, nodes: { ...record.nodes, [nodeId]: { ...node, knowledgeFingerprint: fingerprint } } }
+  const saved = record.nodes[nodeId]?.knowledgeFingerprint
+  // Unmarked pre-0.5 self-reports never become custody assertions on upgrade.
+  return saved?.source === 'host-custody'
+    ? { documents: [...saved.documents], topics: [...saved.topics], contributions: [] }
+    : { documents: [], topics: [], contributions: [] }
 }
 
-/** Declarations and observed outcomes stay separate; legacy nodes have an empty index. */
-export function summarizeKnowledge(record: NetworkRecord, nodeId: string): KnowledgeSummary {
-  const fingerprint = record.nodes[nodeId]?.knowledgeFingerprint
-  const entries = (record.whiteboard?.entries ?? []).filter(entry => entry.authorId === nodeId)
+/** Identical custody projections retain their timestamps and do not wake peers. */
+export function refreshKnowledge(record: NetworkRecord, policy: NetworkOutboundPolicy | undefined, now: number): NetworkRecord {
+  if (policy?.custody === undefined) return record
+  const nodes = { ...record.nodes }
+  let changed = false
+  for (const node of Object.values(nodes)) {
+    const next = metadata(record, node.id, policy)
+    const prior = node.knowledgeFingerprint
+    if (prior?.source === 'host-custody' && (['documents', 'topics', 'contributions'] as const).every(key =>
+      JSON.stringify(prior[key]) === JSON.stringify(next[key]))) continue
+    nodes[node.id] = { ...node, knowledgeFingerprint: { ...next, source: 'host-custody', updatedAt: now } }
+    changed = true
+  }
+  return changed ? { ...record, nodes } : record
+}
+
+/** Custody metadata and observed outcomes stay separate. */
+export function summarizeKnowledge(record: NetworkRecord, nodeId: string, policy?: NetworkOutboundPolicy): KnowledgeSummary {
   const requester = summarizeRequesterFeedback(record, nodeId)
   const verified = summarizeVerifiedFeedback(record, nodeId)
   return {
-    source: 'self-reported',
-    documents: deduplicate([...entries.flatMap(entry => entry.documents ?? []), ...(fingerprint?.documents ?? [])]).slice(0, 16),
-    topics: deduplicate([...entries.flatMap(entry => entry.topics), ...(fingerprint?.topics ?? [])]).slice(0, 16),
-    contributions: deduplicate([...entries.map(entry => entry.key), ...(fingerprint?.contributions ?? [])]).slice(0, 16),
-    updatedAt: entries.length === 0 ? fingerprint?.updatedAt ?? null : Math.max(...entries.map(entry => entry.updatedAt), fingerprint?.updatedAt ?? 0),
+    source: 'host-custody', ...metadata(record, nodeId, policy),
+    updatedAt: record.nodes[nodeId]?.knowledgeFingerprint?.source === 'host-custody'
+      ? record.nodes[nodeId]!.knowledgeFingerprint!.updatedAt : null,
     currentLoad: Object.values(record.tasks).filter(task => task.holderId === nodeId && task.status === 'open').length,
     requesterAccepted: requester.accepted,
     requesterRejected: requester.rejected,
@@ -114,23 +90,20 @@ export function summarizeKnowledge(record: NetworkRecord, nodeId: string): Knowl
 }
 
 /**
- * Relevance only: distinct query terms and a phrase match, never declaration
- * frequency or an unverified popularity claim. Runtime ranking can use actual
- * requester feedback and current load to break ties. Task context remains a
- * fallback for legacy nodes that have never published an index.
+ * Same distinct-term/phrase weights; configured custody excludes agent-authored
+ * task text. Unconfigured legacy networks retain their task-text fallback.
  */
-export function scoreKnowledgeQuery(record: NetworkRecord, nodeId: string, query: string): number {
+export function scoreKnowledgeQuery(record: NetworkRecord, nodeId: string, query: string, policy?: NetworkOutboundPolicy): number {
   const node = record.nodes[nodeId]
   const needle = normalize(query)
   if (node === undefined || needle.length === 0) return 0
   if (needle === '*') return 1
   const terms = [...new Set(needle.split(' '))]
-  const fingerprint = node.knowledgeFingerprint
-  const entries = (record.whiteboard?.entries ?? []).filter(entry => entry.authorId === nodeId)
-  const declared = [...entries.flatMap(entry => [entry.key, ...entry.topics, ...(entry.documents ?? [])]),
-    ...(fingerprint === undefined ? [] : [...fingerprint.documents, ...fingerprint.topics, ...fingerprint.contributions])].map(normalize)
-  const fallback = [nodeId, ...Object.values(record.tasks).filter(task => task.holderId === nodeId)
-    .flatMap(task => [task.description, task.context, task.result?.summary ?? '']), ...entries.map(entry => entry.body)].map(normalize)
+  const index = metadata(record, nodeId, policy)
+  const declared = [...index.documents, ...index.topics, ...index.contributions].map(normalize)
+  const fallback = [nodeId, ...(policy?.custody !== undefined || node.knowledgeFingerprint?.source === 'host-custody' ? [] :
+    Object.values(record.tasks).filter(task => task.holderId === nodeId)
+      .flatMap(task => [task.description, task.context, task.result?.summary ?? '']))].map(normalize)
   const declaredHits = terms.filter(term => declared.some(text => text.includes(term))).length
   const fallbackHits = terms.filter(term => fallback.some(text => text.includes(term))).length
   const phraseBonus = declared.some(text => text.includes(needle)) ? terms.length * 2 : 0

@@ -5,7 +5,7 @@ import { dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parseArgs } from 'node:util'
 import { runShiftingEvidence } from './shifting-evidence-run.ts'
-import { ShiftingBoardScript } from './shifting-evidence-script.ts'
+import { ShiftingMailScript } from './shifting-evidence-script.ts'
 import { summarizeShiftingRuns } from './shifting-evidence-protocol.ts'
 
 export async function runShiftingCalibration(options: { directory: string; repeats?: number; chainLengths?: number[]; steps?: number[] }) {
@@ -32,7 +32,7 @@ export async function runShiftingCalibration(options: { directory: string; repea
     for (const mode of plan.arms) for (const seed of plan.seeds) {
       const directory = join(root, `chain-${configuration.chainLength}-steps-${configuration.perNodeSteps}-${mode}-seed-${seed}`)
       const report = await runShiftingEvidence({ ...plan.limits, ...configuration, seed, model, mode,
-        maxCalls: plan.limits.agents * configuration.perNodeSteps, directory }, { adapter: new ShiftingBoardScript() })
+        maxCalls: plan.limits.agents * configuration.perNodeSteps, directory }, { adapter: new ShiftingMailScript() })
       reports.push({ ...report, directory, reportSha256: createHash('sha256').update(await readFile(join(directory, 'report.json'))).digest('hex') })
     }
     const summary = summarizeShiftingRuns(reports)

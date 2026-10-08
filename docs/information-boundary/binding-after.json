@@ -1,0 +1,108 @@
+{
+  "causalClaim": false,
+  "modelCalls": 0,
+  "outcomes": [
+    {
+      "name": "note",
+      "code": "fact-requests-and-owner-results-only"
+    },
+    {
+      "name": "messageId",
+      "code": "extra-transport-fields"
+    },
+    {
+      "name": "dependsOn",
+      "code": "extra-transport-fields"
+    },
+    {
+      "name": "retryOf",
+      "code": "extra-transport-fields"
+    },
+    {
+      "name": "request-payload",
+      "code": "invalid-fact-request"
+    },
+    {
+      "name": "not-holder",
+      "code": "not-task-holder"
+    },
+    {
+      "name": "setup-payload",
+      "code": "invalid-setup-receipt"
+    },
+    {
+      "name": "unowned-result",
+      "code": "evidence-not-owned"
+    }
+  ],
+  "policy": {
+    "enforced": true,
+    "refusedResults": 1,
+    "refusals": [
+      {
+        "phase": 1,
+        "sender": "node-1",
+        "to": "node-3",
+        "kind": "note",
+        "taskId": null,
+        "code": "fact-requests-and-owner-results-only"
+      },
+      {
+        "phase": 1,
+        "sender": "node-1",
+        "to": "node-3",
+        "kind": "task",
+        "taskId": null,
+        "code": "extra-transport-fields"
+      },
+      {
+        "phase": 1,
+        "sender": "node-1",
+        "to": "node-3",
+        "kind": "task",
+        "taskId": null,
+        "code": "extra-transport-fields"
+      },
+      {
+        "phase": 1,
+        "sender": "node-1",
+        "to": "node-3",
+        "kind": "task",
+        "taskId": null,
+        "code": "extra-transport-fields"
+      },
+      {
+        "phase": 1,
+        "sender": "node-1",
+        "to": "node-3",
+        "kind": "task",
+        "taskId": null,
+        "code": "invalid-fact-request"
+      },
+      {
+        "phase": 1,
+        "sender": "node-6",
+        "to": "node-1",
+        "kind": "result",
+        "taskId": "task-24",
+        "code": "not-task-holder"
+      },
+      {
+        "phase": 1,
+        "sender": "node-3",
+        "to": "node-1",
+        "kind": "result",
+        "taskId": "task-4",
+        "code": "invalid-setup-receipt"
+      },
+      {
+        "phase": 1,
+        "sender": "node-3",
+        "to": "node-1",
+        "kind": "result",
+        "taskId": "task-24",
+        "code": "evidence-not-owned"
+      }
+    ]
+  }
+}

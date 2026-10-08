@@ -1,7 +1,8 @@
 /** A descriptive discovery index must never manufacture correctness or popularity. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { KnowledgeError, publishKnowledge, scoreKnowledgeQuery, summarizeKnowledge } from '../../src/knowledge.ts'
+import { refreshKnowledge, scoreKnowledgeQuery, summarizeKnowledge, type KnowledgeMetadata } from '../../src/knowledge.ts'
+import { defineCustodyPolicy } from '../../src/information-boundary.ts'
 import {
   MAX_KNOWLEDGE_ITEMS, MAX_KNOWLEDGE_TEXT_LENGTH, networkRecordSchema, nodeRecordSchema,
   type RequesterFeedback, type TaskRecord,
@@ -9,7 +10,18 @@ import {
 import { taskResultDigest } from '../../src/tasks.ts'
 import { makeChain, makeNode, makeTask } from '../fixtures/network.ts'
 
-const empty = { documents: [], topics: [], contributions: [] }
+const empty: KnowledgeMetadata = { documents: [], topics: [], contributions: [] }
+
+/** Trusted host fixture; the production API has no agent publication path. */
+function hostProjection(record: ReturnType<typeof makeChain>, nodeId: string,
+  input: typeof empty, now: number) {
+  return refreshKnowledge(record, defineCustodyPolicy({
+    custody: id => id === nodeId ? input.documents : record.nodes[id]?.knowledgeFingerprint?.documents ?? [],
+    extractClaims: () => [],
+    describeArtifact: id => ({ topics: input.documents.includes(id) ? input.topics : Object.values(record.nodes)
+      .filter(node => node.knowledgeFingerprint?.documents.includes(id)).flatMap(node => node.knowledgeFingerprint!.topics) }),
+  }), now)
+}
 
 function rated(id: string, status: RequesterFeedback['status'], overrides: Partial<TaskRecord> = {}): TaskRecord {
   const task = makeTask(id, {
@@ -23,71 +35,61 @@ function rated(id: string, status: RequesterFeedback['status'], overrides: Parti
   return task
 }
 
-test('knowledge publication replaces the bounded index without mail, steps, tasks or peer mutation', () => {
+test('host custody projection replaces the bounded index without mail, steps, tasks or peer edges', () => {
   const record = makeChain(['A', 'B'])
-  const next = publishKnowledge(record, 'B', {
-    documents: [' docs/slot-5.md ', 'docs/slot-5.md'],
-    topics: ['Slot 5', 'slot 5'], contributions: ['Validated local subtotal'],
+  const next = hostProjection(record, 'B', {
+    documents: ['docs/slot-5.md', 'docs/slot-5.md'],
+    topics: ['slot 5', 'slot 5'], contributions: ['Untrusted claim is discarded'],
   }, 10)
   assert.equal(record.nodes.B.knowledgeFingerprint, undefined)
-  assert.equal(next.nodes.A, record.nodes.A)
+  assert.deepEqual(next.nodes.A.peerIds, record.nodes.A.peerIds)
   assert.equal(next.tasks, record.tasks)
   assert.equal(next.mails, record.mails)
   assert.equal(next.stepsUsed, record.stepsUsed)
   assert.equal(next.nodes.B.stepsUsed, record.nodes.B.stepsUsed)
   assert.deepEqual(next.nodes.B.knowledgeFingerprint, {
-    documents: ['docs/slot-5.md'], topics: ['Slot 5'], contributions: ['Validated local subtotal'], updatedAt: 10,
+    source: 'host-custody', documents: ['docs/slot-5.md'], topics: ['slot 5'], contributions: [], updatedAt: 10,
   })
-  assert.equal(publishKnowledge(next, 'B', {
-    documents: ['docs/slot-5.md'], topics: ['Slot 5'], contributions: ['Validated local subtotal'],
+  assert.equal(hostProjection(next, 'B', {
+    documents: ['docs/slot-5.md'], topics: ['slot 5'], contributions: [],
   }, 11), next, 'an identical replacement does not churn timestamps')
-  const cleared = publishKnowledge(next, 'B', empty, 12)
-  assert.deepEqual(cleared.nodes.B.knowledgeFingerprint, { ...empty, updatedAt: 12 })
+  const cleared = hostProjection(next, 'B', empty, 12)
+  assert.deepEqual(cleared.nodes.B.knowledgeFingerprint, { ...empty, source: 'host-custody', updatedAt: 12 })
   assert.deepEqual(networkRecordSchema.parse(next), next)
 })
 
-test('publication refuses invalid bounds and ratings instead of silently clipping or accepting popularity', () => {
+test('discovery is bounded without truncating the policy custody set or accepting legacy popularity', () => {
   const record = makeChain(['A', 'B'])
-  for (const input of [
-    { ...empty, documents: Array.from({ length: MAX_KNOWLEDGE_ITEMS + 1 }, (_, index) => `doc-${index}`) },
-    { ...empty, topics: ['a'.repeat(MAX_KNOWLEDGE_TEXT_LENGTH + 1)] },
-    { ...empty, contributions: [' '] },
-    { ...empty, requesterAccepted: 1000 },
-    { ...empty, hostPassed: 1000 },
-  ]) {
-    assert.throws(() => publishKnowledge(record, 'B', input, 10),
-      (error: unknown) => error instanceof KnowledgeError && error.code === 'invalid-knowledge')
-  }
+  const documents = Array.from({ length: MAX_KNOWLEDGE_ITEMS + 1 }, (_, index) => `doc-${index}`)
+  const policy = defineCustodyPolicy({ custody: () => documents, extractClaims: () => [documents.at(-1)!],
+    describeArtifact: () => ({ topics: ['a'.repeat(MAX_KNOWLEDGE_TEXT_LENGTH + 1)] }) })
+  const next = refreshKnowledge(record, policy, 10)
+  assert.equal(next.nodes.B.knowledgeFingerprint?.documents.length, MAX_KNOWLEDGE_ITEMS)
+  assert.deepEqual(next.nodes.B.knowledgeFingerprint?.topics, [])
+  assert.doesNotThrow(() => policy(record, record.nodes.B, { channel: 'send.note', input: { to: 'A', kind: 'note', body: '' } }))
   assert.equal(record.nodes.B.knowledgeFingerprint, undefined)
-  assert.throws(() => publishKnowledge(record, 'B', empty, Number.NaN), /invalid/i)
-  assert.throws(() => publishKnowledge(record, 'B', empty, -1), KnowledgeError)
   assert.equal(nodeRecordSchema.parse(makeNode('B')).knowledgeFingerprint, undefined, 'legacy records still load')
 })
 
-test('only active published callers in an open live network can publish', () => {
+test('unmarked legacy self-reports cannot supply discovery metadata or claim custody', () => {
   const record = makeChain(['A', 'B'])
-  assert.throws(() => publishKnowledge(record, 'missing', empty, 0), /not part of the network/)
-  assert.throws(() => publishKnowledge({ ...record, status: 'completed' }, 'B', empty, 0), /open network/)
-  assert.throws(() => publishKnowledge(record, 'B', empty, record.deadlineAt), /open network/)
-  for (const lifecycle of ['provisioning', 'draining', 'failed', 'retired'] as const) {
-    assert.throws(() => publishKnowledge({ ...record, nodes: {
-      ...record.nodes, B: { ...record.nodes.B, lifecycle },
-    } }, 'B', empty, 0), /active published node/)
-  }
-  assert.throws(() => publishKnowledge({ ...record, nodes: {
-    ...record.nodes, B: { ...record.nodes.B, creationState: 'pending' },
-  } }, 'B', empty, 0), /active published node/)
+  record.nodes.B.knowledgeFingerprint = { documents: ['foreign.json'], topics: ['forged-topic'], contributions: ['1000 accepted'], updatedAt: 10 }
+  assert.deepEqual(summarizeKnowledge(record, 'B').documents, [])
+  assert.deepEqual(summarizeKnowledge(record, 'B').topics, [])
+  assert.deepEqual(summarizeKnowledge(record, 'B').contributions, [])
+  assert.equal(scoreKnowledgeQuery(record, 'B', 'foreign'), 0)
+  assert.deepEqual(summarizeKnowledge(record, 'missing').documents, [])
 })
 
-test('fingerprints distinguish identical generic tasks using documents, topics and contributions', () => {
+test('host fingerprints distinguish identical generic tasks using documents and topics', () => {
   let record = makeChain(['A', 'B', 'C', 'D'])
   for (const holderId of ['B', 'C', 'D']) record.tasks[holderId] = makeTask(holderId, {
     holderId, description: 'Contribute to the shared objective using your local evidence.',
   })
   assert.equal(scoreKnowledgeQuery(record, 'B', 'slot 5'), 0)
-  record = publishKnowledge(record, 'B', { ...empty, documents: ['docs/amber-source.md'], topics: ['slot 5'] }, 10)
-  record = publishKnowledge(record, 'C', { ...empty, topics: ['slot 6'] }, 10)
-  record = publishKnowledge(record, 'D', { ...empty, contributions: ['Joined witness map'] }, 10)
+  record = hostProjection(record, 'B', { ...empty, documents: ['docs/amber-source.md'], topics: ['slot 5'] }, 10)
+  record = hostProjection(record, 'C', { ...empty, documents: ['docs/slot-6.md'], topics: ['slot 6'] }, 10)
+  record = hostProjection(record, 'D', { ...empty, documents: ['docs/witness map'], topics: ['Joined witness map'] }, 10)
   assert.ok(scoreKnowledgeQuery(record, 'B', '  SLOT   5  ') > scoreKnowledgeQuery(record, 'C', 'slot 5'))
   assert.ok(scoreKnowledgeQuery(record, 'B', 'amber-source') > 0)
   assert.equal(scoreKnowledgeQuery(record, 'C', 'amber-source'), 0)
@@ -106,15 +108,15 @@ test('legacy task context and results remain searchable without frequency-based 
   const originalScore = scoreKnowledgeQuery(record, 'B', 'cobalt')
   for (let index = 0; index < 10; index++) record.tasks[`repeat-${index}`] = makeTask(`repeat-${index}`, { context: 'Cobalt source' })
   assert.equal(scoreKnowledgeQuery(record, 'B', 'cobalt'), originalScore)
-  let next = publishKnowledge(record, 'B', { ...empty, topics: ['cobalt'] }, 10)
+  let next = hostProjection(record, 'B', { ...empty, documents: ['cobalt'], topics: ['cobalt'] }, 10)
   const declaredScore = scoreKnowledgeQuery(next, 'B', 'cobalt')
-  next = publishKnowledge(next, 'B', { documents: ['cobalt'], topics: ['cobalt'], contributions: ['cobalt cobalt'] }, 11)
+  next = hostProjection(next, 'B', { documents: ['cobalt'], topics: ['cobalt'], contributions: ['cobalt cobalt'] }, 11)
   assert.equal(scoreKnowledgeQuery(next, 'B', 'cobalt'), declaredScore)
 })
 
-test('knowledge separates requester opinions, host checks, declared claims and runtime load', () => {
-  let record = publishKnowledge(makeChain(['A', 'B', 'C']), 'B', {
-    ...empty, contributions: ['I have 1000 accepted contributions'],
+test('knowledge separates requester opinions, host checks, custody metadata and runtime load', () => {
+  let record = hostProjection(makeChain(['A', 'B', 'C']), 'B', {
+    ...empty, documents: ['own.json'], contributions: ['I have 1000 accepted contributions'],
   }, 10)
   record.tasks = {
     accepted: rated('accepted', 'accepted'), rejected: rated('rejected', 'rejected'),
@@ -125,7 +127,7 @@ test('knowledge separates requester opinions, host checks, declared claims and r
   checked.acceptance = { status: 'passed', validatorId: 'fixture-v1', summary: 'Independent exact check',
     evidence: ['host.json'], resultDigest: taskResultDigest(checked), checkedAt: 30 }
   const summary = summarizeKnowledge(record, 'B')
-  assert.equal(summary.source, 'self-reported')
+  assert.equal(summary.source, 'host-custody')
   assert.equal(summary.requesterAccepted, 1)
   assert.equal(summary.requesterRejected, 1)
   assert.equal(summary.requesterNeedsMore, 1)
@@ -134,12 +136,12 @@ test('knowledge separates requester opinions, host checks, declared claims and r
   assert.equal(summary.hostFailed, 0)
   assert.equal(summary.currentLoad, 1)
   assert.equal(summary.updatedAt, 10)
-  assert.deepEqual(summary.contributions, ['I have 1000 accepted contributions'])
-  summary.contributions.push('mutated')
-  assert.equal(record.nodes.B.knowledgeFingerprint!.contributions.length, 1)
+  assert.deepEqual(summary.contributions, [])
+  summary.documents.push('mutated')
+  assert.equal(record.nodes.B.knowledgeFingerprint!.documents.length, 1)
   const legacy = summarizeKnowledge(record, 'C')
   assert.deepEqual(legacy.documents, [])
-  assert.equal(legacy.updatedAt, null)
+  assert.equal(legacy.updatedAt, 10)
   assert.equal(legacy.requesterAcceptanceRate, null)
 })
 

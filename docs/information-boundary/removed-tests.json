@@ -1,0 +1,42 @@
+[
+  {
+    "file": "tests/unit/whiteboard.test.ts",
+    "reason": "Removed whiteboard-only feature tests; protocol absence, custody discovery and mail accounting have replacement coverage.",
+    "tests": [
+      "legacy empty boards read as metered durable state without changing nodes, mail, tasks or steps",
+      "publication persists authenticated authorship, immutable creation time and exact successful byte accounting",
+      "only authors may mutate existing keys and stale revisions never replace newer or recreated entries",
+      "entry-count capacity refuses additional keys but allows own replacement and deliberate removal",
+      "UTF-8 entry and global live-byte limits are enforced before committing",
+      "read pagination respects item and byte bounds, preserves order and meters every successful page",
+      "search uses keys, topics and body while cursors reject writes or different filters",
+      "invalid payloads, spoofed fields and unavailable callers leave state unchanged",
+      "durable boundary rejects duplicate keys, invalid generations and oversized payloads"
+    ]
+  },
+  {
+    "file": "tests/unit/whiteboard-cost.test.ts",
+    "reason": "Removed whiteboard-only feature tests; protocol absence, custody discovery and mail accounting have replacement coverage.",
+    "tests": [
+      "BOARD-COST-01: repeated and stale snapshots cannot reset or double-count cumulative usage",
+      "BOARD-COST-02: independent networks add once and empty reads charge their array payload"
+    ]
+  },
+  {
+    "file": "tests/integration/whiteboard.test.ts",
+    "reason": "Removed whiteboard-only feature tests; protocol absence, custody discovery and mail accounting have replacement coverage.",
+    "tests": [
+      "BOARD-01: real tool publication derives author identity and refuses foreign mutation or outsider access",
+      "BOARD-02: publishing, reading and removing create no mail, driver calls or peer steps",
+      "BOARD-03: concurrent compare-and-swap writes cannot lose updates or successful read accounting",
+      "BOARD-04: entries, monotonic revisions and metering survive cold recovery"
+    ]
+  },
+  {
+    "file": "tests/integration/whiteboard-telemetry.test.ts",
+    "reason": "Removed whiteboard-only feature tests; protocol absence, custody discovery and mail accounting have replacement coverage.",
+    "tests": [
+      "BOARD-TELEMETRY-01: live publish/read/remove exports only counters, charges empty reads and preserves totals"
+    ]
+  }
+]

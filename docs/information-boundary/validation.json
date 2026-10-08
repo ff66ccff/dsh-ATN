@@ -1,0 +1,88 @@
+{
+  "version": "0.5.0",
+  "date": "2026-10-08",
+  "causalClaim": false,
+  "paidModelCalls": 0,
+  "preFix": {
+    "commit": "7133c42",
+    "tests": 2,
+    "passed": 0,
+    "failed": 2,
+    "exitCode": 1,
+    "evidence": "pre-fix-failures.tap",
+    "sha256": "3bc69149b6002f8bf57a5146636bdb32eec7d8990e2ac561d6b4864f0c893e61"
+  },
+  "boundary": {
+    "registeredOutboundChannels": 13,
+    "modelTools": 5,
+    "removedWhiteboardTests": 16
+  },
+  "checks": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "serverTests": 542,
+      "serverPassed": 542,
+      "clientTests": 8,
+      "clientPassed": 8,
+      "skipped": 0,
+      "cancelled": 0,
+      "log": "../../.artifacts/information-boundary-final-tests.txt",
+      "sha256": "10e37594d42c87efd37f263209c5f4f6912070f3f15e37a204187d211aef0fb9"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "../../.artifacts/information-boundary-typecheck.txt",
+      "sha256": "41427cf1fbf2d4863171cb5f85448ff71204a2997993e138896dacc7c4db2654"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "removedWhiteboardModulesPresent": false,
+      "log": "../../.artifacts/information-boundary-build.txt",
+      "sha256": "984a30f929b95f54291c7f9d337ffadeb427dada372bc77f5d1290b0b483f9cc"
+    },
+    {
+      "command": "npm run pack:tarball",
+      "exitCode": 0,
+      "log": "../../.artifacts/information-boundary-pack.txt",
+      "sha256": "9e647fbb293631f6ffa6b36a337591a1781b2161abbf8db4c3c58f0ca8dd757b"
+    },
+    {
+      "command": "npm run smoke:profile",
+      "exitCode": 0,
+      "unchangedExistingConfigRows": 183,
+      "modelTools": 5,
+      "childPreset": "atn",
+      "nodes": 2,
+      "userPatchUnchanged": true,
+      "log": "../../.artifacts/information-boundary-profile-smoke.txt",
+      "sha256": "2f417eca5aed1a3888156b62cad95ba2dbbfe9fa2e9dd1e6da603c345cfefa59"
+    }
+  ],
+  "additionalChecks": {
+    "runnableExample": {
+      "command": "node --import tsx/esm examples/information-boundary.ts",
+      "exitCode": 0
+    },
+    "builtPublicApiImport": "passed",
+    "tarballContents": "passed: no whiteboard module; custody implementation and refusal declarations present",
+    "diffWhitespace": "passed"
+  },
+  "bindingCompatibility": {
+    "cases": 8,
+    "orderedRecordsEqual": true,
+    "before": "binding-before.json",
+    "after": "binding-after.json",
+    "beforeSha256": "2444b5d6bd284204ea5d8af91d6cc19268d1bcb365ce50ebf33ea00f096ca314",
+    "afterSha256": "2444b5d6bd284204ea5d8af91d6cc19268d1bcb365ce50ebf33ea00f096ca314"
+  },
+  "artifact": {
+    "path": "../../.artifacts/dsh-atn-0.5.0.tgz",
+    "files": 102,
+    "sha1": "7987d3a1316e2a1b88415df2dbfb153ead9312cf",
+    "sha256": "137221607973ac77c97c4bb7011b5cf40d92123a3eb2e1e09d3f3752c667443e",
+    "publishedToNpm": false
+  }
+}

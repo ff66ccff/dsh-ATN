@@ -39,7 +39,7 @@ test('M2: the bundle rows load into a real kernel and register the ATN tools', a
     assert.ok(kernel.ctx.atn, 'the runtime service is reachable as ctx.atn')
     const names = kernel.ctx.tools.schemas().map((schema) => schema.name)
     assert.deepEqual(names.filter(name => name.startsWith('atn_')).sort(), [
-      'atn_board', 'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
+      'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
     ])
     assert.ok(SHARED_RULES.split('\n').length <= 6, 'the shared rules remain compact')
     assert.ok(!/atn_(peers|tasks|propose|vote|renew|deliver)\b/.test(SHARED_RULES), 'the prompt only names available tools')
@@ -111,7 +111,7 @@ test('AGENT-02: every node advertises the same ATN tool set', async () => {
       hostSets[hostSets.length - 1]!.tools,
       'the child sees the same tools as the host, including every ATN tool',
     )
-    for (const tool of ['atn_start', 'atn_spawn', 'atn_send', 'atn_status', 'atn_board', 'atn_finish']) {
+    for (const tool of ['atn_start', 'atn_spawn', 'atn_send', 'atn_status', 'atn_finish']) {
       assert.ok(childSets[childSets.length - 1]!.tools.includes(tool), `${tool} is available to the child`)
     }
   })

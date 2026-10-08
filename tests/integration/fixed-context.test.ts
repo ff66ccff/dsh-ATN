@@ -7,13 +7,13 @@ import { join } from 'node:path'
 import { bootKernel } from '../fixtures/kernel.ts'
 import { measureAtnFixedContext, SHARED_RULES } from '../../src/tools.ts'
 
-test('RECOVERY-CONTEXT: six tools, six behavioral rules and bounded fixed bytes', async () => {
+test('RECOVERY-CONTEXT: five tools, six behavioral rules and bounded fixed bytes', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-fixed-context-'))
   const kernel = await bootKernel(scratch)
   try {
     const schemas = kernel.ctx.tools.schemas().filter(row => row.name.startsWith('atn_'))
     assert.deepEqual(schemas.map(row => row.name).sort(), [
-      'atn_board', 'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
+      'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
     ])
     assert.ok(SHARED_RULES.split('\n').length <= 6)
     const measured = measureAtnFixedContext(schemas)

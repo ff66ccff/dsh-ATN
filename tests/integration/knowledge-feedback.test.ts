@@ -1,3 +1,4 @@
+import { setHostKnowledge } from '../fixtures/host-custody.ts'
 /** Real tool identity, discovery ranking, no-wakeup updates and durable recovery. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
@@ -54,20 +55,21 @@ function toolResults(agent: Agent): { isError?: boolean; content?: readonly { te
     .map(event => (event.data as { message: { isError?: boolean; content?: readonly { text?: string }[] } }).message)
 }
 
-test('KNOWLEDGE-01: real publish and feedback tools derive identity from the live calling agent', async () => {
+test('KNOWLEDGE-01: removed publication cannot forge custody; feedback derives live caller identity', async () => {
   await withKernel(async kernel => {
     const host = await createHostAgent(kernel, 'knowledge-tools-host')
     const started = await kernel.atn.start(host, goal)
     const worker = await spawn(kernel, host)
+    await setHostKnowledge(kernel.atn, worker.agent, knowledge)
     kernel.model.enqueue(worker.sessionId, [{ tool: 'atn_board', args: {
       action: 'publish', key: 'slot-5', body: 'Evidence available.', documents: knowledge.documents, topics: knowledge.topics, expectedRevision: 0,
     } }])
     await drive(worker.agent, 'Publish the evidence you have read.')
     await settle(kernel)
     let record = await kernel.atn.network(started.networkId)
-    assert.deepEqual(record.whiteboard?.entries.find(entry => entry.authorId === worker.nodeId)?.topics, ['slot 5'])
-    assert.equal(record.nodes[started.nodeId].knowledgeFingerprint, undefined)
-    assert.equal(toolResults(worker.agent).at(-1)?.isError, false)
+    assert.deepEqual(record.nodes[worker.nodeId].knowledgeFingerprint?.topics, ['slot 5'])
+    assert.deepEqual(record.nodes[started.nodeId].knowledgeFingerprint?.documents, [])
+    assert.equal(toolResults(worker.agent).at(-1)?.isError, true)
 
     const taskId = await submit(kernel, started.networkId, worker)
     const opinion = { taskId, status: 'accepted', summary: 'Matches local evidence.',
@@ -97,7 +99,7 @@ test('KNOWLEDGE-01: real publish and feedback tools derive identity from the liv
     assert.equal(toolResults(outsider).length, 2)
     assert.ok(toolResults(outsider).every(result => result.isError === true))
     const unchanged = await kernel.atn.network(started.networkId)
-    assert.deepEqual(unchanged.whiteboard?.entries, record.whiteboard?.entries)
+    assert.deepEqual(unchanged.nodes[worker.nodeId].knowledgeFingerprint, record.nodes[worker.nodeId].knowledgeFingerprint)
     assert.deepEqual(unchanged.tasks[taskId].localFeedback, record.tasks[taskId].localFeedback)
   })
 })
@@ -110,8 +112,8 @@ test('KNOWLEDGE-02: identical assignments become discoverable and requester qual
     const second = await spawn(kernel, host)
     await kernel.atn.rewire(host, { peers: [] })
     assert.deepEqual((await kernel.atn.status(host, { query: 'slot 5' })).candidates, [])
-    await kernel.atn.publishKnowledge(first.agent, knowledge)
-    await kernel.atn.publishKnowledge(second.agent, knowledge)
+    await setHostKnowledge(kernel.atn, first.agent, knowledge)
+    await setHostKnowledge(kernel.atn, second.agent, knowledge)
     const firstTask = await submit(kernel, started.networkId, first)
     const secondTask = await submit(kernel, started.networkId, second)
     const before = await kernel.atn.status(host, { query: 'slot 5' })
@@ -134,7 +136,7 @@ test('KNOWLEDGE-02: identical assignments become discoverable and requester qual
     assert.deepEqual(updated.mails, prior.mails, 'feedback creates no protocol messages')
     assert.equal(updated.stepsUsed, prior.stepsUsed)
 
-    await kernel.atn.publishKnowledge(first.agent, { documents: [], topics: ['unique amber lookup'], contributions: [] })
+    await setHostKnowledge(kernel.atn, first.agent, { documents: ['catalog/amber.json'], topics: ['unique amber lookup'], contributions: [] })
     assert.deepEqual((await kernel.atn.status(host, { query: 'unique amber lookup' })).candidates, [first.nodeId],
       'unrelated popularity cannot replace the evidence actually requested')
   })
@@ -152,8 +154,8 @@ test('KNOWLEDGE-03: concurrent local updates do not lose writes or wake peers an
     const before = await kernel.atn.network(started.networkId)
     const requestCount = kernel.model.requests.length
     await Promise.all([
-      kernel.atn.publishKnowledge(first.agent, knowledge),
-      kernel.atn.publishKnowledge(second.agent, { documents: ['evidence/slot-6.json'], topics: ['slot 6'], contributions: [] }),
+      setHostKnowledge(kernel.atn, first.agent, knowledge),
+      setHostKnowledge(kernel.atn, second.agent, { documents: ['evidence/slot-6.json'], topics: ['slot 6'], contributions: [] }),
       kernel.atn.feedback(host, { taskId, status: 'accepted', summary: 'Checked locally.', evidence: ['check.json'], comparisonKey: 'lookup-v1' }),
     ])
     await settle(kernel)
@@ -314,22 +316,22 @@ test('RECOVERY-EDGE-02: unused feedback and unused new edges have distinct reaso
   })
 })
 
-test('RECOVERY-DISCOVERY: board metadata is discoverable without a knowledge index; legacy indices stay readable', async () => {
+test('RECOVERY-DISCOVERY: host custody is discoverable without a board; new host assignments replace the index', async () => {
   await withKernel(async kernel => {
     const host = await createHostAgent(kernel, 'board-discovery-host')
     const started = await kernel.atn.start(host, goal)
     const worker = await spawn(kernel, host)
     await kernel.atn.rewire(host, { peers: [] })
-    await kernel.atn.board(worker.agent, { action: 'publish', key: 'evidence', body: 'Details on the board.',
-      documents: ['documents/amber-proof.json'], topics: ['violet-domain'], expectedRevision: 0 })
+    await setHostKnowledge(kernel.atn, worker.agent, {
+      documents: ['documents/amber-proof.json'], topics: ['violet-domain'], contributions: [] })
     const record = await kernel.atn.network(started.networkId)
-    assert.equal(record.nodes[worker.nodeId].knowledgeFingerprint, undefined)
+    assert.equal(record.nodes[worker.nodeId].knowledgeFingerprint?.source, 'host-custody')
     assert.deepEqual((await kernel.atn.status(host, { query: 'amber-proof' })).candidates, [worker.nodeId])
     assert.deepEqual((await kernel.atn.status(host, { query: 'violet-domain' })).candidates, [worker.nodeId])
-    // Runtime API retains compatibility for integrations predating board publication.
-    await kernel.atn.publishKnowledge(worker.agent, { documents: ['legacy/cobalt.json'], topics: [], contributions: [] })
+    // Only the host can assign a replacement custody set.
+    await setHostKnowledge(kernel.atn, worker.agent, { documents: ['legacy/cobalt.json'], topics: [], contributions: [] })
     assert.deepEqual((await kernel.atn.status(host, { query: 'cobalt' })).candidates, [worker.nodeId])
-    assert.deepEqual((await kernel.atn.status(host, { query: 'amber-proof' })).candidates, [worker.nodeId])
+    assert.deepEqual((await kernel.atn.status(host, { query: 'amber-proof' })).candidates, [])
   })
 })
 

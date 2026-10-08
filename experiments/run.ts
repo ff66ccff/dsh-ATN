@@ -41,6 +41,9 @@ import { advanceTopologyScenario, provisionTopologyScenario } from './topology-h
 import { assertReferenceFeasible, topologyRuntimeConfig, relativeAtnMetrics, PRIMARY_METRICS } from './measurement-gate.ts'
 import { calibratedTokenLimit, type CalibrationSample } from './calibration.ts'
 import { summarizeMeasurements } from './measurement-summary.ts'
+import { equalBudgetAllocations, createEqualBudgetAdmission, EQUAL_BUDGET_V3_MODES } from './equal-budget.ts'
+import { getEqualBudgetTask, renderEqualBudgetPrompt, renderEqualBudgetSingleScaffoldedPrompt, evaluateEqualBudgetTask } from './equal-budget-task.ts'
+import { installEqualBudgetObserver } from './equal-budget-observer.ts'
 
 // Capture once per process, before a batch starts. Do not edit source during runs.
 const sourceFiles = ['run.ts', 'budget.ts', 'submission.ts', 'tasks.ts', 'evaluation.ts', 'topology-task.ts', 'topology-evaluation.ts', 'topology-host.ts', 'provider.ts', 'telemetry.ts', 'session-query.ts',
@@ -52,7 +55,7 @@ const sourceFiles = ['run.ts', 'budget.ts', 'submission.ts', 'tasks.ts', 'evalua
 const diskSourceHashesAtModuleLoad = Object.fromEntries(await Promise.all(sourceFiles.map(async path =>
   [path, createHash('sha256').update(await readFile(new URL(path, import.meta.url))).digest('hex')])))
 
-export const PILOT_MODES = ['single', 'independent-pool', 'native-team', 'atn-no-rewire', 'atn-adaptive',
+export const PILOT_MODES = ['single', 'single-scaffolded', 'independent-pool', 'native-team', 'atn-no-rewire', 'atn-adaptive',
   'atn-no-rewire-preassigned-backup', 'atn-adaptive-preassigned-backup'] as const
 export type PilotMode = typeof PILOT_MODES[number]
 export interface RunOptions {
@@ -60,6 +63,8 @@ export interface RunOptions {
   maxCalls: number; maxOutputTokens: number; observedTokenLimit: number | null; timeoutMs: number; maxAgents: number
   /** ATN step budget per node, including the entry; separate from the global experiment safety cap. */
   perNodeSteps?: number
+  /** Opt-in equal-budget fixture; legacy pilot/topology behavior stays unchanged. */
+  equalBudget?: { seed: number; agents: number; steps: number; shards?: number; ordersPerShard?: number; compactAnswer?: boolean }
   calibration?: boolean
   calibrationSamples?: readonly CalibrationSample[]
 }
@@ -70,8 +75,15 @@ function codeOf(error: unknown): string {
 }
 
 /** Synthetic task inputs only: no shell, filesystem, network or environment tool is exposed. */
-export async function runPilot(options: RunOptions) {
+export async function runPilot(options: RunOptions, mount?: { liveProviderMount(ctx: Context): Promise<void> }) {
   assertAllowedPilotModel(options.model)
+  const equal = options.equalBudget
+  if (options.mode === 'single-scaffolded' && !equal) throw new Error('single-scaffolded requires an equal-budget ledger task')
+  const singleAgentMode = options.mode === 'single' || options.mode === 'single-scaffolded'
+  const allocation = equal ? equalBudgetAllocations(equal.agents, equal.steps, EQUAL_BUDGET_V3_MODES).find(row => row.mode === options.mode) : undefined
+  if (equal && (!allocation || options.task !== 'ledger-reconciliation' || options.maxCalls !== allocation.totalSteps ||
+    options.maxAgents !== allocation.agents || options.perNodeSteps !== equal.steps)) throw new Error('Invalid equal-budget arm configuration')
+  const allocated = allocation ? createEqualBudgetAdmission(allocation) : undefined
   if (isTopologyTask(options.task) && !options.mode.startsWith('atn-')) throw new Error('Distributed topology tasks require an ATN mode; use legacy tasks for architecture smoke tests')
   const perNodeSteps = options.perNodeSteps ?? 16
   if (!Number.isSafeInteger(perNodeSteps) || perNodeSteps < 1 || perNodeSteps > 64) throw new Error('perNodeSteps must be an integer from 1 to 64')
@@ -79,7 +91,7 @@ export async function runPilot(options: RunOptions) {
   const calibrationKey = { model: options.model.id, task: options.task, maxAgents: options.maxAgents,
     perNodeSteps, maxOutputTokens: options.maxOutputTokens, recoveryMode } as const
   // This is outside the provider try/catch: an infeasible arm never loads an adapter.
-  const reference = options.mode.startsWith('atn-') ? await assertReferenceFeasible(options.task,
+  const reference = options.mode.startsWith('atn-') && !equal ? await assertReferenceFeasible(options.task,
     { maxAgents: options.maxAgents, perNodeSteps, timeoutMs: options.timeoutMs, maxCalls: options.maxCalls, recoveryMode }) : null
   if (reference && options.maxCalls < options.maxAgents * perNodeSteps) throw new Error('Global call safety cap must cover every per-node step allocation')
   const tokenCalibration = reference && !options.calibration
@@ -89,13 +101,20 @@ export async function runPilot(options: RunOptions) {
   const ctx = new Context()
   ctx.baseUrl = import.meta.url
   const topologyTask = isTopologyTask(options.task) ? getTopologyTask(options.task, options.maxAgents) : undefined
-  const task = topologyTask ? undefined : getPilotTask(options.task as PilotTaskId)
+  const equalTask = equal ? getEqualBudgetTask(equal.seed, equal.shards, { ordersPerShard: equal.ordersPerShard, compactAnswer: equal.compactAnswer }) : undefined
+  const pilotTask = topologyTask || equalTask ? undefined : getPilotTask(options.task as PilotTaskId)
+  const task = equalTask ?? pilotTask
   const scenario = topologyTask ? new TopologyScenario(topologyTask, { recoveryMode }) : undefined
   const taskId = options.task
   const taskRevision = (topologyTask ?? task)!.revision
-  const prompt = topologyTask ? renderTopologyPrompt(topologyTask, recoveryMode) : renderTaskPrompt(task!)
+  const prompt = topologyTask ? renderTopologyPrompt(topologyTask, recoveryMode) : equalTask
+    ? options.mode === 'single-scaffolded' ? renderEqualBudgetSingleScaffoldedPrompt(equalTask) : renderEqualBudgetPrompt(equalTask)
+    : renderTaskPrompt(pilotTask!)
   const directory = resolve(options.directory)
   await mkdir(directory, { recursive: true })
+  // Persist the exact task prompt before provider setup, including zero-call failures.
+  const taskPrompt = equalTask ? { file: 'equal-budget-prompt.txt', sha256: createHash('sha256').update(prompt).digest('hex') } : undefined
+  if (taskPrompt) await writeFile(join(directory, taskPrompt.file), prompt, 'utf8')
   const runId = randomUUID()
   const started = Date.now()
   let entry: Agent | undefined
@@ -107,8 +126,14 @@ export async function runPilot(options: RunOptions) {
   let peakAgents = 0
   let totalAgents = 0
   let agentCreationEvents = 0
+  let agentCapacityRejections = 0
   let maxTokenTruncations = 0
   const agentSessions = new Set<string>()
+  const equalSessionAliases = new Map<string, string>()
+  let nativeInteractions = 0
+  let nativeTransferBytes = 0
+  const nativeMessageIds = new Set<string>()
+  let independentTransferBytes = 0
   let ended = false
   const requestFailures: Array<{ code: string; status?: number }> = []
   let telemetry: Awaited<ReturnType<typeof installTelemetry>> | undefined
@@ -120,6 +145,7 @@ export async function runPilot(options: RunOptions) {
   let protocol: unknown = null
   let cleanup = 'released'
   let submissionMetrics: TelemetrySnapshot | null = null
+  let factObserver: ReturnType<typeof installEqualBudgetObserver> | undefined
   let submissionBoundary = -1
   let finalTextExtraction: ReturnType<typeof extractFinalTextSubmission> | null = null
   const submissionBoundaries = new Map<string, number>()
@@ -134,7 +160,7 @@ export async function runPilot(options: RunOptions) {
   }
   const independentCandidates: Array<ReturnType<typeof extractFinalTextSubmission>> = []
   const candidateCalls = new Map<string, number>()
-  const candidateCallLimit = Math.floor((options.maxCalls - 1) / (options.maxAgents - 1))
+  const candidateCallLimit = equal?.steps ?? Math.floor((options.maxCalls - 1) / (options.maxAgents - 1))
   const nativeQueuedMail = (): number => {
     const pending = new Set<string>()
     for (const event of entry?.session.snapshotEvents() ?? []) {
@@ -168,12 +194,21 @@ export async function runPilot(options: RunOptions) {
     await ctx.plugin(AgentRegistry)
     await ctx.plugin(JsonlSessionPersistence, { root: join(directory, 'sessions'), compression: 'none' })
     await ctx.plugin(AgentLoop, { agents: [], maxParallelToolCalls: 1 })
-    await ctx.plugin(OpenCodeGo, {
+    if (mount) await mount.liveProviderMount(ctx)
+    else await ctx.plugin(OpenCodeGo, {
       apiKeyEnv: 'OPENCODE_API_KEY', usageDisplay: 'off', streamIdleTimeoutMs: Math.min(60_000, options.timeoutMs),
       modelLimits: { [options.model.id]: { maxTokens: options.maxOutputTokens } },
     })
     if (!ctx.llm.listProviders().some(provider => provider.id === OpenCodeGo.PROVIDER_ID)) throw new Error('OpenCode plugin route is unavailable')
     telemetry = await installTelemetry(ctx, { directory, runId, prices })
+    if (equal) ctx.on('session/event', (session, event) => {
+      if (!equalSessionAliases.has(session.id)) equalSessionAliases.set(session.id, `session-${equalSessionAliases.size + 1}`)
+      if (event.type === 'team/message/queued' && !nativeMessageIds.has(`${event.data.teamId}:${event.data.message.id}`)) {
+        nativeMessageIds.add(`${event.data.teamId}:${event.data.message.id}`)
+        nativeInteractions++
+        nativeTransferBytes += Buffer.byteLength(JSON.stringify(event.data.message), 'utf8')
+      }
+    }, { global: true })
     ctx.on('session/event', (_session, event) => {
       if (event.type === 'turn/end' && event.data.reason.kind === 'max-tokens') maxTokenTruncations++
     }, { global: true })
@@ -187,6 +222,7 @@ export async function runPilot(options: RunOptions) {
     ctx.on('llm/stream', (request, next) => (async function* () {
       // Host-created workers cannot see or act on a partially provisioned graph.
       await provisioningReady
+      if (allocated && !allocated.canAdmit(request.sessionId)) throw new Error('equal-budget-agent-step-cap')
       const candidateUsed = request.sessionId ? candidateCalls.get(request.sessionId) : undefined
       if (candidateUsed !== undefined && candidateUsed >= candidateCallLimit) throw new Error('pilot-independent-candidate-limit')
       const observed = telemetry?.snapshot().totals.tokens.totalTokens
@@ -197,6 +233,7 @@ export async function runPilot(options: RunOptions) {
         throw new Error(`pilot-${admission.reason}`)
       }
       if (candidateUsed !== undefined) candidateCalls.set(request.sessionId!, candidateUsed + 1)
+      if (allocated) allocated.admit(request.sessionId!)
       for await (const chunk of next()) {
         if (chunk.type === 'finish' && chunk.reason.kind === 'error') {
           const failure = chunk.reason.failure
@@ -214,6 +251,9 @@ export async function runPilot(options: RunOptions) {
       submissionBoundaries.set(agent.id, agent.session.snapshotEvents().at(-1)?.seq ?? -1)
       totalAgents = agentSessions.size
       peakAgents = Math.max(peakAgents, ctx.agents.list().length)
+      if (allocated) {
+        try { allocated.register(agent.id) } catch (error) { agentCapacityRejections++; throw error }
+      }
       return undefined
     })
     const policy = [
@@ -224,7 +264,8 @@ export async function runPilot(options: RunOptions) {
         : 'Only the initial entry/Lead may submit_answer. Workers return their findings through their architecture tools, or as final JSON text if no collaboration tools exist.',
       'Before final submission finish required collaboration. Give exactly one final JSON answer via submit_answer or your final text response; do not include surrounding prose.',
       `Run bounds: at most ${options.maxAgents} total agents including the entry, ${options.maxCalls} model calls across all agents, ${options.maxOutputTokens} output tokens per call. Keep coordination concise.`,
-      options.mode.startsWith('atn-') ? `Each node, including the entry, has ${perNodeSteps} admitted model steps. Exhausted nodes retire; the global call cap is a separate experiment safety limit.` : '',
+      equal ? `Your individual allocation is ${allocation!.perAgentSteps[0]} model calls${singleAgentMode ? '' : ' (every worker and the entry have the same allocation)'}. Total allocated calls across the arm: ${allocation!.totalSteps}. Unused allocations cannot be borrowed. These are model-step limits, not token, HTTP-request or monetary limits.`
+        : options.mode.startsWith('atn-') ? `Each node, including the entry, has ${perNodeSteps} admitted model steps. Exhausted nodes retire; the global call cap is a separate experiment safety limit.` : '',
       options.mode === 'native-team' ? 'The user explicitly requests use of Agent Teams. Choose your own collaborators and task strategy using the native Team tools.' : '',
       options.mode.includes('no-rewire') ? 'Experimental ablation: voluntary atn_status rewire is disabled. Birth connections and inactive-neighbour repair still operate. All other ATN rules apply.' : '',
     ].filter(Boolean).join('\n')
@@ -252,6 +293,7 @@ export async function runPilot(options: RunOptions) {
         }
         const document = task!.documents.find(item => item.id === args.id)
         if (!document) throw new Error('Unknown task document')
+        if (execution.agent) factObserver?.recordRead(execution.agent.id, document.id)
         return { id: document.id, text: document.text }
       },
     }))
@@ -264,6 +306,7 @@ export async function runPilot(options: RunOptions) {
         if (Buffer.byteLength(args.answer, 'utf8') > 16_384) throw new Error('Answer exceeds the artifact size limit')
         if (answer !== undefined) throw new Error('An answer was already submitted')
         answer = args.answer
+        factObserver?.recordSubmission(execution.agent!.id, args.answer)
         submissionMethod = 'tool'
         stopReason = 'submitted'
         submissionMetrics = telemetry?.snapshot() ?? null
@@ -282,8 +325,9 @@ export async function runPilot(options: RunOptions) {
         if (scenario && scenario.snapshot().phase !== 2) throw new Error('Final submission requires the phase 2 update')
         if (Buffer.byteLength(input.summary, 'utf8') > 16_384) throw new Error('Answer exceeds the artifact size limit')
         if (answer !== undefined) throw new Error('An answer was already submitted')
-      }, submitted => {
+      }, (submitted, agent) => {
         answer = submitted; submissionMethod = 'tool'; stopReason = 'submitted'
+        factObserver?.recordSubmission(agent.id, submitted)
         submissionMetrics = telemetry?.snapshot() ?? null
         signalEnd()
       })
@@ -293,9 +337,10 @@ export async function runPilot(options: RunOptions) {
       await ctx.plugin(SubagentRuntime, { maxActiveSubagents: options.maxAgents - 1, maxDepth: 1 })
       await ctx.plugin(Spawn, { providerName: 'spawn' })
       await ctx.plugin(Fork, { providerName: 'fork' })
-      await ctx.plugin(TeamService, { maxMembers: options.maxAgents - 1, maxTasks: 32, maxPendingMessagesPerMember: 32, maxMessageBytes: 8192 })
+      await ctx.plugin(TeamService, { maxMembers: options.maxAgents - 1, maxTasks: equal ? 128 : 32, maxPendingMessagesPerMember: 32, maxMessageBytes: 8192 })
       await ctx.plugin(TeamTools, { freshProvider: 'spawn', forkProvider: 'fork' })
     }
+    if (equalTask) factObserver = installEqualBudgetObserver(ctx, equalTask, session => allocated!.alias(session))
     const handle = await ctx.agents.create({ sessionId: SessionId(`pilot-${runId}`),
       agentOptions: { provider: OpenCodeGo.PROVIDER_ID, model: options.model.id, maxTokens: options.maxOutputTokens },
       meta: { cwd: join(directory, 'workspace') } })
@@ -303,10 +348,12 @@ export async function runPilot(options: RunOptions) {
     await mkdir(join(directory, 'workspace'), { recursive: true })
     await writeFile(join(directory, 'input.json'), JSON.stringify(topologyTask ?? task, null, 2) + '\n')
     await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, mode: options.mode, task: taskId, taskRevision,
-      taskSha256: createHash('sha256').update(JSON.stringify(topologyTask ?? task)).digest('hex'), provider: OpenCodeGo.PROVIDER_ID, model: options.model,
+      taskSha256: createHash('sha256').update(JSON.stringify(topologyTask ?? task)).digest('hex'), taskPrompt, provider: OpenCodeGo.PROVIDER_ID, model: options.model,
       limits: { calls: options.maxCalls, perCallOutputTokens: options.maxOutputTokens, observedTokens: observedTokenLimit,
         tokenLimitIsAdmissionThreshold: true, timeoutMs: options.timeoutMs, agents: options.maxAgents, perNodeSteps, maxTasks: 128 },
       calibration: !!options.calibration, tokenCalibration, primaryMetrics: PRIMARY_METRICS, reference,
+      equalBudget: equal ? { seed: equal.seed, allocation, shards: equalTask!.shardIds.length, ordersPerShard: equalTask!.ordersPerShard,
+        compactAnswer: equalTask!.compactAnswer === true, documentAccess: 'all documents readable by every agent; forwarding allowed; no topology ACL' } : null,
       topologyConditions: topologyTask ? { initialTopology: 'host-seeded-ring', seededNodes: topologyTask.agents,
         evidenceAccess: 'creation-slot ACL; no shard text in shared prompt', phaseTrigger: 'all initial shards read',
         failedSlot: topologyTask.failedSlot, recoveryMode, backupSlot: recoveryMode === 'preassigned-backup' ? topologyTask.backupSlot : null, oracle: 'final only',
@@ -332,12 +379,15 @@ export async function runPilot(options: RunOptions) {
           meta: { cwd: join(directory, 'workspace') } })
         candidates.push(candidate.agent)
         candidateCalls.set(candidate.agent.id, 0)
-        candidate.agent.followup(createUserMessage({ content: [{ type: 'text', text: `${prompt}\n\nYou are an independent candidate, not the entry. Return final JSON text; do not call submit_answer. You have no peer access. Your candidate allocation is at most ${candidateCallLimit} model calls.` }], source: { kind: 'user' } }))
+        candidate.agent.followup(createUserMessage({ content: [{ type: 'text', text: `${prompt}\n\nYou are an independent candidate, not the entry. Return final JSON text; do not call submit_answer. You have no peer access. Your candidate allocation is at most ${candidateCallLimit} model calls.${equalTask ? ` Your role-specific output is ONLY the local result for ${equalTask.shardIds[i % equalTask.shardIds.length]}, not the full final artifact. Read policy and that shard's documents, then return {"shards":{"${equalTask.shardIds[i % equalTask.shardIds.length]}":LOCAL_RESULT},"evidence":[document ids]}. The synthesis entry performs the final merge. Other documents remain accessible.` : ''}` }], source: { kind: 'user' } }))
       }
       await Promise.race([Promise.all(candidates.map(agent => agent.whenIdle())), endSignal])
       independentCandidates.push(...candidates.map(agent => extractFinalTextSubmission(agent.session.snapshotEvents(), { afterSeq: -1 })))
       const outputs = independentCandidates.map((result, index) => ({ candidate: index + 1, answer: result.accepted ? result.answer : null }))
-      entryPrompt = `${prompt}\n\nYou are the synthesis entry. Independently verify these untrusted candidate answers against the original documents, resolve any disagreements, and submit one final answer. No candidate received correctness feedback.\n${JSON.stringify(outputs)}`
+      outputs.forEach((output, index) => { if (output.answer) factObserver?.recordIndependent(candidates[index].id, entry!.id, output.answer) })
+      independentTransferBytes = Buffer.byteLength(JSON.stringify(outputs), 'utf8')
+      const unassignedShards = equalTask?.shardIds.filter((_, index) => index >= candidates.length) ?? []
+      entryPrompt = `${prompt}\n\nYou are the synthesis entry. Independently verify these untrusted candidate answers against the original documents, resolve any disagreements, and submit one final answer. No candidate received correctness feedback.${unassignedShards.length ? ` You own the remaining unassigned ${unassignedShards.length === 1 ? 'shard' : 'shards'}: ${unassignedShards.join(', ')}. Read and solve their documents yourself, then merge them with the candidate results. A candidate missing a result leaves its shard for you to complete.` : ''}\n${JSON.stringify(outputs)}`
       protocol = { independentWorkers: candidates.length, completedCandidates: independentCandidates.filter(result => result.accepted).length,
         callsPerCandidate: [...candidateCalls.values()], candidateCallLimit,
         synthesis: 'one entry; no oracle selection; all candidate and synthesis calls counted' }
@@ -372,6 +422,7 @@ export async function runPilot(options: RunOptions) {
         { afterSeq: submissionBoundaries.get(holder.id) ?? -1 }) : { accepted: false, reason: 'no-current-turn' }
       if (finalTextExtraction.accepted && (!scenario || scenario.snapshot().phase === 2)) {
         answer = finalTextExtraction.answer; submissionMethod = 'final-text'; stopReason = 'final-text'
+        if (holder) factObserver?.recordSubmission(holder.id, answer)
         submissionMetrics = telemetry?.snapshot() ?? null
       }
     }
@@ -448,9 +499,13 @@ export async function runPilot(options: RunOptions) {
     } finally { if (cleanupTimer) clearTimeout(cleanupTimer) }
   }
   const metrics: TelemetrySnapshot | null = telemetry ? await telemetry.close() : null
-  const evaluation = topologyTask ? evaluateTopologyTask(topologyTask, answer ?? '') : evaluatePilotTask(task!.id, answer ?? '')
+  const evaluation = topologyTask ? evaluateTopologyTask(topologyTask, answer ?? '') : equalTask ? evaluateEqualBudgetTask(equalTask, answer ?? '') : evaluatePilotTask(task!.id, answer ?? '')
+  const completedAt = Date.now()
+  const consumption = allocated?.snapshot()
+  const factFlow = factObserver?.finish(answer, entry?.id)
+  if (factFlow) await writeFile(join(directory, 'fact-flow.json'), JSON.stringify(factFlow, null, 2) + '\n')
   const report = { runId, mode: options.mode, model: options.model.id, task: taskId, stopReason,
-    elapsedMs: Date.now() - started, issuedModelCalls: budget.snapshot().issued, budget: budget.snapshot(), peakAgents, totalAgents, agentCreationEvents,
+    startedAt: started, completedAt, elapsedMs: completedAt - started, issuedModelCalls: budget.snapshot().issued, budget: budget.snapshot(), peakAgents, totalAgents, agentCreationEvents,
     requestFailures, maxTokenTruncations, protocol, evaluation, metrics, submissionMetrics, submissionMethod, finalTextExtraction,
     independentCandidates, cleanup, answer: answer ?? null, manipulation: scenario?.snapshot() ?? null,
     calibration: !!options.calibration, tokenCalibration,
@@ -458,7 +513,15 @@ export async function runPilot(options: RunOptions) {
     primaryMetrics: PRIMARY_METRICS, reference,
     atnMessages: metrics?.atnMessages ?? 0, atnPayloadBytes: metrics?.atnPayloadBytes ?? 0,
     fixedContextBytes: metrics?.fixedContextBytes ?? null, meanInputTokensPerCall: metrics?.meanInputTokensPerCall ?? null,
-    relativeMetrics: reference && metrics ? relativeAtnMetrics(metrics.atnMessages, metrics.atnPayloadBytes, reference) : null }
+    relativeMetrics: reference && metrics ? relativeAtnMetrics(metrics.atnMessages, metrics.atnPayloadBytes, reference) : null,
+    ...(equal ? { seed: equal.seed, execution: 'live-provider' as const, causalClaim: false as const, allocation: allocation!, taskPrompt: taskPrompt!,
+      entrySteps: consumption?.[0]?.used ?? 0, agentSteps: Object.fromEntries((consumption ?? []).map(row => [row.alias, row.used])),
+      agentSessions: Object.fromEntries([...agentSessions].map(id => [allocated!.alias(id), [equalSessionAliases.get(id) ?? 'unknown']])),
+      allocatedConsumption: consumption, uncreatedAgentSlots: allocation!.agents - (consumption?.length ?? 0), agentCapacityRejections,
+      factFlowAudit: factFlow?.audit ?? { passed: false, unknown: true },
+      protocolInteractions: options.mode.startsWith('atn-') ? metrics?.atnTotalInteractions ?? null : options.mode === 'native-team' ? nativeInteractions : options.mode === 'independent-pool' ? independentCandidates.length : 0,
+      protocolTransferBytes: options.mode.startsWith('atn-') ? metrics?.atnTotalTransferBytes ?? null : options.mode === 'native-team' ? nativeTransferBytes : options.mode === 'independent-pool' ? independentTransferBytes : 0,
+    } : {}) }
   await writeFile(join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n')
   return report
 }

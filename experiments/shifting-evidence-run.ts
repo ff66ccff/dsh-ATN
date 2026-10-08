@@ -83,7 +83,7 @@ const sourceFiles = ['shifting-evidence-run.ts', 'shifting-evidence-task.ts', 's
   'static-wide-topology.ts', 'comparison-statistics.ts',
   'reference-kernel.ts', 'provider.ts', 'budget.ts', 'telemetry.ts', 'atn-cost.ts',
   '../src/runtime.ts', '../src/schema.ts', '../src/config.ts', '../src/tools.ts', '../src/tasks.ts', '../src/messages.ts',
-  '../src/knowledge.ts', '../src/requester-feedback.ts', '../src/topology.ts', '../src/topology-feedback.ts', '../src/whiteboard.ts',
+  '../src/knowledge.ts', '../src/requester-feedback.ts', '../src/topology.ts', '../src/topology-feedback.ts', '../src/information-boundary.ts', '../src/refusal.ts',
   '../package.json', '../package-lock.json']
 
 export async function shiftingSourceHashes() {
@@ -111,7 +111,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
   const providerProvenance = publicProviderProvenance(testSeam, liveProvider)
   validateOptions(options)
   const hashes = await shiftingSourceHashes()
-  const mechanisms = shiftingMechanisms(options.mode)
+  const mechanisms = { ...shiftingMechanisms(options.mode), sharedBoard: false }
   // A fresh same-bound real-runtime reference is required before provider installation.
   const bindingReference = options.topologyBinding ? await runBindingReferencePair({ agents: options.agents, seed: options.seed,
     chainLength: options.chainLength ?? 4, topologyBinding: true, perNodeSteps: options.perNodeSteps,
@@ -259,9 +259,9 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     ctx.on('agent/created', ({ agent }) => { scenario.register(agent.id); return undefined })
     ctx.systemPrompt.section({ name: 'shifting-experiment', order: 10, text: [
       shiftingPrompt(task, options), `Each node has ${options.perNodeSteps} steps across BOTH phases. Global bounds: ${options.maxCalls} calls, ${options.maxOutputTokens} output tokens/call.`,
-      options.mode === 'fixed' || options.mode === 'fixed-wide' ? `Ablation: atn_status.rewire is disabled; use the fixed ${options.mode === 'fixed-wide' ? 'four-peer public-roster topology' : 'ring'} and available shared board.` : '',
+      options.mode === 'fixed' || options.mode === 'fixed-wide' ? `Ablation: atn_status.rewire is disabled; use the fixed ${options.mode === 'fixed-wide' ? 'four-peer public-roster topology' : 'ring'} and host custody discovery.` : '',
       !mechanisms.requesterFeedback ? 'Ablation: atn_status.review is disabled; collect evidence without requester ratings.' : '',
-      !mechanisms.sharedBoard ? 'Ablation: atn_board is disabled; use actual directed task/result mail and discovery.' : '',
+      'ATN 0.5.0 has no shared board; use actual directed task/result mail and host custody discovery.',
     ].filter(Boolean).join('\n') })
     const output = { schema: { type: 'json' } as const, render: (_: unknown, value: unknown) => [{ type: 'text' as const, text: JSON.stringify(value) }] }
     ctx.tools.register(defineTool({ name: 'read_evidence', description: 'Read your local evidence snapshots, including any stale copies. mine returns all local snapshots; inspect phase/version/key/required fields. Another key/document requires local ownership.',
@@ -269,7 +269,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
       async execute(args, execution) {
         if (!execution.agent) throw new Error('Agent required')
         const result = scenario.read(execution.agent.id, args.id)
-        if (task.topologyBinding) await ctx.atn.publishKnowledge(execution.agent, result.discoveryHints)
+        if (network) await ctx.atn.refreshCustody(network.networkId)
         return result as unknown as JsonValue
       },
     }))
@@ -295,7 +295,6 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     binding = installShiftingEvidenceAccess(ctx.atn, network.networkId, sessionId => scenario.knowledgeHints(sessionId), scenario, fixedPeers)
     if (fixedPeers) ctx.atn.rewire = async () => { throw new Error('Rewiring disabled by fixed-topology ablation') }
     if (!mechanisms.requesterFeedback) ctx.atn.feedback = async () => { throw new Error('Requester ratings disabled by no-feedback ablation') }
-    if (!mechanisms.sharedBoard) ctx.atn.board = async () => { throw new Error('Shared board disabled by no-board ablation') }
     ctx.atn.deliver = async () => { throw new Error('This two-phase experiment records proof with submit_checkpoint; keep the network open for host-managed measurement and cleanup') }
     await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, experiment: task.id, protocolRevision: task.topologyBinding ? 8 : 4, mode: options.mode,
       purpose: options.purpose ?? 'comparison',
@@ -353,8 +352,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     const observations = Object.values(record.tasks).map(row => observeRequesterTask(row, row.id))
     protocol = { ...obligations(record), nodes: Object.keys(record.nodes).length,
       maxObservedFinalDegree: Math.max(...Object.values(record.nodes).map(node => collaborationPeers(record.nodes, node.id, record.limits.maxCollaborationPeers).length)),
-      knowledgePublications: new Set([...(record.whiteboard?.entries ?? []).map(row => row.authorId),
-        ...Object.values(record.nodes).filter(node => node.knowledgeFingerprint).map(row => row.id)]).size,
+      knowledgePublications: Object.values(record.nodes).filter(node => node.knowledgeFingerprint?.source === 'host-custody').length,
       requesterFeedback: { accepted: observations.filter(row => row.status === 'accepted').length,
         rejected: observations.filter(row => row.status === 'rejected').length, needsMore: observations.filter(row => row.status === 'needs-more').length },
       rewireTelemetry: rewireTelemetry(),

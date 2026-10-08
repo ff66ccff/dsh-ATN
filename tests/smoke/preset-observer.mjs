@@ -79,7 +79,7 @@ async function run(ctx) {
     assert.ok(!JSON.stringify(adapter.requests.find(request => request.sessionId === 'atn-smoke-standard').messages).includes('You are in ATN mode'))
     assert.deepEqual(tools(child.sessionId), tools('atn-smoke-entry'))
     assert.deepEqual(tools(child.sessionId).filter(name => name.startsWith('atn_')), [
-      'atn_board', 'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
+      'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
     ])
     assert.ok(tools(child.sessionId).includes('atn_status'))
     assert.ok(JSON.stringify(adapter.requests.find(request => request.sessionId === child.sessionId).messages).includes('You are in ATN mode'))

@@ -1,3 +1,4 @@
+import { setHostKnowledge } from '../fixtures/host-custody.ts'
 /** Experiment accounting is observed through real Harness events; no provider calls. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
@@ -74,6 +75,7 @@ test('TELEMETRY-01: entry and workers count once; topology/tasks persist without
     assert.equal(current.inputTokenUnknownCalls, 0)
     assert.equal(current.callCosts.length, current.totals.attempts)
     assert.ok(current.callCosts.every(row => row.inputTokens === 100 && row.fixedContextBytes > 0))
+    assert.ok(current.callCosts.every(row => row.outputTokens === 20 && row.finishReason !== null))
     assert.ok(Math.abs(current.totals.cost.amount! - current.totals.attempts * .00017) < 1e-12)
     assert.equal(current.totals.toolsStarted, 2)
     assert.equal(current.totals.toolsFinished, 2)
@@ -190,6 +192,39 @@ test('TELEMETRY-03: invalid and contradictory usage cannot become a billable zer
   assert.equal(normalizeUsage({ inputTokens: 3, outputTokens: 2 }).cacheReadTokens, null)
 })
 
+test('TELEMETRY-OUTPUT: per-call output and stream finish preserve truncation and unknown coverage', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'atn-experiment-output-'))
+  const kernel = await bootKernel(scratch)
+  const telemetry = await installTelemetry(kernel.ctx, { directory: join(scratch, 'experiment'), runId: 'output-coverage' })
+  try {
+    const chunks: StreamChunk[][] = [
+      [{ type: 'usage', usage: { inputTokens: 2, outputTokens: 12 } },
+        { type: 'usage', usage: { inputTokens: 2, outputTokens: 8192, reasoningTokens: 8000 } },
+        { type: 'finish', reason: { kind: 'max-tokens' } }],
+      [{ type: 'finish', reason: { kind: 'stop' } }],
+      [{ type: 'usage', usage: { inputTokens: 2, outputTokens: 0 } }],
+    ]
+    kernel.model.stream = async function* () { yield* chunks.shift()! }
+    for (let attempt = 0; attempt < 3; attempt++) {
+      for await (const _ of kernel.ctx.llm.stream({ provider: 'atn-script', model: 'deterministic', messages: [] })) { /* Consume normally. */ }
+    }
+    const result = await telemetry.close()
+    assert.deepEqual(result.callCosts.map(call => call.outputTokens), [8192, null, 0], 'last usage wins; reasoning is already included in output')
+    assert.deepEqual(result.callCosts.map(call => call.finishReason), ['max-tokens', 'stop', null], 'a missing finish event cannot become a normal stop')
+    assert.equal(result.totals.tokens.outputTokens.known, 8192)
+    assert.equal(result.totals.tokens.outputTokens.unknownCalls, 1)
+    assert.equal(result.totals.incomplete, 1)
+    const rows = (await readFile(telemetry.paths.events, 'utf8')).trim().split('\n').map(line => JSON.parse(line))
+    assert.deepEqual(rows.filter(row => row.kind === 'model.end').map(row => row.finishReason), ['max-tokens', 'stop', null])
+    const saved = JSON.parse(await readFile(telemetry.paths.summary, 'utf8'))
+    assert.deepEqual(saved.callCosts, result.callCosts)
+  } finally {
+    await telemetry.close()
+    await kernel.ctx.fiber.dispose()
+    await rm(scratch, { recursive: true, force: true })
+  }
+})
+
 test('TELEMETRY-04: closing an active observation marks incomplete coverage and never cancels the model', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-experiment-close-'))
   const kernel = await bootKernel(scratch)
@@ -216,6 +251,8 @@ test('TELEMETRY-04: closing an active observation marks incomplete coverage and 
     assert.equal(final.coverage.closedWithInFlight, true)
     assert.equal(final.totals.inFlight, 1)
     assert.equal(final.totals.settledAttempts, 0)
+    assert.equal(final.callCosts[0].outputTokens, null)
+    assert.equal(final.callCosts[0].finishReason, null)
     release()
     await consuming
     assert.deepEqual(telemetry.snapshot(), final, 'measurement remains frozen after close')
@@ -496,7 +533,7 @@ test('TELEMETRY-09: requester feedback and knowledge preserve source boundaries 
       peers.push(peer)
       await settle(kernel)
       const agent = kernel.ctx.agents.get(SessionId(peer.sessionId))!
-      await kernel.atn.publishKnowledge(agent, {
+      await setHostKnowledge(kernel.atn, agent, {
         documents: ['SECRET_DOCUMENT'], topics: ['SECRET_TOPIC'], contributions: ['SECRET_CONTRIBUTION'],
       })
       await kernel.atn.send(agent, {
@@ -537,8 +574,8 @@ test('TELEMETRY-09: requester feedback and knowledge preserve source boundaries 
     assert.equal(rows.filter(row => row.kind === 'task.acceptance').length, 1)
     const knowledge = rows.filter(row => row.kind === 'node.knowledge')
     assert.equal(knowledge.length, 2)
-    assert.ok(knowledge.every(row => row.source === 'self-reported' && row.documents[0].startsWith('document-')
-      && row.topics[0].startsWith('topic-') && row.contributions[0].startsWith('contribution-')))
+    assert.ok(knowledge.every(row => row.source === 'host-custody' && row.documents[0].startsWith('document-')
+      && row.topics[0].startsWith('topic-') && row.contributions.length === 0))
     const rewire = rows.find(row => row.kind === 'topology.rewire' && row.verdict === 'observed-improvement')
     assert.ok(rewire)
     assert.equal(rewire.evidenceSource, 'requester')

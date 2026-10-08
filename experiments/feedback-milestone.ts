@@ -1,3 +1,4 @@
+import { setHostKnowledge } from '../tests/fixtures/host-custody.ts'
 /** Legacy P0/P1 diagnostic with explicit M=1; never an experiment admission or capability gate. */
 import { strict as assert } from 'node:assert'
 import { createHash } from 'node:crypto'
@@ -47,10 +48,10 @@ export async function runFeedbackMilestoneArm(withFeedback: boolean) {
 
     const beforePublication = await kernel.atn.status(requester, { query })
     assert.deepEqual(beforePublication.candidates, [], 'identical assignments reveal no holder of the requested information')
-    await kernel.atn.publishKnowledge(candidate.agent, {
+    await setHostKnowledge(kernel.atn, candidate.agent, {
       documents: ['document:slot-5:current'], topics: [query], contributions: ['current value with provenance'],
     })
-    await kernel.atn.publishKnowledge(unrelated.agent, {
+    await setHostKnowledge(kernel.atn, unrelated.agent, {
       documents: ['document:slot-2:current'], topics: ['slot-2'], contributions: ['unrelated value with provenance'],
     })
     const afterPublication = await kernel.atn.status(requester, { query })

@@ -19,8 +19,13 @@ export { createExactJsonValidator, isTaskAccepted } from './tasks.ts'
 export type { TaskValidator, TaskValidationOutcome } from './tasks.ts'
 export type { TaskRecord, TaskAcceptance, TaskAcceptanceMetrics } from './schema.ts'
 export type { RequesterFeedbackInput } from './requester-feedback.ts'
-export type { PublishKnowledgeInput } from './knowledge.ts'
-export type { WhiteboardInput } from './whiteboard.ts'
+export { AtnRefusal, INFORMATION_BOUNDARY_REFUSAL_CODES } from './refusal.ts'
+export { defineCustodyPolicy, OUTBOUND_CHANNELS } from './information-boundary.ts'
+export type { InformationBoundaryRefusalCode } from './refusal.ts'
+export type { NetworkOutboundPolicy, OutboundOperation, OutboundChannel, CustodyResolver,
+  CustodyPolicyOptions, ArtifactDescriptor, ArtifactIds } from './information-boundary.ts'
+export type { NetworkSendPolicy, AtnRuntimeDeps } from './runtime.ts'
+export type { KnowledgeMetadata } from './knowledge.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.

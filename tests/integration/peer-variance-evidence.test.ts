@@ -8,7 +8,7 @@ import { provisionShifting, shiftingConfig } from '../../experiments/shifting-ev
 import { referenceKernel } from '../../experiments/reference-kernel.ts'
 import { installShiftingEvidenceAccess } from '../../experiments/shifting-evidence-access.ts'
 import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
-import { ShiftingBoardScript } from '../../experiments/shifting-evidence-script.ts'
+import { ShiftingMailScript } from '../../experiments/shifting-evidence-script.ts'
 import * as AtnTools from '../../src/tools.ts'
 
 test('PEER-03: identical capabilities expose both copy holders; real same-query reviews persist rejected and accepted', async () => {
@@ -22,7 +22,7 @@ test('PEER-03: identical capabilities expose both copy holders; real same-query 
       const assignments = helper.session.snapshotEvents().filter(event => event.type === 'user/message')
         .flatMap(event => event.data.content.flatMap(block => block.type === 'text' ? [block.text] : []))
       const task = assignments.find(text => text.includes('[ATN task]'))!
-      assert.match(task, /Publish.*local.*once per phase/i)
+      assert.match(task, /Read.*local.*once per phase/i)
       assert.match(task, /respond.*actual.*task.*relay/i)
       assert.match(task, /no assigned work.*end.*turn.*wait/i)
       assert.doesNotMatch(task, /choose useful collaborators/)
@@ -31,9 +31,9 @@ test('PEER-03: identical capabilities expose both copy holders; real same-query 
     const permissions = network.agents.map(agent => JSON.parse(JSON.stringify(agent.options)))
     permissions.forEach(options => assert.deepEqual(options, permissions[0], 'all agents keep the same model route and capabilities'))
     const tools = network.agents.map(agent => kernel.ctx.tools.schemas(agent.id).map(tool => tool.name).sort())
-    assert.equal(tools[0].length, 6)
+    assert.equal(tools[0].length, 5)
     tools.forEach(names => assert.deepEqual(names, tools[0]))
-    for (const agent of network.agents) await kernel.ctx.atn.publishKnowledge(agent, scenario.knowledgeHints(agent.id))
+    await kernel.ctx.atn.refreshCustody(network.networkId)
     const requester = network.agents[0]
     const staleSlot = task.phases[0].staleHolders[task.rootKey], goodSlot = task.phases[0].holders[task.rootKey]
     const discovered = await kernel.ctx.atn.status(requester, { query: task.rootKey })
@@ -60,7 +60,7 @@ test('PEER-04: adaptive script queries, rejects stale lookup, rewires, accepts r
   try {
     const report = await runShiftingEvidence({ model: { id: 'deepseek-v4.1-flash', name: 'Script only', api: 'test', catalogFree: false,
       referenceCostPerMillion: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } }, mode: 'adaptive', directory: join(scratch, 'run'),
-      agents: 8, seed: 17, chainLength: 2, perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000 }, { adapter: new ShiftingBoardScript() })
+      agents: 8, seed: 17, chainLength: 2, perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000 }, { adapter: new ShiftingMailScript() })
     assert.equal(report.passed, true)
     const protocol = report.protocol as { requesterFeedback: { accepted: number; rejected: number }; explicitRewires: Array<{ changed: boolean }>; stepUse: Array<{ stepsUsed: number }> }
     assert.ok(protocol.requesterFeedback.accepted > 0)

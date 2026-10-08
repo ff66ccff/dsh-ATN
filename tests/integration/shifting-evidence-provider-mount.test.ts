@@ -8,7 +8,7 @@ import type { Context } from '@deepseek-ai/cordis'
 import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
 import { PROVIDER_ID } from 'dsh-opencode-go'
 import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
-import { ShiftingBoardScript } from '../../experiments/shifting-evidence-script.ts'
+import { ShiftingMailScript } from '../../experiments/shifting-evidence-script.ts'
 import { ShiftingEvidenceScenario, createShiftingEvidenceTask } from '../../experiments/shifting-evidence-task.ts'
 
 const model = { id: 'deepseek-v4.1-flash', name: 'Zero-network imported-route fixture', api: 'test', catalogFree: false,
@@ -18,7 +18,7 @@ const limits = { model, mode: 'adaptive' as const, agents: 8, seed: 17, chainLen
 const provenance = { provider: PROVIDER_ID, plugin: 'dsh-opencode-go', profile: 'zero-network-profile-fixture',
   sourceProfile: 'original-profile-fixture', modelImport: 'dsh-desktop-profile-llm', mount: 'dsh-profile-import' } as const
 
-class AuditedFixtureAdapter extends ShiftingBoardScript {
+class AuditedFixtureAdapter extends ShiftingMailScript {
   requests: GenerateOptions[] = []
   override async *stream(options: GenerateOptions): AsyncIterable<StreamChunk> {
     this.requests.push(options)
@@ -61,7 +61,7 @@ test('PROFILE-MOUNT-01: imported live mount and scripted seam retain distinct pr
     created.forEach(node => assert.deepEqual(node.options, created[0].options))
     const requests = new Map(adapter.requests.map(request => [String(request.sessionId), request]))
     assert.equal(requests.size, 8)
-    const advertised = ['atn_board', 'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status', 'read_evidence', 'submit_checkpoint']
+    const advertised = ['atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status', 'read_evidence', 'submit_checkpoint']
     for (const request of adapter.requests) {
       assert.equal(request.provider, PROVIDER_ID)
       assert.equal(request.model, model.id)
@@ -89,7 +89,7 @@ test('PROFILE-MOUNT-01: imported live mount and scripted seam retain distinct pr
         assert.ok(observed, `phase ${phase} local ACL rendered for ${node.id}`)
       }
     }
-    const script = await runShiftingEvidence({ ...limits, directory: join(scratch, 'scripted') }, { adapter: new ShiftingBoardScript() })
+    const script = await runShiftingEvidence({ ...limits, directory: join(scratch, 'scripted') }, { adapter: new ShiftingMailScript() })
     assert.equal(script.execution, 'scripted-test')
     assert.equal(script.providerProvenance.mount, 'scripted-test')
     assert.equal(script.providerProvenance.profile, null)
@@ -104,7 +104,7 @@ test('PROFILE-MOUNT-02: scripted seam and imported live mount are mutually exclu
   const scratch = await mkdtemp(join(tmpdir(), 'atn-profile-mount-conflict-'))
   let mounts = 0
   try {
-    await assert.rejects(() => runShiftingEvidence({ ...limits, directory: join(scratch, 'mixed') }, { adapter: new ShiftingBoardScript() }, {
+    await assert.rejects(() => runShiftingEvidence({ ...limits, directory: join(scratch, 'mixed') }, { adapter: new ShiftingMailScript() }, {
       liveProviderMount: async () => { mounts++ }, provenance,
     }), /scripted.*live.*mutually exclusive/i)
     assert.equal(mounts, 0)

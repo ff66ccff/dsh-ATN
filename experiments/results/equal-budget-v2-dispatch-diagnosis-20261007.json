@@ -1,0 +1,743 @@
+{
+  "generatedAt": "2026-10-07T08:55:58.122Z",
+  "kind": "post-run-observational-dispatch-diagnosis",
+  "cohortRoot": ".artifacts/equal-budget/20261007-v2-units8",
+  "sourceAndRawReportsUnchanged": true,
+  "noInferenceOrRetriesPerformed": true,
+  "counts": {
+    "retainedAttempts": 12,
+    "attemptsWithObservedDispatch": 6,
+    "zeroDispatchAttempts": 6,
+    "exactPasses": 5,
+    "unknownModelSessionEndEvents": 21,
+    "completeActualInferencePairedSeeds": [
+      2026100701
+    ],
+    "requiredThreeSeedsByFourArmsActualInferenceComplete": false,
+    "allCohorts": {
+      "retainedAttempts": 24,
+      "attemptsWithObservedDispatch": 18,
+      "exactPasses": 14,
+      "zeroDispatchAttempts": 6,
+      "mainBatchExecuted": false
+    }
+  },
+  "zeroDispatchAttempts": [
+    {
+      "run": "atn-adaptive-seed-2026100702",
+      "mode": "atn-adaptive",
+      "seed": 2026100702,
+      "runId": "4a74df8d-525a-4630-b59c-946dfbf56b71",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/atn-adaptive-seed-2026100702/report.json",
+      "reportSha256": "c6a5b5e39f11e016bb01826697a1be5bc94f2d1e36daf4df5668c19e8a91b9dc",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 10343,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 1,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/atn-adaptive-seed-2026100702/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-atn-adaptive-seed-2026100702-workspace--/pilot-4a74df8d-525a-4630-b59c-946dfbf56b71/session.v4.jsonl",
+          "session": "pilot-4a74df8d-525a-4630-b59c-946dfbf56b71",
+          "sequence": 5,
+          "timestampMs": 1791362856809,
+          "at": "2026-10-07T08:47:36.809Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    },
+    {
+      "run": "atn-adaptive-seed-2026100703",
+      "mode": "atn-adaptive",
+      "seed": 2026100703,
+      "runId": "3d103aa0-9276-4960-b5cf-dc2334a30c47",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/atn-adaptive-seed-2026100703/report.json",
+      "reportSha256": "8cc1042ab83520aeb43b4852d901f09e10b9a27333edb0f10edcb86a9ea6ec68",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 10321,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 1,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/atn-adaptive-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-atn-adaptive-seed-2026100703-workspace--/pilot-3d103aa0-9276-4960-b5cf-dc2334a30c47/session.v4.jsonl",
+          "session": "pilot-3d103aa0-9276-4960-b5cf-dc2334a30c47",
+          "sequence": 5,
+          "timestampMs": 1791362887903,
+          "at": "2026-10-07T08:48:07.903Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    },
+    {
+      "run": "independent-pool-seed-2026100703",
+      "mode": "independent-pool",
+      "seed": 2026100703,
+      "runId": "9e604b5f-6846-428a-8200-8e745fa1faf4",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/report.json",
+      "reportSha256": "fc38ad37dd350c7f8d6db3b894d17378a56d917b7a22f40c904e664d327a6aa5",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 20737,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 16,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-0/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-0",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-1/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-1",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-10/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-10",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-11/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-11",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-12/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-12",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-13/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-13",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-14/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-14",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-2/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-2",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-3/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-3",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-4/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-4",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-5/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-5",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-6/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-6",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-7/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-7",
+          "sequence": 5,
+          "timestampMs": 1791362908657,
+          "at": "2026-10-07T08:48:28.657Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-8/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-8",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-9/session.v4.jsonl",
+          "session": "candidate-9e604b5f-6846-428a-8200-8e745fa1faf4-9",
+          "sequence": 5,
+          "timestampMs": 1791362908658,
+          "at": "2026-10-07T08:48:28.658Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        },
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/independent-pool-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-independent-pool-seed-2026100703-workspace--/pilot-9e604b5f-6846-428a-8200-8e745fa1faf4/session.v4.jsonl",
+          "session": "pilot-9e604b5f-6846-428a-8200-8e745fa1faf4",
+          "sequence": 5,
+          "timestampMs": 1791362919056,
+          "at": "2026-10-07T08:48:39.056Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    },
+    {
+      "run": "native-team-seed-2026100703",
+      "mode": "native-team",
+      "seed": 2026100703,
+      "runId": "296e0752-11ac-401a-b38f-507f2e29137e",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/native-team-seed-2026100703/report.json",
+      "reportSha256": "b54638a400fe07ed391387b54f39a45107d8202fe4b16226b7259d4209b1c6a2",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 10336,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 1,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/native-team-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-native-team-seed-2026100703-workspace--/pilot-296e0752-11ac-401a-b38f-507f2e29137e/session.v4.jsonl",
+          "session": "pilot-296e0752-11ac-401a-b38f-507f2e29137e",
+          "sequence": 5,
+          "timestampMs": 1791362877545,
+          "at": "2026-10-07T08:47:57.545Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    },
+    {
+      "run": "single-seed-2026100702",
+      "mode": "single",
+      "seed": 2026100702,
+      "runId": "fe398f79-008c-48e9-8f8b-c587d739b5a7",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/single-seed-2026100702/report.json",
+      "reportSha256": "08e79ec655e446b287dde806ff95ec89ecb8f70f7676affe8afe59f9e3698f89",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 10319,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 1,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/single-seed-2026100702/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-single-seed-2026100702-workspace--/pilot-fe398f79-008c-48e9-8f8b-c587d739b5a7/session.v4.jsonl",
+          "session": "pilot-fe398f79-008c-48e9-8f8b-c587d739b5a7",
+          "sequence": 5,
+          "timestampMs": 1791362867167,
+          "at": "2026-10-07T08:47:47.167Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    },
+    {
+      "run": "single-seed-2026100703",
+      "mode": "single",
+      "seed": 2026100703,
+      "runId": "7347cedd-54d9-4c59-b762-f871e06d9443",
+      "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/single-seed-2026100703/report.json",
+      "reportSha256": "f3c42bfd87bf047b31e5f3ab5b9b57103c6248dd686423b6df76c0cab0bf144a",
+      "issuedModelCalls": 0,
+      "passed": false,
+      "elapsedMs": 10341,
+      "rawModelStartCount": 0,
+      "rawModelEndCount": 0,
+      "callCostRecords": 0,
+      "stepStartCount": 1,
+      "reportedRequestFailures": [],
+      "reportedStopReason": "quiescent-without-submission",
+      "metricErrors": 0,
+      "zeroDispatchEventKinds": [
+        "experiment.start",
+        "turn/start",
+        "step/start",
+        "step/end",
+        "turn/end",
+        "experiment.end"
+      ],
+      "sessionErrors": [
+        {
+          "file": ".artifacts/equal-budget/20261007-v2-units8/runs/single-seed-2026100703/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-single-seed-2026100703-workspace--/pilot-7347cedd-54d9-4c59-b762-f871e06d9443/session.v4.jsonl",
+          "session": "pilot-7347cedd-54d9-4c59-b762-f871e06d9443",
+          "sequence": 5,
+          "timestampMs": 1791362898274,
+          "at": "2026-10-07T08:48:18.274Z",
+          "error": {
+            "message": "opencode-go has no model \"deepseek-v4.1-flash\"",
+            "code": "UNKNOWN_MODEL"
+          }
+        }
+      ]
+    }
+  ],
+  "precedingDispatchedFailure": {
+    "run": "native-team-seed-2026100702",
+    "mode": "native-team",
+    "seed": 2026100702,
+    "runId": "35aa36fc-8270-4741-9304-0cdab3d4e934",
+    "reportFile": ".artifacts/equal-budget/20261007-v2-units8/runs/native-team-seed-2026100702/report.json",
+    "reportSha256": "39cb5b43d0c85e10ed7cb48e082576147951d4552464bdf5a2df17920dd07e36",
+    "issuedModelCalls": 48,
+    "passed": false,
+    "elapsedMs": 254794,
+    "rawModelStartCount": 48,
+    "rawModelEndCount": 48,
+    "callCostRecords": 48,
+    "stepStartCount": 48,
+    "reportedRequestFailures": [
+      {
+        "code": "TRANSPORT"
+      },
+      {
+        "code": "TRANSPORT"
+      }
+    ],
+    "reportedStopReason": "quiescent-without-submission",
+    "metricErrors": 2,
+    "sessionErrors": [
+      {
+        "file": ".artifacts/equal-budget/20261007-v2-units8/runs/native-team-seed-2026100702/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-native-team-seed-2026100702-workspace--/f78a7b75-3e1d-453e-b94a-0fad2721401b/session.v4.jsonl",
+        "session": "f78a7b75-3e1d-453e-b94a-0fad2721401b",
+        "sequence": 129,
+        "timestampMs": 1791362841417,
+        "at": "2026-10-07T08:47:21.417Z",
+        "error": {
+          "message": "terminated",
+          "code": "TRANSPORT"
+        }
+      },
+      {
+        "file": ".artifacts/equal-budget/20261007-v2-units8/runs/native-team-seed-2026100702/sessions/--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-units8-runs-native-team-seed-2026100702-workspace--/pilot-35aa36fc-8270-4741-9304-0cdab3d4e934/session.v4.jsonl",
+        "session": "pilot-35aa36fc-8270-4741-9304-0cdab3d4e934",
+        "sequence": 232,
+        "timestampMs": 1791362846430,
+        "at": "2026-10-07T08:47:26.430Z",
+        "error": {
+          "message": "Connection error.",
+          "code": "TRANSPORT"
+        }
+      }
+    ]
+  },
+  "perArm": [
+    {
+      "mode": "single",
+      "retainedAttempts": 3,
+      "actualDispatchAttempts": 1,
+      "zeroDispatchAttempts": 2,
+      "exactPasses": 1,
+      "output": {
+        "runs": 3,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 10,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 5212,
+        "knownMaximumOutput": 5212,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.36376953125
+      },
+      "completedOutput": {
+        "runs": 1,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 10,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 5212,
+        "knownMaximumOutput": 5212,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.36376953125
+      }
+    },
+    {
+      "mode": "independent-pool",
+      "retainedAttempts": 3,
+      "actualDispatchAttempts": 2,
+      "zeroDispatchAttempts": 1,
+      "exactPasses": 2,
+      "output": {
+        "runs": 3,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 74,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 6081,
+        "knownMaximumOutput": 6081,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.2576904296875
+      },
+      "completedOutput": {
+        "runs": 2,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 74,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 6081,
+        "knownMaximumOutput": 6081,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.2576904296875
+      }
+    },
+    {
+      "mode": "native-team",
+      "retainedAttempts": 3,
+      "actualDispatchAttempts": 2,
+      "zeroDispatchAttempts": 1,
+      "exactPasses": 1,
+      "output": {
+        "runs": 3,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 123,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 6396,
+        "knownMaximumOutput": 6396,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.21923828125
+      },
+      "completedOutput": {
+        "runs": 1,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 75,
+        "outputUnknownCalls": 0,
+        "finishReasonUnknownCalls": 0,
+        "truncationUnknownCalls": 0,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 0,
+        "incompleteTruncationRuns": 0,
+        "maximumOutputTokens": 6396,
+        "knownMaximumOutput": 6396,
+        "outputCoverageComplete": true,
+        "truncationCoverageComplete": true,
+        "headroomFraction": 0.21923828125
+      }
+    },
+    {
+      "mode": "atn-adaptive",
+      "retainedAttempts": 3,
+      "actualDispatchAttempts": 1,
+      "zeroDispatchAttempts": 2,
+      "exactPasses": 1,
+      "output": {
+        "runs": 3,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 41,
+        "outputUnknownCalls": 2,
+        "finishReasonUnknownCalls": 2,
+        "truncationUnknownCalls": 2,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 1,
+        "incompleteTruncationRuns": 1,
+        "maximumOutputTokens": null,
+        "knownMaximumOutput": 7596,
+        "outputCoverageComplete": false,
+        "truncationCoverageComplete": false,
+        "headroomFraction": null
+      },
+      "completedOutput": {
+        "runs": 1,
+        "limit": 8192,
+        "truncatedCalls": 0,
+        "truncatedRuns": 0,
+        "outputKnownCalls": 41,
+        "outputUnknownCalls": 2,
+        "finishReasonUnknownCalls": 2,
+        "truncationUnknownCalls": 2,
+        "unknownCallCoverageRuns": 0,
+        "incompleteOutputRuns": 1,
+        "incompleteTruncationRuns": 1,
+        "maximumOutputTokens": null,
+        "knownMaximumOutput": 7596,
+        "outputCoverageComplete": false,
+        "truncationCoverageComplete": false,
+        "headroomFraction": null
+      }
+    }
+  ],
+  "observations": [
+    "All six zero-call reports are corroborated by zero raw model.start events, zero model.end events, and empty callCosts. Their recorded session turn/end errors are UNKNOWN_MODEL: opencode-go has no model \"deepseek-v4.1-flash\".",
+    "The five non-pool zero-dispatch attempts each have one affected session. The zero-dispatch independent-pool attempt has 15 candidate session errors followed by one entry session error. There are 21 UNKNOWN_MODEL session end events in total.",
+    "Zero-call attempts only record experiment/turn/step boundaries, with turn/end reason error. Generic stopReason quiescent-without-submission and empty requestFailures do not establish that the model attempted the task.",
+    "The immediately preceding native-team seed 2026100702 attempt did dispatch 48 calls and ended with two session TRANSPORT errors: terminated and Connection error. Temporal adjacency is observed; shared root cause is not proven.",
+    "The installed adapter prepareCall resolves its runtime model catalog before returning a stream. UNKNOWN_MODEL is thrown when the model is absent from that resolved catalog. The Harness invokes prepareCall before stream dispatch, explaining why the telemetry stream middleware records no calls for these errors.",
+    "The saved live execution log contains outcome rows and the main-batch-blocked event, but no catalog fallback error detail. No original HTTP catalog response or original listingFailure is available in these artifacts."
+  ],
+  "codeEvidence": [
+    {
+      "file": "node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js",
+      "line": 1189,
+      "meaning": "await prepareCall precedes stream execution; routing error is thrown before model.start telemetry."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1125,
+      "meaning": "MODELS_FETCH_TIMEOUT_MS = 10000."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1263,
+      "meaning": "A cold catalog starts live membership listing and metadata refresh; disk metadata alone is not live model membership."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1341,
+      "meaning": "A rejected membership listing retains served.models if available, otherwise returns an empty models map and stores listingFailure."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1382,
+      "meaning": "forModel can return the empty failed-listing snapshot; it only specifically throws metadata-unavailable for advertised but unconfigured models."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1583,
+      "meaning": "callSnapshot throws UNKNOWN_MODEL when catalog.models.get(model) is undefined."
+    },
+    {
+      "file": "node_modules/dsh-opencode-go/lib/index.js",
+      "line": 1593,
+      "meaning": "prepareCall awaits callSnapshot before making streamWithSnapshot available."
+    }
+  ],
+  "inferencesAndLimits": [
+    "The repeated approximately 10.3 second single-session delays are consistent with the installed 10 second model listing timeout plus setup/cleanup. The approximately 20.7 second pool delay is consistent with candidate and entry resolution stages. Timing alone cannot establish timeout, network cause, endpoint outage, or delisting.",
+    "UNKNOWN_MODEL does not prove that DeepSeek V4.1 Flash was removed from the live service: the same message can follow an empty cold catalog caused by a failed membership request. A successful live listing that omits the model is another possible source of absence.",
+    "The model had been catalog-visible at preregistration and earlier attempts dispatched successfully. Later runtime catalog resolution is separate. A new health check only describes availability at its own timestamp.",
+    "These six attempts are retained execution/infrastructure failures, not observed model-reasoning failures or evidence about coordination architecture. Inference coverage is six attempts, and the requested three-seed four-arm real-model preflight is incomplete.",
+    "Frozen summary liveRuns=true was based on the execution label alone. A separate positive-dispatch coverage annotation corrects interpretation while preserving the original gate/stats and raw outcomes.",
+    "Independent remaining blockers must not be hidden by gate precedence: one native fact-flow audit gap; ATN two unknown output/finish records; and known completion-witness outputs above the preregistered 4915.2 token threshold. No observed cap event in the dispatched units8 records does not establish complete absence of caps while ATN records remain unknown.",
+    "All 24 attempts across distinct units10/units8 cohorts remain separate; repeated seeds across changed unit sizes are not pooled as independent samples. There were 18 attempts with observed dispatch and 14 exact passes. The zero-completion research-termination criterion was not met, and the main batch did not run."
+  ],
+  "currentCatalogHealthCheck": {
+    "startedAt": "2026-10-07T08:55:58.122Z",
+    "method": "discoverPilotModels(): one read-only live catalog/metadata check; no inference",
+    "interpretation": "Current availability only; cannot identify the historical cause of the six UNKNOWN_MODEL attempts.",
+    "completedAt": "2026-10-07T08:55:59.042Z",
+    "status": "success",
+    "snapshot": {
+      "checkedAt": "2026-10-07T08:55:59.042Z",
+      "provider": "dsh-opencode-go",
+      "models": [
+        {
+          "id": "deepseek-v4.1-flash",
+          "name": "DeepSeek V4.1 Flash",
+          "api": "openai-completions",
+          "contextWindow": 1000000,
+          "catalogFree": false,
+          "referenceCostPerMillion": {
+            "input": 0.15,
+            "output": 0.6,
+            "cacheRead": 0.003,
+            "cacheWrite": 0
+          }
+        },
+        {
+          "id": "longcat-2.5-preview-free",
+          "name": "LongCat 2.5 Preview Free",
+          "api": "openai-completions",
+          "contextWindow": 1000000,
+          "catalogFree": true,
+          "referenceCostPerMillion": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          }
+        }
+      ]
+    },
+    "requestedModelPresent": true
+  }
+}

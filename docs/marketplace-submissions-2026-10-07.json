@@ -1,0 +1,390 @@
+{
+  "checkedAt": "2026-10-07T05:08:39.562Z",
+  "timezone": "Asia/Shanghai",
+  "subject": {
+    "repository": "https://github.com/ff66ccff/dsh-ATN",
+    "package": "dsh-atn@0.4.1",
+    "npmUrl": "https://www.npmjs.com/package/dsh-atn",
+    "installCommand": "dsh plugin --profile web add dsh-atn@0.4.1",
+    "description": {
+      "zh": "面向 DeepSeek Harness 的自适应拓扑多智能体预设，提供点对点通信、共享白板、任务交接和实时网络可视化。",
+      "en": "Adaptive topology multi-agent preset for DeepSeek Harness with peer messaging, a shared board, task handoff and live network visualization."
+    },
+    "verifiedHarnessPeers": "0.2.0-rc.2",
+    "node": ">=24",
+    "license": "Apache-2.0",
+    "usage": "使用 Harness 配置的模型；多智能体运行会消耗相应模型额度。"
+  },
+  "outcome": {
+    "submissionCount": 8,
+    "pullRequests": 3,
+    "issues": 4,
+    "websiteForms": 1,
+    "publiclyListedAndVerified": [
+      "DeepSeek 1024Store"
+    ],
+    "remaining": "其他已提交入口等待维护者审核或收录管道；登录型入口尚未提交。"
+  },
+  "discoverabilityChanges": {
+    "topics": [
+      "agent-preset",
+      "deepseek-harness",
+      "dsh-plugin",
+      "multi-agent"
+    ],
+    "repositoryDescription": "Adaptive topology multi-agent preset for DeepSeek Harness, with peer messaging, a shared board and live network visualization."
+  },
+  "validation": {
+    "publishedPackage": "dsh-atn@0.4.1",
+    "npmIntegrityAndEntryFiles": "passed",
+    "isolatedProfileInstall": "passed",
+    "bundleComposition": "passed",
+    "presetRegistrationAndScriptedChildCreation": "passed",
+    "awesomeYaml": "passed official validateEntries",
+    "storeJson": "passed official validateCatalogEntry",
+    "checkedAt": "2026-10-07T04:56:20.551Z"
+  },
+  "submissions": [
+    {
+      "name": "Awesome DSH Plugin",
+      "website": "https://awesome-dsh-plugin.com/",
+      "category": "agi",
+      "entryPath": "data/plugins/ff66ccff__dsh-ATN.yml",
+      "downstream": [
+        "https://dshmarket.com/",
+        "Harness 内的 dsh-market（npm: dshmarket）"
+      ],
+      "note": "两个自动检查均成功；等待维护者合并及站点生成。",
+      "route": "GitHub PR",
+      "submissionUrl": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/6756",
+      "repository": "awesome-dsh-plugin/awesome-dsh-plugin",
+      "submittedAt": "2026-10-07T04:58:49.681Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": false,
+      "labels": [],
+      "checks": [
+        {
+          "name": "Submission gate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/runs/112641077365"
+        },
+        {
+          "name": "check",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/actions/runs/37574057206/job/112638886449"
+        }
+      ],
+      "acknowledgements": []
+    },
+    {
+      "name": "DeepSeek 1024Store",
+      "website": "https://deepseek1024.com/",
+      "category": "workflow",
+      "entryPath": "catalog/plugins/ff66ccff--dsh-atn.json",
+      "listingUrl": "https://deepseek1024.com/plugins/ff66ccff/dsh-ATN",
+      "note": "PR 已合并；详情页 HTTP 200，搜索 API 返回对应条目。当前安装信息只有 GitHub 来源，npm 安装映射尚未同步。npm 包已发布且真实隔离 profile 安装测试通过。",
+      "route": "GitHub PR",
+      "submissionUrl": "https://github.com/imsai-sh/awesome-deepseek-harness-plugins/pull/575",
+      "repository": "imsai-sh/awesome-deepseek-harness-plugins",
+      "submittedAt": "2026-10-07T04:59:14.777Z",
+      "status": "listed_verified",
+      "githubState": "closed",
+      "merged": true,
+      "labels": [],
+      "checks": [
+        {
+          "name": "merge",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/imsai-sh/awesome-deepseek-harness-plugins/actions/runs/37574091790/job/112639036052"
+        },
+        {
+          "name": "static-review",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/imsai-sh/awesome-deepseek-harness-plugins/actions/runs/37574091790/job/112638995105"
+        }
+      ],
+      "acknowledgements": [
+        {
+          "author": "github-actions[bot]",
+          "url": "https://github.com/imsai-sh/awesome-deepseek-harness-plugins/pull/575#issuecomment-6031258657"
+        }
+      ]
+    },
+    {
+      "name": "Awesome DeepSeek Harness（社区目录）",
+      "website": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness",
+      "category": "Tools, Workflows & Presets",
+      "entryPath": [
+        "README.md",
+        "README.zh.md"
+      ],
+      "note": "双语条目已提交，提交校验和 curate 检查均成功；等待人工审核。",
+      "route": "GitHub PR",
+      "submissionUrl": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/pull/165",
+      "repository": "awesome-deepseekharness/awesome-deepseek-harness",
+      "submittedAt": "2026-10-07T04:59:34.207Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": false,
+      "labels": [
+        "enhancement",
+        "needs-review",
+        "plugin",
+        "auto-labeled"
+      ],
+      "checks": [
+        {
+          "name": "Sourcery review",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/runs/112639103288"
+        },
+        {
+          "name": "gate",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/actions/runs/37574116322/job/112639074983"
+        },
+        {
+          "name": "submission-guard",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/actions/runs/37574116329/job/112639074114"
+        },
+        {
+          "name": "curate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/actions/runs/37574116329/job/112639073914"
+        }
+      ],
+      "acknowledgements": [
+        {
+          "author": "github-actions[bot]",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/pull/165#issuecomment-6031261923"
+        },
+        {
+          "author": "github-actions[bot]",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/pull/165#issuecomment-6031305288"
+        },
+        {
+          "author": "github-actions[bot]",
+          "url": "https://github.com/awesome-deepseekharness/awesome-deepseek-harness/pull/165#issuecomment-6031305535"
+        }
+      ]
+    },
+    {
+      "name": "DSH Directory",
+      "website": "https://dsh.directory/",
+      "category": "Agents & Automation (agents)",
+      "note": "已提交官方 Issue 表单；plugin-submission 标签已自动添加，等待验证和收录。",
+      "route": "GitHub Issue",
+      "submissionUrl": "https://github.com/alexchenzl/dsh-plugin-directory/issues/335",
+      "repository": "alexchenzl/dsh-plugin-directory",
+      "submittedAt": "2026-10-07T05:00:15.431Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": null,
+      "labels": [
+        "plugin-submission"
+      ],
+      "checks": [],
+      "acknowledgements": []
+    },
+    {
+      "name": "DSH Market",
+      "website": "https://dsh.market/",
+      "note": "机器人已确认接收，并说明下一次每日收录管道会检查；暂未确认上线。",
+      "route": "GitHub Issue",
+      "submissionUrl": "https://github.com/2BingLing/dsh-market/issues/209",
+      "repository": "2BingLing/dsh-market",
+      "submittedAt": "2026-10-07T05:00:16.958Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": null,
+      "labels": [
+        "submission"
+      ],
+      "checks": [],
+      "acknowledgements": [
+        {
+          "author": "github-actions[bot]",
+          "url": "https://github.com/2BingLing/dsh-market/issues/209#issuecomment-6031269288"
+        }
+      ]
+    },
+    {
+      "name": "dshplugin.io",
+      "website": "https://dshplugin.io/",
+      "note": "已通过网站指定的 GitHub Issue 入口提交。上游不存在 plugin-submission 标签，已在同一 Issue 请维护者补标签；等待人工处理。",
+      "route": "GitHub Issue",
+      "submissionUrl": "https://github.com/tjsdyy/dshplugin/issues/32",
+      "repository": "tjsdyy/dshplugin",
+      "submittedAt": "2026-10-07T05:01:10.154Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": null,
+      "labels": [],
+      "checks": [],
+      "acknowledgements": []
+    },
+    {
+      "name": "DSH Plugin Hub",
+      "website": "https://dsh-plugin.org/",
+      "category": "Workflow & Automation",
+      "note": "已按网站给出的模板提交 Issue，等待维护者处理。",
+      "route": "GitHub Issue",
+      "submissionUrl": "https://github.com/dshplugin/dsh-plugin-hub/issues/105",
+      "repository": "dshplugin/dsh-plugin-hub",
+      "submittedAt": "2026-10-07T05:05:49.800Z",
+      "status": "submitted_pending_review",
+      "githubState": "open",
+      "merged": null,
+      "labels": [],
+      "checks": [],
+      "acknowledgements": []
+    },
+    {
+      "name": "DSH Marketplace",
+      "website": "https://dshmarketplace.dev/",
+      "route": "网站官方投稿表单 API",
+      "submissionUrl": "https://dshmarketplace.dev/submit",
+      "submittedAt": "2026-10-07T05:02:44.126Z",
+      "status": "submitted_pending_review",
+      "response": {
+        "httpStatus": 200,
+        "ok": true,
+        "duplicate": false,
+        "alreadyListed": false
+      },
+      "note": "官方接口已接收，非重复申请；尚未确认公开条目。未提交个人邮箱。"
+    }
+  ],
+  "liveVerification": {
+    "checkedAt": "2026-10-07T05:08:19.521Z",
+    "detail": {
+      "url": "https://deepseek1024.com/api/v1/plugins/ff66ccff/dsh-ATN",
+      "httpStatus": 200,
+      "id": "ff66ccff/dsh-ATN",
+      "manifest": {
+        "name": "dsh-atn",
+        "version": "0.4.1",
+        "license": "Apache-2.0",
+        "bundlePatch": "./cordis.patch.yml",
+        "dependencies": 2,
+        "peerDependencies": 15,
+        "engines": {
+          "node": ">=24"
+        }
+      },
+      "verification": {
+        "repositoryReachable": true,
+        "bundleDeclared": true
+      },
+      "installMethods": [
+        {
+          "kind": "github",
+          "spec": "github:ff66ccff/dsh-ATN",
+          "command": "dsh plugin --profile web add github:ff66ccff/dsh-ATN",
+          "verification": "unknown",
+          "code": "not_checked",
+          "requiresBuildAllowance": false,
+          "buildPackage": null,
+          "revision": null,
+          "checkedAt": null
+        }
+      ]
+    },
+    "search": {
+      "url": "https://api.deepseek1024.com/v1/plugins/search?q=dsh-ATN&limit=5",
+      "httpStatus": 200,
+      "total": 1,
+      "ids": [
+        "ff66ccff/dsh-ATN"
+      ]
+    },
+    "page": {
+      "url": "https://deepseek1024.com/plugins/ff66ccff/dsh-ATN",
+      "httpStatus": 200,
+      "title": "dsh-ATN — DeepSeek Harness Plugin by ff66ccff",
+      "mentionsPlugin": true
+    }
+  },
+  "otherDiscoveredMarkets": [
+    {
+      "name": "DSHFind",
+      "website": "https://dshfind.com/en",
+      "source": "https://github.com/hikariming/dshfind",
+      "route": "GitHub dsh-plugin topic 扫描",
+      "status": "discovery_metadata_prepared",
+      "note": "已添加 topic；未确认实际收录。"
+    },
+    {
+      "name": "dshplugin.market",
+      "website": "https://dshplugin.market/",
+      "submissionInfo": "https://dshplugin.market/submit",
+      "route": "GitHub topic 扫描",
+      "status": "discovery_metadata_prepared",
+      "note": "投稿页明确没有提交后端；Issue/邮箱入口是占位信息，因此未发送。"
+    },
+    {
+      "name": "DSH Plugins Marketplace",
+      "website": "https://dsh-plugins-mp.com/",
+      "source": "https://github.com/bradeGithub/DSH-Plugins-Marketplace",
+      "route": "GitHub dsh-plugin topic 发现",
+      "status": "discovery_metadata_prepared",
+      "note": "已添加 topic；未确认实际收录。"
+    },
+    {
+      "name": "dshmarketplace.com",
+      "website": "https://www.dshmarketplace.com/",
+      "route": "GitHub topic 候选与人工审核",
+      "status": "discovery_metadata_prepared",
+      "note": "未找到明确的独立投稿表单；未确认实际收录。"
+    },
+    {
+      "name": "dshmp.com",
+      "website": "https://dshmp.com/en",
+      "route": "manifest 校验目录",
+      "status": "submission_route_unconfirmed",
+      "note": "站点可访问；未找到可验证的直接投稿入口。"
+    },
+    {
+      "name": "DSHGet",
+      "website": "https://www.dshget.com/",
+      "source": "https://github.com/bobby-sheng/dshget-data",
+      "status": "submission_route_unconfirmed",
+      "note": "公开数据仓库存在；未确认可用的人工投稿流程。"
+    },
+    {
+      "name": "DSH Hub",
+      "website": "https://dsh-hub.org/",
+      "submissionInfo": "https://dsh-hub.org/submit",
+      "status": "requires_site_login_not_submitted",
+      "note": "官方投稿表单要求先登录；当前没有该站登录会话。",
+      "preparedPayload": {
+        "repositoryUrl": "https://github.com/ff66ccff/dsh-ATN",
+        "kind": "plugin",
+        "category": "workflow",
+        "note": "面向 DeepSeek Harness 的自适应拓扑多智能体预设，提供点对点通信、共享白板、任务交接和实时网络可视化。 Adaptive topology multi-agent preset for DeepSeek Harness with peer messaging, a shared board, task handoff and live network visualization. npm: dsh-atn@0.4.1. dsh plugin --profile web add dsh-atn@0.4.1. Verified with DeepSeek Harness 0.2.0-rc.2 and Node >=24. Apache-2.0. Uses the configured model and consumes model quota."
+      }
+    },
+    {
+      "name": "Cordis plugin registry",
+      "website": "https://cordis.run/",
+      "submissionInfo": "https://cordis.run/en/submit",
+      "status": "requires_site_login_not_submitted",
+      "note": "投稿页要求登录；提交材料已在 subject 中准备。"
+    }
+  ],
+  "followup": [
+    "先查看已提交的 PR/Issue；只有维护者提出具体修改或校验失败时再更新原申请，避免重复提交。",
+    "1024Store 已公开显示，下一次 npm 映射刷新后再核对安装按钮。当前可以直接使用已验证的 npm 安装命令。",
+    "需要在 DSH Hub 或 Cordis registry 登录后，才能完成这两个网站的官方表单。"
+  ]
+}

@@ -1,0 +1,226 @@
+{
+  "generatedAt": "2026-10-07T08:13:13.584Z",
+  "causalClaim": false,
+  "directory": ".artifacts/equal-budget/20261007-v2/runs/native-team-seed-2026100701",
+  "original": {
+    "exactPassed": true,
+    "calls": 58,
+    "agents": 5,
+    "stopReason": "submitted",
+    "auditPassed": false,
+    "auditedFacts": 7,
+    "submittedFacts": 16,
+    "violations": [
+      "missing-positive-source-path:shard-06",
+      "missing-positive-source-path:shard-07",
+      "missing-positive-source-path:shard-08",
+      "missing-positive-source-path:shard-10",
+      "missing-positive-source-path:shard-11",
+      "missing-positive-source-path:shard-12",
+      "missing-positive-source-path:shard-14",
+      "missing-positive-source-path:shard-15",
+      "missing-positive-source-path:shard-16"
+    ],
+    "observerErrors": [],
+    "deliveredTransports": 14,
+    "unknownSendBoundaries": 0,
+    "submissionSeq": 138
+  },
+  "cause": {
+    "category": "recorded-prose-transport-not-recognized-by-JSON-only-audit",
+    "explanation": "Native worker results and verifier table were delivered and recorded. They use prose, A=number syntax, or unquoted object keys. jsonValues only accepts JSON.parse-compatible objects; compact textContainsFact then requires a shard-keyed netByAccount object or shard/shardId plus balances. The resulting nine missing-positive-source-path flags are recognizer coverage gaps, not missing deliveries or a proof of absent source evidence.",
+    "affectedShards": [
+      "shard-06",
+      "shard-07",
+      "shard-08",
+      "shard-10",
+      "shard-11",
+      "shard-12",
+      "shard-14",
+      "shard-15",
+      "shard-16"
+    ],
+    "compactChange": "Round10 requires every shard as a dependency of the compact final merge and accepts a structurally complete identified shard balance instead of matching submitted local values. It still relies on the prior JSON-only transport parser; no new loss of the native delivery boundary is observed. The old matcher also did not recognize these prose payloads.",
+    "code": [
+      {
+        "file": "experiments/equal-budget-audit.ts",
+        "line": 51,
+        "meaning": "JSON-only substring parser"
+      },
+      {
+        "file": "experiments/equal-budget-audit.ts",
+        "line": 109,
+        "meaning": "Compact local shard recognition"
+      },
+      {
+        "file": "experiments/equal-budget-audit.ts",
+        "line": 120,
+        "meaning": "Compact facts route through JSON parser"
+      },
+      {
+        "file": "experiments/equal-budget-observer.ts",
+        "line": 132,
+        "meaning": "Predeclared unstructured prose coverage limitation"
+      }
+    ]
+  },
+  "byAgent": {
+    "agent-1": {
+      "readEvents": 22,
+      "uniqueDocuments": 22,
+      "shards": [
+        "shard-01",
+        "shard-02",
+        "shard-03",
+        "shard-04",
+        "shard-05",
+        "shard-09",
+        "shard-13"
+      ]
+    },
+    "agent-2": {
+      "readEvents": 13,
+      "uniqueDocuments": 13,
+      "shards": [
+        "shard-05",
+        "shard-06",
+        "shard-07",
+        "shard-08"
+      ]
+    },
+    "agent-5": {
+      "readEvents": 49,
+      "uniqueDocuments": 49,
+      "shards": [
+        "shard-01",
+        "shard-02",
+        "shard-03",
+        "shard-04",
+        "shard-05",
+        "shard-06",
+        "shard-07",
+        "shard-08",
+        "shard-09",
+        "shard-10",
+        "shard-11",
+        "shard-12",
+        "shard-13",
+        "shard-14",
+        "shard-15",
+        "shard-16"
+      ]
+    },
+    "agent-3": {
+      "readEvents": 13,
+      "uniqueDocuments": 13,
+      "shards": [
+        "shard-09",
+        "shard-10",
+        "shard-11",
+        "shard-12"
+      ]
+    },
+    "agent-4": {
+      "readEvents": 13,
+      "uniqueDocuments": 13,
+      "shards": [
+        "shard-13",
+        "shard-14",
+        "shard-15",
+        "shard-16"
+      ]
+    }
+  },
+  "groundedSends": [
+    {
+      "transportSeq": 80,
+      "sentSeq": 79,
+      "from": "agent-2",
+      "to": "agent-1",
+      "shards": [
+        5,
+        8
+      ],
+      "requiredDocuments": 13,
+      "allDirectlyReadBeforeSend": true,
+      "lastRequiredRead": 31
+    },
+    {
+      "transportSeq": 82,
+      "sentSeq": 81,
+      "from": "agent-3",
+      "to": "agent-1",
+      "shards": [
+        9,
+        12
+      ],
+      "requiredDocuments": 13,
+      "allDirectlyReadBeforeSend": true,
+      "lastRequiredRead": 66
+    },
+    {
+      "transportSeq": 84,
+      "sentSeq": 83,
+      "from": "agent-4",
+      "to": "agent-1",
+      "shards": [
+        13,
+        16
+      ],
+      "requiredDocuments": 13,
+      "allDirectlyReadBeforeSend": true,
+      "lastRequiredRead": 61
+    },
+    {
+      "transportSeq": 137,
+      "sentSeq": 136,
+      "from": "agent-5",
+      "to": "agent-1",
+      "shards": [
+        1,
+        16
+      ],
+      "requiredDocuments": 49,
+      "allDirectlyReadBeforeSend": true,
+      "lastRequiredRead": 108
+    }
+  ],
+  "postHocDiagnostic": {
+    "notReplacementVerification": true,
+    "mechanicalTranscription": "Only a cloned in-memory copy of verifier delivery137 was changed from its recorded 16-row numeric table to the JSON schema already accepted by the frozen audit. No oracle answer was used.",
+    "tableRows": 16,
+    "tableBalanceSums": {
+      "A": 7750,
+      "B": 13919,
+      "C": 12446,
+      "D": 13673
+    },
+    "submittedBalanceSums": {
+      "A": 7750,
+      "B": 13919,
+      "C": 12446,
+      "D": 13673
+    },
+    "normalizedAuditPassed": true,
+    "normalizedAuditedFacts": 16,
+    "normalizedViolations": [],
+    "conclusion": "The recorded verifier alone has a temporal source/read/send/delivery path for all16 shards; supported-format transcription removes the audit gap. Keep the original frozen audit=false and preflight decision unchanged. This diagnosis supports a parser-coverage limitation, not an architecture-benefit claim."
+  },
+  "outputCoverage": {
+    "knownMaximumOutput": 5800,
+    "observedTruncatedCalls": 0,
+    "missingOutputCalls": [
+      "call-57"
+    ],
+    "incompleteCalls": 1,
+    "unknownCall57": [
+      {
+        "status": "incomplete",
+        "finishReason": null,
+        "at": 1791360503175
+      }
+    ],
+    "interpretation": "5800 is the known peak lower bound, already above4915.2 needed for40% headroom. Call57 has no usage/finish and ends incomplete just after lead call58 finishes; complete maximum and absence of all truncation cannot be certified. No claim about why that stream ended without captured finish is made."
+  },
+  "safeInterpretation": "Keep exact task correctness and fact-flow audit status separate. The answer passed; the frozen positive fact-flow audit failed its supported-format rule. Existing raw records contain grounded plain-text evidence for all16 shards, so the failure is an audit coverage limitation. Do not relabel it as cheating, an incorrect answer, missing real communication, or ATN superiority; do not retroactively replace the gate result."
+}

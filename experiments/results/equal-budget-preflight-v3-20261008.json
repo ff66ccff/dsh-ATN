@@ -1,0 +1,606 @@
+{
+  "version": 2,
+  "round": 11,
+  "status": "passed",
+  "observedRuns": 15,
+  "requiredRuns": 15,
+  "passedRuns": 11,
+  "liveCoverage": {
+    "configuredRuns": 15,
+    "dispatchedRuns": 15,
+    "zeroCallRuns": 0,
+    "unknownDispatchRuns": 0,
+    "complete": true
+  },
+  "mainBatchAllowed": true,
+  "researchLineTerminated": false,
+  "gates": [
+    {
+      "id": "at-least-one-exact-completion",
+      "passed": true
+    },
+    {
+      "id": "positive-matching-real-model-calls",
+      "passed": true
+    }
+  ],
+  "diagnosis": {
+    "category": "feasible",
+    "reason": "At least one exact completion and complete positive matching live-model dispatch coverage. Truncation, per-call headroom and audit gaps are report-only; this is not evidence of an architecture advantage.",
+    "healthyRuns": 12,
+    "taskConsistency": "constructive-reference-consistent-not-model-feasibility",
+    "observations": [
+      {
+        "seed": 2026100801,
+        "mode": "single",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 6,
+        "totalAgents": 1,
+        "entrySteps": 6
+      },
+      {
+        "seed": 2026100801,
+        "mode": "single-scaffolded",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 18,
+        "totalAgents": 1,
+        "entrySteps": 18
+      },
+      {
+        "seed": 2026100801,
+        "mode": "independent-pool",
+        "passed": false,
+        "stopReason": "submitted",
+        "modelCalls": 40,
+        "totalAgents": 16,
+        "entrySteps": 7
+      },
+      {
+        "seed": 2026100801,
+        "mode": "native-team",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 108,
+        "totalAgents": 11,
+        "entrySteps": 23
+      },
+      {
+        "seed": 2026100801,
+        "mode": "atn-adaptive",
+        "passed": false,
+        "stopReason": "quiescent-without-submission",
+        "modelCalls": 33,
+        "totalAgents": 5,
+        "entrySteps": 7
+      },
+      {
+        "seed": 2026100802,
+        "mode": "single-scaffolded",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 18,
+        "totalAgents": 1,
+        "entrySteps": 18
+      },
+      {
+        "seed": 2026100802,
+        "mode": "independent-pool",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 37,
+        "totalAgents": 16,
+        "entrySteps": 7
+      },
+      {
+        "seed": 2026100802,
+        "mode": "native-team",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 82,
+        "totalAgents": 9,
+        "entrySteps": 12
+      },
+      {
+        "seed": 2026100802,
+        "mode": "atn-adaptive",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 40,
+        "totalAgents": 8,
+        "entrySteps": 10
+      },
+      {
+        "seed": 2026100802,
+        "mode": "single",
+        "passed": false,
+        "stopReason": "submitted",
+        "modelCalls": 7,
+        "totalAgents": 1,
+        "entrySteps": 7
+      },
+      {
+        "seed": 2026100803,
+        "mode": "independent-pool",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 35,
+        "totalAgents": 16,
+        "entrySteps": 5
+      },
+      {
+        "seed": 2026100803,
+        "mode": "native-team",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 75,
+        "totalAgents": 7,
+        "entrySteps": 21
+      },
+      {
+        "seed": 2026100803,
+        "mode": "atn-adaptive",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 54,
+        "totalAgents": 5,
+        "entrySteps": 14
+      },
+      {
+        "seed": 2026100803,
+        "mode": "single",
+        "passed": false,
+        "stopReason": "submitted",
+        "modelCalls": 7,
+        "totalAgents": 1,
+        "entrySteps": 7
+      },
+      {
+        "seed": 2026100803,
+        "mode": "single-scaffolded",
+        "passed": true,
+        "stopReason": "submitted",
+        "modelCalls": 17,
+        "totalAgents": 1,
+        "entrySteps": 17
+      }
+    ]
+  },
+  "integrity": false,
+  "auditGating": false,
+  "outputGating": false,
+  "output": {
+    "maximumOutputTokens": null,
+    "knownMaximumOutput": 6913,
+    "headroomFraction": null,
+    "completedMaximumOutputTokens": null,
+    "completedHeadroomFraction": null,
+    "outputCoverageComplete": false,
+    "truncatedRuns": 0,
+    "truncatedCalls": 0,
+    "widespreadTruncation": null,
+    "maxOutputTokens": 8192,
+    "minOutputHeadroom": null,
+    "widespreadTruncationRunFraction": null
+  },
+  "perArm": [
+    {
+      "mode": "single",
+      "runs": [
+        {
+          "mode": "single",
+          "seed": 2026100801,
+          "limit": 8192,
+          "expectedCalls": 6,
+          "observedCalls": 6,
+          "missingCalls": 0,
+          "outputKnownCalls": 6,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 6,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 6253,
+          "knownMaximumOutput": 6253,
+          "headroomFraction": 0.2366943359375,
+          "knownHeadroomUpperBound": 0.2366943359375
+        },
+        {
+          "mode": "single",
+          "seed": 2026100802,
+          "limit": 8192,
+          "expectedCalls": 7,
+          "observedCalls": 7,
+          "missingCalls": 0,
+          "outputKnownCalls": 7,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 7,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 6644,
+          "knownMaximumOutput": 6644,
+          "headroomFraction": 0.18896484375,
+          "knownHeadroomUpperBound": 0.18896484375
+        },
+        {
+          "mode": "single",
+          "seed": 2026100803,
+          "limit": 8192,
+          "expectedCalls": 7,
+          "observedCalls": 7,
+          "missingCalls": 0,
+          "outputKnownCalls": 7,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 7,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 4810,
+          "knownMaximumOutput": 4810,
+          "headroomFraction": 0.412841796875,
+          "knownHeadroomUpperBound": 0.412841796875
+        }
+      ],
+      "liveCoverage": {
+        "configuredRuns": 3,
+        "dispatchedRuns": 3,
+        "zeroCallRuns": 0,
+        "unknownDispatchRuns": 0,
+        "complete": true
+      },
+      "audit": {
+        "observedRuns": 3,
+        "passedRuns": 3,
+        "nonPassingRuns": 0,
+        "missingAuditRuns": 0,
+        "unknownAuditRuns": 0,
+        "failedAuditRuns": 0,
+        "positiveCompletionEvidenceRuns": 3,
+        "interpretation": "Missing audit coverage remains unknown; failed or missing positive fact-flow evidence is reported without a main-batch gate."
+      }
+    },
+    {
+      "mode": "single-scaffolded",
+      "runs": [
+        {
+          "mode": "single-scaffolded",
+          "seed": 2026100801,
+          "limit": 8192,
+          "expectedCalls": 18,
+          "observedCalls": 18,
+          "missingCalls": 0,
+          "outputKnownCalls": 18,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 18,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 2214,
+          "knownMaximumOutput": 2214,
+          "headroomFraction": 0.729736328125,
+          "knownHeadroomUpperBound": 0.729736328125
+        },
+        {
+          "mode": "single-scaffolded",
+          "seed": 2026100802,
+          "limit": 8192,
+          "expectedCalls": 18,
+          "observedCalls": 18,
+          "missingCalls": 0,
+          "outputKnownCalls": 18,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 18,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 1870,
+          "knownMaximumOutput": 1870,
+          "headroomFraction": 0.771728515625,
+          "knownHeadroomUpperBound": 0.771728515625
+        },
+        {
+          "mode": "single-scaffolded",
+          "seed": 2026100803,
+          "limit": 8192,
+          "expectedCalls": 17,
+          "observedCalls": 17,
+          "missingCalls": 0,
+          "outputKnownCalls": 17,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 17,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 2372,
+          "knownMaximumOutput": 2372,
+          "headroomFraction": 0.71044921875,
+          "knownHeadroomUpperBound": 0.71044921875
+        }
+      ],
+      "liveCoverage": {
+        "configuredRuns": 3,
+        "dispatchedRuns": 3,
+        "zeroCallRuns": 0,
+        "unknownDispatchRuns": 0,
+        "complete": true
+      },
+      "audit": {
+        "observedRuns": 3,
+        "passedRuns": 3,
+        "nonPassingRuns": 0,
+        "missingAuditRuns": 0,
+        "unknownAuditRuns": 0,
+        "failedAuditRuns": 0,
+        "positiveCompletionEvidenceRuns": 3,
+        "interpretation": "Missing audit coverage remains unknown; failed or missing positive fact-flow evidence is reported without a main-batch gate."
+      }
+    },
+    {
+      "mode": "independent-pool",
+      "runs": [
+        {
+          "mode": "independent-pool",
+          "seed": 2026100801,
+          "limit": 8192,
+          "expectedCalls": 40,
+          "observedCalls": 40,
+          "missingCalls": 0,
+          "outputKnownCalls": 40,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 40,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 3729,
+          "knownMaximumOutput": 3729,
+          "headroomFraction": 0.5447998046875,
+          "knownHeadroomUpperBound": 0.5447998046875
+        },
+        {
+          "mode": "independent-pool",
+          "seed": 2026100802,
+          "limit": 8192,
+          "expectedCalls": 37,
+          "observedCalls": 37,
+          "missingCalls": 0,
+          "outputKnownCalls": 37,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 37,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 5366,
+          "knownMaximumOutput": 5366,
+          "headroomFraction": 0.344970703125,
+          "knownHeadroomUpperBound": 0.344970703125
+        },
+        {
+          "mode": "independent-pool",
+          "seed": 2026100803,
+          "limit": 8192,
+          "expectedCalls": 35,
+          "observedCalls": 35,
+          "missingCalls": 0,
+          "outputKnownCalls": 35,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 35,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 5972,
+          "knownMaximumOutput": 5972,
+          "headroomFraction": 0.27099609375,
+          "knownHeadroomUpperBound": 0.27099609375
+        }
+      ],
+      "liveCoverage": {
+        "configuredRuns": 3,
+        "dispatchedRuns": 3,
+        "zeroCallRuns": 0,
+        "unknownDispatchRuns": 0,
+        "complete": true
+      },
+      "audit": {
+        "observedRuns": 3,
+        "passedRuns": 3,
+        "nonPassingRuns": 0,
+        "missingAuditRuns": 0,
+        "unknownAuditRuns": 0,
+        "failedAuditRuns": 0,
+        "positiveCompletionEvidenceRuns": 3,
+        "interpretation": "Missing audit coverage remains unknown; failed or missing positive fact-flow evidence is reported without a main-batch gate."
+      }
+    },
+    {
+      "mode": "native-team",
+      "runs": [
+        {
+          "mode": "native-team",
+          "seed": 2026100801,
+          "limit": 8192,
+          "expectedCalls": 108,
+          "observedCalls": 108,
+          "missingCalls": 0,
+          "outputKnownCalls": 107,
+          "outputUnknownCalls": 1,
+          "finishReasonKnownCalls": 108,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 1,
+          "outputCoverageComplete": false,
+          "truncationCoverageComplete": false,
+          "maximumOutputTokens": null,
+          "knownMaximumOutput": 6411,
+          "headroomFraction": null,
+          "knownHeadroomUpperBound": 0.2174072265625
+        },
+        {
+          "mode": "native-team",
+          "seed": 2026100802,
+          "limit": 8192,
+          "expectedCalls": 82,
+          "observedCalls": 82,
+          "missingCalls": 0,
+          "outputKnownCalls": 82,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 82,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 6612,
+          "knownMaximumOutput": 6612,
+          "headroomFraction": 0.19287109375,
+          "knownHeadroomUpperBound": 0.19287109375
+        },
+        {
+          "mode": "native-team",
+          "seed": 2026100803,
+          "limit": 8192,
+          "expectedCalls": 75,
+          "observedCalls": 75,
+          "missingCalls": 0,
+          "outputKnownCalls": 75,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 75,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 6443,
+          "knownMaximumOutput": 6443,
+          "headroomFraction": 0.2135009765625,
+          "knownHeadroomUpperBound": 0.2135009765625
+        }
+      ],
+      "liveCoverage": {
+        "configuredRuns": 3,
+        "dispatchedRuns": 3,
+        "zeroCallRuns": 0,
+        "unknownDispatchRuns": 0,
+        "complete": true
+      },
+      "audit": {
+        "observedRuns": 3,
+        "passedRuns": 2,
+        "nonPassingRuns": 1,
+        "missingAuditRuns": 0,
+        "unknownAuditRuns": 0,
+        "failedAuditRuns": 1,
+        "positiveCompletionEvidenceRuns": 2,
+        "interpretation": "Missing audit coverage remains unknown; failed or missing positive fact-flow evidence is reported without a main-batch gate."
+      }
+    },
+    {
+      "mode": "atn-adaptive",
+      "runs": [
+        {
+          "mode": "atn-adaptive",
+          "seed": 2026100801,
+          "limit": 8192,
+          "expectedCalls": 33,
+          "observedCalls": 33,
+          "missingCalls": 0,
+          "outputKnownCalls": 33,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 33,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 3879,
+          "knownMaximumOutput": 3879,
+          "headroomFraction": 0.5264892578125,
+          "knownHeadroomUpperBound": 0.5264892578125
+        },
+        {
+          "mode": "atn-adaptive",
+          "seed": 2026100802,
+          "limit": 8192,
+          "expectedCalls": 40,
+          "observedCalls": 40,
+          "missingCalls": 0,
+          "outputKnownCalls": 40,
+          "outputUnknownCalls": 0,
+          "finishReasonKnownCalls": 40,
+          "finishReasonUnknownCalls": 0,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 0,
+          "outputCoverageComplete": true,
+          "truncationCoverageComplete": true,
+          "maximumOutputTokens": 6913,
+          "knownMaximumOutput": 6913,
+          "headroomFraction": 0.1561279296875,
+          "knownHeadroomUpperBound": 0.1561279296875
+        },
+        {
+          "mode": "atn-adaptive",
+          "seed": 2026100803,
+          "limit": 8192,
+          "expectedCalls": 54,
+          "observedCalls": 54,
+          "missingCalls": 0,
+          "outputKnownCalls": 53,
+          "outputUnknownCalls": 1,
+          "finishReasonKnownCalls": 53,
+          "finishReasonUnknownCalls": 1,
+          "truncatedCalls": 0,
+          "truncationUnknownCalls": 1,
+          "outputCoverageComplete": false,
+          "truncationCoverageComplete": false,
+          "maximumOutputTokens": null,
+          "knownMaximumOutput": 5090,
+          "headroomFraction": null,
+          "knownHeadroomUpperBound": 0.378662109375
+        }
+      ],
+      "liveCoverage": {
+        "configuredRuns": 3,
+        "dispatchedRuns": 3,
+        "zeroCallRuns": 0,
+        "unknownDispatchRuns": 0,
+        "complete": true
+      },
+      "audit": {
+        "observedRuns": 3,
+        "passedRuns": 3,
+        "nonPassingRuns": 0,
+        "missingAuditRuns": 0,
+        "unknownAuditRuns": 0,
+        "failedAuditRuns": 0,
+        "positiveCompletionEvidenceRuns": 2,
+        "interpretation": "Missing audit coverage remains unknown; failed or missing positive fact-flow evidence is reported without a main-batch gate."
+      }
+    }
+  ],
+  "retainedSeeds": [
+    2026100801,
+    2026100802,
+    2026100803
+  ],
+  "causalClaim": false,
+  "studyScope": "prompt decomposition versus distributed structure under equal visible-call budgets"
+}

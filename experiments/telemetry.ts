@@ -83,7 +83,9 @@ export interface TelemetrySnapshot {
   knownMeanInputTokensPerCall: number | null
   inputTokenUnknownCalls: number
   callCosts: Array<{ call: string; session: string; systemPromptBytes: number; toolSchemaBytes: number;
-    fixedContextBytes: number; inputTokens: number | null }>
+    fixedContextBytes: number; inputTokens: number | null;
+    /** Optional only for older saved observations; new calls always record these fields. */
+    outputTokens?: number | null; finishReason?: Extract<StreamChunk, { type: 'finish' }>['reason']['kind'] | null }>
   totals: TelemetryTotals
   sessions: Record<string, TelemetryTotals>
   coverage: {
@@ -220,9 +222,11 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     const counters = [all, group(session)]
     const fixed = request.tools?.some(tool => tool.name.startsWith('atn_')) ? measureAtnFixedContext(request.tools)
       : { systemPromptBytes: 0, toolSchemaBytes: 0, fixedContextBytes: 0 }
-    const callCost = { call, session, ...fixed, inputTokens: null as number | null }
+    const callCost: TelemetrySnapshot['callCosts'][number] = { call, session, ...fixed, inputTokens: null,
+      outputTokens: null, finishReason: null }
     callCosts.push(callCost)
     let usage: TokenUsage | undefined
+    let finishReason: Extract<StreamChunk, { type: 'finish' }>['reason']['kind'] | null = null
     let status: 'completed' | 'error' | 'aborted' | 'incomplete' = 'incomplete'
     for (const counter of counters) { counter.attempts++; counter.inFlight++ }
     const purpose = request.purpose === 'compaction' || request.purpose === 'session-title' ? request.purpose : 'conversation'
@@ -230,7 +234,10 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     try {
       for await (const chunk of next()) {
         if (chunk.type === 'usage') usage = chunk.usage
-        if (chunk.type === 'finish') status = chunk.reason.kind === 'error' ? 'error' : chunk.reason.kind === 'aborted' ? 'aborted' : 'completed'
+        if (chunk.type === 'finish') {
+          finishReason = chunk.reason.kind
+          status = chunk.reason.kind === 'error' ? 'error' : chunk.reason.kind === 'aborted' ? 'aborted' : 'completed'
+        }
         yield chunk
       }
     } catch (error) {
@@ -241,6 +248,8 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
         const durationMs = Math.max(0, now() - started)
         const normalized = normalizeUsage(usage)
         callCost.inputTokens = normalized.inputTokens
+        callCost.outputTokens = normalized.outputTokens
+        callCost.finishReason = finishReason
         const amount = price(normalized, tariff)
         for (const counter of counters) {
           counter.inFlight--; counter.settledAttempts++; counter.modelDurationMs += durationMs
@@ -255,7 +264,7 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
           else counter.cost.knownAmount += amount
           counter.cost.amount = counter.cost.unknownCalls ? null : counter.cost.knownAmount
         }
-        emit('model.end', { call, session, route, status, durationMs, usage: normalized, cost: amount, currency: prices?.currency ?? null })
+        emit('model.end', { call, session, route, status, finishReason, durationMs, usage: normalized, cost: amount, currency: prices?.currency ?? null })
       }
     }
   }
@@ -325,10 +334,6 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
       if (old.get(key) !== encoded) emit(kind, { network, ...data, ...(kind === 'topology.changed' ? { initial: !old.has(key) } : {}) }, at)
     }
     fact('network', 'network.state', { status: record.status, goalVersion: record.goalHistory.at(-1)?.version ?? null, stepsUsed: record.stepsUsed })
-    if (record.whiteboard) fact('whiteboard', 'whiteboard.state', {
-      entries: record.whiteboard.entries.length, generation: record.whiteboard.generation,
-      ...record.whiteboard.usage,
-    })
     for (const node of members) {
       const nodeId = alias('node', `${record.id}:${node.id}`)
       fact(`node:${node.id}`, 'node.state', { node: nodeId, session: sessionName(node.sessionId), entry: node.isEntry, lifecycle: node.lifecycle,
@@ -339,8 +344,8 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
           .filter(peer => selected.has(peer)).map(peer => alias('node', `${record.id}:${peer}`)),
       })
       const knowledge = node.knowledgeFingerprint
-      if (knowledge) fact(`knowledge:${node.id}`, 'node.knowledge', {
-        node: nodeId, source: 'self-reported', updatedAt: knowledge.updatedAt,
+      if (knowledge && (knowledge.documents.length > 0 || knowledge.topics.length > 0 || knowledge.contributions.length > 0)) fact(`knowledge:${node.id}`, 'node.knowledge', {
+        node: nodeId, source: knowledge.source ?? 'self-reported', updatedAt: knowledge.updatedAt,
         documents: knowledge.documents.map(id => alias('document', id)),
         topics: knowledge.topics.map(topic => alias('topic', topic)),
         contributions: knowledge.contributions.map(contribution => alias('contribution', contribution)),

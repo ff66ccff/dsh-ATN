@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "round": 11,
+  "startedAt": "2026-10-08T01:44:48.800Z",
+  "checkedAt": "2026-10-08T01:44:49.803Z",
+  "targetModel": "deepseek-v4.1-flash",
+  "provider": "dsh-opencode-go",
+  "status": "available",
+  "failure": null,
+  "catalog": {
+    "checkedAt": "2026-10-08T01:44:49.803Z",
+    "provider": "dsh-opencode-go",
+    "models": [
+      {
+        "id": "deepseek-v4.1-flash",
+        "name": "DeepSeek V4.1 Flash",
+        "api": "openai-completions",
+        "contextWindow": 1000000,
+        "catalogFree": false,
+        "referenceCostPerMillion": {
+          "input": 0.15,
+          "output": 0.6,
+          "cacheRead": 0.003,
+          "cacheWrite": 0
+        }
+      },
+      {
+        "id": "longcat-2.5-preview-free",
+        "name": "LongCat 2.5 Preview Free",
+        "api": "openai-completions",
+        "contextWindow": 1000000,
+        "catalogFree": true,
+        "referenceCostPerMillion": {
+          "input": 0,
+          "output": 0,
+          "cacheRead": 0,
+          "cacheWrite": 0
+        }
+      }
+    ]
+  },
+  "readOnly": true,
+  "issuedModelCalls": 0,
+  "causalClaim": false,
+  "limitation": "Visibility at check time only; does not guarantee later provider routing or inference availability."
+}

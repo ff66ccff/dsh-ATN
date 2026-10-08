@@ -1,0 +1,106 @@
+{
+  "catalogChecks": [
+    {
+      "path": ".artifacts/equal-budget/20261008-v3/catalog-execute-1791424377760-da28a124-f6d6-46a6-9406-dea194ec40b6.json",
+      "sha256": "359f9c10f7b0c65d9201a56ec27fda51460bab5e4b2d9cfd0f890cad67cac64c",
+      "record": {
+        "version": 1,
+        "round": 11,
+        "startedAt": "2026-10-08T01:52:57.760Z",
+        "checkedAt": "2026-10-08T01:53:04.004Z",
+        "targetModel": "deepseek-v4.1-flash",
+        "provider": "dsh-opencode-go",
+        "status": "available",
+        "failure": null,
+        "catalog": {
+          "checkedAt": "2026-10-08T01:53:04.004Z",
+          "provider": "dsh-opencode-go",
+          "models": [
+            {
+              "id": "deepseek-v4.1-flash",
+              "name": "DeepSeek V4.1 Flash",
+              "api": "openai-completions",
+              "contextWindow": 1000000,
+              "catalogFree": false,
+              "referenceCostPerMillion": {
+                "input": 0.15,
+                "output": 0.6,
+                "cacheRead": 0.003,
+                "cacheWrite": 0
+              }
+            },
+            {
+              "id": "longcat-2.5-preview-free",
+              "name": "LongCat 2.5 Preview Free",
+              "api": "openai-completions",
+              "contextWindow": 1000000,
+              "catalogFree": true,
+              "referenceCostPerMillion": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              }
+            }
+          ]
+        },
+        "readOnly": true,
+        "issuedModelCalls": 0,
+        "causalClaim": false,
+        "limitation": "Visibility at check time only; does not guarantee later provider routing or inference availability."
+      }
+    },
+    {
+      "path": ".artifacts/equal-budget/20261008-v3/catalog-prepare.json",
+      "sha256": "fb14287f0be6de461d626ae47ef88c9f837a4ae7d9e2c5ceff92457c9c78d2ed",
+      "record": {
+        "version": 1,
+        "round": 11,
+        "startedAt": "2026-10-08T01:52:26.115Z",
+        "checkedAt": "2026-10-08T01:52:33.859Z",
+        "targetModel": "deepseek-v4.1-flash",
+        "provider": "dsh-opencode-go",
+        "status": "available",
+        "failure": null,
+        "catalog": {
+          "checkedAt": "2026-10-08T01:52:33.859Z",
+          "provider": "dsh-opencode-go",
+          "models": [
+            {
+              "id": "deepseek-v4.1-flash",
+              "name": "DeepSeek V4.1 Flash",
+              "api": "openai-completions",
+              "contextWindow": 1000000,
+              "catalogFree": false,
+              "referenceCostPerMillion": {
+                "input": 0.15,
+                "output": 0.6,
+                "cacheRead": 0.003,
+                "cacheWrite": 0
+              }
+            },
+            {
+              "id": "longcat-2.5-preview-free",
+              "name": "LongCat 2.5 Preview Free",
+              "api": "openai-completions",
+              "contextWindow": 1000000,
+              "catalogFree": true,
+              "referenceCostPerMillion": {
+                "input": 0,
+                "output": 0,
+                "cacheRead": 0,
+                "cacheWrite": 0
+              }
+            }
+          ]
+        },
+        "readOnly": true,
+        "issuedModelCalls": 0,
+        "causalClaim": false,
+        "limitation": "Visibility at check time only; does not guarantee later provider routing or inference availability."
+      }
+    }
+  ],
+  "issuedModelCalls": 0,
+  "causalClaim": false
+}

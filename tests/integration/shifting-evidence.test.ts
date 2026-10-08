@@ -9,7 +9,7 @@ import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
 import { runShiftingReference } from '../../experiments/shifting-evidence-reference.ts'
 import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
 import { ScriptedModel } from '../fixtures/kernel.ts'
-import { ShiftingBoardScript } from '../../experiments/shifting-evidence-script.ts'
+import { ShiftingMailScript } from '../../experiments/shifting-evidence-script.ts'
 
 test('explicit observed-token thresholds support 4m, reject above 8m, and leave the CLI default at 400k', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-shifting-token-threshold-'))
@@ -59,20 +59,21 @@ test('same-bound hub synthesis is feasible through real fixed ring mail for both
   }
 })
 
-test('fixed scripted policy solves from rendered ACL evidence and metered board without automatic phase advance', async () => {
+test('fixed scripted policy solves from rendered ACL evidence and metered mail without automatic phase advance', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-shifting-calibration-'))
   try {
     const report = await runShiftingEvidence({ model: { id: 'deepseek-v4.1-flash', name: 'Script only', api: 'test', catalogFree: false,
       referenceCostPerMillion: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } },
     mode: 'fixed', directory: join(scratch, 'run'), agents: 8, seed: 17, chainLength: 2,
-    perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000 }, { adapter: new ShiftingBoardScript() })
+    perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000 }, { adapter: new ShiftingMailScript() })
     assert.equal(report.passed, true)
     assert.deepEqual([report.phase1Submitted, report.phase1Correct, report.phase2Submitted, report.phase2Correct], [true, true, true, true])
     assert.equal(report.manipulation.automaticAdvanceOccurred, false)
     assert.equal(report.conditions.autoAdvance, false)
     assert.equal(report.meanInputTokensPerCall, null, 'scripted decisions do not invent provider input tokens')
     assert.ok(report.metrics!.callCosts.length > 0)
-    assert.ok(report.atnBoard!.reads >= 2 && report.atnBoard!.writes >= 8)
+    assert.ok(report.atnMessages > 0)
+    assert.deepEqual(report.atnBoard, { reads: 0, writes: 0, readBytes: 0, writeBytes: 0 })
   } finally { await rm(scratch, { recursive: true, force: true }) }
 })
 

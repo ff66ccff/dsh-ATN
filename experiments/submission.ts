@@ -2,15 +2,16 @@
 import { lastAssistantStreamChunk } from '@deepseek-ai/dsh-llm'
 import type { SessionEvent, SessionEventType } from '@deepseek-ai/dsh-session'
 import type { AtnRuntime, DeliverInput } from '../src/runtime.ts'
+import type { Agent } from '@deepseek-ai/dsh-agent'
 
 /** Successful ATN delivery is itself a submission; no post-completion tool is required. */
 export function installAtnSubmissionBridge(runtime: AtnRuntime, validate: (input: DeliverInput) => void,
-  submitted: (answer: string) => void): void {
+  submitted: (answer: string, agent: Agent) => void): void {
   const deliver = runtime.deliver.bind(runtime)
   runtime.deliver = async (agent, input) => {
     validate(input)
     const result = await deliver(agent, input)
-    if (result.accepted) submitted(input.summary)
+    if (result.accepted) submitted(input.summary, agent)
     return result
   }
 }

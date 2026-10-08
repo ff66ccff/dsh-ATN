@@ -1,0 +1,70 @@
+Equal-budget ledger task (revision 2, fixture seed 2026100812): Reconcile independent settlement ledgers and consolidate accounts
+
+Reconcile all 16 independent settlement shards at the cutoff using their order, event and correction documents and the shared policy. Any agent can independently solve any shard. Merge every local result into one exact consolidated answer. You may choose your own solving and collaboration strategy.
+
+Read the supplied documents using read_document. Every agent has access to the same complete document set. Facts and intermediate results may be shared using the collaboration tools available in your arm.
+
+Start with document policy. The shard documents are independent; no shard requires evidence from another shard. Each has orders, events and corrections.
+
+Each shard contains 10 orders. You may work one shard at a time, keep concise intermediate balances, and merge only after all 16 shards are accounted for. Multiple read_document calls may be issued in the same model turn. The solving strategy is your choice.
+
+Document ids:
+policy
+shard-01/orders
+shard-01/events
+shard-01/corrections
+shard-02/orders
+shard-02/events
+shard-02/corrections
+shard-03/orders
+shard-03/events
+shard-03/corrections
+shard-04/orders
+shard-04/events
+shard-04/corrections
+shard-05/orders
+shard-05/events
+shard-05/corrections
+shard-06/orders
+shard-06/events
+shard-06/corrections
+shard-07/orders
+shard-07/events
+shard-07/corrections
+shard-08/orders
+shard-08/events
+shard-08/corrections
+shard-09/orders
+shard-09/events
+shard-09/corrections
+shard-10/orders
+shard-10/events
+shard-10/corrections
+shard-11/orders
+shard-11/events
+shard-11/corrections
+shard-12/orders
+shard-12/events
+shard-12/corrections
+shard-13/orders
+shard-13/events
+shard-13/corrections
+shard-14/orders
+shard-14/events
+shard-14/corrections
+shard-15/orders
+shard-15/events
+shard-15/corrections
+shard-16/orders
+shard-16/events
+shard-16/corrections
+
+Return one JSON object as the final answer, with this format:
+{"mergedNetByAccount":{"A":integer,"B":integer,"C":integer,"D":integer},"grandTotal":integer,"evidence":[document-id]}. No extra fields. Include every supplied document id exactly once; evidence order does not matter and duplicate evidence ids are forbidden.
+
+A statement that work is completed is not an answer. Do not include prose outside the JSON object.
+
+Required solving procedure: process the shards sequentially, one shard per model call. Do not try to calculate all shards in a single call.
+Read the shared policy and the current shard documents with read_document. Compute that shard and record a concise intermediate result in your conversation: its shard id and all four netByAccount balances. Preserve the accumulated intermediate results as you proceed to the next shard.
+Use the existing read_document tool to request the next shard documents and continue across calls. Intermediate results are working notes, not the final answer; do not finish while any shard remains unprocessed.
+After every shard has an intermediate result, check that every shard occurs exactly once, merge the accumulated balances, and submit the one final JSON object in the required answer format.

@@ -1,0 +1,471 @@
+{
+  "generatedAt": "2026-10-07T08:09:27.643Z",
+  "causalClaim": false,
+  "scope": "First completed single run only; read-only observation with no prompt, oracle, execution or source intervention.",
+  "run": {
+    "directory": ".artifacts/equal-budget/20261007-v2/runs/single-seed-2026100701",
+    "sessionPath": ".artifacts\\equal-budget\\20261007-v2\\runs\\single-seed-2026100701\\sessions\\--D-dsh-ATN-.artifacts-equal-budget-20261007-v2-runs-single-seed-2026100701-workspace--\\pilot-3be1b4fb-0dbb-4ae1-8595-f6a816f7b05a\\session.v4.jsonl",
+    "mode": "single",
+    "seed": 2026100701,
+    "passed": false,
+    "stopReason": "quiescent-without-submission",
+    "callsUsed": 9,
+    "callsAllocated": 512,
+    "callsUnused": 503,
+    "wallClockMs": 128761,
+    "documentReads": 49,
+    "uniqueDocumentsRead": 49,
+    "maximumOutputTokens": 8192,
+    "outputCap": 8192,
+    "truncatedCalls": 1,
+    "errors": 0,
+    "aborted": 0,
+    "incomplete": 0,
+    "toolErrors": 0,
+    "requestFailures": [],
+    "cleanup": "released",
+    "submissionMethod": "none",
+    "answerPresent": false,
+    "positiveCompletionEvidence": false
+  },
+  "steps": [
+    {
+      "step": 1,
+      "outputTokens": 165,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 100
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "policy",
+        "shard-01/orders",
+        "shard-01/events",
+        "shard-01/corrections"
+      ]
+    },
+    {
+      "step": 2,
+      "outputTokens": 1910,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4604
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-02/orders",
+        "shard-02/events",
+        "shard-02/corrections",
+        "shard-03/orders",
+        "shard-03/events",
+        "shard-03/corrections"
+      ]
+    },
+    {
+      "step": 3,
+      "outputTokens": 2337,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4554
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-04/orders",
+        "shard-04/events",
+        "shard-04/corrections",
+        "shard-05/orders",
+        "shard-05/events",
+        "shard-05/corrections"
+      ]
+    },
+    {
+      "step": 4,
+      "outputTokens": 2297,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4384
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-06/orders",
+        "shard-06/events",
+        "shard-06/corrections",
+        "shard-07/orders",
+        "shard-07/events",
+        "shard-07/corrections"
+      ]
+    },
+    {
+      "step": 5,
+      "outputTokens": 2334,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4480
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-08/orders",
+        "shard-08/events",
+        "shard-08/corrections",
+        "shard-09/orders",
+        "shard-09/events",
+        "shard-09/corrections"
+      ]
+    },
+    {
+      "step": 6,
+      "outputTokens": 2279,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4340
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-10/orders",
+        "shard-10/events",
+        "shard-10/corrections",
+        "shard-11/orders",
+        "shard-11/events",
+        "shard-11/corrections"
+      ]
+    },
+    {
+      "step": 7,
+      "outputTokens": 2294,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4370
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-12/orders",
+        "shard-12/events",
+        "shard-12/corrections",
+        "shard-13/orders",
+        "shard-13/events",
+        "shard-13/corrections"
+      ]
+    },
+    {
+      "step": 8,
+      "outputTokens": 2397,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 4391
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        },
+        {
+          "type": "tool-call",
+          "tool": "read_document"
+        }
+      ],
+      "documentReads": [
+        "shard-14/orders",
+        "shard-14/events",
+        "shard-14/corrections",
+        "shard-15/orders",
+        "shard-15/events",
+        "shard-15/corrections",
+        "shard-16/orders",
+        "shard-16/events",
+        "shard-16/corrections"
+      ]
+    },
+    {
+      "step": 9,
+      "outputTokens": 8192,
+      "blocks": [
+        {
+          "type": "reasoning",
+          "characters": 17023
+        }
+      ],
+      "documentReads": []
+    }
+  ],
+  "observedConclusion": "The model used staged document reads across eight calls, successfully read all 49 documents, then the ninth call reached 8192 output tokens and ended max-tokens with reasoning-only content and no submission. The immediate observed bottleneck is the terminal per-call output cap, not exhaustion of the 512-call allocation, unavailable evidence, or a provider/host failure. This trace does not justify saying the model never decomposed any work.",
+  "reasoningReplay": {
+    "observedSessionFacts": "Saved assistant steps 1..8 carry replayState response api=openai-completions, sdkProvider=opencode-go and thinkingSignature=reasoning_content.",
+    "installedCodeEvidence": [
+      {
+        "file": "node_modules/@deepseek-ai/dsh-session/lib/index.js",
+        "line": 216,
+        "behavior": "deriveEventMessage returns the assistant message unchanged when content is nonempty."
+      },
+      {
+        "file": "node_modules/@deepseek-ai/dsh-session/lib/index.js",
+        "line": 1554,
+        "behavior": "deriveMessages walks retained surface messages."
+      },
+      {
+        "file": "node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js",
+        "line": 1262,
+        "behavior": "The next frozen request uses session.deriveMessages()."
+      },
+      {
+        "file": "node_modules/dsh-opencode-go/lib/index.js",
+        "line": 204,
+        "behavior": "replayedAssistant maps reasoning text to thinking and retains thinkingSignature."
+      },
+      {
+        "file": "node_modules/opencode-go-pi-ai/dist/api/openai-completions.js",
+        "line": 997,
+        "behavior": "convertMessages maps a valid thinkingSignature into the corresponding wire reasoning field."
+      }
+    ],
+    "offlineSerializerCheck": {
+      "method": "Reconstructed saved assistant blocks with their replay metadata, then called installed convertMessages offline; no network call.",
+      "sourceReasoningCharacters": [
+        100,
+        4604,
+        4554,
+        4384,
+        4480,
+        4340,
+        4370,
+        4391
+      ],
+      "serializedReasoningContentCharacters": [
+        100,
+        4604,
+        4554,
+        4384,
+        4480,
+        4340,
+        4370,
+        4391
+      ],
+      "serializedToolCalls": [
+        4,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        9
+      ],
+      "preserved": true
+    },
+    "conclusion": "Local code and offline replay provide evidence that prior reasoning is preserved into reasoning_content, not stripped by the installed Harness/provider serializer. Actual HTTP requests were not captured; gateway/server consumption is unobserved. The reason terminal computation expands is not isolated."
+  },
+  "integrityScriptReview": {
+    "file": ".artifacts/verify-equal-budget-v2.mjs",
+    "issues": [
+      {
+        "kind": "legitimate-exception-coverage",
+        "finding": "metrics:null or missing manifest/events/fact-flow from a retained host exception causes TypeError/ENOENT and prevents exports; these are valid unknown observations and need explicit verification-coverage reporting."
+      },
+      {
+        "kind": "missing-independent-checks",
+        "finding": "Verify attempt mode/seed/startedAt, run model/execution/causalClaim, common output cap, actual input.json task hash against manifest/reference, and per-call finishReason against raw model.end. Current checks do not independently cover all these claims."
+      }
+    ]
+  },
+  "cohortRetentionGuidance": [
+    "Only a nonzero-completion preflight with widespread truncation authorizes the documented smaller 8..12 unit-size adjustment.",
+    "Freeze lineage to the prior design hash/path and the observed feasibility reason; use a new root and retain all first-cohort records.",
+    "Report changed workload cohorts separately. The initial ten-order cohort and any eight-order cohort have different tasks; repeated seeds across them cannot be treated as independent extra seeds in one paired analysis.",
+    "Each accepted final cohort needs its own retained real preflight and at least fourteen paired seeds per arm; all earlier cohort observations remain in the final report.",
+    "If the minimum eight-order size remains infeasible, report the blocked feasibility result without further shrinking or proposing another comparison round."
+  ]
+}

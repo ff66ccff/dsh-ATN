@@ -17,7 +17,7 @@ export async function runSimplificationReferences(seeds: readonly number[]) {
   for (const seed of seeds) for (const mode of SIMPLIFICATION_ARMS) {
     const reference = await runShiftingReference({ agents: 8, seed, chainLength: 2, topologyBinding: true,
       steps: 48, maxCalls: 384, timeoutMs: 600_000, topology: mode })
-    const expected = shiftingMechanisms(mode)
+    const expected = { ...shiftingMechanisms(mode), sharedBoard: false }
     const checks = { completed: reference.passed, allRequiredFacts: reference.obtainedRequiredFactCount === 4,
       noModelCalls: reference.issuedModelCalls === 0, stepBudget: reference.entrySteps <= 48,
       positiveFactFlow: reference.factFlowAudit?.passed === true,
@@ -27,10 +27,11 @@ export async function runSimplificationReferences(seeds: readonly number[]) {
     rows.push({ mode, seed, checks, configurationPassed: Object.values(checks).every(Boolean), reference })
   }
   const passed = rows.every(row => row.configurationPassed)
-  return { version: 1, generatedAt: new Date().toISOString(), seeds: [...seeds], modes: SIMPLIFICATION_ARMS,
+  return { version: 2, boardRemoved: true, noBoardAblationApplicable: false,
+    generatedAt: new Date().toISOString(), seeds: [...seeds], modes: SIMPLIFICATION_ARMS,
     conditions: { agents: 8, chainLength: 2, topologyBinding: true, perNodeSteps: 48, maxCalls: 384, timeoutMs: 600_000 },
     issuedModelCalls: 0, passed, rows, causalClaim: false,
-    interpretation: 'Each mechanism is actually disabled in its own reference. Public metadata and actual direct owner task/results remain available. No live model capability or benefit is asserted.' }
+    interpretation: 'Legacy arm labels are retained for fixture compatibility; all 0.5.0 arms lack the removed board, so a board ablation is no longer applicable. Requester feedback still follows each arm. Host custody metadata and actual direct owner task/results remain available. No live model capability or benefit is asserted.' }
 }
 
 async function main() {
