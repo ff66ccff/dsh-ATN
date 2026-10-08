@@ -331,6 +331,12 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
       const running = ctx.agents.list().some(agent => agent.status === 'running')
       if (!running) {
         await ctx.atn.tick()
+        // A scheduler pass can wake queued work. Measure quiescence only
+        // after that pass, so slow storage cannot turn active work into idle.
+        if (ctx.agents.list().some(agent => agent.status === 'running')) {
+          quietSince = null
+          continue
+        }
         if (quietSince === null) quietSince = Date.now()
         if (Date.now() - quietSince >= 200) {
           if (scenario.phase === 1 && options.autoAdvance) { advance('phase-1-quiescence'); quietSince = null }

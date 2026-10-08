@@ -1389,6 +1389,7 @@ export class AtnRuntime extends Service<Config> {
     const first = await this.inspect(networkId)
     const sessionId = first.nodes[first.mails[mailId]?.toId ?? '']?.sessionId
     if (sessionId === undefined) return 'undeliverable'
+    if (this.closing) return first.mails[mailId]?.status ?? 'undeliverable'
     const live = this.ctx.agents.get(SessionId(sessionId))
     if (first.mails[mailId]?.status === 'queued' && live !== undefined) {
       // A scheduler may observe a newly published outbox before spawn finishes
@@ -1401,8 +1402,11 @@ export class AtnRuntime extends Service<Config> {
       const mail = record.mails[mailId]
       if (mail === undefined) return 'undeliverable'
       if (mail.status !== 'queued') return mail.status
+      // Teardown interrupts delivery, but the durable outbox must remain
+      // replayable by the next runtime rather than becoming unreachable.
+      if (this.closing) return 'queued'
       const target = record.nodes[mail.toId]
-      if (record.status !== 'open' || this.closing || target === undefined || target.lifecycle === 'retired' || target.lifecycle === 'failed' || target.creationState !== 'published') {
+      if (record.status !== 'open' || target === undefined || target.lifecycle === 'retired' || target.lifecycle === 'failed' || target.creationState !== 'published') {
         await this.mutate(networkId, current => applied(markUndeliverable(current, mailId, 'network or recipient is closed', this.now())))
         return 'undeliverable'
       }

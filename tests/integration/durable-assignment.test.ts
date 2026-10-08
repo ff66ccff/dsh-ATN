@@ -278,6 +278,7 @@ test('OUTBOX-08: restarting after a claimed turn is interrupted replays the queu
     await aborted.promise
     release.resolve()
     await disposing
+    assert.equal(await kernel.atn.deliverMail(network.networkId, 'interrupted-claim'), 'queued', 'delivery during teardown must remain replayable')
     assert.equal((await store.load(network.networkId))!.mails['interrupted-claim']!.status, 'queued')
     kernel = await bootKernel(scratch, { store, clock: () => 1_000_000 })
     await kernel.atn.recover()
