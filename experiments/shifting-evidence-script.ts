@@ -39,7 +39,7 @@ function incomingLookups(options: GenerateOptions): Incoming[] {
 }
 
 const lookupCommand = (to: string, lookup: Lookup): Command => ({ tool: 'atn_send', args: { to, kind: 'task', body: `Evidence lookup: ${JSON.stringify(lookup)}` } })
-const pause = () => new Promise<void>(done => setTimeout(done, 80))
+const pause = (milliseconds: number) => new Promise<void>(done => setTimeout(done, milliseconds))
 function lastTask(results: Array<Record<string, unknown>>, id: string): Task | undefined {
   for (const result of [...results].reverse()) {
     const task = (result.tasks as Task[] | undefined)?.find(row => row.id === id)
@@ -61,6 +61,8 @@ function receivedResult(options: GenerateOptions, id: string): Task | undefined 
 }
 
 export class ShiftingMailScript extends LlmAdapter {
+  /** Keep deterministic test polling from exhausting steps on slow storage. */
+  constructor(private readonly pollIntervalMs = 80) { super() }
   private sequence = 0
   private submitted = new Set<string>()
   private answered = new Set<string>()
@@ -112,7 +114,7 @@ export class ShiftingMailScript extends LlmAdapter {
               this.answered.add(incoming.taskId)
               command = { tool: 'atn_send', args: { to: incoming.requester, kind: 'result', taskId: incoming.taskId,
                 body: child.result.summary, summary: child.result.summary, evidence: ['unchanged-relayed-evidence'] } }
-            } else { await pause(); command = { tool: 'atn_status', args: { ...(relay.childTaskId ? { taskIds: [relay.childTaskId] } : {}) } } }
+            } else { await pause(this.pollIntervalMs); command = { tool: 'atn_status', args: { ...(relay.childTaskId ? { taskIds: [relay.childTaskId] } : {}) } } }
           }
         }
       } else if (session.startsWith('shifting-') && !this.submitted.has(key)) {
@@ -144,7 +146,7 @@ export class ShiftingMailScript extends LlmAdapter {
             flow.taskId ??= results.findLast(row => typeof row.settledTaskId === 'string')?.settledTaskId as string | undefined
             const queried = flow.taskId ? lastTask(results, flow.taskId) : undefined
             const task = queried?.result ? queried : flow.taskId ? receivedResult(options, flow.taskId) : undefined
-            if (!task?.result) { await pause(); command = { tool: 'atn_status', args: { ...(flow.taskId ? { taskIds: [flow.taskId] } : {}) } } }
+            if (!task?.result) { await pause(this.pollIntervalMs); command = { tool: 'atn_status', args: { ...(flow.taskId ? { taskIds: [flow.taskId] } : {}) } } }
             else if (!flow.reviewed && !noFeedback) {
               flow.reviewed = true
               let value: unknown

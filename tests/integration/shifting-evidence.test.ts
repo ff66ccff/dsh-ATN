@@ -65,8 +65,12 @@ test('fixed scripted policy solves from rendered ACL evidence and metered mail w
     const report = await runShiftingEvidence({ model: { id: 'deepseek-v4.1-flash', name: 'Script only', api: 'test', catalogFree: false,
       referenceCostPerMillion: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 } },
     mode: 'fixed', directory: join(scratch, 'run'), agents: 8, seed: 17, chainLength: 2,
-    perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 30000, observedTokenLimit: 400000 }, { adapter: new ShiftingMailScript() })
-    assert.equal(report.passed, true)
+    // This checks solving and ACL behavior, not machine-dependent polling cost.
+    perNodeSteps: 48, maxCalls: 384, maxOutputTokens: 1536, timeoutMs: 60000, observedTokenLimit: 400000 }, { adapter: new ShiftingMailScript(500) })
+    assert.equal(report.passed, true, JSON.stringify({ stopReason: report.stopReason,
+      phase1Submitted: report.phase1Submitted, phase1Correct: report.phase1Correct,
+      phase2Submitted: report.phase2Submitted, phase2Correct: report.phase2Correct,
+      protocol: report.protocol, failures: report.failures }))
     assert.deepEqual([report.phase1Submitted, report.phase1Correct, report.phase2Submitted, report.phase2Correct], [true, true, true, true])
     assert.equal(report.manipulation.automaticAdvanceOccurred, false)
     assert.equal(report.conditions.autoAdvance, false)
