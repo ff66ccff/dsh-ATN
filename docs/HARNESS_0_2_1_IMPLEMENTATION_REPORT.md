@@ -1,6 +1,6 @@
 # 阶段 A：Harness 0.2.1-alpha.2 实施记录
 
-日期：2026-10-14。实施基线：`260a82b`。本报告只覆盖阶段 A；B/C/D 尚未开始。
+日期：2026-10-14。实施基线：`260a82b`。本报告保存阶段 A 当时的证据与数量；本轮后续 B、C 客户端、声明审计与 D 已收口，最新矩阵及外部兼容限制见 [最终验收](FINAL_EXECUTION_VALIDATION.md)。
 
 ## 输入核实
 
@@ -76,4 +76,4 @@ smoke 证实 ATN 五工具注册、Standard 隔离、子节点继承同一工具
 实验 native-team 组装补入必需目录服务、移除废弃配置；遥测读取新 relay 日志，保留旧 Team 历史事件读取。其余既有测试断言未改写。
 基线 KNOWLEDGE-02 竞争在聚焦与完整目标版本测试中均通过，未削弱断言、未改生产代码；这次通过不能证明它今后绝不会竞争。
 
-十二项不变式在 A 成立：入口所有权（lifecycle/stop/retire）、原子网络持久化（concurrency/domain）、单向边与谱系（topology）、live 身份（agent/preset）、授权与验收（information-boundary/reference-policy）、stepBudget 含义（budget）、同能力（preset/smoke）、只读观察（observer/UI）、domain v1（domain）、五工具/schema 字节不变（fixed-context/字节对比）、原有测试全部保留、报告只列实际运行结果。未完成项：B/C/D 尚未开始；真实付费模型和浏览器视觉验收不在 A 的已通过声明内。
+十二项不变式在 A 成立：入口所有权（lifecycle/stop/retire）、原子网络持久化（concurrency/domain）、单向边与谱系（topology）、live 身份（agent/preset）、授权与验收（information-boundary/reference-policy）、stepBudget 含义（budget）、同能力（preset/smoke）、只读观察（observer/UI）、domain v1（domain）、五工具/schema 字节不变（fixed-context/字节对比）、原有测试全部保留、报告只列实际运行结果。A 验收时 B/C/D 尚未开始；当前进度见最终验收。真实付费模型和完整 provider 浏览器联合验收仍未做，不计入 A 通过项。

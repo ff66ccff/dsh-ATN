@@ -1,0 +1,44 @@
+[
+  {
+    "log": "FINAL-ci.txt",
+    "command": "npm ci",
+    "seconds": 21.17,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-typecheck.txt",
+    "command": "npm run typecheck",
+    "seconds": 6.03,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-test.txt",
+    "command": "npm test",
+    "seconds": 54.41,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-build.txt",
+    "command": "npm run build",
+    "seconds": 2.52,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-pack-tarball.txt",
+    "command": "npm run pack:tarball",
+    "seconds": 1.84,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-smoke-profile.txt",
+    "command": "npm run smoke:profile",
+    "seconds": 9.16,
+    "exit": 0
+  },
+  {
+    "log": "FINAL-smoke-visualization.txt",
+    "command": "npm run smoke:visualization",
+    "seconds": 9.78,
+    "exit": 0
+  }
+]

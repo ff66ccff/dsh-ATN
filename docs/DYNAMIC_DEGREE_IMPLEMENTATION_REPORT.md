@@ -1,6 +1,6 @@
 # 阶段 B：动态出度实施记录
 
-日期：2026-10-14。代码基线：阶段 A `25cf67c`。本报告仅覆盖 B；C/D 尚未开始。
+日期：2026-10-14。代码基线：阶段 A `25cf67c`。本报告保存 B 当时的证据与数量；后续 C 客户端、声明审计与 D 已收口，最新进度及外部限制见 [最终验收](FINAL_EXECUTION_VALIDATION.md)。
 
 ## 实现与边界
 
@@ -61,4 +61,4 @@ wide 的 requiredDirectEdgeCount=4、exceedsStaticDegree=false，在旧证明也
 typecheck、npm test、build、pack:tarball、目标 CLI 下 smoke:profile 全部退出码 0。完整输出在 `execution-evidence/B-{typecheck,test,build,pack-tarball,smoke-profile}.txt`。
 完整测试 **550 runtime/集成 + 8 UI** 全通过，0 skipped。工具 schema/fixed context 仍为 **4749/5910 bytes**（B-context.json）。client.js=485539 bytes，是 C 的体积基线。
 十二项共享不变式逐条确认：入口所有权未改且 lifecycle/stop/retire 通过；原子记录及临界区未改且 concurrency/domain 通过；单向边/谱系及引导常量未改、topology 通过；live 身份未改、agent/preset 通过；人类授权和宿主验收未改、information-boundary 通过；stepBudget 仍为准入步数、budget 通过；模型/工具/权限不改、preset/smoke 同能力通过；观察只读、observer 与 DYNAMIC-STATUS 通过；domain 版本 1、domain 通过；五工具/schema 字节不变；既有测试保留且全部通过；报告只陈述实际运行结果。
-未完成项：C/D 尚未开始；32 节点五-seed 可达性实验、真实付费模型与 browser 视觉验收未做，未将其计入已通过项。
+B 验收时 C/D 尚未开始；当前已完成 C 客户端与 D。32 节点五-seed 可达性实验、真实付费模型及完整 provider browser 联合验收仍未做，不计入已通过项；C 的真实展示组件截图另有说明。

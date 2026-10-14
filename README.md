@@ -111,7 +111,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - DeepSeek Harness 0.2.1-alpha.2（本分支已验证版本，依赖精确锚定）
 - Cordis 4.0.5-alpha.1（目标 Harness 实际依赖）
 
-本轮 A、B、C 客户端改造已完成，551 项 runtime/集成 + 14 项 UI 全通过，类型检查、构建、打包与目标隔离 profile smoke 通过。C 的完整外部 provider 激活仍有限制，见上文。阶段报告：[A](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)；统一声明审计见 [审计表](docs/DECLARATION_AUDIT.md)。D 决策与最终六项验收另行收口。
+本轮 A、B、C 客户端改造、统一声明审计及 D 决策已完成并分阶段提交。干净 `npm ci` 后的最终六项命令与额外真实 Web 观察 smoke 全通过，551 项 runtime/集成 + 14 项 UI，零失败/跳过。C 的完整外部 provider 激活仍有限制，见上文。阶段报告：[A](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)；[审计表](docs/DECLARATION_AUDIT.md)、[D 决策](docs/NEXT_SCOPE_DECISION_RECORD.md)、[最终验收](docs/FINAL_EXECUTION_VALIDATION.md)。
 
 ### 1. 从 npm 安装已发布版本
 以下命令安装历史发布的 0.5.0；本轮源码依赖和 UI 改动尚未重新发布，验证本轮请使用下节源码 tarball。
