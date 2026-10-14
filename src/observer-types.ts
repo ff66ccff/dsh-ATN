@@ -12,6 +12,8 @@ export interface AtnNetworkView {
   objective: string
   stepsUsed: number
   stepBudget: number
+  /** Current effective degree; optional only for older observation endpoints. */
+  maxCollaborationPeers?: number
   deadlineAt: number
   nodes: AtnNodeView[]
   edges: AtnEdgeView[]

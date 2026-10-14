@@ -9,6 +9,7 @@
  * @module dsh-atn/schema
  */
 import { z } from 'zod'
+import { MAX_COLLABORATION_PEERS } from './topology.ts'
 
 /** Stable network identifier. */
 export type NetworkId = string
@@ -129,7 +130,7 @@ export const nodeRecordSchema = z
      * Missing values bootstrap from the legacy lineage; an explicit empty list
      * means the node has chosen no neighbours and must never restore that lineage.
      */
-    peerIds: z.array(z.string()).max(4).optional(),
+    peerIds: z.array(z.string()).max(MAX_COLLABORATION_PEERS).optional(),
     /** Optional host-derived custody snapshot, refreshed from the host registry. */
     knowledgeFingerprint: knowledgeFingerprintSchema.optional(),
     /** Current lifecycle. */
@@ -351,8 +352,8 @@ export type ProposalRecord = z.infer<typeof proposalRecordSchema>
 /** Effective bounds of one network. Every bound is a positive integer count or a duration. */
 export const networkLimitsSchema = z
   .object({
-    /** Effective directed out-degree; absent legacy records keep the original bound of four. */
-    maxCollaborationPeers: z.number().int().min(1).max(4).optional(),
+    /** Frozen ceiling of the cumulative-node degree curve; absent legacy ceilings remain four. */
+    maxCollaborationPeers: z.number().int().min(1).max(MAX_COLLABORATION_PEERS).optional(),
     /** Terminal requester ratings required on each compared edge; legacy default is two. */
     requesterMinSamples: z.number().int().positive().optional(),
     /** Resident working nodes (`provisioning` and `draining` included). */
@@ -420,11 +421,11 @@ export const rewireObservationsSchema = z.object({
   causalClaim: z.literal(false),
   before: z.object({
     observedAt: z.number().int().nonnegative(),
-    peers: z.array(localPeerObservationSchema).max(4),
+    peers: z.array(localPeerObservationSchema).max(MAX_COLLABORATION_PEERS),
   }).strict(),
   after: z.object({
     observedAt: z.number().int().nonnegative(),
-    peers: z.array(localPeerObservationSchema).max(4),
+    peers: z.array(localPeerObservationSchema).max(MAX_COLLABORATION_PEERS),
   }).strict(),
 }).strict()
 
@@ -506,8 +507,8 @@ export const networkRecordSchema = z.preprocess(value => {
       id: z.string(),
       nodeId: z.string(),
       createdAt: z.number().int().nonnegative(),
-      previousPeers: z.array(z.string()).max(4),
-      nextPeers: z.array(z.string()).max(4),
+      previousPeers: z.array(z.string()).max(MAX_COLLABORATION_PEERS),
+      nextPeers: z.array(z.string()).max(MAX_COLLABORATION_PEERS),
       intent: z.enum(['exploration', 'verified-improvement']),
       /** Optional on legacy rows; refreshed automatically until the node next rewires. */
       observations: rewireObservationsSchema.optional(),
@@ -545,3 +546,4 @@ export type NetworkRecord = z.infer<typeof networkRecordSchema>
 export const ATN_DOMAIN_NAME = 'atn_networks'
 /** Current on-medium network record version. */
 export const ATN_DOMAIN_VERSION = 1
+

@@ -16,8 +16,10 @@ import type { NetworkRecord, NodeId, NodeRecord } from './schema.ts'
 /** How many neighbours each direction holds. */
 export const NEIGHBOURS_PER_DIRECTION = 2
 
-/** Hard compatibility ceiling; a network may freeze a lower outgoing limit. */
-export const MAX_COLLABORATION_PEERS = 4
+/** Deployment safety valve: at the default total of 32 nodes the curve is only six. */
+export const MAX_COLLABORATION_PEERS = 8
+/** Records predating frozen ceilings and standalone node-map reads retain this ceiling. */
+const LEGACY_COLLABORATION_CEILING = 4
 
 function checkedPeerLimit(limit: number): number {
   if (!Number.isInteger(limit) || limit < 1 || limit > MAX_COLLABORATION_PEERS) {
@@ -26,9 +28,11 @@ function checkedPeerLimit(limit: number): number {
   return limit
 }
 
-/** Legacy records that omit the frozen network limit retain four outgoing slots. */
-export function collaborationPeerLimit(record: Pick<NetworkRecord, 'limits'>): number {
-  return checkedPeerLimit(record.limits.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS)
+/** Cumulative nodes include terminal nodes, so retirement cannot reduce a legal degree. */
+export function collaborationPeerLimit(record: Pick<NetworkRecord, 'limits' | 'nodes'>): number {
+  const ceiling = checkedPeerLimit(record.limits.maxCollaborationPeers ?? LEGACY_COLLABORATION_CEILING)
+  const count = Math.max(1, Object.keys(record.nodes).length)
+  return Math.min(ceiling, Math.ceil(Math.log2(count)) + 1)
 }
 
 /** Ordered neighbour slots of one node. */
@@ -170,7 +174,7 @@ function recordedPeers(nodes: Readonly<Record<NodeId, NodeRecord>>, node: NodeRe
 export function collaborationPeers(
   nodes: Readonly<Record<NodeId, NodeRecord>>,
   nodeId: NodeId,
-  limit = MAX_COLLABORATION_PEERS,
+  limit = LEGACY_COLLABORATION_CEILING,
 ): NodeId[] {
   checkedPeerLimit(limit)
   const self = nodes[nodeId]

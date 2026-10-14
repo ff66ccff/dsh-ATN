@@ -46,6 +46,7 @@ export function bindingEvidence(conditions: BindingReferencePair['conditions'], 
       messages: 0, hops: 0, payloadBytes: 0, maxContextBytes: 0, totalInteractions: 0, totalTransferBytes: 0,
       board: { reads: 0, writes: 0, readBytes: 0, writeBytes: 0 }, contextBytesByNode: {}, manipulation: new ShiftingEvidenceScenario(fixture.task).snapshot(),
       actions: 16, entrySteps: 16, actionsByNode: { entry: 16 }, maxNodeActions: 16,
+      // Keep the historical degree-two ring as an explicit experimental ceiling, not a deployment default.
       topology: { nodes: 8, maxPeers: 2, reachableFromEntry: 8, diameter: 4 }, topologyProof: proof,
       initialPeerIds: {}, staticSelection: null, staticTopologyProof: null,
       requiredFactCount: proof.requiredFacts.length, obtainedRequiredFacts: adaptive ? proof.requiredFacts : [],

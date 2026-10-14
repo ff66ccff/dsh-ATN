@@ -184,5 +184,7 @@ test('ADAPT-12: terminal networks remain unchanged and persisted graphs keep exp
   }
   assert.equal(nodeRecordSchema.parse(makeNode('A')).peerIds, undefined)
   assert.deepEqual(nodeRecordSchema.parse(makeNode('A', { peerIds: [] })).peerIds, [])
-  assert.throws(() => nodeRecordSchema.parse(makeNode('A', { peerIds: ['B', 'C', 'D', 'E', 'F'] })))
+  assert.deepEqual(nodeRecordSchema.parse(makeNode('A', { peerIds: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'] })).peerIds,
+    ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'])
+  assert.throws(() => nodeRecordSchema.parse(makeNode('A', { peerIds: ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'] })))
 })

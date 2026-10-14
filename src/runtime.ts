@@ -190,7 +190,7 @@ export interface PeerSummary {
 export interface PeersResult {
   /** Calling node. */
   readonly self: string
-  /** Up to four active collaborators chosen by this node. */
+  /** Active collaborators bounded by the current cumulative-node degree limit. */
   readonly neighbours: readonly string[]
   /** Bounded per-node summaries. */
   readonly nodes: readonly PeerSummary[]

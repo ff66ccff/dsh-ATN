@@ -8,6 +8,7 @@ import { createShiftingEvidenceTask, expectedChain, type ShiftingEvidenceTask } 
 
 export interface BindingTopology { entrySlot: number; maxCollaborationPeers: number; initialPeers: number[] }
 export function initialBindingTopology(agents: number): BindingTopology {
+  // Historical comparison intentionally freezes two; dynamic deployments must pass their own effective topology.
   return { entrySlot: 0, maxCollaborationPeers: 2, initialPeers: [agents - 1, 1] }
 }
 export function proveTopologyBinding(task: ShiftingEvidenceTask, topology = initialBindingTopology(task.agents)) {

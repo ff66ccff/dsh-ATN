@@ -68,6 +68,10 @@ test('DYNAMIC-04: a six-peer logged feedback snapshot remains acknowledged', () 
   record.nodes['node-0'].peerIds = Object.keys(record.nodes).slice(1, 7)
   const first = topologyFeedbackMessage(record, 'node-0', [], 0)!
   assert.ok(first)
+  assert.equal(first.source.kind, 'atn')
+  if (first.source.kind === 'atn' && first.source.form === 'snapshot') {
+    assert.equal(JSON.parse(first.source.sections[0].text).peers.length, 6)
+  } else assert.fail('feedback must carry the persisted topology snapshot')
   record.nodes['node-0'].stepsUsed = 3
   assert.equal(topologyFeedbackMessage(record, 'node-0', [{ type: 'user/message', data: first }], 0), undefined)
 })

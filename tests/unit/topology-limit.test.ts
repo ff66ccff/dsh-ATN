@@ -126,8 +126,8 @@ test('DEGREE-05: degree one works and invalid explicit read limits fail instead 
   assertBound(record)
   assert.deepEqual(record.nodes.C.peerIds, ['B'])
   assert.throws(() => rewireNode(record, 'A', ['B', 'C']), /at most 1/)
-  for (const limit of [0, -1, 1.5, 5, Number.NaN, Number.POSITIVE_INFINITY]) {
-    assert.throws(() => collaborationPeers(record.nodes, 'A', limit), /integer from 1 to 4/)
-    assert.throws(() => collaborationPeerLimit({ limits: { ...record.limits, maxCollaborationPeers: limit } }), /integer from 1 to 4/)
+  for (const limit of [0, -1, 1.5, 9, Number.NaN, Number.POSITIVE_INFINITY]) {
+    assert.throws(() => collaborationPeers(record.nodes, 'A', limit), /integer from 1 to 8/)
+    assert.throws(() => collaborationPeerLimit({ nodes: record.nodes, limits: { ...record.limits, maxCollaborationPeers: limit } }), /integer from 1 to 8/)
   }
 })

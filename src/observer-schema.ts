@@ -1,5 +1,6 @@
 /** Browser-safe codecs for the operator-only observation endpoint. */
 import { z } from 'zod'
+import { MAX_COLLABORATION_PEERS } from './topology.ts'
 import type { InvocationDescriptor } from '@deepseek-ai/dsh-typert-protocol'
 import type { AtnObserverSnapshot } from './observer-types.ts'
 
@@ -18,11 +19,12 @@ export const observerSnapshotSchema: z.ZodType<AtnObserverSnapshot> = z.object({
     id, status: z.enum(['open', 'completed', 'stopped']), entryNodeId: id,
     goalVersion: z.number().int().positive(), objective: text,
     stepsUsed: z.number().int().nonnegative(), stepBudget: z.number().int().positive(),
+    maxCollaborationPeers: z.number().int().min(1).max(MAX_COLLABORATION_PEERS).optional(),
     deadlineAt: timestamp,
     nodes: z.array(z.object({
       id, sessionId: id, isEntry: z.boolean(), creatorId: id.nullable(),
       lifecycle: z.enum(['provisioning', 'active', 'draining', 'retired', 'failed']),
-      agentStatus: z.enum(['running', 'idle', 'unloaded']), peers: z.array(id).max(4),
+      agentStatus: z.enum(['running', 'idle', 'unloaded']), peers: z.array(id).max(MAX_COLLABORATION_PEERS),
       openTasks: z.number().int().nonnegative(), pendingVotes: z.number().int().nonnegative(),
       stepsUsed: z.number().int().nonnegative(),
       currentTool: text.nullable(),

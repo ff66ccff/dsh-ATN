@@ -1,0 +1,198 @@
+{
+  "issuedModelCalls": 0,
+  "agents": 8,
+  "rows": [
+    {
+      "seed": 17,
+      "policy": "historical-degree-two-ring",
+      "oldLimit": 2,
+      "newLimit": 2,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "e435426743bdb195962d61d08d25c2bd09dd75c3023b0ddf0eb956bbb466623a",
+      "afterHash": "e435426743bdb195962d61d08d25c2bd09dd75c3023b0ddf0eb956bbb466623a"
+    },
+    {
+      "seed": 17,
+      "policy": "default-fixed-wide",
+      "oldLimit": 4,
+      "newLimit": 4,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "7d3b3679866c3609d28e9ca75158ae0c782ac6183a8c393fbf32006ed589e0e4",
+      "afterHash": "7d3b3679866c3609d28e9ca75158ae0c782ac6183a8c393fbf32006ed589e0e4"
+    },
+    {
+      "seed": 31,
+      "policy": "historical-degree-two-ring",
+      "oldLimit": 2,
+      "newLimit": 2,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "aed00b8e542e9890a3a5e95260f6dfb23c3d04ff85bfe144c31ded4711ea2c72",
+      "afterHash": "aed00b8e542e9890a3a5e95260f6dfb23c3d04ff85bfe144c31ded4711ea2c72"
+    },
+    {
+      "seed": 31,
+      "policy": "default-fixed-wide",
+      "oldLimit": 4,
+      "newLimit": 4,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "30732f439a371b9b58de49edad71d51b27052541741b7228bdc1dbff8f5389c6",
+      "afterHash": "30732f439a371b9b58de49edad71d51b27052541741b7228bdc1dbff8f5389c6"
+    },
+    {
+      "seed": 45,
+      "policy": "historical-degree-two-ring",
+      "oldLimit": 2,
+      "newLimit": 2,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "cfaa5b97011891fb44bb68d7345ab1e3dec9af248396170b6418b0083d009e29",
+      "afterHash": "cfaa5b97011891fb44bb68d7345ab1e3dec9af248396170b6418b0083d009e29"
+    },
+    {
+      "seed": 45,
+      "policy": "default-fixed-wide",
+      "oldLimit": 4,
+      "newLimit": 4,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "740ed95ec13bb68706d45c8b5059f6e162b50ee8d635b8bfdfbc04489b2bf450",
+      "afterHash": "740ed95ec13bb68706d45c8b5059f6e162b50ee8d635b8bfdfbc04489b2bf450"
+    },
+    {
+      "seed": 59,
+      "policy": "historical-degree-two-ring",
+      "oldLimit": 2,
+      "newLimit": 2,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "32d15a32e0bd8e543e10ff2baee30e3f32d92f712b14b1181ef271649c286deb",
+      "afterHash": "32d15a32e0bd8e543e10ff2baee30e3f32d92f712b14b1181ef271649c286deb"
+    },
+    {
+      "seed": 59,
+      "policy": "default-fixed-wide",
+      "oldLimit": 4,
+      "newLimit": 4,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "d506dd4c9a0aaf74095901f4636e8fc05cd97ca0f420eb0e03dad73d8749b998",
+      "afterHash": "d506dd4c9a0aaf74095901f4636e8fc05cd97ca0f420eb0e03dad73d8749b998"
+    },
+    {
+      "seed": 73,
+      "policy": "historical-degree-two-ring",
+      "oldLimit": 2,
+      "newLimit": 2,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": true
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "cb56e7ebe87095c8111b8c0995d20a8d1970076cefc85fd6adb925a7c4cf1b04",
+      "afterHash": "cb56e7ebe87095c8111b8c0995d20a8d1970076cefc85fd6adb925a7c4cf1b04"
+    },
+    {
+      "seed": 73,
+      "policy": "default-fixed-wide",
+      "oldLimit": 4,
+      "newLimit": 4,
+      "before": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "after": {
+        "conclusion": "unreachable",
+        "exceedsStaticDegree": false
+      },
+      "conclusionFlipped": false,
+      "eligibilityFlipped": false,
+      "requiredDirectEdgeCount": 4,
+      "beforeHash": "532ba15cc420bf485f738a85ca1e8a54085655c1637b17c75afb7b88b79f8c71",
+      "afterHash": "532ba15cc420bf485f738a85ca1e8a54085655c1637b17c75afb7b88b79f8c71"
+    }
+  ],
+  "flippedSeeds": [],
+  "scope": "Historical five seeds, degree-two ring explicitly frozen and default fixed-wide. Does not establish arbitrary larger-network reachability."
+}

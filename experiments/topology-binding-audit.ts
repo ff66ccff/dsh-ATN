@@ -105,6 +105,7 @@ export function bindingReferenceGate(pair: BindingReferencePair | null | undefin
         !isDeepStrictEqual(run.initialPeerIds, selection.peers) || run.topology.maxPeers !== 4 || run.topology.nodes !== agents ||
         run.seed !== seed || run.topologyMode !== 'fixed-wide' || run.issuedModelCalls !== 0 || run.maxNodeActions > perNodeSteps ||
         run.actions > maxCalls || run.factFlowAudit?.passed !== true || !isComparisonSeed(task, run.topologyProof) ||
+        // Historical fixed-wide evidence freezes four at eight nodes, where the dynamic default is also four.
         !verifyTopologyBindingProof(task, run.staticTopologyProof, { entrySlot: 0, maxCollaborationPeers: 4, initialPeers: [agents - 1, 1, 2, 3] })) return false
       const obtained = proof.requiredFacts.filter(row => run.receivedFacts.some(received => received.phase === row.phase &&
         received.ownerSlot === row.holder && isDeepStrictEqual(received.fact, task.phases[row.phase - 1].facts.find(fact => fact.id === row.document))))

@@ -242,6 +242,7 @@ export class AtnObserver extends Service {
       id: record.id, status: record.status, entryNodeId: record.entryNodeId, goalVersion: latest.version,
       objective: display(latest.document.objective), stepsUsed: record.stepsUsed,
       stepBudget: record.limits.stepBudget, deadlineAt: record.deadlineAt,
+      maxCollaborationPeers: collaborationPeerLimit(record),
       nodes,
       edges: nodes.flatMap(node => [
         ...node.peers.map(target => ({ source: node.id, target, kind: 'collaboration' as const })),

@@ -13,7 +13,7 @@ import { MAX_COLLABORATION_PEERS } from './topology.ts'
 
 /** Plugin configuration of the ATN runtime service. */
 export interface Config {
-  /** Maximum outgoing collaborators, 1–4; omitted legacy configurations retain four. */
+  /** Outgoing degree ceiling, 1–8; defaults to eight, above the default 32-node curve value six. */
   maxCollaborationPeers?: number
   /** Minimum terminal requester ratings on each compared edge. Defaults to two. */
   requesterMinSamples?: number

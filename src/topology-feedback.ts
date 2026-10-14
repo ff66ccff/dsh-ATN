@@ -1,7 +1,7 @@
 /** Bounded local graph feedback, acknowledged only by the normal session log. */
 import { createUserMessage, type UserMessage } from '@deepseek-ai/dsh-llm'
 import type { NetworkRecord } from './schema.ts'
-import { collaborationPeers, collaborationPeerLimit, MAX_COLLABORATION_PEERS } from './topology.ts'
+import { collaborationPeers, collaborationPeerLimit } from './topology.ts'
 import { materialFingerprint, summarizeLocalFeedback } from './local-feedback.ts'
 import { summarizeRequesterFeedback } from './requester-feedback.ts'
 import { summarizeVerifiedFeedback } from './verified-feedback.ts'
@@ -38,6 +38,7 @@ function previousSnapshot(
   events: readonly { type: string; data?: unknown }[],
   networkId: string,
   nodeId: string,
+  limit: number,
 ): TopologySnapshot | undefined {
   for (let index = events.length - 1; index >= 0; index -= 1) {
     const event = events[index]!
@@ -49,7 +50,7 @@ function previousSnapshot(
       try {
         const snapshot: TopologySnapshot = JSON.parse(section.text)
         if (snapshot?.networkId === networkId && snapshot.nodeId === nodeId &&
-          Array.isArray(snapshot.peers) && snapshot.peers.length <= MAX_COLLABORATION_PEERS &&
+          Array.isArray(snapshot.peers) && snapshot.peers.length <= limit &&
           snapshot.peers.every(id => typeof id === 'string')) return snapshot
       } catch {
         // Older or malformed metadata cannot acknowledge this node's view.
@@ -71,7 +72,7 @@ export function topologyFeedbackMessage(
   now: number = Date.now(),
 ): UserMessage | undefined {
   const peers = collaborationPeers(record.nodes, nodeId, collaborationPeerLimit(record)).toSorted()
-  const previous = previousSnapshot(events, record.id, nodeId)
+  const previous = previousSnapshot(events, record.id, nodeId, collaborationPeerLimit(record))
   const telemetry = peers.map(peerId => summarizeLocalFeedback(record, peerId, { observerId: nodeId, now }))
   const quality = peers.map(peerId => ({ peerId,
     requester: summarizeRequesterFeedback(record, peerId, { observerId: nodeId }),

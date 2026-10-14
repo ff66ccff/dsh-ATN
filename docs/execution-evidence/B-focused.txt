@@ -1,0 +1,184 @@
+TAP version 13
+# Subtest: DYNAMIC-STATUS: N=2 and N=32 status reads report two and six without mutation or model calls
+ok 1 - DYNAMIC-STATUS: N=2 and N=32 status reads report two and six without mutation or model calls
+  ---
+  duration_ms: 72.1165
+  type: 'test'
+  ...
+# Subtest: ADAPT-01: legacy nodes bootstrap once; explicit empty neighbourhoods stay empty
+ok 2 - ADAPT-01: legacy nodes bootstrap once; explicit empty neighbourhoods stay empty
+  ---
+  duration_ms: 1.4309
+  type: 'test'
+  ...
+# Subtest: ADAPT-02: rewiring crosses branches and changes only the caller outgoing links
+ok 3 - ADAPT-02: rewiring crosses branches and changes only the caller outgoing links
+  ---
+  duration_ms: 0.1594
+  type: 'test'
+  ...
+# Subtest: ADAPT-03: rewiring refuses invalid callers, targets and edge lists
+ok 4 - ADAPT-03: rewiring refuses invalid callers, targets and edge lists
+  ---
+  duration_ms: 0.485
+  type: 'test'
+  ...
+# Subtest: ADAPT-04: repair reserves existing active peers and replaces only lost slots
+ok 5 - ADAPT-04: repair reserves existing active peers and replaces only lost slots
+  ---
+  duration_ms: 0.1519
+  type: 'test'
+  ...
+# Subtest: ADAPT-05: repair walks inactive cycles breadth first and stops at live candidates
+ok 6 - ADAPT-05: repair walks inactive cycles breadth first and stops at live candidates
+  ---
+  duration_ms: 0.1628
+  type: 'test'
+  ...
+# Subtest: ADAPT-06: an inactive explicit empty list cannot revive its birth links
+ok 7 - ADAPT-06: an inactive explicit empty list cannot revive its birth links
+  ---
+  duration_ms: 0.1268
+  type: 'test'
+  ...
+# Subtest: ADAPT-07: reconciliation uses one snapshot regardless of record iteration order
+ok 8 - ADAPT-07: reconciliation uses one snapshot regardless of record iteration order
+  ---
+  duration_ms: 0.1363
+  type: 'test'
+  ...
+# Subtest: ADAPT-08: graph cycles are legal while dangling stored links fail clearly
+ok 9 - ADAPT-08: graph cycles are legal while dangling stored links fail clearly
+  ---
+  duration_ms: 0.1425
+  type: 'test'
+  ...
+# Subtest: ADAPT-09: published children connect to creator and its peers without eviction
+ok 10 - ADAPT-09: published children connect to creator and its peers without eviction
+  ---
+  duration_ms: 0.2568
+  type: 'test'
+  ...
+# Subtest: ADAPT-10: provisioning waits for publication and later retries preserve explicit choices
+ok 11 - ADAPT-10: provisioning waits for publication and later retries preserve explicit choices
+  ---
+  duration_ms: 0.2168
+  type: 'test'
+  ...
+# Subtest: ADAPT-11: a creator exiting during provisioning does not prevent independent child publication
+ok 12 - ADAPT-11: a creator exiting during provisioning does not prevent independent child publication
+  ---
+  duration_ms: 0.1019
+  type: 'test'
+  ...
+# Subtest: ADAPT-12: terminal networks remain unchanged and persisted graphs keep explicit emptiness
+ok 13 - ADAPT-12: terminal networks remain unchanged and persisted graphs keep explicit emptiness
+  ---
+  duration_ms: 2.8464
+  type: 'test'
+  ...
+# Subtest: CONFIG-01: a zero count or duration is rejected at load time
+ok 14 - CONFIG-01: a zero count or duration is rejected at load time
+  ---
+  duration_ms: 1.364
+  type: 'test'
+  ...
+# Subtest: CONFIG-01: a negative or fractional bound is rejected too
+ok 15 - CONFIG-01: a negative or fractional bound is rejected too
+  ---
+  duration_ms: 0.2789
+  type: 'test'
+  ...
+# Subtest: CONFIG-01: an illegal domain name is rejected at load time
+ok 16 - CONFIG-01: an illegal domain name is rejected at load time
+  ---
+  duration_ms: 0.2686
+  type: 'test'
+  ...
+# Subtest: CONFIG-01: a legal domain name and a complete default configuration load
+ok 17 - CONFIG-01: a legal domain name and a complete default configuration load
+  ---
+  duration_ms: 0.2085
+  type: 'test'
+  ...
+# Subtest: CONFIG-01: a broken relation between two valid fields still fails
+ok 18 - CONFIG-01: a broken relation between two valid fields still fails
+  ---
+  duration_ms: 0.1958
+  type: 'test'
+  ...
+# Subtest: CONFIG-02: outgoing ceiling accepts 1–8, persists two, and defaults new configs to eight
+ok 19 - CONFIG-02: outgoing ceiling accepts 1–8, persists two, and defaults new configs to eight
+  ---
+  duration_ms: 1.3065
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-01: exact logarithmic table and pure deterministic default limits
+ok 20 - DYNAMIC-01: exact logarithmic table and pure deterministic default limits
+  ---
+  duration_ms: 9.2205
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-02: deployment ceiling eight, frozen two/four and omitted legacy ceiling four
+ok 21 - DYNAMIC-02: deployment ceiling eight, frozen two/four and omitted legacy ceiling four
+  ---
+  duration_ms: 6.6383
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-03: growth and retirement preserve every established legal edge
+ok 22 - DYNAMIC-03: growth and retirement preserve every established legal edge
+  ---
+  duration_ms: 2.4813
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-04: a six-peer logged feedback snapshot remains acknowledged
+ok 23 - DYNAMIC-04: a six-peer logged feedback snapshot remains acknowledged
+  ---
+  duration_ms: 8.5897
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-05: degree literals are removed from config and both durable/observer codecs
+ok 24 - DYNAMIC-05: degree literals are removed from config and both durable/observer codecs
+  ---
+  duration_ms: 0.9438
+  type: 'test'
+  ...
+# Subtest: DEGREE-01: legacy records preserve four while a frozen cap bounds bootstrap and explicit rewires
+ok 25 - DEGREE-01: legacy records preserve four while a frozen cap bounds bootstrap and explicit rewires
+  ---
+  duration_ms: 7.6654
+  type: 'test'
+  ...
+# Subtest: DEGREE-02: publication inherits bounded links and never evicts a full creator edge
+ok 26 - DEGREE-02: publication inherits bounded links and never evicts a full creator edge
+  ---
+  duration_ms: 0.8085
+  type: 'test'
+  ...
+# Subtest: DEGREE-03: failed-peer repair and legacy oversized exit links obey the same cap
+ok 27 - DEGREE-03: failed-peer repair and legacy oversized exit links obey the same cap
+  ---
+  duration_ms: 0.3483
+  type: 'test'
+  ...
+# Subtest: DEGREE-04: a sixteen-node degree-two ring stays connected, scarce and bounded after every write and failure repair
+ok 28 - DEGREE-04: a sixteen-node degree-two ring stays connected, scarce and bounded after every write and failure repair
+  ---
+  duration_ms: 2.9312
+  type: 'test'
+  ...
+# Subtest: DEGREE-05: degree one works and invalid explicit read limits fail instead of widening
+ok 29 - DEGREE-05: degree one works and invalid explicit read limits fail instead of widening
+  ---
+  duration_ms: 0.6231
+  type: 'test'
+  ...
+1..29
+# tests 29
+# suites 0
+# pass 29
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 729.51

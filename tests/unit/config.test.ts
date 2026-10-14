@@ -65,17 +65,17 @@ test('CONFIG-01: a broken relation between two valid fields still fails', () => 
   assert.throws(() => assertConfigRelations(testConfig({ proposalDeadlineMs: 10_000_000 })), /proposalDeadlineMs must not exceed networkDeadlineMs/)
 })
 
-test('CONFIG-02: outgoing collaboration cap accepts 1–4, persists two, and defaults legacy configs to four', () => {
-  for (const maxCollaborationPeers of [1, 2, 3, 4]) {
+test('CONFIG-02: outgoing ceiling accepts 1–8, persists two, and defaults new configs to eight', () => {
+  for (const maxCollaborationPeers of [1, 2, 3, 4, 5, 6, 7, 8]) {
     const config = testConfig({ maxCollaborationPeers })
     assert.doesNotThrow(() => assertConfigRelations(config))
     assert.equal(limitsFromConfig(config).maxCollaborationPeers, maxCollaborationPeers)
   }
-  for (const maxCollaborationPeers of [-1, 0, 1.5, 5, Number.NaN, Number.POSITIVE_INFINITY]) {
+  for (const maxCollaborationPeers of [-1, 0, 1.5, 9, Number.NaN, Number.POSITIVE_INFINITY]) {
     assert.throws(() => assertConfigRelations({ ...testConfig(), maxCollaborationPeers }), /maxCollaborationPeers/)
   }
   const { maxCollaborationPeers: _configured, ...legacy } = testConfig()
   assert.doesNotThrow(() => assertConfigRelations(legacy))
-  assert.equal(limitsFromConfig(legacy).maxCollaborationPeers, 4)
-  assert.equal(limitsFromConfig(testConfig()).maxCollaborationPeers, 4)
+  assert.equal(limitsFromConfig(legacy).maxCollaborationPeers, 8)
+  assert.equal(limitsFromConfig(testConfig()).maxCollaborationPeers, 8)
 })
