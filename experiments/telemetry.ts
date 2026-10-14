@@ -269,11 +269,14 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     }
   }
 
+  const teamOfSession = new Map<string, string>()
   const observeSession = (session: Session, event: SessionEvent): void => {
     if (closed || !include(session.id)) return
     const name = sessionName(session.id)
     const counters = [all, group(name)]
     if (event.type === 'team/member') {
+      teamOfSession.set(session.id, event.data.teamId)
+      teamOfSession.set(event.data.member.id, event.data.teamId)
       emit('team.member', { team: alias('team', event.data.teamId), session: name,
         member: sessionName(event.data.member.id), phase: event.data.member.phase, context: event.data.member.context }, event.time)
     } else if (event.type === 'team/task') {
@@ -284,6 +287,15 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
         blockedBy: task.blockedBy.map(id => alias('team-task', `${teamId}:${id}`)),
         writeScopes: task.writeScopes.map(scope => alias('write-scope', `${teamId}:${scope}`)),
       }, event.time)
+    } else if (event.type === 'user/message' && event.data.source.kind === 'agent-message'
+      && event.data.source.form === 'relay') {
+      const sender = event.data.source.senderSessionId
+      const teamId = teamOfSession.get(session.id)
+      if (teamId !== undefined && teamOfSession.get(sender) === teamId) {
+        emit('team.mail', { team: alias('team', teamId), session: name,
+          mail: alias('team-mail', `${teamId}:${event.data.id}`), from: sessionName(sender),
+          to: name, status: 'delivered' }, event.time)
+      }
     } else if (event.type === 'team/message/queued') {
       const { message, teamId } = event.data
       emit('team.mail', { team: alias('team', teamId), session: name, mail: alias('team-mail', `${teamId}:${message.id}`),

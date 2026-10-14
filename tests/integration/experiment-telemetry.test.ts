@@ -2,6 +2,7 @@ import { setHostKnowledge } from '../fixtures/host-custody.ts'
 /** Experiment accounting is observed through real Harness events; no provider calls. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
+import { installTeamDirectory } from '../../experiments/native-team-runtime.ts'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
@@ -273,6 +274,7 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
   const kernel = await bootKernel(scratch)
   const telemetry = await installTelemetry(kernel.ctx, { directory: join(scratch, 'experiment'), runId: 'native-team' })
   try {
+    await installTeamDirectory(kernel.ctx, scratch)
     await kernel.ctx.plugin(SubagentRuntime)
     await kernel.ctx.plugin(ExperimentSessionQuery)
     await kernel.ctx.plugin(Spawn, { providerName: 'spawn' })
@@ -292,19 +294,14 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
     const claimed = await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: first.revision, action: 'claim' })
     const completed = await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: claimed.revision, action: 'complete' })
     await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: completed.revision, action: 'reopen' })
-    let acknowledge!: () => void
-    const acknowledged = new Promise<void>(resolve => { acknowledge = resolve })
-    const removeAcknowledgement = kernel.ctx.on('session/event', (_session, event) => {
-      if (event.type === 'team/message/delivered') acknowledge()
-    })
     const sent = await kernel.ctx.agentTeams.sendMessage(host, { target: child.member.name,
       content: [{ type: 'text', text: 'SECRET_TEAM_MAIL' }], signal: new AbortController().signal })
-    assert.equal(sent.status, 'accepted')
+    assert.ok(sent.messageId, 'the service returns the accepted Agent inbox identity')
     await settle(kernel)
-    const deadline = setTimeout(() => acknowledge(), 1000)
-    await acknowledged
-    clearTimeout(deadline)
-    removeAcknowledgement()
+    const target = kernel.ctx.agents.get(child.member.id)!
+    assert.ok(target.session.snapshotEvents().some(event => event.type === 'user/message'
+      && event.data.id === sent.messageId && event.data.source.kind === 'agent-message'),
+    'the target log contains the exact accepted relay')
     const final = await telemetry.close()
     assert.equal(final.coverage.observationErrors, 0)
     const raw = await readFile(telemetry.paths.events, 'utf8')
@@ -317,9 +314,11 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
     assert.ok(tasks.some(row => row.task === linked.blockedBy[0] && row.status === 'completed' && row.revision === completed.revision))
     assert.ok(tasks.some(row => row.owner !== null))
     assert.ok(tasks.some(row => row.writeScopes.length === 1 && row.writeScopes[0].startsWith('write-scope-')))
-    const queued = rows.find(row => row.kind === 'team.mail' && row.status === 'queued')!
-    assert.ok(queued)
-    assert.ok(rows.some(row => row.kind === 'team.mail' && row.status === 'delivered' && row.mail === queued.mail))
+    const delivered = rows.filter(row => row.kind === 'team.mail' && row.status === 'delivered')
+    assert.equal(delivered.length, 1, 'direct inbox delivery produces one structural observation')
+    assert.ok(delivered[0].from && delivered[0].to && delivered[0].mail)
+    assert.equal(rows.some(row => row.kind === 'team.mail' && row.status === 'queued'), false,
+      'the removed Team mailbox must not be fabricated')
     assert.equal(raw.includes('SECRET_'), false)
     assert.equal(raw.includes('secret-team-name'), false)
     assert.equal(raw.includes(child.member.id), false)

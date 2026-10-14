@@ -104,7 +104,9 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ### 环境要求
 - Node.js >= 24
-- DeepSeek Harness >= 0.2.0-rc.2
+- DeepSeek Harness >= 0.2.1-alpha.2
+
+本轮实施进度：Harness 适配阶段 A 已完成，目标 `0.2.1-alpha.2` 下 544 项 runtime/集成 + 8 项 UI 全通过，安装、类型检查、构建、打包与隔离 profile smoke 均通过。动态出度、better-sidebar 与下一轮决策尚未实施。详见 [阶段 A 报告](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)。
 - Cordis 4.0.4
 
 ### 1. 从 npm 安装已发布版本

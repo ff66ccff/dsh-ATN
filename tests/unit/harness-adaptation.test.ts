@@ -13,7 +13,7 @@ test('HARNESS-01: every Harness dependency and override uses the supported relea
   }
   assert.equal(manifest.engines.node, '>=24')
   assert.equal(manifest.engines.dsh, '>=0.2.1-alpha.2')
-  assert.equal(manifest.peerDependencies['@deepseek-ai/cordis'], '4.0.4')
+  assert.equal(manifest.peerDependencies['@deepseek-ai/cordis'], '4.0.5-alpha.1')
 })
 
 test('HARNESS-02: removed invariants and unresolved cwd templates are absent', () => {

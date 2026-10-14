@@ -34,6 +34,7 @@ import { isTaskAccepted, taskResultDigest } from '../src/tasks.ts'
 import { observeRequesterTask, summarizeRequesterFeedback } from '../src/requester-feedback.ts'
 import { createExperimentBudget, installExperimentOutputCap } from './budget.ts'
 import { ExperimentSessionQuery } from './session-query.ts'
+import { installTeamDirectory } from './native-team-runtime.ts'
 import { extractFinalTextSubmission, installAtnSubmissionBridge } from './submission.ts'
 import { getTopologyTask, isTopologyTask, renderTopologyPrompt, TOPOLOGY_TASK_IDS, TopologyScenario, type TopologyTaskId } from './topology-task.ts'
 import { evaluateTopologyTask } from './topology-evaluation.ts'
@@ -333,11 +334,12 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
       })
       if (options.mode.includes('no-rewire')) ctx.atn.rewire = async () => { throw new Error('Voluntary rewiring is disabled by this experiment') }
     } else if (options.mode === 'native-team') {
+      await installTeamDirectory(ctx, directory)
       await ctx.plugin(ExperimentSessionQuery)
       await ctx.plugin(SubagentRuntime, { maxActiveSubagents: options.maxAgents - 1, maxDepth: 1 })
       await ctx.plugin(Spawn, { providerName: 'spawn' })
       await ctx.plugin(Fork, { providerName: 'fork' })
-      await ctx.plugin(TeamService, { maxMembers: options.maxAgents - 1, maxTasks: equal ? 128 : 32, maxPendingMessagesPerMember: 32, maxMessageBytes: 8192 })
+      await ctx.plugin(TeamService, { maxMembers: options.maxAgents - 1, maxTasks: equal ? 128 : 32, maxMessageBytes: 8192 })
       await ctx.plugin(TeamTools, { freshProvider: 'spawn', forkProvider: 'fork' })
     }
     if (equalTask) factObserver = installEqualBudgetObserver(ctx, equalTask, session => allocated!.alias(session))
