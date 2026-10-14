@@ -106,7 +106,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - Node.js >= 24
 - DeepSeek Harness >= 0.2.1-alpha.2
 
-本轮实施进度：Harness 适配 A、动态出度 B 已完成，目标 `0.2.1-alpha.2` 下 550 项 runtime/集成 + 8 项 UI 全通过，类型检查、构建、打包与隔离 profile smoke 均通过。better-sidebar 与下一轮决策尚未实施。详见 [阶段 A 报告](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)及 [阶段 B 报告](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)。
+本轮实施进度：Harness 适配 A、动态出度 B 已完成，目标 `0.2.1-alpha.2` 下 550 项 runtime/集成 + 8 项 UI 全通过，类型检查、构建、打包与隔离 profile smoke 均通过。C 暂停于外部依赖阻塞：better-sidebar 0.26.0 真实启动仍等待已移除的 `webRuntime`，普通 npm 安装也有 peer 冲突；C、统一声明审计及 D 尚未完成。详见 [阶段 A 报告](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[阶段 B 报告](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)和 [阶段 C 阻塞记录](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)。
 - Cordis 4.0.4
 
 ### 1. 从 npm 安装已发布版本

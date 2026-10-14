@@ -1,0 +1,36 @@
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Progress: resolved 3, reused 0, downloaded 0, added 0
+Progress: resolved 20, reused 0, downloaded 0, added 0
+Progress: resolved 22, reused 0, downloaded 0, added 0
+Progress: resolved 23, reused 0, downloaded 0, added 0
+Progress: resolved 62, reused 0, downloaded 0, added 0
+Progress: resolved 78, reused 0, downloaded 0, added 0
+Progress: resolved 149, reused 0, downloaded 0, added 0
+Progress: resolved 167, reused 0, downloaded 0, added 0
+[WARN] Issues with peer dependencies found. Run "pnpm peers check" to list them.
+
+dependencies:
++ dsh-better-sidebar 0.26.0
+
+Packages: +170
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Packages are hard linked from the content-addressable store to the virtual store.
+  Content-addressable store is at: D:\.pnpm-store\v11
+  Virtual store is at:             node_modules/.pnpm
+Progress: resolved 170, reused 102, downloaded 20, added 91
+[WARN] Tarball download average speed 40 KiB/s (size 41 KiB) is below 50 KiB/s: https://registry.npmjs.org/@lezer/lr/-/lr-1.4.11.tgz (GET)
+[WARN] Tarball download average speed 41 KiB/s (size 46 KiB) is below 50 KiB/s: https://registry.npmjs.org/@lezer/python/-/python-1.1.19.tgz (GET)
+Progress: resolved 170, reused 102, downloaded 55, added 156
+[WARN] Tarball download average speed 38 KiB/s (size 49 KiB) is below 50 KiB/s: https://registry.npmjs.org/@codemirror/commands/-/commands-6.11.1.tgz (GET)
+Progress: resolved 170, reused 102, downloaded 61, added 162
+Progress: resolved 170, reused 102, downloaded 65, added 165
+Progress: resolved 170, reused 102, downloaded 65, added 166
+Progress: resolved 170, reused 102, downloaded 66, added 166
+Progress: resolved 170, reused 102, downloaded 66, added 168
+Progress: resolved 170, reused 102, downloaded 67, added 168
+Progress: resolved 170, reused 102, downloaded 67, added 169
+Progress: resolved 170, reused 102, downloaded 68, added 169
+Progress: resolved 170, reused 102, downloaded 68, added 170, done
+Added 1 entry to minimumReleaseAgeExclude in pnpm-workspace.yaml (set minimumReleaseAgeStrict to true to gate these updates with a prompt):
+  dsh-better-sidebar@0.26.0
+Done in 31.2s using pnpm v11.21.0

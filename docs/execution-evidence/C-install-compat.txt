@@ -1,0 +1,23 @@
+npm error code ERESOLVE
+npm error ERESOLVE unable to resolve dependency tree
+npm error
+npm error While resolving: undefined@undefined
+npm error Found: @deepseek-ai/cordis@4.0.5-alpha.1
+npm error node_modules/@deepseek-ai/cordis
+npm error   @deepseek-ai/cordis@"4.0.5-alpha.1" from the root project
+npm error   peer @deepseek-ai/cordis@"~4.0.5-alpha.1" from @deepseek-ai/cordis-plugin-include@1.0.10-alpha.1
+npm error   node_modules/@deepseek-ai/cordis-plugin-include
+npm error     peerOptional @deepseek-ai/cordis-plugin-include@"~1.0.10-alpha.1" from @deepseek-ai/cordis@4.0.5-alpha.1
+npm error   1 more (@deepseek-ai/cordis-plugin-loader)
+npm error
+npm error Could not resolve dependency:
+npm error peer @deepseek-ai/cordis@"^4.0.4" from dsh-better-sidebar@0.26.0
+npm error node_modules/dsh-better-sidebar
+npm error   dsh-better-sidebar@"0.26.0" from the root project
+npm error
+npm error Fix the upstream dependency conflict, or retry this command with --force or --legacy-peer-deps to accept an incorrect (and potentially broken) dependency resolution.
+npm error
+npm error
+npm error For a full report see:
+npm error C:\Users\66ccff\AppData\Local\npm-cache\_logs\2026-10-14T11_12_32_142Z-eresolve-report.txt
+npm error A complete log of this run can be found in: C:\Users\66ccff\AppData\Local\npm-cache\_logs\2026-10-14T11_12_32_142Z-debug-0.log

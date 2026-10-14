@@ -1,0 +1,5 @@
+dsh: warning: 1 entry did not activate
+better-sidebar (dsh-better-sidebar): pending (waiting for service: webRuntime)
+dsh web: http://127.0.0.1:59738/?token=<redacted>
+SIDEBAR_COMPAT {"version":"0.2.1-alpha.2","webRuntime":false,"webStartup":true,"betterSidebarHostState":0,"pendingInjection":{"webServer":null,"sessions":null,"webRuntime":null,"tools":null}}
+
