@@ -1,0 +1,6 @@
+
+> dsh-atn@0.5.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client-test.json
+
+experiments/run.ts(340,102): error TS2353: Object literal may only specify known properties, and 'maxPendingMessagesPerMember' does not exist in type 'Config'.
+tests/integration/experiment-telemetry.test.ts(302,23): error TS2339: Property 'status' does not exist on type 'SendTeamMessageResult'.

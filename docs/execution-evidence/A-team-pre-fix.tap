@@ -1,0 +1,25 @@
+TAP version 13
+# Subtest: TELEMETRY-05: native Team task revisions, dependencies and mail export only structural facts
+not ok 1 - TELEMETRY-05: native Team task revisions, dependencies and mail export only structural facts
+  ---
+  duration_ms: 75.2185
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\experiment-telemetry.test.ts:1:13483'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'spawnTeammate')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\experiment-telemetry.test.ts:281:47)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1276.9644
