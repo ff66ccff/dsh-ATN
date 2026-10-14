@@ -1,5 +1,7 @@
 # dsh-ATN 最小正式 bundle：实现规格
 
+> 历史档案：以下默认值、工具面与 UI 范围属于该轮源码/实验基线，保留原始记录；现行动态额度（默认八节点仍四）与结构化观察面见 [声明审计](DECLARATION_AUDIT.md) 和 A/B/C 报告。
+
 **状态：交给 DeepSeek V4 Flash 实现；本文不是已实现功能说明。** 用户要求本轮 Claude 只写文档并暂停，后续由 DeepSeek 实现，最后交回 Claude review。GitHub 发布暂缓到实现和 review 之后。
 
 ## 0. 给实现者的任务

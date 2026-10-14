@@ -1,5 +1,7 @@
 # P0–P5 实施与变化证据链实验
 
+> 历史档案：以下默认值、工具面与 UI 范围属于该轮源码/实验基线，保留原始记录；现行动态额度（默认八节点仍四）与结构化观察面见 [声明审计](DECLARATION_AUDIT.md) 和 A/B/C 报告。
+
 > 本文下方保留 2026-10-05 两轮历史协议和原始结果，不代表当前工具接口。可测性恢复后的接口、校准、错误归因及完成边界见 [本轮恢复报告](MEASURABILITY_RECOVERY_REPORT.md) 和 [校准报告](MEASURABILITY_CALIBRATION.md)。原来的换边 verdict 里程碑已取消：新边在换边前没有任务样本，74/74 insufficient-evidence 不能解释为模型不使用反馈。
 
 当前协议使用六个工具、六行共同规则：评价与换边分别是 `atn_status(review={...})`、`atn_status(rewire={...})`，知识发布是 `atn_board` 的 `documents/topics/body`。边级评分默认每侧每边 M=2，事后更新，仅作诊断。自动推进默认关闭，链长、每节点步数、调用和输出上限均显式记录，不提高 runtime 默认预算。

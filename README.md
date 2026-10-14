@@ -25,7 +25,9 @@
 
 **dsh-ATN 带来了一个前所未有的、经过双向严密实证的坚实解法：**
 
-> **节点可以自由重连，但永远说不出自己未曾持有的数据。**
+> **节点可以自由重连；启用宿主保管策略后，出站通道拒绝声明宿主未授予的 artifact 身份。**
+
+此边界取决于宿主 `custody` 与 `extractClaims` 的授权映射和提取规则，不保证识别任意自然语言泄漏。网络隔离也不自动等于租户认证；跨租户授权与完整审计证明仍需宿主接入及独立补证。
 
 | 架构层级 | 负责维度 | 运行性质 | 严密实证支撑 |
 |---|---|---|---|
@@ -70,19 +72,21 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ---
 
-## 📊 原生 Web GUI 实时拓扑看板
+## 📊 Web GUI 结构化网络状态面板
 
-在 DeepSeek Harness Web GUI 中运行 ATN 预设任务，点击顶栏 **「可视化ATN网络」** 即可一键展开实时拓扑监控看板：
+在 DeepSeek Harness Web GUI 中运行 ATN 预设任务，点击顶栏 **「ATN 网络状态」** 查看节点表、邻接分组与任务详情。浏览器中的 `betterSidebar` 服务可用时，还会注册原生右侧栏 `atn-network` tab；顶栏入口始终可用。
 
 <div align="center">
 
-![DeepSeek Harness ATN 原生网络拓扑实时监控看板](docs/assets/atn-web-gui.png)
+![ATN 结构化状态面板组件示例](docs/assets/atn-web-gui.png)
 
 </div>
 
-- **动态有向连通图**：直观展示节点间的协作出边、单向/双向调用通道与亲缘谱系。
-- **全景健康状态**：实时监控各节点当前负载、正在执行的动作、步数配额余量及历史履约率。
-- **零侵入观察通道**：复用 Harness 认证观察流，纯只读拉取，绝不主动唤醒模型或增加系统负载。
+- **有向邻接分组**：协作出边与出生谱系分开列表，节点选择联动邻居、任务结果和活动流。
+- **节点状态与配额**：展示当前负载、工具、剩余步数/连接额度。历史统计仅为快照窗口内的提交/结算数，不等于验收率；遗留任务候选是否可认领由 `atn_status` 确认。
+- **只读观察**：复用认证 RPC 与严格 schema，可见时串行读取，隐藏/切会话/切预设/卸载取消；不写网络、不唤醒模型、不产生模型 token，仍有普通 RPC 处理开销。
+
+截图由真实展示组件与确定性示例数据生成。`dsh-better-sidebar` 是 optional peer，无须安装即可使用顶栏回退；当前 0.26.0 provider 在目标 Harness 上仍等待已删除的 `webRuntime`，普通 npm 同装也有 peer 冲突。因此已验证客户端 Tab API 和真实注册服务，完整 provider 联合启动及侧栏浏览器验收仍待上游适配。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [C 实施报告](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)。
 
 ---
 
@@ -104,12 +108,13 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ### 环境要求
 - Node.js >= 24
-- DeepSeek Harness >= 0.2.1-alpha.2
+- DeepSeek Harness 0.2.1-alpha.2（本分支已验证版本，依赖精确锚定）
+- Cordis 4.0.5-alpha.1（目标 Harness 实际依赖）
 
-本轮实施进度：Harness 适配 A、动态出度 B 已完成，目标 `0.2.1-alpha.2` 下 550 项 runtime/集成 + 8 项 UI 全通过，类型检查、构建、打包与隔离 profile smoke 均通过。C 暂停于外部依赖阻塞：better-sidebar 0.26.0 真实启动仍等待已移除的 `webRuntime`，普通 npm 安装也有 peer 冲突；C、统一声明审计及 D 尚未完成。详见 [阶段 A 报告](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[阶段 B 报告](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)和 [阶段 C 阻塞记录](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)。
-- Cordis 4.0.4
+本轮 A、B、C 客户端改造已完成，551 项 runtime/集成 + 14 项 UI 全通过，类型检查、构建、打包与目标隔离 profile smoke 通过。C 的完整外部 provider 激活仍有限制，见上文。阶段报告：[A](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)；统一声明审计见 [审计表](docs/DECLARATION_AUDIT.md)。D 决策与最终六项验收另行收口。
 
 ### 1. 从 npm 安装已发布版本
+以下命令安装历史发布的 0.5.0；本轮源码依赖和 UI 改动尚未重新发布，验证本轮请使用下节源码 tarball。
 ```bash
 # 安装已发布版本至 web profile
 dsh plugin --profile web add dsh-atn@0.5.0

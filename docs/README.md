@@ -8,10 +8,31 @@
 
 ## 🧭 核心战略与定位白皮书
 
-- [**战略定位与演进白皮书** (`STRATEGY_AND_POSITIONING.md`)](STRATEGY_AND_POSITIONING.md)  
+- [**战略定位与演进白皮书** (`STRATEGY_AND_POSITIONING.md`)](STRATEGY_AND_POSITIONING.md)
   *必读纲领*。系统阐述“还能叫自适应拓扑网络吗”、“演进轴如何切换至信任轴”以及“怎么宣传与受众定位”。确立**“布线会变，边界不变”**的核心理念。
-- [**0.5.0 信息边界产品化开发方案** (`INFORMATION_BOUNDARY_PRODUCT_PLAN.md`)](INFORMATION_BOUNDARY_PRODUCT_PLAN.md)  
+- [**0.5.0 信息边界产品化开发方案** (`INFORMATION_BOUNDARY_PRODUCT_PLAN.md`)](INFORMATION_BOUNDARY_PRODUCT_PLAN.md)
   产品化实施方案。阐述为何移除白板、保留宿主派生发现元数据，以及 13 条出站通道的审计与红灯测试要求。
+- [**下一步拓展方向** (`ROADMAP_NEXT_DIRECTIONS.md`)](ROADMAP_NEXT_DIRECTIONS.md)
+  决策建议稿（非实施说明）。给出 P0–P2 优先级、推荐顺序，并指出「拒绝日志持久化」中的架构张力与「多网络观测」对跨网络隔离声明的反噬风险。
+
+---
+
+## 📋 当前轮实施说明
+
+> **入口：先读 [**本轮总纲** (`MASTER_EXECUTION_PLAN.md`)](MASTER_EXECUTION_PLAN.md)。** 它定义阶段顺序（A→B→C→D）、阶段之间的硬闸门、12 条跨阶段不变式、跨阶段声明审计、停止条件与最终验收，并指向下面三份阶段 brief。**与阶段 brief 冲突时以阶段 brief 为准；顺序、闸门、不变式与跨阶段任务以总纲为准。**
+
+以下三份文档各自独立、**不得混做**。每份都遵守本仓库的既有规范：先有失败测试留档、后有代码修复；不得把未测试内容写成已通过。
+
+- [**Harness 0.2.1-alpha.2 适配实施说明** (`HARNESS_0_2_1_ADAPTATION_BRIEF.md`)](HARNESS_0_2_1_ADAPTATION_BRIEF.md)
+  把全部 `@deepseek-ai/dsh-*` 依赖从 `0.2.0-rc.2` 提升到 `0.2.1-alpha.2`，移除 `dsh-invariants`。实测目录为 24 篇 guide（输入 brief 写 22），逐篇核对见 A 报告；固定工具协议字节保持不变。
+- [**接入 better-sidebar 实施说明** (`BETTER_SIDEBAR_INTEGRATION_BRIEF.md`)](BETTER_SIDEBAR_INTEGRATION_BRIEF.md)
+  彻底移除自绘拓扑图（内联 SVG / 环形布局 / 缩放），改为结构化面板，并接入 better-sidebar 的 `registerTab` 成为原生右侧栏 tab。better-sidebar 为可选依赖，未安装时必须保留可用回退。
+- [**动态出度实施说明** (`DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md`)](DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md)
+  把写死的出度上限 4 改为随累计节点数按对数曲线增长（`⌈log₂N⌉ + 1`，默认规模 8 节点下仍为 4），并保持「稀疏、单调、可离线核验」三条性质。
+
+实施记录：[A：Harness 适配](HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B：动态出度](DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C：结构化面板与可选侧栏](BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)、[统一声明审计](DECLARATION_AUDIT.md)。C 的 ATN 客户端双路径通过，完整 better-sidebar 0.26.0 host 激活仍受上游旧服务依赖阻碍；回退可用，不把 API 验证当作联合启动验证。
+
+总纲/brief 是实施前输入，其中旧版本、固定额度、图形描述是基线或待删除项，不能用作现行产品说明。当前行为以根 README、阶段报告和声明审计为准；历史实验仍保留原条件。
 
 ---
 
@@ -19,11 +40,11 @@
 
 0.5.0 版本将信息边界确立为一等公民能力，提供宿主强制的数据隔离机制。
 
-- [**13 条出站通道审计与公开拒绝码契约** (`information-boundary/OUTBOUND_CHANNEL_AUDIT.md`)](information-boundary/OUTBOUND_CHANNEL_AUDIT.md)  
+- [**13 条出站通道审计与公开拒绝码契约** (`information-boundary/OUTBOUND_CHANNEL_AUDIT.md`)](information-boundary/OUTBOUND_CHANNEL_AUDIT.md)
   列出从 `start`、`spawn` 到 `send`、`review`、`claim`、`rewire`、`finish` 等全部 13 条出站通道，固化 `evidence-not-owned` 等公开拒绝码。
-- [**修复前失败留档** (`information-boundary/PRE_FIX_RECORD.md`)](information-boundary/PRE_FIX_RECORD.md)  
+- [**修复前失败留档** (`information-boundary/PRE_FIX_RECORD.md`)](information-boundary/PRE_FIX_RECORD.md)
   严格执行“先有失败测试留档，后有代码修复”规范，记录 `review.summary` 与虚报发现元数据的修复前拦截日志。
-- [**信息边界实施报告** (`INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md`)](INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md)  
+- [**信息边界实施报告** (`INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md`)](INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md)
   记录 0.5.0 的完整实施过程、白板移除影响分析与 550+ 测试矩阵。
 - **验证与对比工件**：
   - [`information-boundary/pre-fix-failures.tap`](information-boundary/pre-fix-failures.tap)：修复前测试失败原始 TAP 日志。
@@ -35,11 +56,11 @@
 
 ## 🕸️ 拓扑机制与运行时架构
 
-- [**最小自适应拓扑机制规范** (`ADAPTIVE_TOPOLOGY.md`)](ADAPTIVE_TOPOLOGY.md)  
-  详细定义节点自主决定的出边重连（出度上限 4）、局部邻居发现轮转、捎带式遥测与逐节点预算机制。
-- [**任务验收与验证协同** (`VERIFIED_COLLABORATION.md`)](VERIFIED_COLLABORATION.md)  
+- [**最小自适应拓扑机制规范** (`ADAPTIVE_TOPOLOGY.md`)](ADAPTIVE_TOPOLOGY.md)
+  定义节点自主重连、局部发现、捎带遥测与逐节点预算；有效出度按累计规模增长，默认 N=8→4、N=32→6，天花板 8。历史实验冻结值另行标明。
+- [**任务验收与验证协同** (`VERIFIED_COLLABORATION.md`)](VERIFIED_COLLABORATION.md)
   定义执行结果与验收结果的解耦，区分本地请求者判定与宿主验收证据。
-- [**故障自愈与修复机制报告** (`REPAIR_IMPLEMENTATION_REPORT.md`)](REPAIR_IMPLEMENTATION_REPORT.md)  
+- [**故障自愈与修复机制报告** (`REPAIR_IMPLEMENTATION_REPORT.md`)](REPAIR_IMPLEMENTATION_REPORT.md)
   孤儿任务原子认领、两阶段优雅退休（Draining/Retired）与串行持久化队列规范。
 
 ---
@@ -49,7 +70,7 @@
 本项目进行了横跨 11 轮的严格对照实验与等预算评测。实测明确证实：**未建立自适应拓扑在任务正确率、效率或成本上的独立优势（全部 `causalClaim=false`）**。这些阴性结果是本项目最重要的诚实基石。
 
 ### 终轮：第 11 轮（五臂配对等预算收束）
-- [**第 11 轮五臂等预算基准测试报告** (`EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md`)](EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md)  
+- [**第 11 轮五臂等预算基准测试报告** (`EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md`)](EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md)
   *终轮收束报告*。五臂各 14 个配对 seed（共 70 次真实模型调用运行），严格执行精确 McNemar 检验与 Holm 显著性校正。明确判定：分布式协调未带来总体效率或正确率收益，等预算研究线正式收束。
 - [**第 11 轮执行记录与环境审计** (`EQUAL_BUDGET_EXECUTION_NOTES_V3.md`)](EQUAL_BUDGET_EXECUTION_NOTES_V3.md)
 - [**第 11 轮实验方案简报** (`EQUAL_BUDGET_BENCHMARK_BRIEF_V3.md`)](EQUAL_BUDGET_BENCHMARK_BRIEF_V3.md)
@@ -73,7 +94,7 @@
 - [对等方差实施报告 (`PEER_VARIANCE_IMPLEMENTATION_REPORT.md`)](PEER_VARIANCE_IMPLEMENTATION_REPORT.md)
 
 ### 第 5 轮：拓扑测量与结构可达性（核心证明）
-- [**拓扑测量结果报告** (`TOPOLOGY_MEASUREMENT_RESULTS_2026-10-05.md`)](TOPOLOGY_MEASUREMENT_RESULTS_2026-10-05.md)  
+- [**拓扑测量结果报告** (`TOPOLOGY_MEASUREMENT_RESULTS_2026-10-05.md`)](TOPOLOGY_MEASUREMENT_RESULTS_2026-10-05.md)
   *拓扑层核心证据*：证明自适应换边机制能到达静态固定边在拓扑约束下不可达的结构位置（零模型调用的确定性结构证明）。
 - [拓扑测量方案设计 (`DESIGN_TOPOLOGY_MEASUREMENT.md`)](DESIGN_TOPOLOGY_MEASUREMENT.md)
 - [全反馈拓扑实验 (`FULL_FEEDBACK_EXPERIMENT.md`)](FULL_FEEDBACK_EXPERIMENT.md)

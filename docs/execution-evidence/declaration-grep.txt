@@ -1,0 +1,108 @@
+README.md:24:- **自由交互群聊**：缺乏出度与拓扑管控，极易引发广播风暴、上下文爆炸与不可控的虚假事实传播。
+README.md:34:| 🕸️ **拓扑层 (Topology)** | **能和谁说话**（物理可达性） | **动态自适应**：节点可按需自主换边，累计规模的对数曲线限制出度；默认 8 节点上限为 4，32 节点为 6 | **第 5 轮结构证明**：在显式冻结的实验额度下，自适应换边能够到达静态拓扑不可达的协作节点（零模型调用）。 |
+README.md:64:- **出度硬顶控制**：有效上限为 `min(天花板, ceil(log2(累计节点数)) + 1)`；默认天花板及绝对硬顶均为 8，默认规模（8 节点）下上限仍为 4，32 节点为 6。退休和失败节点仍计入累计数，额度不会随退休下降；全网出边保持 O(N log N)。天花板 8 高于默认最大规模的曲线值 6，只作为部署安全阀。
+README.md:216:- 🛡️ **拓扑换边纳入策略管辖（Topology-as-ACL）**：将 `rewire` 从单纯的出度配额控制升级为策略级微隔离机制，宿主可按节点安全密级决定“谁能连谁”。
+README.md:227:| `maxCollaborationPeers` | `8` | 有效出度的天花板（硬约束 1–8），status 返回当前曲线值。旧网络冻结 4 或省略此字段时继续以 4 为天花板，无迁移；显式冻结 2 的实验仍最多 2。 |
+docs\ADAPTIVE_TOPOLOGY.md:47:确定性测试能验证连接改变通信、断边保留旧任务、逐节点预算、并发认领、无额外调用的反馈及持久恢复。它们不能证明真实模型会选择有用的拓扑，更不能证明完成质量、成本或速度优于 agent team。历史实验把八节点的出度冻结为二，初始双向环直径为四，并加入私有证据位置和阶段变化；十六节点的同类环直径为八也有确定性测试。历史白板跨拓扑可读，禁白板臂仍有知识索引；这些旧版条件不是现行五工具的能力。各臂记录提交质量、消耗、完成时间及实际边变化；保持原边集不算有效换边。详见[完整实验记录](FULL_FEEDBACK_EXPERIMENT.md)。
+docs\DESIGN_TOPOLOGY_MEASUREMENT.md:180:- 8 次 `max-tokens` 截断（输出上限 4096）——同样是搬运原始数据的症状。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md:1:# 阶段 B：动态出度实施记录
+docs\BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md:39:- 删除样式类（与 B 基线逐项比较）：`.atn-arrow`、`.atn-arrow-birth`、`.atn-canvas`、`.atn-dot`、`.atn-edge`、`.atn-edge-birth`、`.atn-edge-faded`、`.atn-edge-selected`、`.atn-foot-status`、`.atn-graph-area`、`.atn-graph-help`、`.atn-heading`、`.atn-legend`、`.atn-legend-birth`、`.atn-legend-line`、`.atn-main`、`.atn-node`、`.atn-node-dot`、`.atn-node-failed`、`.atn-node-icon`、`.atn-node-retired`、`.atn-node-ring`、`.atn-node-running`、`.atn-node-selected`、`.atn-node-status`、`.atn-toolbar`、`.atn-tools`、`.atn-trigger-label`、`.atn-warning`。媒体查询同步替换，无悬空画布规则。
+docs\DECLARATION_AUDIT.md:7:| README:32 → 拓扑层表格 | 出度严格受限 ≤4 | 累计规模对数曲线；默认8节点=4，32节点=6；历史证明限定冻结额度 | B / DYNAMIC-01..05，degree-table完整1..32，五seed脚本 |
+docs\DECLARATION_AUDIT.md:8:| README:62 → 出度硬顶控制 | 单节点最大活跃出边4 | min(天花板,ceil(log2累计N)+1)，默认/硬顶8，累计含退休失败；保留稀疏承诺 | B / DYNAMIC-01..05、DYNAMIC-STATUS，192/992边比例 |
+docs\DECLARATION_AUDIT.md:9:| README:220 → 配置表 | 默认4，硬约束1–4 | 默认天花板8，范围1..8，status报告有效值；旧4/缺省冻结4，显式2保留 | B / CONFIG-02、DEGREE-05、ADAPT-12、DYNAMIC-STATUS |
+docs\DECLARATION_AUDIT.md:10:| README:73–86 → 状态面板 | 动态有向连通图，旧可视化入口，全量历史履约率，无系统负载 | 节点表/有向邻接/出生分区/详情/活动；顶栏ATN网络状态及条件侧栏；窗口提交率/候选明确限制；有RPC开销无模型调用 | C / 原8UI保留、VIEW-PROPS、VISIBLE、MENU，真实Web smoke只读与请求数 |
+docs\DECLARATION_AUDIT.md:12:| ADAPTIVE_TOPOLOGY:11 → status重连段 | atn_rewire，上限1–4 | status(rewire)，天花板1..8/默认8，累计曲线/旧记录冻结；N8仍4 | B / CONFIG-02、DYNAMIC-STATUS、冷恢复/domain与拓扑测试 |
+docs\DECLARATION_AUDIT.md:13:| STRATEGY:14 → 机制定位 | 出度上限4 | 随累计规模增长，N8=4/N32=6，安全天花板8 | B / 度数表、单调性/保边测试 |
+docs\DECLARATION_AUDIT.md:14:| STRATEGY:22 → 拓扑证据 | 出度上限4作为证据 | 动态额度；历史结构证明只用于显式冻结实验，不外推大网络 | B / compare-degree-proofs五seed 0翻转 |
+docs\DECLARATION_AUDIT.md:23:命令：`rg -n '出度|≤ 4|上限 4|1–4|硬约束|拓扑图|连通图|atn-canvas|可视化ATN网络' README.md docs -g '*.md'`。完整原始结果见 [declaration-grep.txt](execution-evidence/declaration-grep.txt)，不筛掉历史资料以制造零命中。客户端另外检查 `rg -n 'atn-canvas|atn-edge|<svg|zoomIn|zoomOut|layout\.ts' src/client lib/client.js` 无命中，见 [declaration-client-grep.txt](execution-evidence/declaration-client-grep.txt)。
+docs\DECLARATION_AUDIT.md:30:- DESIGN_TOPOLOGY_MEASUREMENT/MEASURABILITY中“上限4096”是输出token实验条件；第1–4轮/4.1–4.6是章节或轮次，不是度数范围。EQUAL_BUDGET的“硬约束”是等预算实验条件，仍正确。
+docs\DECLARATION_AUDIT.md:31:- MINIMAL_BUNDLE_SPEC“不做拓扑图WebUI”是早期范围，已加历史说明；现行结构化面板由C报告描述。
+docs\EQUAL_BUDGET_BENCHMARK_BRIEF.md:5:实现代理必须先读完第 0、1、2 节再动手。第 2.1 节是本轮唯一的硬约束。
+docs\EQUAL_BUDGET_BENCHMARK_BRIEF.md:48:### 2.1 总预算必须相等（本轮唯一硬约束）
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:3:这份文档交给实现代理执行。本轮做两件事：**彻底移除本插件自绘的拓扑图**（内联 SVG、环形布局、缩放/平移），把 ATN 网络状态改为**结构化面板**；并把该面板**接入 better-sidebar 的 `registerTab`**，成为原生右侧栏的一个 tab。better-sidebar 是**可选依赖**，未安装时必须保留现有入口作为回退。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:14:- **自绘图形**：`src/client/NetworkAction.tsx:145-193` 的 `Topology` 组件渲染内联 `<svg className="atn-canvas">`，每个边一条 `<path data-atn-edge data-atn-edge-kind>`，每个节点一个 `<g role="button">`。容器是 `Modal`。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:44:- 删除 `src/client/styles.ts` 中仅供图形使用的样式。实测清单（`styles.ts:18`）：`.atn-canvas`、`.atn-edge`、`.atn-edge-birth`、`.atn-edge-selected`、`.atn-edge-faded`、`.atn-arrow`、`.atn-arrow-birth`。**注意 `.atn-canvas` 还出现在两处媒体查询里（`styles.ts:23` 与 `:24`），必须一并清理，否则会留下悬空规则。**
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:53:- 全仓库 grep `atn-canvas`、`atn-edge`、`<svg`、`zoomIn`、`zoomOut` 在 `src/client/` 下无命中。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:125:- **`README.md:73-86`**（「📊 原生 Web GUI 实时拓扑看板」整节）：改写为结构化面板的描述。**必须删除对「动态有向连通图」的描述**，因为图形已不存在。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:148:6. 不新增模型工具，不改任何工具 schema，不改出度/配置语义。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:156:- 出度曲线与配置语义：见 `docs/DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md`。
+docs\BETTER_SIDEBAR_INTEGRATION_BRIEF.md:203:4. better-sidebar 的 tab 会新增一行「新建标签页列表」条目，而宿主只在 guide 条目 ≤ 4 条时渲染说明（其指南记载 `MAX_DESCRIBED_ENTRIES = 4`）。本插件的加入是否会挤掉其他条目的说明，**未验证**；若会产生可见回归，在报告中说明。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:1:# dsh-ATN 动态出度实施说明
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:3:这份文档交给实现代理执行。当前出度上限是一个写死的常量 4：它与网络规模无关，因此在只有 2 个节点的网络里给出一个物理上不可满足的额度，在 32 个节点的网络里又限制了局部探索。本轮把出度上限改为**随网络规模按对数曲线增长**，并保持「稀疏、单调、可离线核验」三条性质。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:11:- `MAX_COLLABORATION_PEERS = 4` 定义于 `src/topology.ts:20`；`checkedPeerLimit`（`src/topology.ts:22-27`）对 1–4 之外的值抛 `invalid-peer-limit`。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:17:- 配置面：`src/config.ts:52`（默认值）、`:85`、`:106-107`（关系校验，拒绝 > 4）、`:140`（投影进 limits）、`:16`（文档注释「1–4」）。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:19:- **`NEIGHBOURS_PER_DIRECTION = 2`（`src/topology.ts:17`）不是出度。** 它是旧出生谱系的引导槽位（2 上 + 2 下 = 4 个引导槽）。本轮**不得**改动它，也不得把它与本轮的出度上限混为一谈。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:37:`maxCollaborationPeers` 的语义从「出度上限本身」变为「出度上限的天花板」。这是一个**语义变更**，必须在配置文档、README、`status()` 返回与迁移说明中同时写明，不得让既有 profile 的配置项含义悄悄漂移。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:41:- **G1 动态**：有效出度上限随累计节点数按对数曲线增长，不再恒为 4。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:63:- 静态断言：`src/` 下不再存在 `max(4)` / `> 4` / `1–4` 形式的出度上限字面量（`NEIGHBOURS_PER_DIRECTION` 除外）。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:89:- `config.maxCollaborationPeers` 语义改为**天花板**，不再是出度本身。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:143:以下每一处都在陈述「出度 ≤ 4」这一**已发布承诺**，必须逐条改写为曲线语义，并保留旧值的适用条件：
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:145:- `README.md:32`（拓扑层表格「出度严格受限（≤ 4）」）
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:146:- `README.md:62`（「出度硬顶控制：单节点最大活跃出边为 4」）
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:147:- `README.md:220`（配置表 `maxCollaborationPeers` 默认值与「硬约束 1–4」）
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:148:- `docs/ADAPTIVE_TOPOLOGY.md:11`（`atn_rewire` 的 `maxCollaborationPeers` 1–4 描述）
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:149:- `docs/STRATEGY_AND_POSITIONING.md:14, 22, 63`（三处把出度上限 4 当作机制证据）
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:171:5. 不改动 `NEIGHBOURS_PER_DIRECTION`，也不把它当作出度。
+docs\DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md:191:2. 4.1–4.6 各自的新增测试有可核对的修复前失败记录（无法重放的必须逐项列出，不得补造证据）。
+docs\FIVE_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:13:配对 seed 固定为 17、31、45、59、73；8 节点、链长 2，48 步／节点、384 次全网可观测调用准入、4096 输出 token／调用、800 万已观测 token 准入阈值、600 秒／次；autoAdvance=false。各臂完全相同，只有 fixed-wide 的出度上限为 4，其他臂为 2。stepBudget 不是 token、HTTP 请求或费用上限。源码在运行前冻结，所有 manifest 哈希一致；生产默认值未修改。
+docs\FIVE_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:17:## 固定出度 4 的策略与零模型参考
+docs\FIVE_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:31:fixed 的不可完成源于四个不同必需持有者超出度二；fixed-wide 的失败源于本次公开静态策略遗漏必需持有者，属于任务设计与选边策略的后果。度四的必需持有者并集本身可被一个预知 fixture 的静态邻域覆盖，因此不能宣称所有度四静态图都结构上不可解，也不能把这两臂失败写成自适应收益。
+docs\FOUR_ARM_COMPARISON_BRIEF.md:19:入口 slot=0、初始 peers=[7,1]、出度上限 2；两个阶段共需 4 个不同持有者的精确事实，所需不同直连边为 4 > 2。固定边集合跨阶段不能更换，因此固定拓扑在结构上无法完成。证明为纯计算，SHA-256 绑定 fixture 与拓扑参数。
+docs\FOUR_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:9:[两种拓扑参考对照](../experiments/results/four-arm-reference-20261006.json)与[结构证明](../experiments/results/four-arm-proof-20261006.json)覆盖 seed 17、31、45、59、73。参考使用真实 Harness、同一 revision 3 fixture、相同所有者 ACL、单向边和预算：8 节点、出度 2、链长 2、每节点 48 步、全网 384 次动作准入、600 秒期限。参考策略根据公开 discovery 元数据找持有者，只用实际 task/result 构造答案；隐藏 fixture 仅在执行结束后的评分、证明和取得事实核验中使用。
+docs\FOUR_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:38:全部真实运行保持：8 节点、链长 2、出度 2、48 步／节点、384 次全网调用准入、4096 输出 token／调用、800 万已观测 token 准入阈值、600 秒期限、自动推进关闭。没有提高预算或修改生产默认值；步骤不等于 token、HTTP 请求或费用上限。新源码 30 个文件归档于 `.artifacts/four-arm/source/`。
+docs\FOUR_ARM_COMPARISON_IMPLEMENTATION_REPORT.md:64:| 每个计划 seed 的结构证明及重算 | **通过**：均需 4 个不同持有者直连边，大于出度 2，固定不可达 |
+docs\FOUR_ARM_COMPARISON_REVISED_BRIEF.md:47:当前比较是 adaptive（出度 2、可换边）对 fixed（出度 2、不可换边）。两者同时相差"能否换边"与"边数是否够用"。需要补一个**出度 4 的静态臂**，才能把"自适应"与"边够多"分开。
+docs\FOUR_ARM_COMPARISON_REVISED_BRIEF.md:49:初步分析（须由本轮实测确认）：即使出度 4，静态臂仍无法覆盖两个阶段——第二阶段更换持有者，而白板只允许当前阶段的 `phase-N:` 键，因此静态臂在第一阶段无法预知第二阶段的持有者，只能盲猜。这提示绑定是稳健的，但必须作为对照臂实测出来。
+docs\FOUR_ARM_COMPARISON_REVISED_BRIEF.md:54:- **G2 补齐对照臂**：新增静态出度 4 臂，隔离"自适应"与"边数"。
+docs\FOUR_ARM_COMPARISON_REVISED_BRIEF.md:74:### 4.2 新增静态出度 4 对照臂
+docs\FULL_FEEDBACK_EXPERIMENT.md:22:| P3 | `maxCollaborationPeers`：持久出度上限 1–4，兼容默认 4；新实验设置 2 | 出生连接、重连、旧记录初始化和失效修复都执行约束；16 节点二邻居环测试直径为 8 |
+docs\FULL_FEEDBACK_EXPERIMENT.md:59:第二轮对三个模型重跑全部四臂；节点数、出度、每节点步数与调用上限保持一致，输出上限改为 4096、总 token 观测阈值为 200 万、期限为 360 秒。两轮协议和预算不同，不能把跨轮变化归因于某个单独机制。第二轮复现命令：
+docs\FULL_FEEDBACK_EXPERIMENT.md:154:白板使跨拓扑共享成为一种独立通信路径；fixed 仍保留生产 runtime 的失活节点修复。第二轮禁白板臂的发现只携带固定元数据，邮件路径受到出度二约束。单种子、每臂一次、提供商运行顺序与故障都限制了效应解释。**本轮不能证明自适应优于固定拓扑、参考策略或 agent team。**
+docs\HARNESS_0_2_1_ADAPTATION_BRIEF.md:112:- 本轮**不新增、不删除、不重命名**任何模型工具；不改任何工具 schema；不改 `maxCollaborationPeers` 等配置语义（出度曲线是**另一份 brief** 的工作，见 `docs/DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md`，两份不得混做）。
+docs\HARNESS_0_2_1_ADAPTATION_BRIEF.md:138:6. 不把版本提升与出度曲线改动、better-sidebar 接入混在同一次提交里。
+docs\MEASURABILITY_CALIBRATION.md:17:扫描在首个样本前写入 `plan.json`：链长 2/3/4 × 每节点 20/32/48 步，每个配置固定使用种子 17、31、45、59、73；8 节点、出度 2、调用上限分别为 160/256/384、输出上限 1536、超时 30000 ms、观测 token 门槛 400000，`autoAdvance=false`。按“链长升序，再按步数升序”选择首个至少 80% 成功的配置，保留全部失败。实验显式参数不改变 runtime 默认预算。`stepBudget` 计模型步骤，不能解释为 token、HTTP 请求或费用上限。
+docs\MASTER_EXECUTION_PLAN.md:14:| **B** | 出度随网络规模动态化 | [`DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md`](DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md) |
+docs\MASTER_EXECUTION_PLAN.md:15:| **C** | 弃用自绘拓扑图，接入 better-sidebar | [`BETTER_SIDEBAR_INTEGRATION_BRIEF.md`](BETTER_SIDEBAR_INTEGRATION_BRIEF.md) |
+docs\MASTER_EXECUTION_PLAN.md:27:- 出度上限为常量 `MAX_COLLABORATION_PEERS = 4`（`src/topology.ts:20`）。
+docs\MASTER_EXECUTION_PLAN.md:87:| `README.md:32` | 拓扑层表格「出度严格受限（≤ 4）」 | B |
+docs\MASTER_EXECUTION_PLAN.md:88:| `README.md:62` | 「出度硬顶控制：单节点最大活跃出边为 4」 | B |
+docs\MASTER_EXECUTION_PLAN.md:89:| `README.md:220` | 配置表 `maxCollaborationPeers` 默认 4、「硬约束 1–4」 | B |
+docs\MASTER_EXECUTION_PLAN.md:90:| `README.md:73-86` | 「📊 原生 Web GUI 实时拓扑看板」整节（描述动态有向连通图） | C |
+docs\MASTER_EXECUTION_PLAN.md:92:| `docs/ADAPTIVE_TOPOLOGY.md:11` | `atn_rewire` 的 `maxCollaborationPeers` 1–4 | B |
+docs\MASTER_EXECUTION_PLAN.md:93:| `docs/STRATEGY_AND_POSITIONING.md:14` | 「出度上限为 4」 | B |
+docs\MASTER_EXECUTION_PLAN.md:94:| `docs/STRATEGY_AND_POSITIONING.md:22` | 拓扑层证据行「出度上限 4」 | B |
+docs\MASTER_EXECUTION_PLAN.md:95:| `docs/STRATEGY_AND_POSITIONING.md:63` | Topology-as-ACL「局部出度配额（上限 4）」 | B |
+docs\MASTER_EXECUTION_PLAN.md:103:  - `出度`、`≤ 4`、`上限 4`、`1–4`、`硬约束`
+docs\MASTER_EXECUTION_PLAN.md:104:  - `拓扑图`、`连通图`、`atn-canvas`、`可视化ATN网络`
+docs\MASTER_EXECUTION_PLAN.md:106:- **不得**为了省事而删除声明本身（例如直接删掉整段「出度硬顶控制」）。承诺要么被更新为真，要么被明确撤回并说明理由。
+docs\MASTER_EXECUTION_PLAN.md:178:2. **B**：给出默认配置下 N=8 与 N=32 的有效上限实测值，**明确 N=8 是否为 4**；给出度数表脚本与 `N = 1..maxTotalNodes` 的完整输出；给出逐 seed 的结构证明结论变化。
+docs\MEASURABILITY_RECOVERY_BRIEF.md:131:现状：`shifting-evidence` 是 8 节点、出度 2、**四跳**依赖链，两个阶段，每节点 20 步；入口还要自己走完整条链并提交。上轮 5/12 死于 token 上限。`shifting-evidence-task.ts` 还让宿主在半预算时自动推进阶段，与入口提交第一阶段 checkpoint 竞争。
+docs\MEASURABILITY_RECOVERY_BRIEF.md:209:2. 4.1–4.6 各自的新增测试在修复前失败、修复后通过。
+docs\MEASURABILITY_RECOVERY_REPORT.md:13:| 4.3 上下文 | 共同规则 6 行；固定协议字节由真实注册表测量；本地反馈正文上限 4096 字节，仅截断可选明细，保留同伴 ID、计数；白板仍按原分页字节上限读取。后续任务邮件只保留任务标识和新差异，持久原邮件及回执不变 |
+docs\MEASURABILITY_RECOVERY_REPORT.md:59:4.1 的主要事后评价、4.2 合并接口、4.4/4.5 新口径等部分测试是在实现后新增，没有逐项重放原工作区红灯。因此实施说明“4.1–4.6 每项全部新增测试均留修前失败记录”的严格过程要求未完全满足，报告不补造证据。原有测试没有删除，单样本历史诊断显式使用 M=1；新增默认 M=2 测试另外验证实际新判据。
+docs\MEASURABILITY_RECOVERY_REPORT.md:79:目录 `.artifacts/experiments/measurability-live-fixed-20261005-v2/` 保留全部五次产物。使用目录实测全部价格为零的 `space-bunny-free`，`--free-only` 强制排除非免费路线。链长 2、8 节点、出度 2、每节点 20 步、最多 160 调用、输出上限 4096、token 观测阈值 2,000,000、每次期限 360 秒、自动推进关闭。输出、观测阈值和期限显式沿用历史第二批的条件，不修改默认值；与脚本扫描不同条件分别统计。源码哈希一致。
+docs\MINIMAL_BUNDLE_SPEC.md:51:不做拓扑图 Web UI、动态角色系统、全局智能调度者、信息素算法、复杂信誉评分、多数表决、全局任务 DAG、跨机器部署、自动合并代码工作区、自动切换模型和真实群体质量 benchmark。保留通用工具结果和运行状态，足够调试和使用。
+docs\PEER_VARIANCE_IMPLEMENTATION_BRIEF.md:159:2. 4.1–4.5 各自的新增测试有可核对的修复前失败记录（若确实无法重放，必须像上一轮那样明确写出哪几项没有，不得补造证据）。
+docs\PEER_VARIANCE_IMPLEMENTATION_REPORT.md:61:资源条件：Space Bunny Free、链长 2、8 节点、出度 2、每节点 48 步、全局 384 个可观测调用、每调用输出 4096、每次期限 600 秒、自动推进关闭。首批已观测总 token 阈值为 4,000,000；复验显式提高至 8,000,000，后续 fixed 使用相同档位。缓存读取也计入 provider 的 totalTokens；两档结果分开保留，不跨配置累计成功。`--free-only` 在每批执行前要求当前目录全部参考标价为零。
+docs\PEER_VARIANCE_IMPLEMENTATION_REPORT.md:151:正式 ATN 条件为 8 节点、出度 2、链长 2、每节点 48 步、全局 384 调用、每调用输出上限 4096、已观测总 token 阈值 8,000,000、每次期限 600 秒、关闭自动推进；种子 17、31、45、59、73。每个模型先执行五次独立 adaptive 探针，再执行五次同模型／配置／26 文件源码 fixed，两个模型分别判定，不跨模型或历史源码拼接样本。四臂比较未执行。
+docs\README.md:29:  彻底移除自绘拓扑图（内联 SVG / 环形布局 / 缩放），改为结构化面板，并接入 better-sidebar 的 `registerTab` 成为原生右侧栏 tab。better-sidebar 为可选依赖，未安装时必须保留可用回退。
+docs\README.md:30:- [**动态出度实施说明** (`DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md`)](DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md)
+docs\README.md:31:  把写死的出度上限 4 改为随累计节点数按对数曲线增长（`⌈log₂N⌉ + 1`，默认规模 8 节点下仍为 4），并保持「稀疏、单调、可离线核验」三条性质。
+docs\README.md:33:实施记录：[A：Harness 适配](HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B：动态出度](DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C：结构化面板与可选侧栏](BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)、[统一声明审计](DECLARATION_AUDIT.md)。C 的 ATN 客户端双路径通过，完整 better-sidebar 0.26.0 host 激活仍受上游旧服务依赖阻碍；回退可用，不把 API 验证当作联合启动验证。
+docs\README.md:60:  定义节点自主重连、局部发现、捎带遥测与逐节点预算；有效出度按累计规模增长，默认 N=8→4、N=32→6，天花板 8。历史实验冻结值另行标明。
+docs\README.md:105:### 第 1–4 轮：早期原型与试点
+docs\ROADMAP_NEXT_DIRECTIONS.md:13:| **P0** | 动态出度下的结构证明重导 | 补证 | 动态出度（本轮）**已经**改变了第 5 轮证明的输入；不补证，拓扑层就没有证据 |
+docs\ROADMAP_NEXT_DIRECTIONS.md:24:## 1. P0：动态出度下的结构证明重导
+docs\ROADMAP_NEXT_DIRECTIONS.md:26:**现状。** 拓扑层的**唯一**证据是第 5 轮的结构可达性证明（[拓扑测量结果报告](TOPOLOGY_MEASUREMENT_RESULTS_2026-10-05.md)）：在零模型调用、纯计算的条件下，证明自适应换边能到达固定拓扑在结构上不可达的位置。该证明的输入包含**出度上限**。
+docs\ROADMAP_NEXT_DIRECTIONS.md:28:**缺口。** [动态出度实施说明](DYNAMIC_DEGREE_IMPLEMENTATION_BRIEF.md) 把出度上限从常量 4 改为随累计节点数按对数曲线增长。**证明的输入因此已经变了。** 如果不重导，会出现两种坏情况之一：证明仍在用旧的常量 4（结论与现行代码不符），或证明被悄悄搁置（拓扑层失去证据）。
+docs\ROADMAP_NEXT_DIRECTIONS.md:37:**风险。** 若新曲线下大量 seed 的结论翻转，说明「动态出度」与「拓扑绑定」两条线的兼容性需要重新评估——**必须在实施前知道，而不是实施后**。
+docs\ROADMAP_NEXT_DIRECTIONS.md:169:3. **不做「更聪明的拓扑」**。项目已经明确放弃「自适应拓扑 → 更好的任务结果」这一箭头。动态出度（本轮）的定位是**让额度与规模匹配**，不是**提升任务正确率**——实施与宣传时都不得越过这条线。
+docs\STRATEGY_AND_POSITIONING.md:14:- **“自适应拓扑”描述的是机制**：节点可以自主换边（`atn_status(rewire=...)`）、出度按累计规模的对数曲线增长、邻居可局部动态替换。默认规模（8 节点）下上限仍为 4，32 节点为 6；可配天花板与绝对硬顶为 8。这些机制在生产代码中运行。
+docs\STRATEGY_AND_POSITIONING.md:22:| **拓扑层 (Topology)** | **能和谁说话**（物理可达性） | 动态，节点可自主换边，累计规模决定有效出度（8 节点为 4、32 节点为 6） | **第 5 轮**：在显式冻结实验额度下，adaptive 能到达 fixed 在拓扑约束下到不了的节点，零模型调用。动态出度复核见本轮报告，不能外推任意规模。 |
+docs\STRATEGY_AND_POSITIONING.md:63:     - “谁可以连谁”不仅仅由随累计规模增长的局部出度配额决定（默认 8 节点为 4、32 节点为 6，部署天花板最多 8），还可以由宿主的安全策略（如网络区域隔离、密级划分）强制判定。
+docs\TOOL_ERROR_AUDIT.md:38:| `peer-limit-guard` | 2 | 超过实验出度 2 | 保留拓扑约束 |
+docs\TOPOLOGY_BINDING_IMPLEMENTATION_BRIEF.md:71:- 任务必须随附一份**离线可达性证明**：在固定的初始环上，计算收集全部必需事实所需的直连边集合；证明它超过单个节点允许的出度上限，因此固定拓扑在结构上无法完成。
+docs\TOPOLOGY_BINDING_IMPLEMENTATION_BRIEF.md:77:- 证明脚本对每个 seed 输出：必需事实集合、初始出度上限、所需直连边数、结论（可达／不可达）。
+docs\TOPOLOGY_BINDING_IMPLEMENTATION_BRIEF.md:149:2. 4.1–4.3 各自的新增测试有可核对的修复前失败记录（无法重放的必须逐项列出，不得补造证据）。
+docs\TOPOLOGY_BINDING_IMPLEMENTATION_REPORT.md:19:[证明脚本](../experiments/topology-binding-proof.ts) 不安装 runtime、不调用模型。它从同一完整 fixture 的两阶段链计算必需事实、持有者、入口直连边集合、初始边、不可达事实与出度约束；SHA-256 同时绑定 fixture 与拓扑参数。验证时重新计算整份证明，不信任已存的结论。可达／未绑定／直连边需求未超过上限的 seed 不得进入比较。
+docs\TOPOLOGY_BINDING_IMPLEMENTATION_REPORT.md:25:输出保留在 [topology-binding-proof-20261006.json](../experiments/results/topology-binding-proof-20261006.json)。入口 slot=0；固定初始 peers=[7,1]；出度上限=2。以下四个事实按各 phase 的 pointer 链列出（不包括用于评价的旧副本）。
