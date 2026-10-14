@@ -13,7 +13,7 @@
 - [**0.5.0 信息边界产品化开发方案** (`INFORMATION_BOUNDARY_PRODUCT_PLAN.md`)](INFORMATION_BOUNDARY_PRODUCT_PLAN.md)
   产品化实施方案。阐述为何移除白板、保留宿主派生发现元数据，以及 13 条出站通道的审计与红灯测试要求。
 - [**下一步拓展方向** (`ROADMAP_NEXT_DIRECTIONS.md`)](ROADMAP_NEXT_DIRECTIONS.md)
-  决策建议稿（非实施说明）。给出 P0–P2 优先级、推荐顺序，并指出「拒绝日志持久化」中的架构张力与「多网络观测」对跨网络隔离声明的反噬风险。
+  经 A/B/C 实测修订的方向库（非实施说明）。下一轮选定范围、逐条事实修正与五 seed 无翻转结论见 [D 决策记录](NEXT_SCOPE_DECISION_RECORD.md)。
 
 ---
 
@@ -31,6 +31,8 @@
   把写死的出度上限 4 改为随累计节点数按对数曲线增长（`⌈log₂N⌉ + 1`，默认规模 8 节点下仍为 4），并保持「稀疏、单调、可离线核验」三条性质。
 
 实施记录：[A：Harness 适配](HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B：动态出度](DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C：结构化面板与可选侧栏](BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)、[统一声明审计](DECLARATION_AUDIT.md)。C 的 ATN 客户端双路径通过，完整 better-sidebar 0.26.0 host 激活仍受上游旧服务依赖阻碍；回退可用，不把 API 验证当作联合启动验证。
+
+[D：下一轮范围决策](NEXT_SCOPE_DECISION_RECORD.md) 已收口；最终整轮命令与十二项不变式见 [最终验收记录](FINAL_EXECUTION_VALIDATION.md)。
 
 总纲/brief 是实施前输入，其中旧版本、固定额度、图形描述是基线或待删除项，不能用作现行产品说明。当前行为以根 README、阶段报告和声明审计为准；历史实验仍保留原条件。
 
