@@ -1,0 +1,64 @@
+TAP version 13
+# Subtest: HARNESS-01: every Harness dependency and override uses the supported release
+not ok 1 - HARNESS-01: every Harness dependency and override uses the supported release
+  ---
+  duration_ms: 1.6589
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\harness-adaptation.test.ts:1:199'
+  failureType: 'testCodeFailure'
+  error: |-
+    @deepseek-ai/dsh-agent
+    + actual - expected
+    
+    + '0.2.0-rc.2'
+    - '0.2.1-alpha.2'
+           ^
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '0.2.1-alpha.2'
+  actual: '0.2.0-rc.2'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\harness-adaptation.test.ts:11:56)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: HARNESS-02: removed invariants and unresolved cwd templates are absent
+not ok 2 - HARNESS-02: removed invariants and unresolved cwd templates are absent
+  ---
+  duration_ms: 0.3472
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\harness-adaptation.test.ts:1:704'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + '0.2.0-rc.2'
+    - undefined
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  actual: '0.2.0-rc.2'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\harness-adaptation.test.ts:20:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 552.0507
