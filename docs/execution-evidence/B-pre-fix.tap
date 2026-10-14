@@ -1,0 +1,452 @@
+TAP version 13
+# Subtest: DYNAMIC-STATUS: N=2 and N=32 status reads report two and six without mutation or model calls
+not ok 1 - DYNAMIC-STATUS: N=2 and N=32 status reads report two and six without mutation or model calls
+  ---
+  duration_ms: 63.1953
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\dynamic-degree.test.ts:1:450'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4 !== 2
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 2
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\dynamic-degree.test.ts:26:14)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: DYNAMIC-01: exact logarithmic table and pure deterministic default limits
+not ok 2 - DYNAMIC-01: exact logarithmic table and pure deterministic default limits
+  ---
+  duration_ms: 1.8823
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\dynamic-degree.test.ts:1:819'
+  failureType: 'testCodeFailure'
+  error: |-
+    N=1
+    
+    4 !== 1
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 1
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\dynamic-degree.test.ts:22:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.start (node:internal/test_runner/test:1242:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: DYNAMIC-02: deployment ceiling eight, frozen two/four and omitted legacy ceiling four
+not ok 3 - DYNAMIC-02: deployment ceiling eight, frozen two/four and omitted legacy ceiling four
+  ---
+  duration_ms: 0.3006
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\dynamic-degree.test.ts:1:1432'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    4 !== 8
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 8
+  actual: 4
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\dynamic-degree.test.ts:33:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: DYNAMIC-03: growth and retirement preserve every established legal edge
+ok 4 - DYNAMIC-03: growth and retirement preserve every established legal edge
+  ---
+  duration_ms: 2.5636
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-04: a six-peer logged feedback snapshot remains acknowledged
+ok 5 - DYNAMIC-04: a six-peer logged feedback snapshot remains acknowledged
+  ---
+  duration_ms: 7.8549
+  type: 'test'
+  ...
+# Subtest: DYNAMIC-05: degree literals are removed from config and both durable/observer codecs
+not ok 6 - DYNAMIC-05: degree literals are removed from config and both durable/observer codecs
+  ---
+  duration_ms: 0.889
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\dynamic-degree.test.ts:1:3393'
+  failureType: 'testCodeFailure'
+  error: |-
+    The input was expected to not match the regular expression /\.max\(4\)|> 4|1–4/. Input:
+    
+    '/**\n' +
+      ' * Deployment-varying bounds of the ATN runtime.\n' +
+      ' *\n' +
+      ' * Every bound is a Cordis `Config` field so a profile can change it without a\n' +
+      ' * code change; the schema validates each field on its own and\n' +
+      ' * {@link resolveLimits} validates the relations between fields. No bound is a\n' +
+      ' * hardcoded constant in the runtime.\n' +
+      ' * @module dsh-atn/config\n' +
+      ' */\n' +
+      "import z from '@deepseek-ai/schemastery'\n" +
+      "import { ATN_DOMAIN_NAME, type NetworkLimits } from './schema.ts'\n" +
+      "import { MAX_COLLABORATION_PEERS } from './topology.ts'\n" +
+      '\n' +
+      '/** Plugin configuration of the ATN runtime service. */\n' +
+      'export interface Config {\n' +
+      '  /** Maximum outgoing collaborators, 1–4; omitted legacy configurations retain four. */\n' +
+      '  maxCollaborationPeers?: number\n' +
+      '  /** Minimum terminal requester ratings on each compared edge. Defaults to two. */\n' +
+      '  requesterMinSamples?: number\n' +
+      '  /** Resident working nodes; `provisioning` and `draining` nodes still consume a slot. */\n' +
+      '  maxResidentNodes: number\n' +
+      '  /** Cumulative nodes ever created in one network. */\n' +
+      '  maxTotalNodes: number\n' +
+      '  /** Cumulative formal tasks in one network. */\n' +
+      '  maxTasks: number\n' +
+      '  /** Cumulative proposals in one network. */\n' +
+      '  maxProposals: number\n' +
+      '  /** Ordinary pending outbound mail per node; accepted tasks retain one result slot each. */\n' +
+      '  maxPendingMailPerNode: number\n' +
+      '  /** Ordinary retained mail allowance; at most maxTasks extra first-result settlement records. */\n' +
+      '  maxRetainedMail: number\n' +
+      '  /** Maximum UTF-8 bytes of one mail body, envelope included. */\n' +
+      '  maxMessageBytes: number\n' +
+      '  /** Maximum UTF-8 bytes of the goal document body. */\n' +
+      '  maxDocumentBytes: number\n' +
+      '  /** Default lease granted at creation, in milliseconds. */\n' +
+      '  defaultLeaseMs: number\n' +
+      '  /** Maximum single lease extension, in milliseconds. */\n' +
+      '  maxLeaseExtensionMs: number\n' +
+      '  /** Hard wall-clock deadline of a network, in milliseconds. */\n' +
+      '  networkDeadlineMs: number\n' +
+      '  /** Wall-clock deadline of one proposal, in milliseconds. */\n' +
+      '  proposalDeadlineMs: number\n' +
+      '  /** Admitted model-step budget per node, including the entry after network creation. */\n' +
+      '  stepBudget: number\n' +
+      '  /** Storage-domain name holding network records. */\n' +
+      '  domainName: string\n' +
+      '}\n' +
+      '\n' +
+      '/** Validated plugin configuration. */\n' +
+      'export const Config: z<Config> = z.object({\n' +
+      '  maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),\n' +
+      '  requesterMinSamples: z.natural().default(2),\n' +
+      '  maxResidentNodes: z.natural().default(8),\n' +
+      '  maxTotalNodes: z.natural().default(32),\n' +
+      '  maxTasks: z.natural().default(256),\n' +
+      '  maxProposals: z.natural().default(64),\n' +
+      '  maxPendingMailPerNode: z.natural().default(64),\n' +
+      '  maxRetainedMail: z.natural().default(1024),\n' +
+      '  maxMessageBytes: z.natural().default(8192),\n' +
+      '  maxDocumentBytes: z.natural().default(8192),\n' +
+      '  defaultLeaseMs: z.natural().default(5 * 60 * 1000),\n' +
+      '  maxLeaseExtensionMs: z.natural().default(30 * 60 * 1000),\n' +
+      '  networkDeadlineMs: z.natural().default(60 * 60 * 1000),\n' +
+      '  proposalDeadlineMs: z.natural().default(2 * 60 * 1000),\n' +
+      '  stepBudget: z.natural().default(64),\n' +
+      '  domainName: z.string().default(ATN_DOMAIN_NAME),\n' +
+      '})\n' +
+      '\n' +
+      '/**\n' +
+      ' * Reject a configuration whose individual fields are valid but whose relations\n' +
+      ' * are not, at load time rather than at the first write.\n' +
+      ' *\n' +
+      ' * A count or a duration of `0` is not a bound the runtime could honour: it\n' +
+      ' * would fail on the first write instead of at load, so it is rejected here. The\n' +
+      ' * durable medium also restricts the domain name, so an illegal one fails now\n' +
+      ' * rather than when the store is opened.\n' +
+      ' *\n' +
+      ' * @param config - Validated plugin configuration.\n' +
+      ' * @throws Error naming the first broken relation, field or domain name.\n' +
+      ' */\n' +
+      'export function assertConfigRelations(config: Config): void {\n' +
+      '  const problems: string[] = []\n' +
+      '  const positive: [string, number][] = [\n' +
+      "    ['maxCollaborationPeers', config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS],\n" +
+      "    ['requesterMinSamples', config.requesterMinSamples ?? 2],\n" +
+      "    ['maxResidentNodes', config.maxResidentNodes],\n" +
+      "    ['maxTotalNodes', config.maxTotalNodes],\n" +
+      "    ['maxTasks', config.maxTasks],\n" +
+      "    ['maxProposals', config.maxProposals],\n" +
+      "    ['maxPendingMailPerNode', config.maxPendingMailPerNode],\n" +
+      "    ['maxRetainedMail', config.maxRetainedMail],\n" +
+      "    ['maxMessageBytes', config.maxMessageBytes],\n" +
+      "    ['maxDocumentBytes', config.maxDocumentBytes],\n" +
+      "    ['defaultLeaseMs', config.defaultLeaseMs],\n" +
+      "    ['maxLeaseExtensionMs', config.maxLeaseExtensionMs],\n" +
+      "    ['networkDeadlineMs', config.networkDeadlineMs],\n" +
+      "    ['proposalDeadlineMs', config.proposalDeadlineMs],\n" +
+      "    ['stepBudget', config.stepBudget],\n" +
+      '  ]\n' +
+      '  for (const [field, value] of positive) {\n' +
+      '    if (!Number.isInteger(value) || value <= 0) {\n' +
+      '      problems.push(`${field} must be a positive integer, got ${String(value)}`)\n' +
+      '    }\n' +
+      '  }\n' +
+      '  if ((config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS) > MAX_COLLABORATION_PEERS) {\n' +
+      '    problems.push(`maxCollaborationPeers must not exceed ${MAX_COLLABORATION_PEERS}`)\n' +
+      '  }\n' +
+      '  if (!/^[a-z][a-z0-9_]*$/.test(config.domainName)) {\n' +
+      '    problems.push(`domainName must match [a-z][a-z0-9_]*, got "${config.domainName}"`)\n' +
+      '  }\n' +
+      '  if (config.maxTotalNodes < config.maxResidentNodes) {\n' +
+      "    problems.push('maxTotalNodes must be at least maxResidentNodes')\n" +
+      '  }\n' +
+      '  if (config.maxLeaseExtensionMs < config.defaultLeaseMs) {\n' +
+      "    problems.push('maxLeaseExtensionMs must be at least defaultLeaseMs')\n" +
+      '  }\n' +
+      '  if (config.networkDeadlineMs < config.defaultLeaseMs) {\n' +
+      "    problems.push('networkDeadlineMs must be at least defaultLeaseMs')\n" +
+      '  }\n' +
+      '  if (config.proposalDeadlineMs > config.networkDeadlineMs) {\n' +
+      "    problems.push('proposalDeadlineMs must not exceed networkDeadlineMs')\n" +
+      '  }\n' +
+      '  if (config.maxPendingMailPerNode > config.maxRetainedMail) {\n' +
+      "    problems.push('maxPendingMailPerNode must not exceed maxRetainedMail')\n" +
+      '  }\n' +
+      '  if (problems.length > 0) {\n' +
+      "    throw new Error(`dsh-atn configuration is inconsistent: ${problems.join('; ')}`)\n" +
+      '  }\n' +
+      '}\n' +
+      '\n' +
+      '/**\n' +
+      ' * Project a plugin configuration onto the bounds frozen into a new network.\n' +
+      ' *\n' +
+      ' * @param config - Validated plugin configuration.\n' +
+      ' * @returns The bounds recorded in the network record.\n' +
+      ' */\n' +
+      'export function limitsFromConfig(config: Config): NetworkLimits {\n' +
+      '  return {\n' +
+      '    maxCollaborationPeers: config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS,\n' +
+      '    requesterMinSamples: config.requesterMinSamples ?? 2,\n' +
+      '    maxResidentNodes: config.maxResidentNodes,\n' +
+      '    maxTotalNodes: config.maxTotalNodes,\n' +
+      '    maxTasks: config.maxTasks,\n' +
+      '    maxProposals: config.maxProposals,\n' +
+      '    maxPendingMailPerNode: config.maxPendingMailPerNode,\n' +
+      '    maxRetainedMail: config.maxRetainedMail,\n' +
+      '    maxMessageBytes: config.maxMessageBytes,\n' +
+      '    maxDocumentBytes: config.maxDocumentBytes,\n' +
+      '    defaultLeaseMs: config.defaultLeaseMs,\n' +
+      '    maxLeaseExtensionMs: config.maxLeaseExtensionMs,\n' +
+      '    networkDeadlineMs: config.networkDeadlineMs,\n' +
+      '    proposalDeadlineMs: config.proposalDeadlineMs,\n' +
+      '    stepBudget: config.stepBudget,\n' +
+      '  }\n' +
+      '}\n' +
+      '\n' +
+      '/**\n' +
+      ' * Count the UTF-8 bytes of a string, matching what the durable medium stores.\n' +
+      ' *\n' +
+      ' * @param value - Text to measure.\n' +
+      ' * @returns Byte length of the UTF-8 encoding.\n' +
+      ' */\n' +
+      'export function utf8Bytes(value: string): number {\n' +
+      "  return Buffer.byteLength(value, 'utf8')\n" +
+      '}\n'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual: |-
+    /**
+     * Deployment-varying bounds of the ATN runtime.
+     *
+     * Every bound is a Cordis `Config` field so a profile can change it without a
+     * code change; the schema validates each field on its own and
+     * {@link resolveLimits} validates the relations between fields. No bound is a
+     * hardcoded constant in the runtime.
+     * @module dsh-atn/config
+     */
+    import z from '@deepseek-ai/schemastery'
+    import { ATN_DOMAIN_NAME, type NetworkLimits } from './schema.ts'
+    import { MAX_COLLABORATION_PEERS } from './topology.ts'
+    
+    /** Plugin configuration of the ATN runtime service. */
+    export interface Config {
+      /** Maximum outgoing collaborators, 1–4; omitted legacy configurations retain four. */
+      maxCollaborationPeers?: number
+      /** Minimum terminal requester ratings on each compared edge. Defaults to two. */
+      requesterMinSamples?: number
+      /** Resident working nodes; `provisioning` and `draining` nodes still consume a slot. */
+      maxResidentNodes: number
+      /** Cumulative nodes ever created in one network. */
+      maxTotalNodes: number
+      /** Cumulative formal tasks in one network. */
+      maxTasks: number
+      /** Cumulative proposals in one network. */
+      maxProposals: number
+      /** Ordinary pending outbound mail per node; accepted tasks retain one result slot each. */
+      maxPendingMailPerNode: number
+      /** Ordinary retained mail allowance; at most maxTasks extra first-result settlement records. */
+      maxRetainedMail: number
+      /** Maximum UTF-8 bytes of one mail body, envelope included. */
+      maxMessageBytes: number
+      /** Maximum UTF-8 bytes of the goal document body. */
+      maxDocumentBytes: number
+      /** Default lease granted at creation, in milliseconds. */
+      defaultLeaseMs: number
+      /** Maximum single lease extension, in milliseconds. */
+      maxLeaseExtensionMs: number
+      /** Hard wall-clock deadline of a network, in milliseconds. */
+      networkDeadlineMs: number
+      /** Wall-clock deadline of one proposal, in milliseconds. */
+      proposalDeadlineMs: number
+      /** Admitted model-step budget per node, including the entry after network creation. */
+      stepBudget: number
+      /** Storage-domain name holding network records. */
+      domainName: string
+    }
+    
+    /** Validated plugin configuration. */
+    export const Config: z<Config> = z.object({
+      maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),
+      requesterMinSamples: z.natural().default(2),
+      maxResidentNodes: z.natural().default(8),
+      maxTotalNodes: z.natural().default(32),
+      maxTasks: z.natural().default(256),
+      maxProposals: z.natural().default(64),
+      maxPendingMailPerNode: z.natural().default(64),
+      maxRetainedMail: z.natural().default(1024),
+      maxMessageBytes: z.natural().default(8192),
+      maxDocumentBytes: z.natural().default(8192),
+      defaultLeaseMs: z.natural().default(5 * 60 * 1000),
+      maxLeaseExtensionMs: z.natural().default(30 * 60 * 1000),
+      networkDeadlineMs: z.natural().default(60 * 60 * 1000),
+      proposalDeadlineMs: z.natural().default(2 * 60 * 1000),
+      stepBudget: z.natural().default(64),
+      domainName: z.string().default(ATN_DOMAIN_NAME),
+    })
+    
+    /**
+     * Reject a configuration whose individual fields are valid but whose relations
+     * are not, at load time rather than at the first write.
+     *
+     * A count or a duration of `0` is not a bound the runtime could honour: it
+     * would fail on the first write instead of at load, so it is rejected here. The
+     * durable medium also restricts the domain name, so an illegal one fails now
+     * rather than when the store is opened.
+     *
+     * @param config - Validated plugin configuration.
+     * @throws Error naming the first broken relation, field or domain name.
+     */
+    export function assertConfigRelations(config: Config): void {
+      const problems: string[] = []
+      const positive: [string, number][] = [
+        ['maxCollaborationPeers', config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS],
+        ['requesterMinSamples', config.requesterMinSamples ?? 2],
+        ['maxResidentNodes', config.maxResidentNodes],
+        ['maxTotalNodes', config.maxTotalNodes],
+        ['maxTasks', config.maxTasks],
+        ['maxProposals', config.maxProposals],
+        ['maxPendingMailPerNode', config.maxPendingMailPerNode],
+        ['maxRetainedMail', config.maxRetainedMail],
+        ['maxMessageBytes', config.maxMessageBytes],
+        ['maxDocumentBytes', config.maxDocumentBytes],
+        ['defaultLeaseMs', config.defaultLeaseMs],
+        ['maxLeaseExtensionMs', config.maxLeaseExtensionMs],
+        ['networkDeadlineMs', config.networkDeadlineMs],
+        ['proposalDeadlineMs', config.proposalDeadlineMs],
+        ['stepBudget', config.stepBudget],
+      ]
+      for (const [field, value] of positive) {
+        if (!Number.isInteger(value) || value <= 0) {
+          problems.push(`${field} must be a positive integer, got ${String(value)}`)
+        }
+      }
+      if ((config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS) > MAX_COLLABORATION_PEERS) {
+        problems.push(`maxCollaborationPeers must not exceed ${MAX_COLLABORATION_PEERS}`)
+      }
+      if (!/^[a-z][a-z0-9_]*$/.test(config.domainName)) {
+        problems.push(`domainName must match [a-z][a-z0-9_]*, got "${config.domainName}"`)
+      }
+      if (config.maxTotalNodes < config.maxResidentNodes) {
+        problems.push('maxTotalNodes must be at least maxResidentNodes')
+      }
+      if (config.maxLeaseExtensionMs < config.defaultLeaseMs) {
+        problems.push('maxLeaseExtensionMs must be at least defaultLeaseMs')
+      }
+      if (config.networkDeadlineMs < config.defaultLeaseMs) {
+        problems.push('networkDeadlineMs must be at least defaultLeaseMs')
+      }
+      if (config.proposalDeadlineMs > config.networkDeadlineMs) {
+        problems.push('proposalDeadlineMs must not exceed networkDeadlineMs')
+      }
+      if (config.maxPendingMailPerNode > config.maxRetainedMail) {
+        problems.push('maxPendingMailPerNode must not exceed maxRetainedMail')
+      }
+      if (problems.length > 0) {
+        throw new Error(`dsh-atn configuration is inconsistent: ${problems.join('; ')}`)
+      }
+    }
+    
+    /**
+     * Project a plugin configuration onto the bounds frozen into a new network.
+     *
+     * @param config - Validated plugin configuration.
+     * @returns The bounds recorded in the network record.
+     */
+    export function limitsFromConfig(config: Config): NetworkLimits {
+      return {
+        maxCollaborationPeers: config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS,
+        requesterMinSamples: config.requesterMinSamples ?? 2,
+        maxResidentNodes: config.maxResidentNodes,
+        maxTotalNodes: config.maxTotalNodes,
+        maxTasks: config.maxTasks,
+        maxProposals: config.maxProposals,
+        maxPendingMailPerNode: config.maxPendingMailPerNode,
+        maxRetainedMail: config.maxRetainedMail,
+        maxMessageBytes: config.maxMessageBytes,
+        maxDocumentBytes: config.maxDocumentBytes,
+        defaultLeaseMs: config.defaultLeaseMs,
+        maxLeaseExtensionMs: config.maxLeaseExtensionMs,
+        networkDeadlineMs: config.networkDeadlineMs,
+        proposalDeadlineMs: config.proposalDeadlineMs,
+        stepBudget: config.stepBudget,
+      }
+    }
+    
+    /**
+     * Count the UTF-8 bytes of a string, matching what the durable medium stores.
+     *
+     * @param value - Text to measure.
+     * @returns Byte length of the UTF-8 encoding.
+     */
+    export function utf8Bytes(value: string): number {
+      return Buffer.byteLength(value, 'utf8')
+    }
+    
+  operator: 'doesNotMatch'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\dynamic-degree.test.ts:77:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 2
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 662.6956
