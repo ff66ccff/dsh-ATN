@@ -1,0 +1,65 @@
+
+> dsh-atn@0.5.0 smoke:profile
+> node --import tsx/esm tests/smoke/profile-smoke.ts
+
+profile smoke: home=D:\PersonalFile\Temp\dsh-atn-profile-2g6nyl installSpec=D:\dsh-ATN\.artifacts\dsh-atn-0.5.0.tgz
+  $ --profile atn-smoke-base --from-default-profile web --dump-config
+  $ --profile atn-smoke-atn --from-default-profile web --dump-config
+  $ --profile atn-smoke-base --dump-config
+  $ plugin --profile atn-smoke-atn add D:\dsh-ATN\.artifacts\dsh-atn-0.5.0.tgz
+  $ --profile atn-smoke-atn --dump-config
+  $ --profile atn-smoke-atn --patch D:\PersonalFile\Temp\dsh-atn-profile-2g6nyl\preset-smoke.patch.yml --no-open --port 0
+{
+  "installSpec": "D:\\dsh-ATN\\.artifacts\\dsh-atn-0.5.0.tgz",
+  "home": "D:\\PersonalFile\\Temp\\dsh-atn-profile-2g6nyl",
+  "steps": [
+    {
+      "step": "PROFILE-01 init base profile",
+      "command": "dsh --profile atn-smoke-base --from-default-profile web --dump-config",
+      "exitCode": 0,
+      "detail": "initialized isolated Web profile"
+    },
+    {
+      "step": "PROFILE-01 init target profile",
+      "command": "dsh --profile atn-smoke-atn --from-default-profile web --dump-config",
+      "exitCode": 0,
+      "detail": "initialized isolated Web profile"
+    },
+    {
+      "step": "PROFILE-01 install package",
+      "command": "dsh plugin --profile atn-smoke-atn add D:\\dsh-ATN\\.artifacts\\dsh-atn-0.5.0.tgz",
+      "exitCode": 0,
+      "detail": "  Virtual store is at:             node_modules/.pnpm | Progress: resolved 5, reused 4, downloaded 1, added 5, done | Done in 1s using pnpm v11.21.0"
+    },
+    {
+      "step": "PROFILE-01 bundle list",
+      "command": "read profile manifest",
+      "exitCode": 0,
+      "detail": "@deepseek-ai/dsh-base, @deepseek-ai/dsh-web-app, dsh-atn"
+    },
+    {
+      "step": "PROFILE-02 loader composes the bundle layer",
+      "command": "dsh --profile atn-smoke-atn --dump-config",
+      "exitCode": 0,
+      "detail": "host runtime and standalone ATN preset are present"
+    },
+    {
+      "step": "PROFILE-04 bundle does not override existing rows",
+      "command": "diff of --dump-config with and without the bundle",
+      "exitCode": 0,
+      "detail": "185 complete pre-existing rows unchanged; only ATN runtime and preset added"
+    },
+    {
+      "step": "PRESET Web roster, scoped model requests and child creation (partial PROFILE-03)",
+      "command": "dsh --profile atn-smoke-atn --patch <observer> --no-open --port 0",
+      "exitCode": 0,
+      "detail": "ATN_PRESET_SMOKE {\"presets\":[{\"id\":\"standard\",\"isDefault\":true},{\"id\":\"ptc\",\"isDefault\":false},{\"id\":\"minimal\",\"isDefault\":false},{\"id\":\"cordis\",\"isDefault\":false},{\"id\":\"atn\",\"name\":\"ATN\",\"isDefault\":false}],\"tools\":[\"ask_user_question\",\"atn_finish\",\"atn_send\",\"atn_spawn\",\"atn_start\",\"atn_status\",\"edit\",\"glob\",\"grep\",\"present\",\"pwsh\",\"read\",\"read_image\",\"skill\",\"todo_write\",\"web_fetch\",\"web_search\",\"working_directory\",\"write\"],\"childPreset\":\"atn\",\"nodes\":2}"
+    },
+    {
+      "step": "PROFILE-04 user patch untouched",
+      "command": "read profile cordis.patch.yml",
+      "exitCode": 0,
+      "detail": "unchanged"
+    }
+  ]
+}

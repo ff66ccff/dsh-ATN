@@ -3,7 +3,7 @@ export const NS = 'atn-network' as const
 
 /** Chinese observer labels. */
 export const zh = {
-  trigger: '可视化ATN网络', title: 'ATN 网络', close: '关闭网络视图',
+  trigger: 'ATN 网络状态', title: 'ATN 网络', close: '关闭网络视图',
   description: '观察智能体的当前行为，以及它们自主建立的协作连接。',
   loading: '正在读取网络…', empty: '当前会话尚未加入 ATN 网络',
   emptyHelp: '开始任务后，智能体会按需创建 ATN 网络；这里将显示真实节点与连接。',
@@ -12,9 +12,10 @@ export const zh = {
   nodes: '节点', connections: '协作连接', running: '正在运行', tasks: '待处理任务',
   goal: '共享目标', revision: '版本', steps: '已用步数', totalSteps: '全网累计步数', nodeBudget: '每节点步数上限', deadline: '截止时间',
   networkOpen: '进行中', networkCompleted: '已完成', networkStopped: '已停止',
-  graph: 'ATN 智能体拓扑图', graphHelp: '箭头 A → B 表示 A 将 B 选作协作邻居；创建关系单独显示。',
-  birthEdges: '显示创建关系', collaboration: '协作邻接', birth: '创建关系',
-  zoomIn: '放大', zoomOut: '缩小', reset: '重置视图', fit: '适应画布',
+  collaboration: '协作邻接', birth: '创建关系',
+  remaining: '剩余步数', peerQuota: '剩余连接额度', fulfilment: '历史任务提交 / 结算',
+  fulfilmentHelp: '只统计当前快照窗口中的历史任务，已提交不代表验收通过。', noSamples: '暂无样本',
+  orphans: '遗留任务候选', orphanHelp: '失败或退出节点的失败 / 不可达尝试；是否可认领须由 atn_status 确认。',
   details: '节点详情', selectNode: '选择节点查看行为与邻居', entry: '入口', current: '当前会话',
   session: '会话', state: '状态', tool: '正在调用', noTool: '暂无正在调用的工具',
   peers: '选定的邻居', noPeers: '尚无协作邻居', incoming: '将此节点选为邻居', noIncoming: '暂无入向协作连接',
@@ -34,7 +35,7 @@ export type AtnKey = keyof typeof zh
 
 /** English observer labels. */
 export const en: Record<AtnKey, string> = {
-  trigger: 'Visualize ATN network', title: 'ATN network', close: 'Close network view',
+  trigger: 'ATN network status', title: 'ATN network', close: 'Close network view',
   description: 'Observe agents, their current work, and the collaboration links they choose.',
   loading: 'Loading network…', empty: 'This session has not joined an ATN network',
   emptyHelp: 'Start a task. Its real nodes and connections will appear after an agent creates the ATN network.',
@@ -43,9 +44,10 @@ export const en: Record<AtnKey, string> = {
   nodes: 'Nodes', connections: 'Collaboration links', running: 'Running', tasks: 'Open tasks',
   goal: 'Shared objective', revision: 'Revision', steps: 'Steps used', totalSteps: 'Total network steps', nodeBudget: 'Step limit per node', deadline: 'Deadline',
   networkOpen: 'In progress', networkCompleted: 'Completed', networkStopped: 'Stopped',
-  graph: 'ATN agent topology', graphHelp: 'An arrow A → B means A selected B as a collaborator. Birth relationships are shown separately.',
-  birthEdges: 'Show birth relationships', collaboration: 'Collaboration', birth: 'Birth relationship',
-  zoomIn: 'Zoom in', zoomOut: 'Zoom out', reset: 'Reset view', fit: 'Fit to canvas',
+  collaboration: 'Collaboration', birth: 'Birth relationship',
+  remaining: 'Steps remaining', peerQuota: 'Connections remaining', fulfilment: 'Historical submitted / settled',
+  fulfilmentHelp: 'Historical tasks within the current snapshot window only. Submitted does not mean independently accepted.', noSamples: 'No samples',
+  orphans: 'Abandoned task candidates', orphanHelp: 'Failed / unreachable attempts held by failed or retired nodes; confirm claim eligibility with atn_status.',
   details: 'Node details', selectNode: 'Select a node to inspect its work and neighbors', entry: 'Entry', current: 'Current session',
   session: 'Session', state: 'State', tool: 'Current tool', noTool: 'No tool currently running',
   peers: 'Selected neighbors', noPeers: 'No collaboration neighbors yet', incoming: 'Selected by', noIncoming: 'No incoming collaboration links',

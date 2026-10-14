@@ -10,6 +10,9 @@ import { NetworkAction, type NetworkActionProps } from '../../src/client/Network
 import { zh } from '../../src/client/locales.ts'
 import type { AtnObserverSnapshot } from '../../src/observer-types.ts'
 import type { SessionListState } from '@deepseek-ai/dsh-api-session-controller/client'
+import { NetworkView } from '../../src/client/NetworkView.tsx'
+import { SidebarObserver } from '../../src/client/SidebarObserver.tsx'
+import type { TabDescriptor } from 'dsh-better-sidebar'
 
 let dom: JSDOM
 let root: Root
@@ -40,7 +43,7 @@ function snapshot(objective = 'Inspect actual network'): AtnObserverSnapshot {
     observedAt: 1000,
     network: {
       id: 'network-1', status: 'open', entryNodeId: 'root', goalVersion: 2, objective,
-      stepsUsed: 3, stepBudget: 40, deadlineAt: 900000,
+      stepsUsed: 3, stepBudget: 40, maxCollaborationPeers: 2, deadlineAt: 900000,
       nodes: [
         { id: 'root', sessionId: 'session-a', isEntry: true, creatorId: null, lifecycle: 'active', agentStatus: 'idle', peers: ['child'], stepsUsed: 1, openTasks: 4, pendingVotes: 0, currentTool: null },
         { id: 'child', sessionId: 'session-child', isEntry: false, creatorId: 'root', lifecycle: 'active', agentStatus: 'running', peers: ['root'], stepsUsed: 2, openTasks: 6, pendingVotes: 1, currentTool: 'bash' },
@@ -185,11 +188,10 @@ test('renders directed adjacency separately from birth links and node task resul
   await render(source.readSnapshot)
   await click(button(zh.trigger))
   await finish(source.calls[0], snapshot())
-  const edges = [...document.querySelectorAll<SVGPathElement>('[data-atn-edge]')]
-  assert.equal(edges.length, 2)
-  assert.ok(edges.every(edge => edge.getAttribute('marker-end')?.startsWith('url(#')))
-  assert.notEqual(edges[0].getAttribute('d'), edges[1].getAttribute('d'))
-  const child = document.querySelector<SVGGElement>('g[role="button"][aria-label*="child"]')!
+  const collaboration = document.querySelector(`section[aria-label="${zh.collaboration}"]`)!
+  assert.equal(collaboration.querySelectorAll('li').length, 2)
+  assert.deepEqual([...collaboration.querySelectorAll('li')].map(row => row.textContent), ['root → child', 'child → root'])
+  const child = button('child')
   assert.ok(child)
   await click(child)
   assert.equal(child.getAttribute('aria-pressed'), 'true')
@@ -200,11 +202,12 @@ test('renders directed adjacency separately from birth links and node task resul
   assert.match(details.textContent!, /A recorded failure/)
   assert.match(details.textContent!, /失败/)
   assert.match(document.querySelector('.atn-metrics')!.textContent!, /10待处理任务/, 'Metrics use all node obligations, not the capped task window')
-  await click(document.querySelector('input[type="checkbox"]')!)
-  assert.equal(document.querySelectorAll('[data-atn-edge-kind="birth"]').length, 1)
+  const lineage = document.querySelector(`section[aria-label="${zh.birth}"]`)!
+  assert.equal(lineage.querySelectorAll('li').length, 1)
+  assert.equal(lineage.querySelector('li')!.textContent, 'root → child')
   assert.equal(document.querySelector('img'), null, 'Agent text is never interpreted as markup')
   assert.match(document.body.textContent!, /<img src=x>/)
-  assert.equal(document.querySelectorAll('input').length, 1, 'Only a viewing toggle is exposed')
+  assert.equal(document.querySelectorAll('input').length, 0, 'Only read-only selection controls are exposed')
   assert.equal(source.calls.length, 1, 'Selection and view controls issue no network mutations')
 })
 
@@ -242,4 +245,116 @@ test('SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin un
     assert.deepEqual(registrations.map(row => row.id), ['atn-network'])
   } finally { await ctx.fiber.dispose() }
   assert.equal(disposed, 1)
+})
+
+test('SIDEBAR-PENDING: a required missing module blocks its apply, but late optional child registration does not block the header', async () => {
+  const ctx = new Context()
+  let applied = false
+  const required = ctx.plugin({ inject: ['missingSidebar'], apply: () => { applied = true } })
+  await required
+  assert.equal(applied, false)
+  let headers = 0, tabs = 0, releases = 0
+  ctx.provide('slots', { inject: (_name: string, install: () => () => void) => ctx.effect(install), register: () => {
+    headers++; return () => { headers-- }
+  } })
+  ctx.provide('locale', { register: () => () => {}, bind: () => (key: keyof typeof zh) => zh[key] })
+  ctx.provide('sessions', { list: { getSnapshot: () => sessions, subscribe: subscribeSessions } })
+  ctx.provide('connection', { rpc: { call: async () => ({ ok: true, value: snapshot() }) } })
+  try {
+    const plugin = await ctx.plugin(ClientPlugin)
+    assert.equal(headers, 1)
+    const provider = await ctx.plugin((inner: Context) => {
+      inner.provide('betterSidebar', { registerTab: () => { tabs++; return () => { releases++ } } })
+    })
+    await new Promise(resolve => setTimeout(resolve, 0))
+    assert.equal(tabs, 1)
+    await provider.dispose()
+    assert.equal(releases, 1)
+    assert.equal(headers, 1, 'losing the provider preserves the usable fallback')
+    await plugin.dispose()
+    assert.equal(headers, 0)
+  } finally { await ctx.fiber.dispose() }
+})
+
+test('SIDEBAR-VISIBLE: inactive tabs pause, active tabs serialize requests, and preset changes abort and reset', async () => {
+  const source = reader()
+  const localeSnapshot = {}
+  const sessionSource = { getSnapshot: () => sessions, subscribe: subscribeSessions }
+  const localeSource = { getSnapshot: () => localeSnapshot, subscribe: () => () => {} }
+  const props = { readSnapshot: source.readSnapshot, sessions: sessionSource, locale: localeSource,
+    t: (key: keyof typeof zh) => zh[key] }
+  const draw = async (sessionId: string, visible: boolean) => {
+    await act(async () => root.render(<SidebarObserver {...props} sessionId={sessionId} visible={visible} />))
+  }
+  await act(async () => setPreset('session-a', 'atn'))
+  await draw('session-a', false)
+  assert.equal(source.calls.length, 0)
+  await draw('session-a', true)
+  assert.equal(source.calls.length, 1)
+  await new Promise(resolve => setTimeout(resolve, 1050))
+  assert.equal(source.calls.length, 1)
+  await finish(source.calls[0], snapshot('Visible sidebar data'))
+  assert.match(document.body.textContent!, /Visible sidebar data/)
+  await act(async () => { await new Promise(resolve => setTimeout(resolve, 1050)) })
+  await draw('session-a', false)
+  assert.equal(source.calls[1].signal.aborted, true)
+  await finish(source.calls[1], snapshot('Hidden late response'))
+  assert.doesNotMatch(document.body.textContent!, /Hidden late response/)
+  await draw('session-a', true)
+  assert.equal(source.calls.length, 3)
+  await act(async () => setPreset('session-a', 'standard'))
+  assert.equal(source.calls[2].signal.aborted, true)
+  assert.equal(document.querySelector('table'), null)
+  await finish(source.calls[2], snapshot('Previous ATN response'))
+  await act(async () => setPreset('session-a', 'atn'))
+  assert.equal(source.calls.length, 4)
+  assert.doesNotMatch(document.body.textContent!, /Previous ATN response|Visible sidebar data/)
+  await act(async () => setPreset('session-b', 'atn'))
+  await draw('session-b', true)
+  assert.equal(source.calls[3].signal.aborted, true)
+  assert.equal(source.calls[4].sessionId, 'session-b')
+})
+
+test('VIEW-PROPS: displays quotas, bounded submission history, abandoned attempts and locale-owned groups from props', async () => {
+  const value = snapshot()
+  value.network!.nodes[1].lifecycle = 'retired'
+  await act(async () => root.render(<NetworkView sessionId="session-a" snapshot={value} error={null} selectedId="child"
+    selectNode={() => {}} retry={() => {}} t={key => zh[key]} />))
+  const row = [...document.querySelectorAll('tbody tr')].find(row => row.textContent?.includes('child'))!
+  assert.match(row.textContent!, /已退出/)
+  assert.ok([...row.querySelectorAll('td')].some(cell => cell.textContent === '38'))
+  assert.ok([...row.querySelectorAll('td')].some(cell => cell.textContent === '1'))
+  assert.match(row.textContent!, /0 \/ 1/)
+  assert.match(document.querySelector(`section[aria-label="${zh.orphans}"]`)!.textContent!, /Run focused checks/)
+  assert.equal(document.querySelector('svg'), null)
+  await act(async () => root.render(<NetworkView sessionId="session-a" snapshot={value} error={null} selectedId={null}
+    selectNode={() => {}} retry={() => {}} t={key => `[${key}]`} />))
+  assert.ok(document.querySelector('section[aria-label="[collaboration]"]'))
+  assert.ok(document.querySelector('section[aria-label="[birth]"]'))
+  assert.match(document.body.textContent!, /\[remaining\]|\[peerQuota\]|\[fulfilment\]/)
+  assert.doesNotMatch(document.body.textContent!, /剩余步数|协作邻接|创建关系/)
+})
+
+test('SIDEBAR-MENU: descriptor gates non-ATN sessions and uses right sidebar rather than bottom-only', async () => {
+  const ctx = new Context()
+  let tab: TabDescriptor | undefined
+  const localeSnapshot = {}
+  ctx.provide('slots', { inject: (_name: string, install: () => () => void) => ctx.effect(install), register: () => () => {} })
+  ctx.provide('locale', { register: () => () => {}, bind: () => (key: keyof typeof zh) => zh[key],
+    getSnapshot: () => localeSnapshot, subscribe: () => () => {} })
+  ctx.provide('sessions', { list: { getSnapshot: () => sessions, subscribe: subscribeSessions } })
+  ctx.provide('connection', { rpc: { call: async () => ({ ok: true, value: snapshot() }) } })
+  ctx.provide('betterSidebar', { registerTab: (descriptor: TabDescriptor) => { tab = descriptor; return () => {} } })
+  try {
+    await ctx.plugin(ClientPlugin)
+    assert.ok(tab)
+    await act(async () => setPreset('session-a', 'standard'))
+    assert.equal(tab.available!(ctx, { sessionId: 'session-a' }, {}), false)
+    await act(async () => setPreset('session-a', 'atn'))
+    assert.equal(tab.available!(ctx, { sessionId: 'session-a' }, {}), true)
+    assert.equal('bottomOnly' in tab, false)
+    await act(async () => root.render(tab!.component({ ctx, scope: { sessionId: 'session-a' },
+      store: {}, tab: { id: 'tab1', type: 'atn-network', title: zh.title }, visible: true })))
+    assert.match(document.body.textContent!, /Inspect actual network/)
+  } finally { await act(async () => root.render(null)); await ctx.fiber.dispose() }
 })

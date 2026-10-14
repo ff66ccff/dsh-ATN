@@ -1,6 +1,7 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "paths": { "dsh-better-sidebar": ["./src/client/better-sidebar-contract.d.ts"] },
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "types": ["react", "react-dom"],
     "jsx": "react-jsx",

@@ -1,0 +1,1 @@
+SIDEBAR_REAL_REGISTRY {"version":"0.26.0","registered":true,"duplicateRejected":true,"disposed":true,"remounted":true,"modelCalls":0,"hostActivation":"not-tested-by-this-check"}
