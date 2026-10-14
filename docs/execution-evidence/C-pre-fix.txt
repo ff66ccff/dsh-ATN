@@ -1,0 +1,59 @@
+
+> dsh-atn@0.5.0 test:client
+> node scripts/test-client.mjs
+
+✔ shows the entry only for the current ATN preset, including metadata arriving later (75.3497ms)
+✔ leaving ATN hides the open panel, aborts polling, and resets it before returning (1080.9653ms)
+✔ switching from an ATN session to a non-ATN session hides the entry without fetching (7.1051ms)
+✔ does not fetch until opened, serializes polling, and aborts on close (2136.9873ms)
+✔ switching sessions cancels the old request and ignores its late response (12.2298ms)
+✔ unmount aborts the observer request (6.1138ms)
+✔ shows empty state, a disconnected last snapshot, and a working retry (1074.5671ms)
+✔ renders directed adjacency separately from birth links and node task results (15.2088ms)
+✖ SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service (20.2499ms)
+✖ SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload (8.3512ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 8
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5230.8659
+
+✖ failing tests:
+
+test at .artifacts\tests-client\observer-ui.test.mjs:1021:1
+✖ SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service (20.2499ms)
+  AssertionError [ERR_ASSERTION]: fallback displays the node table
+      at TestContext.<anonymous> (file:///D:/dsh-ATN/.artifacts/tests-client/observer-ui.test.mjs:1041:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at .artifacts\tests-client\observer-ui.test.mjs:1048:1
+✖ SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload (8.3512ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'atn-network'
+  - ]
+  
+      at TestContext.<anonymous> (file:///D:/dsh-ATN/.artifacts/tests-client/observer-ui.test.mjs:1066:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'atn-network' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

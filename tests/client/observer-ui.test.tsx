@@ -4,6 +4,8 @@ import { afterEach, beforeEach, test } from 'node:test'
 import { JSDOM } from 'jsdom'
 import { act, useSyncExternalStore } from 'react'
 import { createRoot, type Root } from 'react-dom/client'
+import { Context } from '@deepseek-ai/cordis'
+import * as ClientPlugin from '../../src/client/index.tsx'
 import { NetworkAction, type NetworkActionProps } from '../../src/client/NetworkAction.tsx'
 import { zh } from '../../src/client/locales.ts'
 import type { AtnObserverSnapshot } from '../../src/observer-types.ts'
@@ -204,4 +206,40 @@ test('renders directed adjacency separately from birth links and node task resul
   assert.match(document.body.textContent!, /<img src=x>/)
   assert.equal(document.querySelectorAll('input').length, 1, 'Only a viewing toggle is exposed')
   assert.equal(source.calls.length, 1, 'Selection and view controls issue no network mutations')
+})
+
+test('SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service', async () => {
+  const ctx = new Context()
+  let headers = 0
+  ctx.provide('slots', { inject: (_name: string, install: () => () => void) => ctx.effect(install),
+    register: () => { headers++; return () => { headers-- } } })
+  ctx.provide('locale', { register: () => () => {}, bind: () => (key: keyof typeof zh) => zh[key] })
+  ctx.provide('connection', { rpc: { call: async () => ({ ok: true, value: snapshot() }) } })
+  try {
+    await ctx.plugin(ClientPlugin)
+    assert.equal(headers, 1)
+    await render(async () => snapshot())
+    await click(button(zh.trigger))
+    assert.ok(document.querySelector('table'), 'fallback displays the node table')
+    assert.match(document.body.textContent!, /Inspect actual network/)
+  } finally { await ctx.fiber.dispose() }
+  assert.equal(headers, 0)
+})
+
+test('SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload', async () => {
+  const ctx = new Context()
+  const registrations: { id: string }[] = []
+  let disposed = 0
+  ctx.provide('slots', { inject: (_name: string, install: () => () => void) => ctx.effect(install), register: () => () => {} })
+  ctx.provide('locale', { register: () => () => {}, bind: () => (key: keyof typeof zh) => zh[key] })
+  ctx.provide('sessions', { list: { getSnapshot: () => sessions, subscribe: subscribeSessions } })
+  ctx.provide('connection', { rpc: { call: async () => ({ ok: true, value: snapshot() }) } })
+  ctx.provide('betterSidebar', { registerTab: (descriptor: { id: string }) => {
+    registrations.push(descriptor); return () => { disposed++ }
+  } })
+  try {
+    await ctx.plugin(ClientPlugin)
+    assert.deepEqual(registrations.map(row => row.id), ['atn-network'])
+  } finally { await ctx.fiber.dispose() }
+  assert.equal(disposed, 1)
 })
