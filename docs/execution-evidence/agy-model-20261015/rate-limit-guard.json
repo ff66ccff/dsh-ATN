@@ -1,0 +1,15 @@
+{
+  "fixtureOnly": true,
+  "externalModelCalls": 0,
+  "stopReason": "provider-auth-access-or-quota-rejected",
+  "normalizedRateLimitWithoutHttpStatusRejected": true,
+  "failures": [
+    {
+      "code": "RATE_LIMIT",
+      "status": null
+    }
+  ],
+  "cleanup": "released",
+  "outcome": "passed",
+  "notRealModelEvidence": true
+}

@@ -1,4 +1,11 @@
 /** Deterministic local policies. Evidence enters only through the scenario ACL. */
+/** All six collaborationPeers calls intentionally freeze the legacy ceiling at 4,
+ * rather than using collaborationPeerLimit. These policies support archived
+ * experiments whose raw sources are pinned by sourceHashes; changing behavior
+ * invalidates the registered design. At the default eight nodes the curve is
+ * also 4. Even this comment changes the raw hash: replay from the frozen checkout,
+ * never rewrite the archived hashes to admit a changed checkout.
+ */
 import type { DeliverInput, RewireInput, SendInput } from '../src/runtime.ts'
 import type { MailRecord, NodeRecord, TaskRecord } from '../src/schema.ts'
 import { collaborationPeers } from '../src/topology.ts'

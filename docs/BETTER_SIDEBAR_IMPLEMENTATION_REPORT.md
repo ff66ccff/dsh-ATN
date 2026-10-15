@@ -18,6 +18,8 @@
 
 `dsh-better-sidebar:^0.26.0` 只声明 optional peer，没有运行时值 import，也没有装进 devDependencies。该版 publisher 的 Cordis peer `^4.0.4` 与 `4.0.5-alpha.1` 普通 npm 解析冲突，且其 host 仍依赖已删除的 webRuntime。保留隔离安装/启动事实：[清单](execution-evidence/C-sidebar-manifest.json)、[npm ERESOLVE](execution-evidence/C-install-compat.txt)、[CLI 安装成功](execution-evidence/C-profile-compat.txt)、[启动 pending](execution-evidence/C-sidebar-boot.txt)。安装成功不代表激活成功。
 
+后续修订（2026-10-15）：上述范围是本阶段的历史基线，当前声明已收窄为精确的可选 peer `dsh-better-sidebar:0.26.0`，并接入独立 CI 双检查。仅此版本在验证集合内，见[残余验证缺口实施报告](RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)。
+
 因此使用 consumer-owned 的窄 type-only Tab API 投影及 client tsconfig paths；`import type {} from 'dsh-better-sidebar'` 触发 Context 合并，编译擦除。这是对 brief 依赖接入方式的明确调整，不是模拟运行时 provider。NOTICE 保留投影来源的 MIT attribution。实际阅读 published service/官方 external-plugin-guide，并用两项补充检查限定风险：
 
 - `SIDEBAR_PACKAGE_DIR=<隔离安装的0.26.0目录> node scripts/verify-sidebar-contract.mjs`：生成 descriptor→published TabDescriptor 赋值 fixture，strict 类型检查通过；publisher declaration SHA256 `404cbe44621280ad3109b8849ab01fd9284ed306260d78bc341c51a906025ac9`。[输出](execution-evidence/C-published-contract.txt)。skipLibCheck 跳过 publisher 旧依赖声明，**只证明所用接口形状兼容**。

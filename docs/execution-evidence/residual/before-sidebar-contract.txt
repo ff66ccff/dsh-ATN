@@ -1,0 +1,10 @@
+$ node scripts/verify-sidebar-contract.mjs
+{
+  "package": "dsh-better-sidebar",
+  "version": "0.26.0",
+  "publishedDeclarationSha256": "404cbe44621280ad3109b8849ab01fd9284ed306260d78bc341c51a906025ac9",
+  "consumerDescriptorAssignableToPublished": true,
+  "scope": "Public TabDescriptor shape only; not whole-provider activation."
+}
+
+EXIT_CODE=0

@@ -1,0 +1,742 @@
+[
+  {
+    "seed": 17,
+    "reference": {
+      "seed": 17,
+      "topologyMode": "fixed",
+      "mechanisms": {
+        "requesterFeedback": true,
+        "sharedBoard": false
+      },
+      "requesterRatings": 14,
+      "policy": "hub-synthesis-via-fixed-ring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 60,
+      "actionsByNode": {
+        "node-1": 8,
+        "node-3": 8,
+        "node-6": 8,
+        "node-9": 8,
+        "node-12": 8,
+        "node-15": 8,
+        "node-18": 8,
+        "node-21": 4
+      },
+      "maxNodeActions": 8,
+      "entrySteps": 8,
+      "receivedFacts": [],
+      "unavailable": [],
+      "checkpoints": [],
+      "topologyProof": null,
+      "staticTopologyProof": null,
+      "requiredFactCount": 0,
+      "obtainedRequiredFacts": [],
+      "obtainedRequiredFactCount": 0,
+      "factFlowAudit": null,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "initialPeerIds": {
+        "node-1": [
+          "node-21",
+          "node-3"
+        ],
+        "node-3": [
+          "node-1",
+          "node-6"
+        ],
+        "node-6": [
+          "node-3",
+          "node-9"
+        ],
+        "node-9": [
+          "node-6",
+          "node-12"
+        ],
+        "node-12": [
+          "node-9",
+          "node-15"
+        ],
+        "node-15": [
+          "node-12",
+          "node-18"
+        ],
+        "node-18": [
+          "node-15",
+          "node-21"
+        ],
+        "node-21": [
+          "node-18",
+          "node-1"
+        ]
+      },
+      "staticSelection": null,
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 35,
+      "hops": 35,
+      "payloadBytes": 31118,
+      "maxContextBytes": 5823,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 35,
+      "totalTransferBytes": 31118,
+      "contextBytesByNode": {
+        "network-1:node-3": 5823,
+        "network-1:node-6": 5179,
+        "network-1:node-9": 4545,
+        "network-1:node-12": 3751,
+        "network-1:node-15": 2946,
+        "network-1:node-18": 2297,
+        "network-1:node-21": 1342,
+        "network-1:node-1": 5235
+      },
+      "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+    }
+  },
+  {
+    "seed": 31,
+    "reference": {
+      "seed": 31,
+      "topologyMode": "fixed",
+      "mechanisms": {
+        "requesterFeedback": true,
+        "sharedBoard": false
+      },
+      "requesterRatings": 14,
+      "policy": "hub-synthesis-via-fixed-ring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 60,
+      "actionsByNode": {
+        "node-1": 8,
+        "node-3": 8,
+        "node-6": 8,
+        "node-9": 8,
+        "node-12": 8,
+        "node-15": 8,
+        "node-18": 8,
+        "node-21": 4
+      },
+      "maxNodeActions": 8,
+      "entrySteps": 8,
+      "receivedFacts": [],
+      "unavailable": [],
+      "checkpoints": [],
+      "topologyProof": null,
+      "staticTopologyProof": null,
+      "requiredFactCount": 0,
+      "obtainedRequiredFacts": [],
+      "obtainedRequiredFactCount": 0,
+      "factFlowAudit": null,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "initialPeerIds": {
+        "node-1": [
+          "node-21",
+          "node-3"
+        ],
+        "node-3": [
+          "node-1",
+          "node-6"
+        ],
+        "node-6": [
+          "node-3",
+          "node-9"
+        ],
+        "node-9": [
+          "node-6",
+          "node-12"
+        ],
+        "node-12": [
+          "node-9",
+          "node-15"
+        ],
+        "node-15": [
+          "node-12",
+          "node-18"
+        ],
+        "node-18": [
+          "node-15",
+          "node-21"
+        ],
+        "node-21": [
+          "node-18",
+          "node-1"
+        ]
+      },
+      "staticSelection": null,
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 35,
+      "hops": 35,
+      "payloadBytes": 31412,
+      "maxContextBytes": 5987,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 35,
+      "totalTransferBytes": 31412,
+      "contextBytesByNode": {
+        "network-1:node-3": 5987,
+        "network-1:node-6": 5176,
+        "network-1:node-9": 4538,
+        "network-1:node-12": 3734,
+        "network-1:node-15": 3099,
+        "network-1:node-18": 2298,
+        "network-1:node-21": 1342,
+        "network-1:node-1": 5238
+      },
+      "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+    }
+  },
+  {
+    "seed": 45,
+    "reference": {
+      "seed": 45,
+      "topologyMode": "fixed",
+      "mechanisms": {
+        "requesterFeedback": true,
+        "sharedBoard": false
+      },
+      "requesterRatings": 14,
+      "policy": "hub-synthesis-via-fixed-ring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 60,
+      "actionsByNode": {
+        "node-1": 8,
+        "node-3": 8,
+        "node-6": 8,
+        "node-9": 8,
+        "node-12": 8,
+        "node-15": 8,
+        "node-18": 8,
+        "node-21": 4
+      },
+      "maxNodeActions": 8,
+      "entrySteps": 8,
+      "receivedFacts": [],
+      "unavailable": [],
+      "checkpoints": [],
+      "topologyProof": null,
+      "staticTopologyProof": null,
+      "requiredFactCount": 0,
+      "obtainedRequiredFacts": [],
+      "obtainedRequiredFactCount": 0,
+      "factFlowAudit": null,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "initialPeerIds": {
+        "node-1": [
+          "node-21",
+          "node-3"
+        ],
+        "node-3": [
+          "node-1",
+          "node-6"
+        ],
+        "node-6": [
+          "node-3",
+          "node-9"
+        ],
+        "node-9": [
+          "node-6",
+          "node-12"
+        ],
+        "node-12": [
+          "node-9",
+          "node-15"
+        ],
+        "node-15": [
+          "node-12",
+          "node-18"
+        ],
+        "node-18": [
+          "node-15",
+          "node-21"
+        ],
+        "node-21": [
+          "node-18",
+          "node-1"
+        ]
+      },
+      "staticSelection": null,
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 35,
+      "hops": 35,
+      "payloadBytes": 31425,
+      "maxContextBytes": 5825,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 35,
+      "totalTransferBytes": 31425,
+      "contextBytesByNode": {
+        "network-1:node-3": 5825,
+        "network-1:node-6": 5346,
+        "network-1:node-9": 4541,
+        "network-1:node-12": 3737,
+        "network-1:node-15": 3099,
+        "network-1:node-18": 2298,
+        "network-1:node-21": 1342,
+        "network-1:node-1": 5237
+      },
+      "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+    }
+  },
+  {
+    "seed": 59,
+    "reference": {
+      "seed": 59,
+      "topologyMode": "fixed",
+      "mechanisms": {
+        "requesterFeedback": true,
+        "sharedBoard": false
+      },
+      "requesterRatings": 14,
+      "policy": "hub-synthesis-via-fixed-ring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 60,
+      "actionsByNode": {
+        "node-1": 8,
+        "node-3": 8,
+        "node-6": 8,
+        "node-9": 8,
+        "node-12": 8,
+        "node-15": 8,
+        "node-18": 8,
+        "node-21": 4
+      },
+      "maxNodeActions": 8,
+      "entrySteps": 8,
+      "receivedFacts": [],
+      "unavailable": [],
+      "checkpoints": [],
+      "topologyProof": null,
+      "staticTopologyProof": null,
+      "requiredFactCount": 0,
+      "obtainedRequiredFacts": [],
+      "obtainedRequiredFactCount": 0,
+      "factFlowAudit": null,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "initialPeerIds": {
+        "node-1": [
+          "node-21",
+          "node-3"
+        ],
+        "node-3": [
+          "node-1",
+          "node-6"
+        ],
+        "node-6": [
+          "node-3",
+          "node-9"
+        ],
+        "node-9": [
+          "node-6",
+          "node-12"
+        ],
+        "node-12": [
+          "node-9",
+          "node-15"
+        ],
+        "node-15": [
+          "node-12",
+          "node-18"
+        ],
+        "node-18": [
+          "node-15",
+          "node-21"
+        ],
+        "node-21": [
+          "node-18",
+          "node-1"
+        ]
+      },
+      "staticSelection": null,
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 35,
+      "hops": 35,
+      "payloadBytes": 30945,
+      "maxContextBytes": 5821,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 35,
+      "totalTransferBytes": 30945,
+      "contextBytesByNode": {
+        "network-1:node-3": 5821,
+        "network-1:node-6": 5020,
+        "network-1:node-9": 4549,
+        "network-1:node-12": 3746,
+        "network-1:node-15": 2940,
+        "network-1:node-18": 2296,
+        "network-1:node-21": 1342,
+        "network-1:node-1": 5231
+      },
+      "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+    }
+  },
+  {
+    "seed": 73,
+    "reference": {
+      "seed": 73,
+      "topologyMode": "fixed",
+      "mechanisms": {
+        "requesterFeedback": true,
+        "sharedBoard": false
+      },
+      "requesterRatings": 14,
+      "policy": "hub-synthesis-via-fixed-ring",
+      "evaluation": [
+        {
+          "phase": 1,
+          "passed": true,
+          "submitted": true
+        },
+        {
+          "phase": 2,
+          "passed": true,
+          "submitted": true
+        }
+      ],
+      "passed": true,
+      "issuedModelCalls": 0,
+      "actions": 60,
+      "actionsByNode": {
+        "node-1": 8,
+        "node-3": 8,
+        "node-6": 8,
+        "node-9": 8,
+        "node-12": 8,
+        "node-15": 8,
+        "node-18": 8,
+        "node-21": 4
+      },
+      "maxNodeActions": 8,
+      "entrySteps": 8,
+      "receivedFacts": [],
+      "unavailable": [],
+      "checkpoints": [],
+      "topologyProof": null,
+      "staticTopologyProof": null,
+      "requiredFactCount": 0,
+      "obtainedRequiredFacts": [],
+      "obtainedRequiredFactCount": 0,
+      "factFlowAudit": null,
+      "topology": {
+        "nodes": 8,
+        "maxPeers": 2,
+        "reachableFromEntry": 8,
+        "diameter": 4
+      },
+      "initialPeerIds": {
+        "node-1": [
+          "node-21",
+          "node-3"
+        ],
+        "node-3": [
+          "node-1",
+          "node-6"
+        ],
+        "node-6": [
+          "node-3",
+          "node-9"
+        ],
+        "node-9": [
+          "node-6",
+          "node-12"
+        ],
+        "node-12": [
+          "node-9",
+          "node-15"
+        ],
+        "node-15": [
+          "node-12",
+          "node-18"
+        ],
+        "node-18": [
+          "node-15",
+          "node-21"
+        ],
+        "node-21": [
+          "node-18",
+          "node-1"
+        ]
+      },
+      "staticSelection": null,
+      "manipulation": {
+        "phase": 2,
+        "registeredNodes": 8,
+        "deniedReads": 0,
+        "distinctDocumentReads": 36,
+        "transitionReason": "phase-1-checkpoint",
+        "automaticAdvanceOccurred": false,
+        "checks": {
+          "boundedNodes": true,
+          "rootHolderChanged": true,
+          "routeChanged": true,
+          "phaseChanged": true
+        },
+        "evidenceVariance": {
+          "currentVersionByPhase": [
+            1,
+            2
+          ],
+          "staleSlotsByPhase": [
+            [
+              1
+            ],
+            [
+              7
+            ]
+          ],
+          "staleRootHolderChanged": true,
+          "staleCopiesByPhase": [
+            2,
+            2
+          ],
+          "capabilityChanges": false
+        },
+        "causalClaim": false
+      },
+      "messages": 35,
+      "hops": 35,
+      "payloadBytes": 30784,
+      "maxContextBytes": 5825,
+      "board": {
+        "reads": 0,
+        "writes": 0,
+        "readBytes": 0,
+        "writeBytes": 0
+      },
+      "totalInteractions": 35,
+      "totalTransferBytes": 30784,
+      "contextBytesByNode": {
+        "network-1:node-3": 5825,
+        "network-1:node-6": 5014,
+        "network-1:node-9": 4380,
+        "network-1:node-12": 3747,
+        "network-1:node-15": 2941,
+        "network-1:node-18": 2298,
+        "network-1:node-21": 1342,
+        "network-1:node-1": 5237
+      },
+      "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+    }
+  }
+]

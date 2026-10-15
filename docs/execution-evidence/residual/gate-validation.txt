@@ -1,0 +1,63 @@
+[
+  {
+    "name": "optional-field-drift-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "entrypoint-contract-drift-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "restored-sidebar-contract",
+    "exitCode": 0,
+    "expectationMet": true
+  },
+  {
+    "name": "entrypoint-registry-failure-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "before-published-0.25.0-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "published-0.25.0-contract-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "published-0.25.0-registry-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "synthetic-0.26.1-contract-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "synthetic-0.26.1-registry-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "peer-range-drift-rejected",
+    "exitCode": 1,
+    "expectationMet": true
+  },
+  {
+    "name": "ci-yaml-and-blocking-wiring",
+    "expectationMet": true,
+    "existingVerifyJobUnchanged": true,
+    "providerPinMatchesVerifiedSet": true
+  },
+  {
+    "name": "sidebar-0.26.0",
+    "exitCode": 0,
+    "expectationMet": true
+  }
+]

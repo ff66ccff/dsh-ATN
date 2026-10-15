@@ -6,8 +6,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
+import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
 import { PROVIDER_ID } from 'dsh-opencode-go'
-import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
+import { runShiftingEvidence, type ShiftingLiveProviderMount, type ShiftingOptions } from '../../experiments/shifting-evidence-run.ts'
 import { ShiftingMailScript } from '../../experiments/shifting-evidence-script.ts'
 import { ShiftingEvidenceScenario, createShiftingEvidenceTask } from '../../experiments/shifting-evidence-task.ts'
 
@@ -109,5 +110,46 @@ test('PROFILE-MOUNT-02: scripted seam and imported live mount are mutually exclu
     }), /scripted.*live.*mutually exclusive/i)
     assert.equal(mounts, 0)
     await assert.rejects(() => readFile(join(scratch, 'mixed', 'manifest.json')), /ENOENT/)
+  } finally { await rm(scratch, { recursive: true, force: true }) }
+})
+
+test('AGY-MOUNT: the installed Gemini route reaches every node with medium effort and unknown tariff', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'atn-agy-mount-'))
+  const adapter = new class extends AuditedFixtureAdapter {
+    override async resolveModel(provider: string, model: string) {
+      return { ...(await super.resolveModel(provider, model)), reasoning: {
+        efforts: [{ id: ReasoningEffortId('medium'), name: 'Medium' }],
+      } }
+    }
+  }()
+  const agyModel = { id: 'gemini-3.8-flash-tiered', name: 'Gemini zero-network fixture', api: 'agy',
+    catalogFree: false, referenceCostPerMillion: null } as const
+  try {
+    const report = await runShiftingEvidence({ ...limits, model: agyModel, directory: join(scratch, 'run') } as ShiftingOptions,
+      undefined, { provenance: { provider: 'agy', plugin: 'dsh-agy', profile: 'installed-desktop-plugin',
+        modelImport: 'installed-dsh-agy', mount: 'dsh-installed-plugin', model: agyModel.id, reasoningEffort: 'medium' },
+      async liveProviderMount(ctx: Context) { ctx.llm.registerAdapter(['agy'], adapter) },
+    } as ShiftingLiveProviderMount)
+    assert.equal(report.passed, true, JSON.stringify({ stop: report.stopReason, failures: report.failures, calls: report.issuedModelCalls }))
+    assert.equal(report.providerProvenance.provider, 'agy')
+    assert.equal(new Set(adapter.requests.map(request => request.sessionId)).size, 8)
+    for (const request of adapter.requests) {
+      assert.equal(request.provider, 'agy')
+      assert.equal(request.model, agyModel.id)
+      assert.equal(request.reasoningEffort, 'medium')
+      assert.equal(request.maxTokens, limits.maxOutputTokens)
+    }
+    assert.equal(report.metrics!.totals.cost.amount, null)
+    assert.equal(report.metrics!.totals.cost.currency, null)
+  } finally { await rm(scratch, { recursive: true, force: true }) }
+})
+
+test('AGY-MOUNT: an unmounted Gemini route is rejected before credentials or inference', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'atn-agy-unmounted-'))
+  try {
+    await assert.rejects(() => runShiftingEvidence({ ...limits, model: {
+      id: 'gemini-3.8-flash-tiered', name: 'Gemini fixture', api: 'agy', catalogFree: false,
+      referenceCostPerMillion: null,
+    }, directory: join(scratch, 'run') } as ShiftingOptions), /explicit.*installed.*agy|authorized.*agy/i)
   } finally { await rm(scratch, { recursive: true, force: true }) }
 })

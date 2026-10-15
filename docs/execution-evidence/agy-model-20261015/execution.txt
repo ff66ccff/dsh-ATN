@@ -1,0 +1,7 @@
+AGY_PROBE_PLAN {"provider":"agy","model":"gemini-3.8-flash-tiered","reasoningEffort":"medium","seeds":[17,31,45,59,73],"agents":8,"chainLength":2,"perNodeSteps":12,"maxCalls":96,"maxOutputTokens":4096,"observedTokenLimit":400000,"timeoutMs":120000,"autoAdvance":false}
+AGY_PROBE_RUN {"seed":17,"passed":false,"phase1":false,"phase2":false,"calls":23,"providerDispatches":19,"stop":"timeout","failures":[],"cleanup":"released","completed":1,"planned":5,"stopped":null}
+AGY_PROBE_RUN {"seed":31,"passed":false,"phase1":false,"phase2":false,"calls":17,"providerDispatches":33,"stop":"timeout","failures":[],"cleanup":"released","completed":2,"planned":5,"stopped":null}
+AGY_PROBE_RUN {"seed":45,"passed":false,"phase1":false,"phase2":false,"calls":18,"providerDispatches":48,"stop":"timeout","failures":[],"cleanup":"released","completed":3,"planned":5,"stopped":null}
+AGY_PROBE_RUN {"seed":59,"passed":false,"phase1":false,"phase2":false,"calls":18,"providerDispatches":62,"stop":"timeout","failures":[],"cleanup":"released","completed":4,"planned":5,"stopped":null}
+AGY_PROBE_RUN {"seed":73,"passed":false,"phase1":false,"phase2":false,"calls":17,"providerDispatches":76,"stop":"timeout","failures":[],"cleanup":"released","completed":5,"planned":5,"stopped":null}
+AGY_PROBE_DONE {"completed":5,"planned":5,"stopped":null,"actualProviderDispatches":76}

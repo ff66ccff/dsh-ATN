@@ -1,0 +1,58 @@
+{
+  "checkedAt": "2026-10-15T04:26:13.368Z",
+  "provider": "dsh-opencode-go",
+  "models": [
+    {
+      "id": "deepseek-v4.1-flash",
+      "name": "DeepSeek V4.1 Flash",
+      "api": "openai-completions",
+      "contextWindow": 1000000,
+      "catalogFree": false,
+      "referenceCostPerMillion": {
+        "input": 0.15,
+        "output": 0.6,
+        "cacheRead": 0.003,
+        "cacheWrite": 0
+      }
+    },
+    {
+      "id": "longcat-2.5-preview-free",
+      "name": "LongCat 2.5 Preview Free",
+      "api": "openai-completions",
+      "contextWindow": 1000000,
+      "catalogFree": true,
+      "referenceCostPerMillion": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    },
+    {
+      "id": "step-5-preview-free",
+      "name": "Step 5 Preview Free",
+      "api": "openai-completions",
+      "contextWindow": 1000000,
+      "catalogFree": true,
+      "referenceCostPerMillion": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    },
+    {
+      "id": "cat-jam-free",
+      "name": "Cat Jam Free",
+      "api": "openai-completions",
+      "contextWindow": 262144,
+      "catalogFree": true,
+      "referenceCostPerMillion": {
+        "input": 0,
+        "output": 0,
+        "cacheRead": 0,
+        "cacheWrite": 0
+      }
+    }
+  ]
+}

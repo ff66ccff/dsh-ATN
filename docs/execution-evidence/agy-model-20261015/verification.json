@@ -1,0 +1,18 @@
+{
+  "liveExperimentExit": 0,
+  "allPlannedSeedsRetained": true,
+  "sourceHashesUnchangedDuringExperiment": true,
+  "archivedDriverHashMatchesPlan": true,
+  "mediumOnAllDispatches": true,
+  "providerDispatches": 76,
+  "allFiveRunsReleased": true,
+  "runtimeTests": 553,
+  "uiTests": 14,
+  "testExit": 0,
+  "typecheckExit": 0,
+  "zeroNetworkNullStatusRateLimitGuard": "passed",
+  "reportLinksChecked": 23,
+  "totalTokenUsageKnown": false,
+  "actualSubscriptionCostKnown": false,
+  "causalClaim": false
+}

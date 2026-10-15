@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-10-15T04:30:26.463Z",
+  "reason": "provider-rate-limit-code-without-http-status",
+  "evidence": {
+    "completedSeed": 17,
+    "failures": [
+      {
+        "code": "RATE_LIMIT",
+        "status": null
+      }
+    ]
+  },
+  "action": "Terminated only the Node process executing .scratch/free-subscription-probe.ts; process exit -1.",
+  "guardGap": "The driver checked only HTTP 401/403/429, so normalized RATE_LIMIT with null status did not stop admission of seed 31.",
+  "retainedInterruptedSeed": 31,
+  "unstartedSeeds": [
+    45,
+    59,
+    73
+  ],
+  "rerun": false,
+  "originalBatchJsonPreserved": true,
+  "originalBatchStoppedFieldIsStale": true,
+  "cleanupForInterruptedSeed": "unknown; no final report or experiment.end event",
+  "issuedRequestsMayHaveCompletedRemotelyAfterTermination": true,
+  "noModelSwitchOrAdditionalInferenceAfterCoordinatorStop": true
+}

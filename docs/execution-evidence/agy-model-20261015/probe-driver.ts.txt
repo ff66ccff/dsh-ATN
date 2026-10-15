@@ -1,0 +1,117 @@
+import assert from 'node:assert/strict'
+import { Context } from '@deepseek-ai/cordis'
+import LlmRuntime, { LlmAdapter, ReasoningEffortId, resolveRetryPolicy, type GenerateOptions,
+  type StreamChunk } from '@deepseek-ai/dsh-llm'
+import { readFile, writeFile, appendFile, mkdir } from 'node:fs/promises'
+import { resolve, join } from 'node:path'
+import { homedir } from 'node:os'
+import { pathToFileURL } from 'node:url'
+import { registerHooks } from 'node:module'
+import { createHash } from 'node:crypto'
+import { isDeepStrictEqual } from 'node:util'
+import { runShiftingEvidence, shiftingSourceHashes, type InstalledAgyModel } from '../experiments/shifting-evidence-run.ts'
+import { runShiftingReference } from '../experiments/shifting-evidence-reference.ts'
+
+registerHooks({ resolve(specifier, context, nextResolve) {
+  return nextResolve(specifier, ['@deepseek-ai/dsh-llm', '@deepseek-ai/cordis'].includes(specifier)
+    ? { ...context, parentURL: pathToFileURL(resolve('package.json')).href } : context)
+} })
+process.env.DSH_HOME = resolve(homedir(), '.dsh')
+const root = resolve('.artifacts/agy-validation/20261015/gemini-medium-probe')
+const pluginDirectory = resolve(homedir(), '.dsh/profiles/desktop/node_modules/dsh-agy')
+const plugin = await import(pathToFileURL(resolve(pluginDirectory, 'lib/index.mjs')).href)
+const model: InstalledAgyModel = { id: 'gemini-3.8-flash-tiered', name: 'Gemini 3.8 Flash', api: 'agy',
+  contextWindow: 1048576, catalogFree: false, referenceCostPerMillion: null }
+const seeds = [17, 31, 45, 59, 73]
+const conditions = { agents: 8, chainLength: 2, perNodeSteps: 12, maxCalls: 96,
+  maxOutputTokens: 4096, observedTokenLimit: 400000, timeoutMs: 120000, autoAdvance: false }
+const sourceHashes = await shiftingSourceHashes()
+await mkdir(root)
+const references = []
+for (const seed of seeds) {
+  const reference = await runShiftingReference({ agents: conditions.agents, seed, chainLength: conditions.chainLength,
+    steps: conditions.perNodeSteps, maxCalls: conditions.maxCalls, timeoutMs: conditions.timeoutMs })
+  assert(reference.passed && reference.issuedModelCalls === 0)
+  references.push({ seed, reference })
+}
+await writeFile(join(root, 'references.json'), JSON.stringify(references, null, 2) + '\n')
+const plan = { createdAt: new Date().toISOString(), purpose: 'adaptive-probe', execution: 'live-provider',
+  provider: 'agy', plugin: 'dsh-agy', pluginVersion: '0.4.4', model, reasoningEffort: 'medium',
+  seeds, conditions, sourceHashes, planned: seeds.length, maxConcurrentProviderStreams: 1,
+  modelTariff: 'unknown; no price estimate', credentialSource: 'installed dsh-agy account store, read by plugin',
+  peerResolution: 'installed plugin with workspace Harness llm/cordis peers via Node resolve hook',
+  directHttpInference: false, causalClaim: false,
+  driverSha256: createHash('sha256').update(await readFile(new URL(import.meta.url))).digest('hex') }
+await writeFile(join(root, 'plan.json'), JSON.stringify(plan, null, 2) + '\n')
+console.log('AGY_PROBE_PLAN ' + JSON.stringify({ provider: 'agy', model: model.id, reasoningEffort: 'medium', seeds, ...conditions }))
+
+const source = new Context()
+let stopped: string | null = null
+let sequence = 0, tail = Promise.resolve(), traceWrites = Promise.resolve()
+const trace = (event: object) => {
+  traceWrites = traceWrites.then(() => appendFile(join(root, 'provider-calls.jsonl'), JSON.stringify(event) + '\n'))
+}
+class SerialInstalledAgyAdapter extends LlmAdapter {
+  override providerInfo(provider: string) { return source.llm.listProviders().find(row => row.id === provider)! }
+  override listModels(provider: string) { return source.llm.listModels(provider) }
+  override resolveModel(provider: string, id: string, signal?: AbortSignal) { return source.llm.resolveModelInfo(provider, id, signal) }
+  override providerRetryPolicy() { return resolveRetryPolicy({ mode: 'normal', maxRetries: 0 }, 'experiment') }
+  override async *stream(options: GenerateOptions): AsyncIterable<StreamChunk> {
+    assert.equal(options.provider, 'agy'); assert.equal(options.model, model.id)
+    assert.equal(options.reasoningEffort, 'medium')
+    const previous = tail
+    let release!: () => void
+    tail = new Promise<void>(done => { release = done })
+    await previous
+    try {
+      options.signal?.throwIfAborted()
+      if (stopped) throw new Error('AGY experiment stopped before queued provider dispatch')
+      const call = ++sequence
+      const prepared = await source.llm.prepareCall({ provider: 'agy', model: model.id,
+        reasoningEffort: ReasoningEffortId('medium'), maxTokens: options.maxTokens }, options.signal)
+      assert.equal(prepared.config.provider, 'agy'); assert.equal(prepared.config.model, model.id)
+      assert.equal(prepared.config.reasoningEffort, 'medium')
+      trace({ kind: 'dispatch', call, at: Date.now(), provider: 'agy', model: model.id,
+        reasoningEffort: prepared.config.reasoningEffort, maxTokens: prepared.config.maxTokens })
+      for await (const chunk of prepared.stream(options)) {
+        if (chunk.type === 'finish') {
+          const failure = chunk.reason.kind === 'error' ? chunk.reason.failure : null
+          if (failure && ([401, 403, 429].includes(failure.status ?? 0) || /AUTH|RATE_LIMIT|QUOTA|PERMISSION/.test(failure.code))) {
+            stopped = 'provider-auth-access-or-quota-rejected'
+          }
+          trace({ kind: 'finish', call, at: Date.now(), reason: chunk.reason.kind,
+            ...(failure ? { code: failure.code, status: failure.status ?? null } : {}) })
+        }
+        yield chunk
+      }
+    } finally { release() }
+  }
+}
+
+const completed: Array<Awaited<ReturnType<typeof runShiftingEvidence>> & { directory: string }> = []
+try {
+  await source.plugin(LlmRuntime)
+  await source.plugin(plugin)
+  assert(source.llm.listProviders().some(row => row.id === 'agy'))
+  const info = await source.llm.resolveModelInfo('agy', model.id)
+  assert(info.reasoning?.efforts.some(row => row.id === 'medium'))
+  for (const seed of seeds) {
+    assert(isDeepStrictEqual(sourceHashes, await shiftingSourceHashes()), 'Source drift before seed')
+    const directory = join(root, `${model.id}-adaptive-seed-${seed}`)
+    const report = await runShiftingEvidence({ ...conditions, seed, model, mode: 'adaptive', directory, purpose: 'adaptive-probe' },
+      undefined, { provenance: { provider: 'agy', plugin: 'dsh-agy', profile: 'installed-desktop-plugin',
+        modelImport: 'installed-dsh-agy', mount: 'dsh-installed-plugin', model: model.id, reasoningEffort: 'medium' },
+      async liveProviderMount(ctx) { ctx.llm.registerAdapter(['agy'], new SerialInstalledAgyAdapter()) } })
+    completed.push({ ...report, directory })
+    if (report.failures.some(row => [401,403,429].includes(row.status ?? 0) || /AUTH|RATE_LIMIT|QUOTA|PERMISSION/.test(row.code))) stopped = 'provider-auth-access-or-quota-rejected'
+    if (report.cleanup !== 'released') stopped = 'cleanup-not-released'
+    await traceWrites
+    await writeFile(join(root, 'batch.json'), JSON.stringify({ ...plan, completed, stopped, actualProviderDispatches: sequence }, null, 2) + '\n')
+    console.log('AGY_PROBE_RUN ' + JSON.stringify({ seed, passed: report.passed, phase1: report.phase1Correct, phase2: report.phase2Correct,
+      calls: report.issuedModelCalls, providerDispatches: sequence, stop: report.stopReason, failures: report.failures,
+      cleanup: report.cleanup, completed: completed.length, planned: seeds.length, stopped }))
+    if (stopped) break
+  }
+} finally { await source.fiber.dispose(); await traceWrites }
+console.log('AGY_PROBE_DONE ' + JSON.stringify({ completed: completed.length, planned: seeds.length, stopped, actualProviderDispatches: sequence }))
+if (stopped) process.exitCode = 1

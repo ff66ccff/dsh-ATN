@@ -1,0 +1,18 @@
+{
+  "seed": 31,
+  "model": "step-5-preview-free",
+  "execution": "live-provider",
+  "interrupted": true,
+  "outcome": "unknown",
+  "reportMissing": true,
+  "cleanup": "unknown-after-process-termination",
+  "modelCallsObserved": 21,
+  "settledCallsObserved": 16,
+  "callsUnsettledAtLastPersistedEvent": 5,
+  "knownTokens": 70590,
+  "unknownUsageCalls": 5,
+  "errorCallsObserved": 3,
+  "stoppingReason": "provider-rate-limit-code-without-http-status",
+  "rawEventsSha256": "f83ea910fdcfc7d3d1c9a7a5a911e7dc96ec0265c73365e02351755cae5f24f6",
+  "replaced": false
+}

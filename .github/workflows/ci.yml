@@ -25,3 +25,20 @@ jobs:
         with:
           name: dsh-atn-${{ matrix.os }}
           path: .artifacts/*.tgz
+  sidebar-contract:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    env:
+      SIDEBAR_PACKAGE_DIR: ${{ runner.temp }}/atn-sidebar-provider/node_modules/dsh-better-sidebar
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      # Isolate the provider's legacy peers from the consumer's dependency graph.
+      - run: npm install --prefix "${{ runner.temp }}/atn-sidebar-provider" --ignore-scripts --legacy-peer-deps --package-lock=false --no-audit --no-fund --save=false dsh-better-sidebar@0.26.0
+      - run: npm run verify:sidebar

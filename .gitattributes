@@ -1,2 +1,8 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# These raw validation artifacts have SHA256 identities in the reports.
+# Preserve bytes on Windows checkouts as well as in Git blobs.
+docs/execution-evidence/residual/** -text
+docs/execution-evidence/free-model-20261015/** -text
+docs/execution-evidence/agy-model-20261015/** -text

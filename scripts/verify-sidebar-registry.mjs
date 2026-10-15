@@ -1,12 +1,10 @@
 /** Exercise ATN registration against the provider's actual shipped service implementation. */
 import { build } from 'esbuild'
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { writeFile, mkdir } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { spawn } from 'node:child_process'
-const directory = process.env.SIDEBAR_PACKAGE_DIR
-if (!directory) throw new Error('Set SIDEBAR_PACKAGE_DIR to an independently installed dsh-better-sidebar package')
-const manifest = JSON.parse(await readFile(resolve(directory, 'package.json'), 'utf8'))
-if (manifest.version !== '0.26.0') throw new Error('This published-source check is pinned to the reviewed 0.26.0 contract')
+import { verifiedSidebarPackage } from './sidebar-compatibility.mjs'
+const { directory, manifest } = await verifiedSidebarPackage()
 await mkdir('.artifacts/sidebar-registry', { recursive: true })
 const entry = resolve('.artifacts/sidebar-registry/entry.ts')
 const output = resolve('.artifacts/sidebar-registry/check.mjs')

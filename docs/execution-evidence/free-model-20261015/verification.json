@@ -1,0 +1,13 @@
+{
+  "sourceHashesUnchangedDuringExperiment": true,
+  "archivedDriverHashMatchesPlan": true,
+  "reportLinksChecked": 13,
+  "freeOnly": true,
+  "completed": 1,
+  "interrupted": 1,
+  "unstarted": 3,
+  "observableCalls": 44,
+  "liveRunnerExit": -1,
+  "testsRerun": false,
+  "reasonNoTestRerun": "Experiment execution and documentation only; no production source changes in this follow-up."
+}

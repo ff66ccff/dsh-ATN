@@ -71,8 +71,9 @@ export function topologyFeedbackMessage(
   events: readonly { type: string; data?: unknown }[],
   now: number = Date.now(),
 ): UserMessage | undefined {
-  const peers = collaborationPeers(record.nodes, nodeId, collaborationPeerLimit(record)).toSorted()
-  const previous = previousSnapshot(events, record.id, nodeId, collaborationPeerLimit(record))
+  const limit = collaborationPeerLimit(record)
+  const peers = collaborationPeers(record.nodes, nodeId, limit).toSorted()
+  const previous = previousSnapshot(events, record.id, nodeId, limit)
   const telemetry = peers.map(peerId => summarizeLocalFeedback(record, peerId, { observerId: nodeId, now }))
   const quality = peers.map(peerId => ({ peerId,
     requester: summarizeRequesterFeedback(record, peerId, { observerId: nodeId }),

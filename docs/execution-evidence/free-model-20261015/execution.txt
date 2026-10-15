@@ -1,0 +1,2 @@
+FREE_PROBE_PLAN {"model":"step-5-preview-free","planned":5,"agents":8,"chainLength":2,"perNodeSteps":12,"maxCalls":96,"maxOutputTokens":4096,"observedTokenLimit":400000,"timeoutMs":120000,"autoAdvance":false}
+FREE_PROBE_RUN {"seed":17,"passed":false,"stopReason":"timeout","calls":23,"cleanup":"released","failures":[{"code":"RATE_LIMIT","status":null}],"recorded":1,"planned":5,"stopped":null}

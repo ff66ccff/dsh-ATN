@@ -2,7 +2,7 @@
 import { Context } from '@deepseek-ai/cordis'
 import AgentRegistry, { type Agent } from '@deepseek-ai/dsh-agent'
 import AgentLoop from '@deepseek-ai/dsh-agent-loop'
-import LlmRuntime, { createUserMessage, type LlmAdapter } from '@deepseek-ai/dsh-llm'
+import LlmRuntime, { createUserMessage, ReasoningEffortId, type LlmAdapter } from '@deepseek-ai/dsh-llm'
 import SessionStore, { SessionId } from '@deepseek-ai/dsh-session'
 import JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-jsonl'
 import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
@@ -40,8 +40,13 @@ import { shiftingMechanisms } from './simplification-arms.ts'
 
 export const SHIFTING_MODES = [...SHIFTING_ARMS, 'minimal'] as const
 export type ShiftingMode = typeof SHIFTING_MODES[number]
+/** Separately authorized installed-provider route; no invented OpenCode tariff. */
+export interface InstalledAgyModel {
+  id: 'gemini-3.8-flash-tiered'; name: string; api: 'agy'; contextWindow?: number
+  catalogFree: false; referenceCostPerMillion: null
+}
 export interface ShiftingOptions {
-  model: PilotModel; mode: ShiftingMode; directory: string; agents: number; seed: number
+  model: PilotModel | InstalledAgyModel; mode: ShiftingMode; directory: string; agents: number; seed: number
   perNodeSteps: number; maxCalls: number; maxOutputTokens: number; timeoutMs: number; observedTokenLimit: number
   chainLength?: number; topologyBinding?: boolean; autoAdvance?: boolean; purpose?: 'comparison' | 'adaptive-probe'
 }
@@ -53,13 +58,24 @@ export interface ShiftingLiveProviderProvenance {
 }
 export interface ShiftingLiveProviderMount {
   liveProviderMount(ctx: Context): Promise<void>
-  provenance: ShiftingLiveProviderProvenance
+  provenance: ShiftingLiveProviderProvenance | {
+    provider: 'agy'; plugin: 'dsh-agy'; profile: string
+    modelImport: 'installed-dsh-agy'; mount: 'dsh-installed-plugin'
+    model: 'gemini-3.8-flash-tiered'; reasoningEffort: 'medium'
+  }
 }
 
 function publicProviderProvenance(testSeam: { adapter: LlmAdapter } | undefined, liveProvider: ShiftingLiveProviderMount | undefined) {
   if (testSeam && liveProvider) throw new Error('Scripted and live provider mounts are mutually exclusive')
   if (liveProvider) {
     const supplied = liveProvider.provenance
+    if (supplied?.mount === 'dsh-installed-plugin') {
+      if (typeof liveProvider.liveProviderMount !== 'function' || supplied.provider !== 'agy' || supplied.plugin !== 'dsh-agy' ||
+        supplied.modelImport !== 'installed-dsh-agy' || supplied.model !== 'gemini-3.8-flash-tiered' || supplied.reasoningEffort !== 'medium' ||
+        typeof supplied.profile !== 'string' || !supplied.profile.trim()) throw new Error('Invalid explicitly authorized installed agy route')
+      return { provider: supplied.provider, plugin: supplied.plugin, profile: supplied.profile,
+        modelImport: supplied.modelImport, mount: supplied.mount, model: supplied.model, reasoningEffort: supplied.reasoningEffort }
+    }
     if (typeof liveProvider.liveProviderMount !== 'function' || !supplied || supplied.provider !== OpenCodeGo.PROVIDER_ID ||
       supplied.plugin !== 'dsh-opencode-go' || supplied.mount !== 'dsh-profile-import' || supplied.modelImport !== 'dsh-desktop-profile-llm' ||
       typeof supplied.profile !== 'string' || supplied.profile.trim().length === 0 ||
@@ -91,8 +107,14 @@ export async function shiftingSourceHashes() {
     [file, createHash('sha256').update(await readFile(new URL(file, import.meta.url))).digest('hex')])))
 }
 
-function validateOptions(options: ShiftingOptions) {
-  assertAllowedPilotModel(options.model)
+function validateOptions(options: ShiftingOptions, installedAgy: boolean) {
+  if (installedAgy) {
+    if (options.model.id !== 'gemini-3.8-flash-tiered' || options.model.api !== 'agy' || options.model.catalogFree !== false ||
+      options.model.referenceCostPerMillion !== null) throw new Error('Installed agy requires the exact authorized Gemini route and unknown tariff')
+  } else {
+    if (options.model.referenceCostPerMillion === null) throw new Error('Gemini requires an explicit installed agy mount')
+    assertAllowedPilotModel(options.model)
+  }
   if (!SHIFTING_MODES.includes(options.mode)) throw new Error('Unknown shifting-evidence arm')
   if (options.purpose === 'adaptive-probe' && options.mode !== 'adaptive') throw new Error('Adaptive probe requires the adaptive arm')
   createShiftingEvidenceTask(options.agents, options.seed, options.chainLength, options.topologyBinding)
@@ -109,7 +131,9 @@ function validateOptions(options: ShiftingOptions) {
 
 export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: { adapter: LlmAdapter }, liveProvider?: ShiftingLiveProviderMount) {
   const providerProvenance = publicProviderProvenance(testSeam, liveProvider)
-  validateOptions(options)
+  const installedAgy = providerProvenance.provider === 'agy'
+  const provider = providerProvenance.provider
+  validateOptions(options, installedAgy)
   const hashes = await shiftingSourceHashes()
   const mechanisms = { ...shiftingMechanisms(options.mode), sharedBoard: false }
   // A fresh same-bound real-runtime reference is required before provider installation.
@@ -139,7 +163,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
   let phaseRequested: string | undefined
   let ready!: () => void
   const provisioned = new Promise<void>(done => { ready = done })
-  const budget = createExperimentBudget({ provider: OpenCodeGo.PROVIDER_ID, model: options.model.id,
+  const budget = createExperimentBudget({ provider, model: options.model.id,
     maxCalls: options.maxCalls, maxOutputTokens: options.maxOutputTokens, observedTokenLimit: options.observedTokenLimit })
   const attempts: Array<{ phase: number; at: number; answer: string }> = []
   const hostControlInputs = { messages: 0, bytes: 0 }
@@ -227,13 +251,16 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     else if (liveProvider) await liveProvider.liveProviderMount(ctx)
     else await ctx.plugin(OpenCodeGo, { apiKeyEnv: 'OPENCODE_API_KEY', usageDisplay: 'off', streamIdleTimeoutMs: Math.min(options.timeoutMs, 60_000),
       modelLimits: { [options.model.id]: { maxTokens: options.maxOutputTokens } } })
-    telemetry = await installTelemetry(ctx, { directory, runId, prices: {
+    const cost = options.model.referenceCostPerMillion
+    telemetry = await installTelemetry(ctx, { directory, runId, prices: cost ? {
       id: 'live-catalog-reference-not-subscription-bill', currency: 'USD', reasoningIncludedInOutput: true,
-      routes: [{ provider: OpenCodeGo.PROVIDER_ID, model: options.model.id,
-        inputPerMillion: options.model.referenceCostPerMillion.input, outputPerMillion: options.model.referenceCostPerMillion.output,
-        cacheReadPerMillion: options.model.referenceCostPerMillion.cacheRead, cacheWritePerMillion: options.model.referenceCostPerMillion.cacheWrite }],
-    } })
+      routes: [{ provider, model: options.model.id,
+        inputPerMillion: cost.input, outputPerMillion: cost.output,
+        cacheReadPerMillion: cost.cacheRead, cacheWritePerMillion: cost.cacheWrite }],
+    } : undefined })
     installExperimentOutputCap(ctx, options.maxOutputTokens)
+    if (installedAgy) ctx.on('agent/request', async (_payload, next) => ({ ...(await next()),
+      reasoningEffort: ReasoningEffortId('medium') }), { global: true, prepend: true })
     ctx.on('agent/pre-step', async (payload, next) => {
       await provisioned
       if (scenario.phase === 1 && network) {
@@ -246,13 +273,20 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     }, { global: true, prepend: true })
     ctx.on('llm/stream', (request, next) => (async function* () {
       await provisioned
+      if (installedAgy && request.reasoningEffort !== 'medium') {
+        cancel('reasoning-effort-mismatch'); throw new Error('Installed agy requires medium effort on every node')
+      }
       const usage = telemetry!.snapshot().totals.tokens.totalTokens
       const admission = budget.admit(request, { ended, knownTotalTokens: usage.known, unknownUsageCalls: usage.unknownCalls })
       if (!admission.allowed) { if (admission.reason !== 'ended') cancel(admission.reason); throw new Error(`shifting-${admission.reason}`) }
       if (options.autoAdvance && scenario.phase === 1 && admission.issued >= Math.floor(options.maxCalls / 2)) phaseRequested ??= 'half-call-budget'
       for await (const chunk of next()) {
-        if (chunk.type === 'finish' && chunk.reason.kind === 'error') failures.push({ code: chunk.reason.failure.code,
-          status: chunk.reason.failure.status ?? null })
+        if (chunk.type === 'finish' && chunk.reason.kind === 'error') {
+          const failure = chunk.reason.failure
+          failures.push({ code: failure.code, status: failure.status ?? null })
+          if (installedAgy && ([401, 403, 429].includes(failure.status ?? 0) ||
+            /^(?:AUTH|RATE_LIMIT|QUOTA_EXCEEDED|PERMISSION_DENIED)$/.test(failure.code))) cancel('provider-auth-access-or-quota-rejected')
+        }
         yield chunk
       }
     })(), { global: true, prepend: true })
@@ -288,7 +322,8 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
     await ctx.plugin(Storage); await ctx.plugin(JsonStorageBackend, { root: join(directory, 'storage') }); await ctx.plugin(StorageDomain, { backend: 'json' })
     await ctx.plugin(AtnRuntimePlugin, shiftingConfig(options.agents, options.perNodeSteps, options.timeoutMs, options.mode === 'fixed-wide' ? 4 : 2)); await ctx.plugin(AtnTools)
     const handle = await ctx.agents.create({ sessionId: SessionId(`shifting-${runId}`),
-      agentOptions: { provider: OpenCodeGo.PROVIDER_ID, model: options.model.id, maxTokens: options.maxOutputTokens }, meta: { cwd: directory } })
+      agentOptions: { provider, model: options.model.id, maxTokens: options.maxOutputTokens,
+        ...(installedAgy ? { reasoningEffort: ReasoningEffortId('medium') } : {}) }, meta: { cwd: directory } })
     entry = handle.agent
     network = await provisionShifting(ctx, entry, scenario, options)
     const fixedPeers = options.mode === 'fixed' || options.mode === 'fixed-wide' ? network.initialPeerIds : undefined

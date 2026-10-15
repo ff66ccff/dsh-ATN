@@ -1,0 +1,360 @@
+{
+  "date": "2026-10-15",
+  "provider": "agy",
+  "plugin": "dsh-agy",
+  "pluginVersion": "0.4.4",
+  "model": "gemini-3.8-flash-tiered",
+  "reasoningEffort": "medium",
+  "mediumBudgetOverride": null,
+  "planned": 5,
+  "completed": 5,
+  "passed": 0,
+  "stopped": null,
+  "runnerCalls": 93,
+  "providerDispatches": 76,
+  "providerFinishesObserved": 76,
+  "knownTokens": 0,
+  "unknownUsageCalls": 93,
+  "knownInputTokens": 356776,
+  "knownOutputTokens": 2540,
+  "knownCacheReadTokens": 0,
+  "totalTokenUsageAvailable": false,
+  "maxConcurrentProviderStreams": 1,
+  "conditions": {
+    "agents": 8,
+    "chainLength": 2,
+    "perNodeSteps": 12,
+    "maxCalls": 96,
+    "maxOutputTokens": 4096,
+    "observedTokenLimit": 400000,
+    "timeoutMs": 120000,
+    "autoAdvance": false
+  },
+  "rows": [
+    {
+      "seed": 17,
+      "passed": false,
+      "phase1Submitted": false,
+      "phase1Correct": false,
+      "phase2Submitted": false,
+      "phase2Correct": false,
+      "stopReason": "timeout",
+      "cleanup": "released",
+      "elapsedMs": 120080,
+      "runnerCalls": 23,
+      "providerDispatches": 19,
+      "knownTokens": 0,
+      "unknownUsageCalls": 23,
+      "usageByField": {
+        "inputTokens": {
+          "known": 92022,
+          "unknownCalls": 5
+        },
+        "outputTokens": {
+          "known": 479,
+          "unknownCalls": 5
+        },
+        "cacheReadTokens": {
+          "known": 0,
+          "unknownCalls": 5
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 23
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 23
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 23
+        }
+      },
+      "tools": {
+        "started": 18,
+        "errors": 0
+      },
+      "nodes": 8,
+      "openTasks": 8,
+      "queuedMail": 0,
+      "rewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "phase": 1,
+      "failures": [],
+      "interpretation": "Actual adaptive probe only; no comparison arms."
+    },
+    {
+      "seed": 31,
+      "passed": false,
+      "phase1Submitted": false,
+      "phase1Correct": false,
+      "phase2Submitted": false,
+      "phase2Correct": false,
+      "stopReason": "timeout",
+      "cleanup": "released",
+      "elapsedMs": 120057,
+      "runnerCalls": 17,
+      "providerDispatches": 14,
+      "knownTokens": 0,
+      "unknownUsageCalls": 17,
+      "usageByField": {
+        "inputTokens": {
+          "known": 64212,
+          "unknownCalls": 4
+        },
+        "outputTokens": {
+          "known": 536,
+          "unknownCalls": 4
+        },
+        "cacheReadTokens": {
+          "known": 0,
+          "unknownCalls": 4
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        }
+      },
+      "tools": {
+        "started": 16,
+        "errors": 0
+      },
+      "nodes": 8,
+      "openTasks": 8,
+      "queuedMail": 0,
+      "rewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "phase": 1,
+      "failures": [],
+      "interpretation": "Actual adaptive probe only; no comparison arms."
+    },
+    {
+      "seed": 45,
+      "passed": false,
+      "phase1Submitted": false,
+      "phase1Correct": false,
+      "phase2Submitted": false,
+      "phase2Correct": false,
+      "stopReason": "timeout",
+      "cleanup": "released",
+      "elapsedMs": 120036,
+      "runnerCalls": 18,
+      "providerDispatches": 15,
+      "knownTokens": 0,
+      "unknownUsageCalls": 18,
+      "usageByField": {
+        "inputTokens": {
+          "known": 69520,
+          "unknownCalls": 4
+        },
+        "outputTokens": {
+          "known": 497,
+          "unknownCalls": 4
+        },
+        "cacheReadTokens": {
+          "known": 0,
+          "unknownCalls": 4
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        }
+      },
+      "tools": {
+        "started": 15,
+        "errors": 0
+      },
+      "nodes": 8,
+      "openTasks": 8,
+      "queuedMail": 0,
+      "rewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "phase": 1,
+      "failures": [],
+      "interpretation": "Actual adaptive probe only; no comparison arms."
+    },
+    {
+      "seed": 59,
+      "passed": false,
+      "phase1Submitted": false,
+      "phase1Correct": false,
+      "phase2Submitted": false,
+      "phase2Correct": false,
+      "stopReason": "timeout",
+      "cleanup": "released",
+      "elapsedMs": 120051,
+      "runnerCalls": 18,
+      "providerDispatches": 14,
+      "knownTokens": 0,
+      "unknownUsageCalls": 18,
+      "usageByField": {
+        "inputTokens": {
+          "known": 65330,
+          "unknownCalls": 5
+        },
+        "outputTokens": {
+          "known": 472,
+          "unknownCalls": 5
+        },
+        "cacheReadTokens": {
+          "known": 0,
+          "unknownCalls": 5
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 18
+        }
+      },
+      "tools": {
+        "started": 16,
+        "errors": 0
+      },
+      "nodes": 8,
+      "openTasks": 8,
+      "queuedMail": 0,
+      "rewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "phase": 1,
+      "failures": [],
+      "interpretation": "Actual adaptive probe only; no comparison arms."
+    },
+    {
+      "seed": 73,
+      "passed": false,
+      "phase1Submitted": false,
+      "phase1Correct": false,
+      "phase2Submitted": false,
+      "phase2Correct": false,
+      "stopReason": "timeout",
+      "cleanup": "released",
+      "elapsedMs": 120041,
+      "runnerCalls": 17,
+      "providerDispatches": 14,
+      "knownTokens": 0,
+      "unknownUsageCalls": 17,
+      "usageByField": {
+        "inputTokens": {
+          "known": 65692,
+          "unknownCalls": 4
+        },
+        "outputTokens": {
+          "known": 556,
+          "unknownCalls": 4
+        },
+        "cacheReadTokens": {
+          "known": 0,
+          "unknownCalls": 4
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 17
+        }
+      },
+      "tools": {
+        "started": 16,
+        "errors": 0
+      },
+      "nodes": 8,
+      "openTasks": 8,
+      "queuedMail": 0,
+      "rewires": 0,
+      "feedback": {
+        "accepted": 0,
+        "rejected": 0,
+        "needsMore": 0
+      },
+      "phase": 1,
+      "failures": [],
+      "interpretation": "Actual adaptive probe only; no comparison arms."
+    }
+  ],
+  "archive": [
+    {
+      "seed": 17,
+      "reportSha256": "1c37b3e85c3cba0db61145530e3315c1b65b3650d3e40613eb61440fbd7fdfa6",
+      "eventsSha256": "44e7fa347b1a88dcfca2acb31c945f97825228e17e3321339e34c38068743144"
+    },
+    {
+      "seed": 31,
+      "reportSha256": "347994323447d27d3b3568ba65ee89d8a5cc30bd48d4d2c069e72578e97a087c",
+      "eventsSha256": "ed6222b08e6dc767df66c14573c8fd8a6454fb2228483db6dd51b9ebc73c50bd"
+    },
+    {
+      "seed": 45,
+      "reportSha256": "fea7efee28b8b5aa2a9296d192969a6413e5a66a6d81632df84c82baa8ca0554",
+      "eventsSha256": "7e9cb6b62bb6dfaad633df9bc4d4668fa1233bfdadab0f01509585d1ec136640"
+    },
+    {
+      "seed": 59,
+      "reportSha256": "efb9962c9f6da33b46f0b8e2b15e6809dcc3072c5190d0fe92db4d64db7bd586",
+      "eventsSha256": "b0a5512096fe88e900758f298d3d328fdbe8be18b51ff031f6b52d06d5df17b9"
+    },
+    {
+      "seed": 73,
+      "reportSha256": "bc573f151e0c88f98c03f4f0461fdc31114f8cbdda665d2730dc5aa31f1fda2b",
+      "eventsSha256": "e398be0ea23bb7f1355b2b0ffd921730de6557ad320a6efa08299137cbcb3cea"
+    }
+  ],
+  "pluginSourceHashes": {
+    "index.mjs": "b06efd5660791708ef2ecde7c69f582a3dde5b73e5c93698247fb7aa07c44573",
+    "plugin-common-CKTYXxSc.mjs": "7f6837abd8ac127720876bc3d118bfbd5860ca7a47d2f20d03209fefb4b2b3b9",
+    "models-CjB0rXtI.mjs": "625e5c7cbf5f484e04ae7a112119e6fd99887329ed850a61866a5947a70706e1",
+    "translate-BR1kuCaz.mjs": "c693540cf76e59207e0347f996ea3686f75c7ec5e22dd39276985a40c012d8b1",
+    "catalog-BRHHLLd5.mjs": "144de8ccf2dccaf55f13d8673d9e5603b44addeda2d8571a89b81799ab0e51a7"
+  },
+  "directHttpInference": false,
+  "tariff": "unknown",
+  "actualSubscriptionUsage": "not-measured",
+  "comparisonWithStep5IsControlled": false,
+  "comparisonArmsExecuted": false,
+  "causalClaim": false
+}

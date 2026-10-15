@@ -1,0 +1,10 @@
+$ node scripts/verify-sidebar-contract.mjs
+SIDEBAR_CONTRACT_REJECTED: consumer TabDescriptor differs from the published API
+[96m.scratch/sidebar-contract-check.ts[0m:[93m4[0m:[93m38[0m - [91merror[0m[90m TS2344: [0mType 'keyof import("D:/dsh-ATN/src/client/better-sidebar-contract", { with: { "resolution-mode": "import" } }).TabDescriptor' does not satisfy the constraint 'keyof import("D:/dsh-ATN/.scratch/residual-sidebar/node_modules/dsh-better-sidebar/lib/types/client/service", { with: { "resolution-mode": "import" } }).TabDescriptor'.
+  Type '"singleDrifted"' is not assignable to type 'keyof TabDescriptor'.
+
+[7m4[0m type SupportedKeys = Pick<Published, keyof Projected>
+[7m [0m [91m                                     ~~~~~~~~~~~~~~~[0m
+
+
+EXIT_CODE=1

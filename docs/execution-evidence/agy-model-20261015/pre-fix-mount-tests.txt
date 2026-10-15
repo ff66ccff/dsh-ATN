@@ -1,0 +1,49 @@
+✔ PROFILE-MOUNT-01: imported live mount and scripted seam retain distinct provenance/execution and identical node capabilities/ACL (3628.6583ms)
+✔ PROFILE-MOUNT-02: scripted seam and imported live mount are mutually exclusive before any provisioning or filesystem work (2.3446ms)
+✖ AGY-MOUNT: the installed Gemini route reaches every node with medium effort and unknown tariff (1.5455ms)
+✖ AGY-MOUNT: an unmounted Gemini route is rejected before credentials or inference (4.2548ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 2
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4945.6148
+
+✖ failing tests:
+
+test at tests\integration\shifting-evidence-provider-mount.test.ts:1:5861
+✖ AGY-MOUNT: the installed Gemini route reaches every node with medium effort and unknown tariff (1.5455ms)
+  Error: Invalid public profile-import provider provenance
+      at publicProviderProvenance (D:\dsh-ATN\experiments\shifting-evidence-run.ts:67:13)
+      at runShiftingEvidence (D:\dsh-ATN\experiments\shifting-evidence-run.ts:111:30)
+      at TestContext.<anonymous> (D:\dsh-ATN\tests\integration\shifting-evidence-provider-mount.test.ts:121:26)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at tests\integration\shifting-evidence-provider-mount.test.ts:1:7127
+✖ AGY-MOUNT: an unmounted Gemini route is rejected before credentials or inference (4.2548ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /explicit.*installed.*agy|authorized.*agy/i. Input:
+  
+  'Error: Model is outside the authorized free-or-DeepSeek-V4.1-Flash execution scope: gemini-3.8-flash-tiered'
+  
+      at async TestContext.<anonymous> (D:\dsh-ATN\tests\integration\shifting-evidence-provider-mount.test.ts:143:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: Model is outside the authorized free-or-DeepSeek-V4.1-Flash execution scope: gemini-3.8-flash-tiered
+        at assertAllowedPilotModel (D:\dsh-ATN\experiments\provider.ts:22:11)
+        at validateOptions (D:\dsh-ATN\experiments\shifting-evidence-run.ts:95:3)
+        at runShiftingEvidence (D:\dsh-ATN\experiments\shifting-evidence-run.ts:112:3)
+        at <anonymous> (D:\dsh-ATN\tests\integration\shifting-evidence-provider-mount.test.ts:143:32)
+        at waitForActual (node:assert:632:21)
+        at strict.rejects (node:assert:769:31)
+        at TestContext.<anonymous> (D:\dsh-ATN\tests\integration\shifting-evidence-provider-mount.test.ts:143:18)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: /explicit.*installed.*agy|authorized.*agy/i,
+    operator: 'rejects',
+    diff: 'simple'
+  }

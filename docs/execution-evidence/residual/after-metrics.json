@@ -1,0 +1,71 @@
+{
+  "clientBytes": 479789,
+  "clientSha256": "249aca803c6e0b5db6851b29471c32499c522f36e7a95b342d4a14c543520b9d",
+  "context": {
+    "systemPromptBytes": 1161,
+    "toolSchemaBytes": 4749,
+    "fixedContextBytes": 5910
+  },
+  "sources": {
+    "experiments/reference-policy.ts": {
+      "beforeRawSha256": "54c63dd64e55a8020efd2b1522c40a0bced187c647290c7ac941c62ada8da4ac",
+      "afterRawSha256": "f5b9403c4a40ad9cf74c5411e7c90d724849d57bfc6cc3e7f2363cf65e9b76f3",
+      "equalBudgetSourceHash": "f5b9403c4a40ad9cf74c5411e7c90d724849d57bfc6cc3e7f2363cf65e9b76f3",
+      "commentsChangeSourceHash": true,
+      "emittedJsSha256": "526a32acdbbc961b20530f6bdb1f80c01026ab2264c4a2205bb2375bc6853013",
+      "emittedJsUnchanged": true,
+      "calls": [
+        [
+          "view.nodes",
+          "view.node.id"
+        ],
+        [
+          "view.nodes",
+          "path[path.length - 1]!"
+        ],
+        [
+          "view.nodes",
+          "view.node.id"
+        ],
+        [
+          "view.nodes",
+          "view.node.id"
+        ],
+        [
+          "view.nodes",
+          "view.node.id"
+        ],
+        [
+          "view.nodes",
+          "view.node.id"
+        ]
+      ],
+      "callsUnchanged": true,
+      "archivedRawSha256": "54c63dd64e55a8020efd2b1522c40a0bced187c647290c7ac941c62ada8da4ac",
+      "archivedMatchesBefore": true,
+      "archivedMatchesAfter": false
+    },
+    "experiments/topology-host.ts": {
+      "beforeRawSha256": "63ac9cebcc9f92c03c73071e9296dea4b2e85227dcfbc7bf30cba347ea916821",
+      "afterRawSha256": "8b800533248d0e18894360b1548b01a5fa3e234aa85eb7224b6b105d7d0da190",
+      "equalBudgetSourceHash": "8b800533248d0e18894360b1548b01a5fa3e234aa85eb7224b6b105d7d0da190",
+      "commentsChangeSourceHash": true,
+      "emittedJsSha256": "799fecb9c82f36aa3eb58ee3460a62e67febb7b735bafb470355532a6780676e",
+      "emittedJsUnchanged": true,
+      "calls": [
+        [
+          "record.nodes",
+          "id"
+        ],
+        [
+          "record.nodes",
+          "node.id"
+        ]
+      ],
+      "callsUnchanged": true,
+      "archivedRawSha256": "63ac9cebcc9f92c03c73071e9296dea4b2e85227dcfbc7bf30cba347ea916821",
+      "archivedMatchesBefore": true,
+      "archivedMatchesAfter": false
+    }
+  }
+}

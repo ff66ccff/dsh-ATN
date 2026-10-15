@@ -1,0 +1,12 @@
+{
+  "source": "actual installed dsh-agy request translator",
+  "upstreamCallIssued": false,
+  "model": "gemini-3.8-flash-tiered",
+  "generationConfig": {
+    "maxOutputTokens": 4096,
+    "thinkingConfig": {
+      "thinkingLevel": "medium",
+      "includeThoughts": true
+    }
+  }
+}

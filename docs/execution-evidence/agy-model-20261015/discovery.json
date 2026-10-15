@@ -1,0 +1,30 @@
+{
+  "plugin": "dsh-agy",
+  "pluginVersion": "0.4.4",
+  "provider": "agy",
+  "model": "gemini-3.8-flash-tiered",
+  "name": "Gemini 3.8 Flash",
+  "reasoning": {
+    "efforts": [
+      {
+        "id": "low",
+        "name": "Low"
+      },
+      {
+        "id": "medium",
+        "name": "Medium"
+      },
+      {
+        "id": "high",
+        "name": "High"
+      }
+    ]
+  },
+  "requestedEffort": "medium",
+  "context": {
+    "contextWindow": 1048576
+  },
+  "defaultMaxTokens": 65536,
+  "catalogSource": "installed plugin metadata; not proof of upstream inference",
+  "modelCalls": 0
+}

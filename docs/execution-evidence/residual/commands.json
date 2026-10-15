@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-15",
+  "platform": "win32",
+  "node": "v24.19.0",
+  "baselineRevision": "334673ada126d5da91eab5a465659091d9cf7b88",
+  "commands": [
+    {
+      "command": "npm test",
+      "log": "test.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "log": "typecheck.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "log": "build.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run pack:tarball",
+      "log": "pack-tarball.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run smoke:profile",
+      "log": "smoke-profile.txt",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:sidebar",
+      "log": "sidebar-0.26.0.txt",
+      "exitCode": 0
+    }
+  ],
+  "runtimeTests": 551,
+  "uiTests": 14,
+  "failures": 0,
+  "skipped": 0,
+  "actualModelCalls": 0,
+  "hostedGithubActionsExecuted": false,
+  "ubuntuExecutedLocally": false,
+  "optionalPrecisionItem45": "not-implemented",
+  "archivedDesignHashesRewritten": false
+}

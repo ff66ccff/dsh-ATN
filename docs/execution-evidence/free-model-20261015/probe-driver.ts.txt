@@ -1,0 +1,62 @@
+import assert from 'node:assert/strict'
+import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { resolve, join } from 'node:path'
+import { isDeepStrictEqual } from 'node:util'
+import { createHash } from 'node:crypto'
+import { discoverPilotModels } from '../experiments/provider.ts'
+import { runShiftingEvidence, shiftingSourceHashes } from '../experiments/shifting-evidence-run.ts'
+import { runShiftingReference } from '../experiments/shifting-evidence-reference.ts'
+import { summarizeAdaptiveProbe } from '../experiments/shifting-evidence-protocol.ts'
+
+const root = resolve('.artifacts/free-model-validation/20261015/step5-probe')
+const modelId = 'step-5-preview-free'
+const seeds = [17, 31, 45, 59, 73]
+const conditions = { agents: 8, chainLength: 2, perNodeSteps: 12, maxCalls: 96,
+  maxOutputTokens: 4096, observedTokenLimit: 400000, timeoutMs: 120000, autoAdvance: false }
+process.env.DSH_HOME ??= resolve('.scratch/pilot-harness-home')
+await mkdir(root)
+const sourceHashes = await shiftingSourceHashes()
+const catalog = await discoverPilotModels()
+const model = catalog.models.find(row => row.id === modelId)
+assert(model?.catalogFree && Object.values(model.referenceCostPerMillion).every(rate => rate === 0), 'Only a live-catalog zero-price model is authorized')
+await writeFile(join(root, 'catalog.json'), JSON.stringify(catalog, null, 2) + '\n')
+const references = []
+for (const seed of seeds) {
+  const reference = await runShiftingReference({ agents: conditions.agents, seed, chainLength: conditions.chainLength,
+    steps: conditions.perNodeSteps, maxCalls: conditions.maxCalls, timeoutMs: conditions.timeoutMs })
+  references.push({ seed, reference })
+  assert(reference.passed && reference.issuedModelCalls === 0, 'Current same-budget reference must pass before inference')
+}
+await writeFile(join(root, 'references.json'), JSON.stringify(references, null, 2) + '\n')
+const plan = { createdAt: new Date().toISOString(), purpose: 'adaptive-probe', execution: 'live-provider',
+  provider: 'dsh-opencode-go', providerVersion: '0.1.20', harnessVersion: '0.2.1-alpha.2',
+  model, seeds, conditions, sourceHashes, planned: seeds.length,
+  credentialSource: 'current-user DPAPI via process-only OPENCODE_API_KEY',
+  providerMount: 'ctx.plugin(dsh-opencode-go)', directHttpInference: false,
+  driverSha256: createHash('sha256').update(await readFile(new URL(import.meta.url))).digest('hex'),
+  failurePolicy: 'Retain all attempts; do not replace failed seeds; stop on 401/403/429, failed cleanup or source drift.',
+  causalClaim: false }
+await writeFile(join(root, 'plan.json'), JSON.stringify(plan, null, 2) + '\n')
+console.log('FREE_PROBE_PLAN ' + JSON.stringify({ model: model.id, planned: seeds.length, ...conditions }))
+const completed: Array<Awaited<ReturnType<typeof runShiftingEvidence>> & { directory: string }> = []
+let stopped: string | null = null
+for (const seed of seeds) {
+  assert(isDeepStrictEqual(sourceHashes, await shiftingSourceHashes()), 'Source changed during experiment')
+  const freshCatalog = await discoverPilotModels()
+  const fresh = freshCatalog.models.find(row => row.id === modelId)
+  assert(fresh?.catalogFree && Object.values(fresh.referenceCostPerMillion).every(rate => rate === 0), 'Free pricing must still be live before each run')
+  const directory = join(root, `${modelId}-adaptive-seed-${seed}`)
+  await writeFile(join(root, `catalog-seed-${seed}.json`), JSON.stringify(freshCatalog, null, 2) + '\n')
+  const report = await runShiftingEvidence({ ...conditions, seed, model: fresh, mode: 'adaptive', directory, purpose: 'adaptive-probe' })
+  completed.push({ ...report, directory })
+  if (report.failures.some(row => [401, 403, 429].includes(row.status ?? 0))) stopped = 'provider-auth-access-or-quota-rejected'
+  if (report.cleanup !== 'released') stopped = 'cleanup-not-released'
+  await writeFile(join(root, 'batch.json'), JSON.stringify({ ...plan, completed, stopped,
+    summary: summarizeAdaptiveProbe(completed), causalClaim: false }, null, 2) + '\n')
+  console.log('FREE_PROBE_RUN ' + JSON.stringify({ seed, passed: report.passed, stopReason: report.stopReason,
+    calls: report.issuedModelCalls, cleanup: report.cleanup, failures: report.failures,
+    recorded: completed.length, planned: seeds.length, stopped }))
+  if (stopped) break
+}
+console.log('FREE_PROBE_DONE ' + JSON.stringify({ root, completed: completed.length, planned: seeds.length, stopped }))
+if (stopped) process.exitCode = 1

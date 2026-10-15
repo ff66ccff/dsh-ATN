@@ -1,4 +1,11 @@
 /** Host-only experimental initialization; all model requests must remain gated until this returns. */
+/** Both collaborationPeers calls intentionally freeze the legacy ceiling at 4,
+ * rather than using collaborationPeerLimit. This host supports archived
+ * experiments whose raw sources are pinned by sourceHashes; changing behavior
+ * invalidates the registered design. At the default eight nodes the curve is
+ * also 4. Even this comment changes the raw hash: replay from the frozen checkout,
+ * never rewrite the archived hashes to admit a changed checkout.
+ */
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import { createUserMessage } from '@deepseek-ai/dsh-llm'

@@ -1,0 +1,12 @@
+{
+  "artifact": ".artifacts/dsh-atn-0.5.0.tgz",
+  "artifactBytes": 286012,
+  "artifactSha256": "10a0b5cd60579c9bc815c8af9e68aceeaef914e0149b5d52bb6063a51028c930",
+  "packagedManifestMatchesWorkspace": true,
+  "dshCliVersion": "0.2.1-alpha.2",
+  "smokeProfileExit": 0,
+  "reportLinksChecked": 29,
+  "diffCheckExit": 0,
+  "projectionRestored": true,
+  "published": false
+}

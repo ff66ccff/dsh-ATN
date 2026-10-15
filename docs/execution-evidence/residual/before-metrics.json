@@ -1,0 +1,19 @@
+{
+  "clientBytes": 479789,
+  "clientSha256": "249aca803c6e0b5db6851b29471c32499c522f36e7a95b342d4a14c543520b9d",
+  "context": {
+    "systemPromptBytes": 1161,
+    "toolSchemaBytes": 4749,
+    "fixedContextBytes": 5910
+  },
+  "sources": {
+    "experiments/reference-policy.ts": {
+      "rawSha256": "54c63dd64e55a8020efd2b1522c40a0bced187c647290c7ac941c62ada8da4ac",
+      "emittedJsSha256": "526a32acdbbc961b20530f6bdb1f80c01026ab2264c4a2205bb2375bc6853013"
+    },
+    "experiments/topology-host.ts": {
+      "rawSha256": "63ac9cebcc9f92c03c73071e9296dea4b2e85227dcfbc7bf30cba347ea916821",
+      "emittedJsSha256": "799fecb9c82f36aa3eb58ee3460a62e67febb7b735bafb470355532a6780676e"
+    }
+  }
+}

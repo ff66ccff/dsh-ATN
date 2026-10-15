@@ -38,6 +38,19 @@
 
 ---
 
+## 🔒 复核后续修复
+
+- [**残余验证缺口修复说明** (`RESIDUAL_VERIFICATION_GAPS_BRIEF.md`)](RESIDUAL_VERIFICATION_GAPS_BRIEF.md)
+  复核 A/B/C/D 后的收口工作，**不新增功能**：把已写好但无人执行的 better-sidebar 双检查接进 CI 门禁（缺一即红）、对齐 `^0.26.0` 声明与实际只验证 `0.26.0` 的不一致、为两处有意冻结旧出度的实验调用补说明。含一条**自我撤回**：复核中提出的「稀疏度声明在 N≤5 不成立」经重算不成立（`O(N log N)` 为正确的渐近界），本轮不实施。
+- [**残余验证缺口实施报告** (`RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md`)](RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)
+  精确可选 peer `0.26.0`、独立 Ubuntu/Windows 门禁、可选字段漂移与注册服务失败的阻断证据，以及注释改变原始实验哈希的实测与重放约束。GitHub 托管矩阵、完整 provider host/browser 联合验收仍未执行。
+- [**OpenCode Go 免费模型真实探针（2026-10-15）**](FREE_MODEL_PROBE_2026-10-15.md)
+  按后续授权使用订阅插件实际调用 Step 5 免费模型，记录 44 次模型调用；5 seed 计划中，1 次超时失败、1 次限流后中断、3 次未启动。原始输出、未知 usage 和驱动限流 guard 缺口完整留档，不宣称实验全部通过。
+- [**dsh-agy Gemini 3.8 Flash medium 真实实验（2026-10-15）**](AGY_GEMINI_MEDIUM_PROBE_2026-10-15.md)
+  指定模型和 medium 档位完成 5 seed 探针，76 次实际插件派发、0/5 两阶段通过；全部超时未提交，未记录到认证/限流错误。包含请求体档位核对、未知总 usage、单并发排队边界和 553+14 项回归结果，不作跨模型效率比较。
+
+---
+
 ## 🛡️ 信息边界与保管模型 (v0.5.0)
 
 0.5.0 版本将信息边界确立为一等公民能力，提供宿主强制的数据隔离机制。

@@ -1,0 +1,26 @@
+$ npm run verify:sidebar
+
+> dsh-atn@0.5.0 verify:sidebar
+> node scripts/verify-sidebar-contract.mjs && node scripts/verify-sidebar-registry.mjs
+
+{
+  "package": "dsh-better-sidebar",
+  "version": "0.26.0",
+  "publishedDeclarationSha256": "404cbe44621280ad3109b8849ab01fd9284ed306260d78bc341c51a906025ac9",
+  "consumerDescriptorAssignableToPublished": true,
+  "consumerKeysExistInPublished": true,
+  "scope": "Public TabDescriptor shape only; not whole-provider activation."
+}
+file:///D:/dsh-ATN/.artifacts/sidebar-registry/check.mjs:1713
+throw new Error("RESIDUAL_REGISTRY_FAILURE_SENTINEL");
+      ^
+
+Error: RESIDUAL_REGISTRY_FAILURE_SENTINEL
+    at file:///D:/dsh-ATN/.artifacts/sidebar-registry/check.mjs:1713:7
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0
+
+EXIT_CODE=1

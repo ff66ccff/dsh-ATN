@@ -42,6 +42,7 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm run typecheck && npm test && npm run build",
     "test:client": "node scripts/test-client.mjs",
+    "verify:sidebar": "node scripts/verify-sidebar-contract.mjs && node scripts/verify-sidebar-registry.mjs",
     "smoke:visualization": "node --import tsx/esm tests/smoke/visualization-smoke.ts",
     "render:screenshot": "node scripts/generate-screenshot.mjs",
     "experiment:catalog": "node --import tsx/esm experiments/provider.ts",
@@ -95,7 +96,7 @@
     "@deepseek-ai/dsh-tools": "0.2.1-alpha.2",
     "@deepseek-ai/dsh-typert-protocol": "0.2.1-alpha.2",
     "@deepseek-ai/dsh-typert-registry": "0.2.1-alpha.2",
-    "dsh-better-sidebar": "^0.26.0"
+    "dsh-better-sidebar": "0.26.0"
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "4.0.5-alpha.1",
