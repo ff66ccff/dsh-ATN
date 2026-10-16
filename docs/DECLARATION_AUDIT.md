@@ -84,3 +84,5 @@ V2 阶段 3 公开增量：npm 白名单的 conformance/、`dsh-atn/conformance`
 V2 阶段 4 公开增量：ATN_FLEET_READER、fleetNetworkResourceId、AtnFleetSnapshot 与 atnObserver/fleet；不新增模型工具。B-OBSERVE/权限表登记 index 与逐网络资源；默认无授权、owner 拒绝。拒绝桶为观察期易失计数，不追加 journal、不写 NetworkRecord，domain 1、旧记录冷读。FLEET-AUTH/COLD/COUNTERS、UI carrier 生命周期和真实浏览器留档锚定；不声称完整 sidebar provider 激活或外部 IAM 证明。
 
 V2 阶段 5：REFUSAL_LOG_DESIGN 仅设计，无日志代码/存储/端点。B-REFUSAL-LOG 标注“设计未实现”；五字段 JSON Lines、14/16 最终词汇、宿主 ownership、独立未来授权与三种一致性选项均由文档审计锚定。不会把现有易失桶称作合规日志或把未来故障测试称作已通过。
+
+V2 最终复核：606 runtime/集成 + 17 UI，0 fail/skip；九项命令全 exit 0；八工具、7956/5910、domain 1、14 通道、16 码保持。最终源码、测试、套件与 tarball SHA-256 见 execution-evidence/round-v2-final/invariants.json；实现/收窄/未验证范围见 ROUND_V2_IMPLEMENTATION_REPORT。

@@ -1,0 +1,29 @@
+npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+
+> dsh-atn@0.5.0 prepare
+> npm run build
+
+
+> dsh-atn@0.5.0 build
+> node scripts/clean-build.mjs && tsc -p tsconfig.build.json && node scripts/build-client.mjs
+
+
+  lib\client.js  354.0kb
+
+Done in 35ms
+
+added 246 packages, and audited 247 packages in 17s
+
+24 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+npm warn allow-scripts 5 packages have install scripts not yet covered by allowScripts:
+npm warn allow-scripts   @google/genai@2.21.0 (preinstall: echo 'preinstall: no-op')
+npm warn allow-scripts   esbuild@0.25.12 (postinstall: node install.js)
+npm warn allow-scripts   koffi@3.1.1 (install: node ./cnoke.cjs -P . -D src/koffi --prebuild --release)
+npm warn allow-scripts   protobufjs@7.6.6 (postinstall: node scripts/postinstall)
+npm warn allow-scripts   esbuild@0.28.2 (postinstall: node install.js)
+npm warn allow-scripts
+npm warn allow-scripts Run `npm approve-scripts --allow-scripts-pending` to review, or `npm approve-scripts <pkg>` to allow.

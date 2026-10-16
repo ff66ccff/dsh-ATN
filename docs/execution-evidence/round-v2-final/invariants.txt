@@ -1,0 +1,1 @@
+FINAL-INVARIANTS: 8 tools; 7956/5910 bytes; domain 1; 14 channels; 16 stable codes; 606 + 17 tests; nine gates exit 0

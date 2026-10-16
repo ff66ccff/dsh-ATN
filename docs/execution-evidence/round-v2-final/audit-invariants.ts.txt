@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict'
+import { readFile, writeFile } from 'node:fs/promises'
+import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { ATN_DOMAIN_VERSION } from '../src/schema.ts'
+import { OUTBOUND_CHANNELS, INFORMATION_BOUNDARY_REFUSAL_CODES } from '../src/index.ts'
+import { CHANNELS, REFUSAL_CODES } from '../conformance/index.mjs'
+assert.equal(ATN_DOMAIN_VERSION, 1)
+assert.deepEqual([...OUTBOUND_CHANNELS], CHANNELS)
+assert.deepEqual([...INFORMATION_BOUNDARY_REFUSAL_CODES], REFUSAL_CODES)
+assert.equal(execFileSync('git', ['diff', 'e3c7178', 'HEAD', '--', 'src/tools.ts'], {encoding:'utf8'}), '')
+const sourceDiff = execFileSync('git', ['show', '--format=', '--name-only', '9927855'], {encoding:'utf8'}).trim().split(/\r?\n/)
+assert.ok(sourceDiff.every(path => path === 'README.md' || path.startsWith('docs/')), 'phase 5 is documents only')
+const gates = JSON.parse(await readFile('docs/execution-evidence/round-v2-final/gates.json', 'utf8'))
+assert.equal(gates.results.length, 9)
+assert.ok(gates.results.every((gate: {code:number}) => gate.code === 0))
+const tests = await readFile('docs/execution-evidence/round-v2-final/npm-test.txt', 'utf8')
+assert.match(tests, /tests 606/); assert.match(tests, /tests 17/)
+assert.doesNotMatch(tests, /(?:ℹ|#) fail [1-9]|(?:ℹ|#) skipped [1-9]/)
+const changed = execFileSync('git', ['diff', '--name-only', 'e3c7178', 'HEAD', '--', 'src', 'conformance', 'scripts', 'tests', 'package.json', 'package-lock.json'], {encoding:'utf8'}).trim().split(/\r?\n/)
+const hashes = Object.fromEntries(await Promise.all([...changed, '.artifacts/dsh-atn-0.5.0.tgz'].map(async path => [path, createHash('sha256').update(await readFile(path)).digest('hex')])))
+await writeFile('docs/execution-evidence/round-v2-final/invariants.json', JSON.stringify({ domain:1, modelTools:8,
+ fixedContextBytes:{ enabled:7956, disabled:5910 }, toolSourceIdenticalToApprovedBaseline:true,
+ channels:OUTBOUND_CHANNELS, refusalCodes:INFORMATION_BOUNDARY_REFUSAL_CODES,
+ tests:{runtime:606,ui:17,failed:0,skipped:0}, phase5DocumentsOnly:true, hashes }, null, 2) + '\n')
+console.log('FINAL-INVARIANTS: 8 tools; 7956/5910 bytes; domain 1; 14 channels; 16 stable codes; 606 + 17 tests; nine gates exit 0')

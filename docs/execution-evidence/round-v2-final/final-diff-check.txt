@@ -1,0 +1,14 @@
+warning: in the working copy of 'docs/DECLARATION_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ROUND_V2_IMPLEMENTATION_REPORT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/audit-invariants.ts.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/gates.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/invariants.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-ci.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-build.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-pack-tarball.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-smoke-profile.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-smoke-visualization.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-typecheck.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-run-verify-sidebar.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-final/npm-test.txt', LF will be replaced by CRLF the next time Git touches it

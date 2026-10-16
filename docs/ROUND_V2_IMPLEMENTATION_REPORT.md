@@ -13,7 +13,7 @@
 | 2 可选读策略 | `3828de1` | 同一 principal/resource/action；排序前过滤、祖先闭包、可见权重重放、citedBy/任务证据过滤、隐藏/未知错误不可区分、关闭对照、冷重放、同步失败原子性；论文第 8 偏离 | [阶段 2](execution-evidence/round-v2-phase2/README.md)、[授权契约](OBSERVER_READ_AUTHORIZATION.md)；601 + 15 |
 | 3 宿主套件 | `03b09e5` | 46 个可携带结构用例；14 通道 held/unheld、三类引用、传输字段、原子性、容量与读策略；两个错误策略实际红灯；npm files/exports 与独立解包 CLI 可得 | [阶段 3](execution-evidence/round-v2-phase3/README.md)、[接入指南](../conformance/README.md)；603 + 15 |
 | 4 舰队观察 | `b85513e` | atn-fleet/index + 逐网络授权；默认拒绝且不用 owner bypass；严格只读快照、有界易失拒绝桶；原 tab/顶栏内部切换；真实浏览器 A/B/双网/未授权范围 | [阶段 4](execution-evidence/round-v2-phase4/README.md)、[计数口径](FLEET_OBSERVATION_CONTRACT.md)；606 + 17 |
-| 5 日志设计 | 本报告同阶段文档提交（见 git log） | 仅文档：三种一致性/丢失策略、JSON Lines 五字段、最终 14/16 词汇、宿主 ownership、独立未来权限、B-REFUSAL-LOG；无日志实现 | [设计稿](REFUSAL_LOG_DESIGN.md)、[阶段 5](execution-evidence/round-v2-phase5/README.md) |
+| 5 日志设计 | `9927855` | 仅文档：三种一致性/丢失策略、JSON Lines 五字段、最终 14/16 词汇、宿主 ownership、独立未来权限、B-REFUSAL-LOG；无日志实现 | [设计稿](REFUSAL_LOG_DESIGN.md)、[阶段 5](execution-evidence/round-v2-phase5/README.md) |
 
 阶段 0/1/2/3/4 均在全部命令成功、证据保存并独立提交后才开始下一阶段。阶段 1 为纯补证：红灯明确是故意指向错误网络的 resolver 负对照，不伪称生产漏洞。
 
@@ -40,7 +40,9 @@
 
 每阶段的 gates.json 记录 `npm ci`、typecheck、全量 npm test、build、pack:tarball、显式 `.scratch/harness-alpha4` CLI 的 smoke:profile、smoke:visualization、独立 sidebar 0.26.1 的 verify:sidebar 与 diff --check 的实际退出码和时间。红灯不覆盖成绿灯；必要的第一次失败单独保存。
 
-阶段 5 的完整闸门已全绿（606 runtime/集成 + 17 UI，零失败零跳过），只包含文档 diff。最终整体复核尚在执行；结果将补入 [最终 gates.json](execution-evidence/round-v2-final/gates.json)，不将未执行命令视作通过。
+六阶段与最终整体复核全部完成，九项命令均退出 0。[最终 gates.json](execution-evidence/round-v2-final/gates.json)保留真实命令与时间；606 runtime/集成 + 17 UI，零失败零跳过。显式 alpha.4 CLI 的 profile/Web smoke、独立 sidebar 0.26.1 均通过；阶段 5 的提交仅文档。
+
+[最终不变量与 SHA-256](execution-evidence/round-v2-final/invariants.json)：八工具、7956/5910 字节、domain 1、14 通道顺序与 16 码不变，src/tools.ts 与批准基线逐字相同。live registry 的[重新实测](execution-evidence/round-v2-final/context.txt)一致。源码/测试/脚本/套件及实际 tarball 的 SHA-256 一并记录；本轮不据此宣称发布或真实模型收益。
 
 浏览器截图来自一次性 loopback fixture 的真实 kernel/Peer/Gateway 与产品同一 ObserverHost/FleetView；选择测试主体的控件只存在于 fixture，不能作为产品 IAM。真实 tarball Web smoke 另验证 HTTP owner 拒绝与非 owner 两网 Gateway 读取。截图：[舰队](execution-evidence/round-v2-phase4/browser-all.png)、[未授权](execution-evidence/round-v2-phase4/browser-denied.png)。
 
