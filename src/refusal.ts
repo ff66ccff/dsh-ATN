@@ -4,6 +4,7 @@ export const INFORMATION_BOUNDARY_REFUSAL_CODES = [
   'fact-requests-and-owner-results-only', 'extra-transport-fields',
   'invalid-fact-request', 'fixed-edge-required', 'invalid-setup-receipt', 'invalid-owner-result',
   'async-policy',
+  'ref-unresolved', 'ref-not-owned', 'ref-not-visible', 'rationale-missing-ref', 'custody-unavailable', 'substrate-full',
 ] as const
 
 export type InformationBoundaryRefusalCode = (typeof INFORMATION_BOUNDARY_REFUSAL_CODES)[number]

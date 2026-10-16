@@ -10,9 +10,10 @@
 import z from '@deepseek-ai/schemastery'
 import { ATN_DOMAIN_NAME, type NetworkLimits } from './schema.ts'
 import { MAX_COLLABORATION_PEERS } from './topology.ts'
+import { SUBSTRATE_DEFAULTS, type SubstrateOptions } from './substrate-options.ts'
 
 /** Plugin configuration of the ATN runtime service. */
-export interface Config {
+export interface Config extends Partial<SubstrateOptions> {
   /** Outgoing degree ceiling, 1–8; defaults to eight, above the default 32-node curve value six. */
   maxCollaborationPeers?: number
   /** Minimum terminal requester ratings on each compared edge. Defaults to two. */
@@ -49,6 +50,15 @@ export interface Config {
 
 /** Validated plugin configuration. */
 export const Config: z<Config> = z.object({
+  substrateEnabled: z.boolean().default(SUBSTRATE_DEFAULTS.substrateEnabled),
+  maxSubstrateMessages: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessages),
+  maxSubstrateMessageBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessageBytes),
+  maxSubstrateTotalBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateTotalBytes),
+  substrateSearchResults: z.natural().default(SUBSTRATE_DEFAULTS.substrateSearchResults),
+  substrateVisitLimit: z.natural().default(SUBSTRATE_DEFAULTS.substrateVisitLimit),
+  substrateRefsPerMessage: z.natural().default(SUBSTRATE_DEFAULTS.substrateRefsPerMessage),
+  substrateCitationWeight: z.boolean().default(SUBSTRATE_DEFAULTS.substrateCitationWeight),
+  substrateCitersShown: z.natural().default(SUBSTRATE_DEFAULTS.substrateCitersShown),
   maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),
   requesterMinSamples: z.natural().default(2),
   maxResidentNodes: z.natural().default(8),
@@ -81,6 +91,19 @@ export const Config: z<Config> = z.object({
  */
 export function assertConfigRelations(config: Config): void {
   const problems: string[] = []
+  const substrate = { ...SUBSTRATE_DEFAULTS, ...config }
+  for (const field of ['maxSubstrateMessages', 'maxSubstrateMessageBytes', 'maxSubstrateTotalBytes',
+    'substrateSearchResults', 'substrateVisitLimit', 'substrateRefsPerMessage', 'substrateCitersShown'] as const) {
+    if (!Number.isSafeInteger(substrate[field]) || substrate[field] <= 0) problems.push(`${field} must be a positive safe integer`)
+  }
+  for (const [field, maximum] of [['substrateSearchResults',16],['substrateVisitLimit',16],
+    ['substrateRefsPerMessage',32],['substrateCitersShown',8]] as const) {
+    if (substrate[field] > maximum) problems.push(`${field} must not exceed ${maximum}`)
+  }
+  for (const field of ['substrateEnabled','substrateCitationWeight'] as const) {
+    if (typeof substrate[field] !== 'boolean') problems.push(`${field} must be boolean`)
+  }
+  if (substrate.maxSubstrateTotalBytes < substrate.maxSubstrateMessageBytes) problems.push('maxSubstrateTotalBytes must be at least maxSubstrateMessageBytes')
   const positive: [string, number][] = [
     ['maxCollaborationPeers', config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS],
     ['requesterMinSamples', config.requesterMinSamples ?? 2],
@@ -137,6 +160,7 @@ export function assertConfigRelations(config: Config): void {
  */
 export function limitsFromConfig(config: Config): NetworkLimits {
   return {
+    ...Object.fromEntries(Object.entries(SUBSTRATE_DEFAULTS).map(([field, fallback]) => [field, config[field as keyof SubstrateOptions] ?? fallback])),
     maxCollaborationPeers: config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS,
     requesterMinSamples: config.requesterMinSamples ?? 2,
     maxResidentNodes: config.maxResidentNodes,

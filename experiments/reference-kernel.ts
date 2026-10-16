@@ -51,7 +51,7 @@ export async function referenceKernel(directory: string, scenario: { task: { age
     await ctx.plugin(StorageDomain, { backend: 'json' })
     await ctx.plugin(AtnRuntimePlugin, Config({ ...Config(), maxResidentNodes: scenario.task.agents,
       maxTotalNodes: scenario.task.agents, maxTasks: 128, maxPendingMailPerNode: 32, maxRetainedMail: 128,
-      stepBudget: 16, ...limits }))
+      stepBudget: 16, ...limits, substrateEnabled: false }))
     const handle = await ctx.agents.create({ sessionId: SessionId('reference-entry'),
       agentOptions: { provider: 'reference-disabled', model: 'no-model' }, meta: { cwd: directory } })
     return { ctx, entry: handle.agent, modelCalls: () => issuedModelCalls }

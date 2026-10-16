@@ -1,4 +1,4 @@
-/** Model-facing peer reviews and rewiring retain the compact six-tool protocol. */
+/** Model-facing peer reviews and rewiring retain the compact eight-tool protocol. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
 import { mkdtemp, rm } from 'node:fs/promises'
@@ -17,7 +17,7 @@ async function fixture(run: (kernel: Kernel) => Promise<void>): Promise<void> {
 }
 
 test('PEER-VARIANCE-RULES: reviews enumerate locally checkable rejection criteria', () => {
-  assert.equal(SHARED_RULES.split('\n').length, 6)
+  assert.equal(SHARED_RULES.split('\n').length, 8)
   const reviewRule = SHARED_RULES.split('\n').find(line => line.includes('review'))!
   assert.match(reviewRule, /check.*phase\/version.*key.*required fields/i)
   assert.match(reviewRule, /reject.*phase\/version mismatch/i)

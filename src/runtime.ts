@@ -60,6 +60,14 @@ export { AtnRefusal } from './refusal.ts'
 import type { GoalDocument, NetworkRecord, NodeRecord, TaskRecord } from './schema.ts'
 import { HandleReleaser, waitBounded, type HandleReleaseOutcome } from './handles.ts'
 import { randomUUID } from 'node:crypto'
+import { appendSubstrate, searchSubstrate, visitSubstrate, recordSubstrateRead, substrateLimits, citers,
+  evidenceChain, type PublishInput, type SubstrateMessageView } from './substrate.ts'
+import { weightAt } from './substrate-ranking.ts'
+
+/** Abort the store transform without a write when a queued read reaches an archived network. */
+class ArchivedSubstrateRead extends Error {
+  constructor(readonly messages: SubstrateMessageView[]) { super('archived substrate read') }
+}
 
 declare module '@deepseek-ai/cordis' {
   interface Context {
@@ -509,6 +517,64 @@ export class AtnRuntime extends Service<Config> {
     assertSynchronousAdmission(this.outboundPolicies.get(record.id)?.(record, sender, operation))
     if (operation.channel === 'send.task' || operation.channel === 'send.note' || operation.channel === 'send.result') {
       assertSynchronousAdmission(this.sendPolicies.get(record.id)?.(record, sender, operation.input))
+    }
+  }
+
+  /** Append structured work through the same custody resolver and atomic outbound gate as other channels. */
+  async publish(agent: Agent, input: PublishInput): Promise<{ address: string; epoch: number }> {
+    const { record, node } = await this.callerContext(agent)
+    const committed = await this.mutate(record.id, current => {
+      const next = appendSubstrate(current, node.id, input, {
+        custody: this.knowledgePolicy(current)?.custody,
+        admit: () => this.admitOutbound(current, current.nodes[node.id], { channel: 'publish', input }),
+      })
+      return { record: next, value: { address: next.substrate!.messages.at(-1)!.address, epoch: current.stepsUsed } }
+    })
+    return committed.value
+  }
+
+  /** Pull matching messages; no sender identities or citation weights enter the model result. */
+  async search(agent: Agent, input: { query: string }): Promise<{ messages: SubstrateMessageView[] }> {
+    return this.substrateRead(agent, current => searchSubstrate(current, input.query))
+  }
+
+  /** Resolve every address or refuse the whole call, including its read telemetry. */
+  async visit(agent: Agent, input: { addresses: readonly string[] }): Promise<{ messages: SubstrateMessageView[] }> {
+    return this.substrateRead(agent, current => visitSubstrate(current, input.addresses))
+  }
+
+  private async substrateRead(agent: Agent, read: (record: NetworkRecord) => SubstrateMessageView[]) {
+    const { record } = await this.callerContext(agent)
+    if (record.status !== 'open') return { messages: read(record) }
+    try {
+      return (await this.mutate(record.id, current => {
+        const messages = read(current)
+        if (current.status !== 'open') throw new ArchivedSubstrateRead(messages)
+        return { record: recordSubstrateRead(current, messages), value: { messages } }
+      })).value
+    } catch (error) {
+      if (error instanceof ArchivedSubstrateRead) return { messages: error.messages }
+      throw error
+    }
+  }
+
+  /** Full operator audit export; this host API is never a model tool or a discovery source. */
+  async exportSubstrate(networkId: string) {
+    const record = await this.inspect(networkId)
+    const limits = substrateLimits(record)
+    return {
+      epoch: record.stepsUsed,
+      capacity: { messages: record.substrate?.messages.length ?? 0, maxMessages: limits.maxSubstrateMessages,
+        bytes: record.substrate?.totalBytes ?? 0, maxBytes: limits.maxSubstrateTotalBytes },
+      metrics: record.substrate?.metrics ?? { publishCalls:0, publishedBytes:0, readCalls:0, readMessages:0, readBytes:0 },
+      messages: (record.substrate?.messages ?? []).map(message => ({ ...structuredClone(message),
+        ...(limits.substrateCitationWeight ? { weight: weightAt(record, message.address) } : {}), citedBy: citers(record, message.address) })),
+      evidenceChains: Object.values(record.tasks).filter(task => task.result?.evidence.some(ref => ref.startsWith('msg:'))).map(task => {
+        const roots = task.result!.evidence.filter(ref => ref.startsWith('msg:'))
+        // Legacy arbitrary evidence strings remain readable; report unresolved roots instead of breaking observation.
+        const unresolved = roots.filter(ref => !record.substrate?.messages.some(message => message.address === ref))
+        return { taskId: task.id, addresses: evidenceChain(record, roots.filter(ref => !unresolved.includes(ref))), unresolved }
+      }),
     }
   }
 
@@ -1361,6 +1427,7 @@ export class AtnRuntime extends Service<Config> {
         ...(input.messageId === undefined ? {} : { id: input.messageId }),
       })
       // Task settlement and its outbox row commit in one network mutation.
+      evidenceChain(current, input.evidence ?? [])
       return { record: enqueued.record, value: { mailId: enqueued.mailId, duplicate: enqueued.duplicate } }
     })
     if (committed.value.duplicate) {
@@ -2075,6 +2142,7 @@ export class AtnRuntime extends Service<Config> {
         return { record: current, value: { accepted: false, reason: `completion refused: ${blockers.join('; ')}` } }
       }
 
+      evidenceChain(current, input.evidence)
       const ownTasks = openTasks(current).filter((task) => task.holderId === holder.id)
       const tasks = { ...current.tasks }
       for (const task of ownTasks) {

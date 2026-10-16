@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+ok 1 - SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+  ---
+  duration_ms: 150.5323
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+ok 2 - SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+  ---
+  duration_ms: 16.1614
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+ok 3 - SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+  ---
+  duration_ms: 177.7209
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+ok 4 - SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+  ---
+  duration_ms: 34.8422
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+ok 5 - SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+  ---
+  duration_ms: 20.5742
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+ok 6 - SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+  ---
+  duration_ms: 65.3079
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-PRIORITY: existing task-holder and delivery blockers precede new evidence validation
+ok 7 - SUBSTRATE-PRIORITY: existing task-holder and delivery blockers precede new evidence validation
+  ---
+  duration_ms: 12.9507
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1189.1741

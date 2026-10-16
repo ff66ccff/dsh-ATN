@@ -1,0 +1,174 @@
+TAP version 13
+# Subtest: BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+ok 1 - BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+  ---
+  duration_ms: 223.2272
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+    # Subtest: start
+    ok 1 - start
+      ---
+      duration_ms: 20.504
+      type: 'test'
+      ...
+    # Subtest: spawn
+    ok 2 - spawn
+      ---
+      duration_ms: 22.5832
+      type: 'test'
+      ...
+    # Subtest: send.task
+    ok 3 - send.task
+      ---
+      duration_ms: 21.6477
+      type: 'test'
+      ...
+    # Subtest: send.note
+    ok 4 - send.note
+      ---
+      duration_ms: 37.8834
+      type: 'test'
+      ...
+    # Subtest: send.result
+    ok 5 - send.result
+      ---
+      duration_ms: 21.3591
+      type: 'test'
+      ...
+    # Subtest: status.review
+    ok 6 - status.review
+      ---
+      duration_ms: 26.9643
+      type: 'test'
+      ...
+    # Subtest: status.claim
+    ok 7 - status.claim
+      ---
+      duration_ms: 22.624
+      type: 'test'
+      ...
+    # Subtest: status.rewire
+    ok 8 - status.rewire
+      ---
+      duration_ms: 30.9998
+      type: 'test'
+      ...
+    # Subtest: finish.node
+    ok 9 - finish.node
+      ---
+      duration_ms: 23.6466
+      type: 'test'
+      ...
+    # Subtest: finish.network
+    ok 10 - finish.network
+      ---
+      duration_ms: 25.9148
+      type: 'test'
+      ...
+    # Subtest: propose
+    ok 11 - propose
+      ---
+      duration_ms: 36.5759
+      type: 'test'
+      ...
+    # Subtest: vote
+    ok 12 - vote
+      ---
+      duration_ms: 108.0269
+      type: 'test'
+      ...
+    # Subtest: renew
+    ok 13 - renew
+      ---
+      duration_ms: 29.4962
+      type: 'test'
+      ...
+    # Subtest: publish
+    ok 14 - publish
+      ---
+      duration_ms: 33.9688
+      type: 'test'
+      ...
+    1..14
+ok 2 - BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+  ---
+  duration_ms: 466.1696
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+    # Subtest: review.evidence
+    ok 1 - review.evidence
+      ---
+      duration_ms: 347.1133
+      type: 'test'
+      ...
+    # Subtest: result.evidence
+    ok 2 - result.evidence
+      ---
+      duration_ms: 434.8
+      type: 'test'
+      ...
+    # Subtest: spawn.context
+    ok 3 - spawn.context
+      ---
+      duration_ms: 344.6038
+      type: 'test'
+      ...
+    # Subtest: messageId
+    ok 4 - messageId
+      ---
+      duration_ms: 302.5927
+      type: 'test'
+      ...
+    # Subtest: dependsOn
+    ok 5 - dependsOn
+      ---
+      duration_ms: 316.0989
+      type: 'test'
+      ...
+    # Subtest: retryOf
+    ok 6 - retryOf
+      ---
+      duration_ms: 305.9069
+      type: 'test'
+      ...
+    1..6
+ok 3 - BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+  ---
+  duration_ms: 2052.8135
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+ok 4 - BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+  ---
+  duration_ms: 401.2591
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+ok 5 - BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+  ---
+  duration_ms: 383.9314
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+ok 6 - BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+  ---
+  duration_ms: 195.5256
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+ok 7 - BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+  ---
+  duration_ms: 347.6016
+  type: 'test'
+  ...
+1..7
+# tests 27
+# suites 0
+# pass 27
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 4862.4707

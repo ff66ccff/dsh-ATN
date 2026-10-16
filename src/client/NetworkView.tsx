@@ -31,6 +31,23 @@ export function NetworkView({ sessionId, snapshot, error, selectedId, selectNode
       {snapshot && !network && <div className="atn-empty"><h3>{t('empty')}</h3><p>{t('emptyHelp')}</p></div>}
       {network && <>
         <Overview network={network} t={t} />
+        {network.substrate && <section className="atn-relations atn-substrate" aria-label={t('substrate')}>
+          <h3>{t('substrate')}</h3>
+          <p>{t('substrateEpoch')} {network.substrate.epoch} · {network.substrate.capacity.messages} / {network.substrate.capacity.maxMessages} {t('substrateMessages')}
+            {' · '}{network.substrate.capacity.bytes} / {network.substrate.capacity.maxBytes} UTF-8 bytes</p>
+          <p className="atn-muted">{t('substrateMetrics')} {network.substrate.metrics.publishCalls} / {network.substrate.metrics.readCalls}
+            {' · '}{network.substrate.metrics.publishedBytes} / {network.substrate.metrics.readBytes} UTF-8 bytes · {t('substrateNotBilling')}</p>
+          <div className="atn-table-scroll"><table aria-label={t('substrateMessages')}><thead><tr>
+            {[t('substrateAddress'),t('substrateTask'),t('createdBy'),t('substrateWeight'),t('substrateRefs')].map(label=><th key={label}>{label}</th>)}
+          </tr></thead><tbody>{network.substrate.messages.map(message=><tr key={message.address}>
+            <td>{message.address}</td><td>{message.sub_task}</td><td>{message.authorId}</td>
+            <td>{message.weight === undefined ? '—' : `${message.weight} / 1000000`}</td>
+            <td>{message.refCount} / {message.citerCount}</td>
+          </tr>)}</tbody></table></div>
+          {network.substrate.evidenceChains.length>0 && <><h4>{t('substrateEvidence')}</h4>{network.substrate.evidenceChains.map(chain=><p key={chain.taskId}>
+            {chain.taskId}: {chain.addresses.join(' → ')}{chain.truncated && ` … (${chain.total})`}
+          </p>)}</>}
+        </section>}
         <NodeList network={network} selectedId={selected?.id ?? null} selectNode={selectNode} t={t} />
         <section className="atn-relations" aria-label={t('collaboration')}><h3>{t('collaboration')}</h3>
           <Edges network={network} kind="collaboration" selectNode={selectNode} t={t} /></section>

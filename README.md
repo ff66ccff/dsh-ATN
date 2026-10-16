@@ -32,7 +32,7 @@
 | 架构层级 | 负责维度 | 运行性质 | 严密实证支撑 |
 |---|---|---|---|
 | 🕸️ **拓扑层 (Topology)** | **能和谁说话**（物理可达性） | **动态自适应**：节点可按需自主换边，累计规模的对数曲线限制出度；默认 8 节点上限为 4，32 节点为 6 | **第 5 轮结构证明**：在显式冻结的实验额度下，自适应换边能够到达静态拓扑不可达的协作节点（零模型调用）。 |
-| 🛡️ **保管层 (Custody)** | **能说什么**（数据合法声称） | **宿主强约束**：不变的边界底线，出站通道逐一审查，无权声明即刻熔断 | **0.5.0 全量安全审计**：完整锁定全部 13 条出站通道，修复前拦截留档，彻底杜绝数据洗白。 |
+| 🛡️ **保管层 (Custody)** | **能说什么**（数据合法声称） | **宿主强约束**：不变的边界底线，出站通道逐一审查，无权声明即刻熔断 | **0.5.0 全量安全审计**：当前覆盖 14 条出站通道（0.5.0 历史审计为 13 条），修复前拦截留档，彻底杜绝数据洗白。 |
 
 这是 DeepSeek Harness 原生 Team 所完全不具备的能力——**原生 Team 既无法动态自适应拓扑，也无法提供宿主级强制的数据保管边界**。
 
@@ -52,12 +52,12 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 ## 🌟 核心能力优势
 
 ### 1. 🛡️ 宿主强制的信息边界（Host-Enforced Boundary）
-- **全通道审查**：覆盖 `start`、`spawn`、`send`（task/note/result）、`status`（review/claim/rewire）、`finish` 及保留治理 API 共 **13 条出站通道**。
+- **全通道审查**：覆盖 `start`、`spawn`、`send`（task/note/result）、`status`（review/claim/rewire）、`finish` 及保留治理 API 共 **14 条出站通道**（新增受控 `publish`）。
 - **原子拦截无副作用**：未持有 artifact 的虚假声称（`evidence-not-owned`）会在持久化或派发前被绝对拦截，不修改网络状态、不扣减步数配额、不留下脏数据。
 - **杜绝数据洗白**：结果回执、评价反馈、可选传输字段（`messageId`、`dependsOn`、`retryOf`）全方位审计，彻底封堵隐式隧道。
 
 ### 2. 🔍 宿主派生的安全知识发现（Derived Discovery）
-- **告别不可控白板**：0.5.0 彻底废除了易被夹带任意事实的自由文本白板，将工具面收敛至纯粹的 5 个核心工具。
+- **告别不可控白板**：0.5.0 删除了自由文本白板；本轮有据地、受限地解除结构化可核验发布禁令，默认工具面为 8 个。发现元数据仍仅由宿主派生。
 - **防虚报元数据**：`atn_status(query=...)` 检索候选节点时，其文档与标签（topics）完全由**宿主从真实 Custody 注册表反向派生**。智能体无法自报虚假专长，发现即代表真实持有。
 
 ### 3. 🕸️ 高效局部自适应拓扑（Adaptive Topology）
@@ -71,6 +71,15 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - **两阶段平滑退休**：节点按 `Draining`（处理在途义务、停止接新单）→ `Retired`（注销资源句柄）两阶段优雅离线，保障系统平稳收拢。
 
 ---
+
+
+### 5. 共享 Substrate：有界拉取中间产物
+
+默认启用 `atn_publish / atn_search / atn_visit`。网络内消息只追加，地址永不重用，生产者退休或失败后正文仍可检索；认领者可主动追读。引用采用 `msg:<n> / task:<id> / artifact:<id>`，宿主核验存在性、任务可见性、真实 artifact 保管集合，并检查理由是否逐条点名。引用权重作用于单条消息，仅重排正相关结果，不展示给模型，不授予权限；可设 `substrateCitationWeight=false` 回退纯 BM25。发布不产生邮件、不唤醒节点、不额外请求模型；仍在调用者当前获准步骤内执行。
+
+每次读取消息条数与 UTF-8 字节有上界；整数排序和权重可从持久记录重放。拒绝写入不追加消息、不消耗地址、不修改权重或网络业务状态。domain 保持 1，旧记录可冷加载。网络完成／停止后只读归档。默认八工具固定上下文 **7,956 字节**（schema 6,119、规则 1,837）；关闭 substrate 精确回到 **5,910 字节**（4,749 + 1,161）。观察面复用原 tab／顶栏回退，展示容量、步纪元、消息权重与证据链；完整四字段、作者、被引和证据链可由宿主 `ctx.atn.exportSubstrate(networkId)` 导出。
+
+限制：这些是零模型结构验证，不主张正确率、效率、吞吐、延迟或成本收益；不证明真实模型会正确使用它。宿主只校验理由“点名”，不判定是否真的说明贡献，也不证明正文真实或阻止任意自然语言泄漏。论文结果不迁移，本轮不重启等预算研究。
 
 ## 📊 Web GUI 结构化网络状态面板
 
@@ -90,9 +99,9 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ---
 
-## 🛠️ 精简模型交互面：五大核心工具
+## 🛠️ 模型交互面：八个核心工具
 
-0.5.0 去粗取精，彻底剔除不可控的自由文本白板，将模型操作面收敛为 5 个高内聚工具：
+默认启用原有五工具与三个 substrate 工具；`substrateEnabled=false` 时恢复原五工具和原六条行为规则。
 
 | 工具名称 | 核心输入参数 | 核心职责与业务价值 |
 |---|---|---|
@@ -100,6 +109,9 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 | `atn_spawn` | `task`, `context`, `leaseMs` | 在拓扑中创建同能力工作节点，继承安全预设并建立初始边。 |
 | `atn_send` | `to`, `kind` (`task`\|`note`\|`result`), `body`（`result` 需携带 `taskId`, `summary`, `evidence`） | 点对点加密级安全通信；支持下发子任务、同步进展及带权属证据的交付结算。 |
 | `atn_status` | 可选读：`query`, `taskIds`<br>可选写：`claimTaskId`, `review`, `rewire` | **一体化状态中枢**：查询拓扑邻居、原子认领孤儿任务、提交履约评价及自主换边重连。 |
+| `atn_publish` | `sub_task`, `artifact`, `rationale`, `refs` | 只追加结构化中间产物；引用可解析、理由逐条点名、artifact 引用由宿主保管核验。 |
+| `atn_search` | `query` | BM25 与可关闭的消息引文权重，仅对正相关结果排序；默认最多 8 条。 |
+| `atn_visit` | `addresses` | 默认最多 8 个地址；任一未解析则整体拒绝，不展示作者或权重。 |
 | `atn_finish` | 可选 `scope="node"\|"network"`（网络级需 `summary`, `goalVersion`） | 优雅履行责任退出：单个节点退休（node）或全网汇聚交付最终结论（network）。 |
 
 ---
@@ -205,7 +217,7 @@ node --import tsx/esm examples/information-boundary.ts
 1. **不防推理衍生**：智能体可从合法数据中提炼推论并传递；策略约束 Artifact 身份标识，不度量语义信息熵。
 2. **不防物理侧信道**：交互延迟、正文字节数、调用频次及错误码反馈等侧信道可能残留信号。
 3. **不防合谋互通**：两个合法持有不同数据的节点可在策略许可范围内主动互换数据。
-4. **网络内部生效**：仅约束 ATN 框架内的 13 条出站通道，不拦截智能体在 ATN 外直接调用宿主未纳管能力的动作。
+4. **网络内部生效**：仅约束 ATN 框架内的 14 条出站通道，不拦截智能体在 ATN 外直接调用宿主未纳管能力的动作。
 
 ---
 
@@ -234,6 +246,15 @@ node --import tsx/esm examples/information-boundary.ts
 | `maxMessageBytes` | `8192` | 单条通信消息最大 UTF-8 字节数 |
 | `defaultLeaseMs` | `300000` | 默认任务租约超时时长（5 分钟） |
 | `networkDeadlineMs` | `3600000` | 网络硬性总生命周期上限（60 分钟） |
+| `substrateEnabled` | `true` | 关闭三个新工具并恢复原固定上下文 |
+| `maxSubstrateMessages` | `128` | 消息数上限，满则拒绝，无驱逐 |
+| `maxSubstrateMessageBytes` | `2048` | 单条含完整持久信封的 UTF-8 字节上限 |
+| `maxSubstrateTotalBytes` | `131072` | 消息序列累计字节上限，至少等于单条上限 |
+| `substrateSearchResults` | `8` | 每次 search 返回 1–16 条中的配置上限 |
+| `substrateVisitLimit` | `8` | 每次 visit 的地址上限，1–16 |
+| `substrateRefsPerMessage` | `32` | 单条引用上限，1–32，重复引用拒绝 |
+| `substrateCitationWeight` | `true` | 关闭后不记录权重，采用纯 BM25 |
+| `substrateCitersShown` | `8` | 模型最多回看最近被引地址数，1–8 |
 | `domainName` | `atn_networks` | 隔离存储域命名空间 |
 
 ---
@@ -261,7 +282,7 @@ npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
 
 完整技术报告与历史档案请参阅 [**dsh-ATN 文档库索引指南**](docs/README.md)：
 - 🧭 [**战略定位与演进白皮书**](docs/STRATEGY_AND_POSITIONING.md)：深度拆解设计哲学与信任轴演进逻辑。
-- 🛡️ [**13 条出站通道审计契约**](docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md)：查看出站通道与拒绝码定义。
+- 🛡️ [**14 条出站通道审计契约**](docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md)：查看出站通道与拒绝码定义。
 - 🧪 [**第 11 轮五臂等预算评测报告**](docs/EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md)：查阅 70 次真实运行的原始统计数据。
 
 ---
@@ -271,3 +292,5 @@ npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
 本项目采用 [Apache-2.0](LICENSE) 许可证开源。遵循相关第三方开源声明与规范，详见 [NOTICE](NOTICE)。
 
 当前上游适配依据与验证边界见 [alpha.4 实施报告](docs/UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)。旧 A/B/C 报告保留历史版本与测试数；本轮开工基线为 569 项 runtime/集成 + 14 项 UI。
+
+- [Substrate 实施说明](docs/SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md) / [实施报告](docs/SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)：结构契约、论文偏离、字节数与零模型证据。

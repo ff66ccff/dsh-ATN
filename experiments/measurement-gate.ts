@@ -12,7 +12,7 @@ export interface MeasurementLimits {
 
 /** The very same assembly is passed to the offline reference and live runtime. */
 export function topologyRuntimeConfig(limits: MeasurementLimits): Config {
-  return Config({ ...Config(), maxResidentNodes: limits.maxAgents, maxTotalNodes: limits.maxAgents,
+  return Config({ ...Config(), substrateEnabled: false, maxResidentNodes: limits.maxAgents, maxTotalNodes: limits.maxAgents,
     maxTasks: 128, maxProposals: 8, maxPendingMailPerNode: 32, maxRetainedMail: 128,
     networkDeadlineMs: limits.timeoutMs, proposalDeadlineMs: Math.min(limits.timeoutMs, 60_000),
     defaultLeaseMs: limits.timeoutMs, maxLeaseExtensionMs: limits.timeoutMs, stepBudget: limits.perNodeSteps })

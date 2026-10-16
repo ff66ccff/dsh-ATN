@@ -1,0 +1,306 @@
+TAP version 13
+# Subtest: RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+ok 1 - RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+  ---
+  duration_ms: 28.4651
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+ok 2 - SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+  ---
+  duration_ms: 14.0407
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+ok 3 - BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+  ---
+  duration_ms: 136.6975
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+    # Subtest: start
+    ok 1 - start
+      ---
+      duration_ms: 12.6937
+      type: 'test'
+      ...
+    # Subtest: spawn
+    ok 2 - spawn
+      ---
+      duration_ms: 12.1867
+      type: 'test'
+      ...
+    # Subtest: send.task
+    ok 3 - send.task
+      ---
+      duration_ms: 14.0118
+      type: 'test'
+      ...
+    # Subtest: send.note
+    ok 4 - send.note
+      ---
+      duration_ms: 15.4758
+      type: 'test'
+      ...
+    # Subtest: send.result
+    ok 5 - send.result
+      ---
+      duration_ms: 17.2097
+      type: 'test'
+      ...
+    # Subtest: status.review
+    ok 6 - status.review
+      ---
+      duration_ms: 21.3529
+      type: 'test'
+      ...
+    # Subtest: status.claim
+    ok 7 - status.claim
+      ---
+      duration_ms: 14.3838
+      type: 'test'
+      ...
+    # Subtest: status.rewire
+    ok 8 - status.rewire
+      ---
+      duration_ms: 13.718
+      type: 'test'
+      ...
+    # Subtest: finish.node
+    ok 9 - finish.node
+      ---
+      duration_ms: 14.936
+      type: 'test'
+      ...
+    # Subtest: finish.network
+    ok 10 - finish.network
+      ---
+      duration_ms: 17.8815
+      type: 'test'
+      ...
+    # Subtest: propose
+    ok 11 - propose
+      ---
+      duration_ms: 15.9709
+      type: 'test'
+      ...
+    # Subtest: vote
+    ok 12 - vote
+      ---
+      duration_ms: 46.9284
+      type: 'test'
+      ...
+    # Subtest: renew
+    ok 13 - renew
+      ---
+      duration_ms: 14.3313
+      type: 'test'
+      ...
+    # Subtest: publish
+    ok 14 - publish
+      ---
+      duration_ms: 14.9214
+      type: 'test'
+      ...
+    1..14
+ok 4 - BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+  ---
+  duration_ms: 248.7783
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+    # Subtest: review.evidence
+    ok 1 - review.evidence
+      ---
+      duration_ms: 90.0173
+      type: 'test'
+      ...
+    # Subtest: result.evidence
+    ok 2 - result.evidence
+      ---
+      duration_ms: 76.1678
+      type: 'test'
+      ...
+    # Subtest: spawn.context
+    ok 3 - spawn.context
+      ---
+      duration_ms: 66.0497
+      type: 'test'
+      ...
+    # Subtest: messageId
+    ok 4 - messageId
+      ---
+      duration_ms: 69.1327
+      type: 'test'
+      ...
+    # Subtest: dependsOn
+    ok 5 - dependsOn
+      ---
+      duration_ms: 62.4928
+      type: 'test'
+      ...
+    # Subtest: retryOf
+    ok 6 - retryOf
+      ---
+      duration_ms: 60.3497
+      type: 'test'
+      ...
+    1..6
+ok 5 - BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+  ---
+  duration_ms: 425.3465
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+ok 6 - BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+  ---
+  duration_ms: 101.9371
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+ok 7 - BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+  ---
+  duration_ms: 86.5708
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+ok 8 - BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+  ---
+  duration_ms: 47.0058
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+ok 9 - BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+  ---
+  duration_ms: 83.9608
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+ok 10 - SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+  ---
+  duration_ms: 171.3031
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+ok 11 - SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+  ---
+  duration_ms: 14.1968
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+ok 12 - SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+  ---
+  duration_ms: 205.1845
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+ok 13 - SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+  ---
+  duration_ms: 38.292
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+ok 14 - SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+  ---
+  duration_ms: 17.5253
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+ok 15 - SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+  ---
+  duration_ms: 73.0873
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-PRIORITY: existing task-holder and delivery blockers precede new evidence validation
+ok 16 - SUBSTRATE-PRIORITY: existing task-holder and delivery blockers precede new evidence validation
+  ---
+  duration_ms: 17.7519
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+ok 17 - BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+  ---
+  duration_ms: 98.9036
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+ok 18 - BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+  ---
+  duration_ms: 0.2919
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+ok 19 - BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+  ---
+  duration_ms: 4.589
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CONFIG: defaults, frozen limits, relations and strict legacy compatibility
+ok 20 - SUBSTRATE-CONFIG: defaults, frozen limits, relations and strict legacy compatibility
+  ---
+  duration_ms: 7.9002
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-ADMISSION: every invalid reference/field refuses atomically and names the reference
+ok 21 - SUBSTRATE-ADMISSION: every invalid reference/field refuses atomically and names the reference
+  ---
+  duration_ms: 4.0321
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CAPACITY: envelope bytes, count and total caps never evict or consume addresses
+ok 22 - SUBSTRATE-CAPACITY: envelope bytes, count and total caps never evict or consume addresses
+  ---
+  duration_ms: 0.447
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-TOKENIZE: NFKC, mixed CJK, punctuation and case are deterministic
+ok 23 - SUBSTRATE-TOKENIZE: NFKC, mixed CJK, punctuation and case are deterministic
+  ---
+  duration_ms: 1.5575
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-LN: monotone deterministic logarithm is within two fixed units of reference
+ok 24 - SUBSTRATE-LN: monotone deterministic logarithm is within two fixed units of reference
+  ---
+  duration_ms: 48.2154
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-BM25: integer score matches float reference with a bounded truncation error
+ok 25 - SUBSTRATE-BM25: integer score matches float reference with a bounded truncation error
+  ---
+  duration_ms: 0.5702
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-RANK: relevance gate, early ties, empty/k limits, order-independent replay and hidden fields
+ok 26 - SUBSTRATE-RANK: relevance gate, early ties, empty/k limits, order-independent replay and hidden fields
+  ---
+  duration_ms: 1.1836
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-WEIGHTS: exact hand examples, lazy step decay, disabled mode and history replay
+ok 27 - SUBSTRATE-WEIGHTS: exact hand examples, lazy step decay, disabled mode and history replay
+  ---
+  duration_ms: 0.4767
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CHAIN: transitive chain/branch closure deduplicates, sorts addresses and includes resources
+ok 28 - SUBSTRATE-CHAIN: transitive chain/branch closure deduplicates, sorts addresses and includes resources
+  ---
+  duration_ms: 0.8392
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-INTEGER-AUDIT: no float literal, Math or clock in ranking/weight path
+ok 29 - SUBSTRATE-INTEGER-AUDIT: no float literal, Math or clock in ranking/weight path
+  ---
+  duration_ms: 15.4578
+  type: 'test'
+  ...
+1..29
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1885.388

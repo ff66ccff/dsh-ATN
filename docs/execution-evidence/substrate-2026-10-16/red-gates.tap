@@ -1,0 +1,406 @@
+TAP version 13
+# Subtest: RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+not ok 1 - RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+  ---
+  duration_ms: 26.5797
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\fixed-context.test.ts:1:282'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+        'atn_finish',
+    -   'atn_publish',
+    -   'atn_search',
+        'atn_send',
+        'atn_spawn',
+        'atn_start',
+        'atn_status',
+    -   'atn_visit'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'atn_finish'
+    1: 'atn_publish'
+    2: 'atn_search'
+    3: 'atn_send'
+    4: 'atn_spawn'
+    5: 'atn_start'
+    6: 'atn_status'
+    7: 'atn_visit'
+  actual:
+    0: 'atn_finish'
+    1: 'atn_send'
+    2: 'atn_spawn'
+    3: 'atn_start'
+    4: 'atn_status'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\fixed-context.test.ts:15:12)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+ok 2 - SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+  ---
+  duration_ms: 11.8855
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+ok 3 - BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact
+  ---
+  duration_ms: 126.1164
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+not ok 4 - BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+  ---
+  duration_ms: 2.1937
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\information-boundary.test.ts:1:3700'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'start',
+        'spawn',
+        'send.task',
+        'send.note',
+    ...
+        'renew',
+    +   'publish'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'start'
+    1: 'spawn'
+    2: 'send.task'
+    3: 'send.note'
+    4: 'send.result'
+    5: 'status.review'
+    6: 'status.claim'
+    7: 'status.rewire'
+    8: 'finish.node'
+    9: 'finish.network'
+    10: 'propose'
+    11: 'vote'
+    12: 'renew'
+  actual:
+    0: 'start'
+    1: 'spawn'
+    2: 'send.task'
+    3: 'send.note'
+    4: 'send.result'
+    5: 'status.review'
+    6: 'status.claim'
+    7: 'status.rewire'
+    8: 'finish.node'
+    9: 'finish.network'
+    10: 'propose'
+    11: 'vote'
+    12: 'renew'
+    13: 'publish'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\information-boundary.test.ts:64:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+    # Subtest: review.evidence
+    ok 1 - review.evidence
+      ---
+      duration_ms: 71.0234
+      type: 'test'
+      ...
+    # Subtest: result.evidence
+    ok 2 - result.evidence
+      ---
+      duration_ms: 63.3892
+      type: 'test'
+      ...
+    # Subtest: spawn.context
+    ok 3 - spawn.context
+      ---
+      duration_ms: 68.179
+      type: 'test'
+      ...
+    # Subtest: messageId
+    ok 4 - messageId
+      ---
+      duration_ms: 62.755
+      type: 'test'
+      ...
+    # Subtest: dependsOn
+    ok 5 - dependsOn
+      ---
+      duration_ms: 70.0729
+      type: 'test'
+      ...
+    # Subtest: retryOf
+    ok 6 - retryOf
+      ---
+      duration_ms: 63.2233
+      type: 'test'
+      ...
+    1..6
+ok 5 - BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+  ---
+  duration_ms: 399.8905
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+ok 6 - BOUNDARY-REPAIR: a newly repaired topology edge does not change custody
+  ---
+  duration_ms: 106.3852
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+ok 7 - BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry
+  ---
+  duration_ms: 81.9523
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+ok 8 - BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write
+  ---
+  duration_ms: 43.5162
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+ok 9 - BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody
+  ---
+  duration_ms: 94.8912
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+not ok 10 - BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+  ---
+  duration_ms: 51.1481
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\information-boundary-inventory.test.ts:1:4134'
+  failureType: 'testCodeFailure'
+  error: |-
+    classify and test every new public runtime API
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'admitStep',
+        'callerContext',
+        'claim',
+        'deliver',
+        'deliverMail',
+        'deliveryHolder',
+    -   'exportSubstrate',
+        'failNode',
+        'feedback',
+        'findBySessionId',
+        'finish',
+        'handleFor',
+    ...
+        'provisionRecoveryTask',
+    -   'publish',
+        'recover',
+        'refreshCustody',
+        'renew',
+        'resolveNode',
+        'rewire',
+    -   'search',
+        'send',
+        'shutdown',
+        'spawn',
+        'start',
+        'status',
+    ...
+        'verifyTask',
+    -   'visit',
+        'vote'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'admitStep'
+    1: 'callerContext'
+    2: 'claim'
+    3: 'deliver'
+    4: 'deliverMail'
+    5: 'deliveryHolder'
+    6: 'exportSubstrate'
+    7: 'failNode'
+    8: 'feedback'
+    9: 'findBySessionId'
+    10: 'finish'
+    11: 'handleFor'
+    12: 'installOutboundPolicy'
+    13: 'installSendPolicy'
+    14: 'network'
+    15: 'networkForSession'
+    16: 'networkIds'
+    17: 'now'
+    18: 'openStore'
+    19: 'ownsHandle'
+    20: 'peers'
+    21: 'pendingMail'
+    22: 'propose'
+    23: 'provisionRecoveryTask'
+    24: 'publish'
+    25: 'recover'
+    26: 'refreshCustody'
+    27: 'renew'
+    28: 'resolveNode'
+    29: 'rewire'
+    30: 'search'
+    31: 'send'
+    32: 'shutdown'
+    33: 'spawn'
+    34: 'start'
+    35: 'status'
+    36: 'stop'
+    37: 'tasks'
+    38: 'tick'
+    39: 'verifyTask'
+    40: 'visit'
+    41: 'vote'
+  actual:
+    0: 'admitStep'
+    1: 'callerContext'
+    2: 'claim'
+    3: 'deliver'
+    4: 'deliverMail'
+    5: 'deliveryHolder'
+    6: 'failNode'
+    7: 'feedback'
+    8: 'findBySessionId'
+    9: 'finish'
+    10: 'handleFor'
+    11: 'installOutboundPolicy'
+    12: 'installSendPolicy'
+    13: 'network'
+    14: 'networkForSession'
+    15: 'networkIds'
+    16: 'now'
+    17: 'openStore'
+    18: 'ownsHandle'
+    19: 'peers'
+    20: 'pendingMail'
+    21: 'propose'
+    22: 'provisionRecoveryTask'
+    23: 'recover'
+    24: 'refreshCustody'
+    25: 'renew'
+    26: 'resolveNode'
+    27: 'rewire'
+    28: 'send'
+    29: 'shutdown'
+    30: 'spawn'
+    31: 'start'
+    32: 'status'
+    33: 'stop'
+    34: 'tasks'
+    35: 'tick'
+    36: 'verifyTask'
+    37: 'vote'
+  operator: 'deepStrictEqual'
+  stack: |-
+    auditPublicMethods (D:\dsh-ATN\tests\unit\information-boundary-inventory.test.ts:24:10)
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\information-boundary-inventory.test.ts:75:3)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+not ok 11 - BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+  ---
+  duration_ms: 0.3384
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\information-boundary-inventory.test.ts:1:4877'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'evidence-not-owned',
+        'not-task-holder',
+        'metadata-only',
+        'fact-requests-and-owner-results-only',
+    ...
+        'async-policy',
+    -   'ref-unresolved',
+    -   'ref-not-owned',
+    -   'ref-not-visible',
+    -   'rationale-missing-ref',
+    -   'custody-unavailable',
+    -   'substrate-full'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'evidence-not-owned'
+    1: 'not-task-holder'
+    2: 'metadata-only'
+    3: 'fact-requests-and-owner-results-only'
+    4: 'extra-transport-fields'
+    5: 'invalid-fact-request'
+    6: 'fixed-edge-required'
+    7: 'invalid-setup-receipt'
+    8: 'invalid-owner-result'
+    9: 'async-policy'
+    10: 'ref-unresolved'
+    11: 'ref-not-owned'
+    12: 'ref-not-visible'
+    13: 'rationale-missing-ref'
+    14: 'custody-unavailable'
+    15: 'substrate-full'
+  actual:
+    0: 'evidence-not-owned'
+    1: 'not-task-holder'
+    2: 'metadata-only'
+    3: 'fact-requests-and-owner-results-only'
+    4: 'extra-transport-fields'
+    5: 'invalid-fact-request'
+    6: 'fixed-edge-required'
+    7: 'invalid-setup-receipt'
+    8: 'invalid-owner-result'
+    9: 'async-policy'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\information-boundary-inventory.test.ts:84:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+ok 12 - BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+  ---
+  duration_ms: 5.5501
+  type: 'test'
+  ...
+1..12
+# tests 18
+# suites 0
+# pass 14
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1623.9113

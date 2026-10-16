@@ -1,0 +1,17 @@
+SUBSTRATE-CONFIG: defaults, frozen limits, relations and strict legacy compatibility
+SUBSTRATE-ADMISSION: every invalid reference/field refuses atomically and names the reference
+SUBSTRATE-CAPACITY: envelope bytes, count and total caps never evict or consume addresses
+SUBSTRATE-TOKENIZE: NFKC, mixed CJK, punctuation and case are deterministic
+SUBSTRATE-LN: monotone deterministic logarithm is within two fixed units of reference
+SUBSTRATE-BM25: integer score matches float reference with a bounded truncation error
+SUBSTRATE-RANK: relevance gate, early ties, empty/k limits, order-independent replay and hidden fields
+SUBSTRATE-WEIGHTS: exact hand examples, lazy step decay, disabled mode and history replay
+SUBSTRATE-CHAIN: transitive chain/branch closure deduplicates, sorts addresses and includes resources
+SUBSTRATE-INTEGER-AUDIT: no float literal, Math or clock in ranking/weight path
+SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+SUBSTRATE-PRIORITY: existing task-holder and delivery blockers precede new evidence validation

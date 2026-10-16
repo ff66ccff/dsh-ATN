@@ -26,6 +26,8 @@ export type { NetworkOutboundPolicy, OutboundOperation, OutboundChannel, Custody
   CustodyPolicyOptions, ArtifactDescriptor, ArtifactIds } from './information-boundary.ts'
 export type { NetworkSendPolicy, AtnRuntimeDeps } from './runtime.ts'
 export type { KnowledgeMetadata } from './knowledge.ts'
+export type { PublishInput, SubstrateMessageView } from './substrate.ts'
+export type { SubstrateState, SubstrateMessage } from './schema.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.

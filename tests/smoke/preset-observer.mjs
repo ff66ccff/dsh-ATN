@@ -9,6 +9,9 @@ class ScriptedAdapter extends LlmAdapter {
   commands = [
     { name: 'atn_start', args: { objective: 'Verify the installed ATN mode.', successCriteria: 'A worker inherits ATN tools.', constraints: 'No external model requests.' } },
     { name: 'atn_spawn', args: { task: 'Check inherited capabilities.', context: 'Disposable profile smoke.' } },
+    { name: 'atn_publish', args: { sub_task: 'parser intermediate result', artifact: 'Reusable lead', rationale: 'Local scripted fixture' } },
+    { name: 'atn_search', args: { query: 'parser' } },
+    { name: 'atn_visit', args: { addresses: ['msg:1'] } },
   ]
   sequence = 0
 
@@ -74,12 +77,14 @@ async function run(ctx) {
       recentEvents: handles.at(-1).agent.session.snapshotEvents().slice(-8),
     }))
     assert.equal(child.presetId, 'atn')
+    assert.equal(record.substrate.messages.length, 1, 'real installed profile executed atn_publish')
+    assert.equal(record.substrate.metrics.readCalls, 2, 'real installed profile executed search and visit')
     const tools = id => adapter.requests.filter(request => request.sessionId === id && request.tools?.length).at(-1)?.tools.map(tool => tool.name).sort()
     assert.ok(!tools('atn-smoke-standard').some(name => name.startsWith('atn_')))
     assert.ok(!JSON.stringify(adapter.requests.find(request => request.sessionId === 'atn-smoke-standard').messages).includes('You are in ATN mode'))
     assert.deepEqual(tools(child.sessionId), tools('atn-smoke-entry'))
     assert.deepEqual(tools(child.sessionId).filter(name => name.startsWith('atn_')), [
-      'atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status',
+      'atn_finish', 'atn_publish', 'atn_search', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status', 'atn_visit',
     ])
     assert.ok(tools(child.sessionId).includes('atn_status'))
     assert.ok(JSON.stringify(adapter.requests.find(request => request.sessionId === child.sessionId).messages).includes('You are in ATN mode'))
@@ -87,6 +92,7 @@ async function run(ctx) {
     console.log('ATN_PRESET_SMOKE ' + JSON.stringify({
       presets: roster.presets.map(row => ({ id: row.id, name: row.name, isDefault: row.isDefault, broken: row.broken })),
       tools: tools(child.sessionId), childPreset: child.presetId, nodes: Object.keys(record.nodes).length,
+      substratePublished: record.substrate.messages.length, substrateReads: record.substrate.metrics.readCalls,
     }))
   } finally { await Promise.all(handles.map(handle => handle.dispose())) }
 }

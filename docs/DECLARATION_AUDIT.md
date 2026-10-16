@@ -39,3 +39,13 @@
 |---|---|---|
 | 当前验证版本 | Harness alpha.4、Cordis alpha.2、sidebar 0.26.1 精确 optional peer | UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT；engines.dsh 单独判兼容，范围内仅 alpha.4 实测 |
 | 运行行为 | 五工具与固定上下文保持，domain=1；JSONL 入口改为命名空间导入 | 上游移除 default export；类型检查、全量测试和真实 profile |
+
+## 2026-10-16 Substrate 有意修订
+
+| 声明／闸门 | 本轮改动 | 依据 |
+|---|---|---|
+| 五工具／六规则／固定字节上界 | 默认八工具、保留六条原规则并增加两条；7956 字节，关闭回 5910 | fixed-context / context.json；红灯 red-gates.tap |
+| 13 通道与 10 个拒绝码 | 新增 publish 为第 14 条；新增 6 码，原码及顺序不变 | inventory / 手写 14 通道洗数据用例 / 审计表；红灯先留档 |
+| 0.5.0 发布禁令 | **0.5.0 的发布禁令在本轮被有据地、受限地解除**：仅结构化可核验发布 | 不恢复白板、自报知识或编辑／删除；substrate admission + host custody |
+| 权重与发现 | 消息引文权重不是节点声誉；不参与发现或授权 | tokenizer/BM25/weight/replay 测试，knowledge 代码路径未扩展 |
+| 历史实验 | 显式 substrateEnabled=false，五工具固定条件继续保留 | measurement-gate、shiftingConfig、reference-kernel；不重开等预算线 |

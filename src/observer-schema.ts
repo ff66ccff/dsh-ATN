@@ -7,10 +7,20 @@ import type { AtnObserverSnapshot } from './observer-types.ts'
 export const OBSERVER_MAX_TASKS = 200
 export const OBSERVER_MAX_EVENTS = 120
 export const OBSERVER_TEXT_LIMIT = 512
+export const OBSERVER_MAX_SUBSTRATE = 128
 export const observerSessionIdSchema = z.string().min(1).max(4096)
 const text = z.string().max(OBSERVER_TEXT_LIMIT)
 const id = z.string()
 const timestamp = z.number().finite().nonnegative()
+const count = z.number().int().safe().nonnegative()
+const substrate = z.object({
+  epoch: count,
+  capacity: z.object({ messages:count, maxMessages:count, bytes:count, maxBytes:count }).strict(),
+  metrics: z.object({ publishCalls:count, publishedBytes:count, readCalls:count, readMessages:count, readBytes:count }).strict(),
+  messages:z.array(z.object({ address:id, sub_task:text, authorId:id,
+    weight:z.number().int().min(0).max(1000000).optional(), refCount:count, citerCount:count }).strict()).max(OBSERVER_MAX_SUBSTRATE),
+  evidenceChains:z.array(z.object({ taskId:id, addresses:z.array(id).max(OBSERVER_MAX_SUBSTRATE), total:count, truncated:z.boolean() }).strict()).max(OBSERVER_MAX_TASKS),
+}).strict()
 
 /** Exact wire shape; arbitrary host properties cannot cross this boundary. */
 export const observerSnapshotSchema: z.ZodType<AtnObserverSnapshot> = z.object({
@@ -21,6 +31,7 @@ export const observerSnapshotSchema: z.ZodType<AtnObserverSnapshot> = z.object({
     stepsUsed: z.number().int().nonnegative(), stepBudget: z.number().int().positive(),
     maxCollaborationPeers: z.number().int().min(1).max(MAX_COLLABORATION_PEERS).optional(),
     deadlineAt: timestamp,
+    substrate: substrate.optional(),
     nodes: z.array(z.object({
       id, sessionId: id, isEntry: z.boolean(), creatorId: id.nullable(),
       lifecycle: z.enum(['provisioning', 'active', 'draining', 'retired', 'failed']),

@@ -57,6 +57,7 @@ const admissionCases: { channel: OutboundChannel; run: (fixture: AdmissionFixtur
   { channel: 'propose', run: f => f.kernel.atn.propose(f.root, { document: goal, rationale: foreign }) },
   { channel: 'vote', run: f => f.kernel.atn.vote(f.worker, { proposalId: f.proposalId, approve: true, reason: foreign }) },
   { channel: 'renew', run: f => f.kernel.atn.renew(f.worker, { taskId: 'open', extendMs: 100, basis: foreign }) },
+  { channel: 'publish', run: f => f.kernel.atn.publish(f.root, { sub_task: 'Check', artifact: foreign, rationale: 'Local observation', refs: [] }) },
 ]
 
 test('BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic', async t => {
@@ -166,6 +167,11 @@ test('BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody can
     await kernel.atn.send(agent, { to: start.nodeId, kind: 'result', taskId: requested.settledTaskId!,
       body: 'claim:worker-artifact', summary: 'claim:worker-artifact', evidence: ['claim:worker-artifact'] })
     await settle(kernel)
+    // Idle means the driver settled, not that every concurrent input receipt
+    // finished persisting. Join real delivery queues before taking an atomic-refusal baseline.
+    for (const mail of Object.values((await kernel.atn.network(start.networkId)).mails)) {
+      assert.equal(await kernel.atn.deliverMail(start.networkId, mail.id), 'delivered')
+    }
     const before = await kernel.atn.network(start.networkId)
     custody.get(start.nodeId)!.clear()
     await assert.rejects(kernel.atn.send(root, { to: worker.nodeId, kind: 'task', body: 'claim:root-artifact', messageId: 'owned-request' }), { code: 'evidence-not-owned' })

@@ -3,6 +3,9 @@ export const NS = 'atn-network' as const
 
 /** Chinese observer labels. */
 export const zh = {
+  substrate:'共享 Substrate', substrateEpoch:'步纪元', substrateMessages:'消息', substrateAddress:'地址',
+  substrateTask:'已完成子任务', substrateWeight:'消息引用权重（仅观察面）', substrateRefs:'引用 / 被引',
+  substrateMetrics:'发布 / 读取', substrateNotBilling:'与邮件分列；不是 Provider token 或账单', substrateEvidence:'交付证据链（非质量分）',
   trigger: 'ATN 网络状态', title: 'ATN 网络', close: '关闭网络视图',
   description: '观察智能体的当前行为，以及它们自主建立的协作连接。',
   loading: '正在读取网络…', empty: '当前会话尚未加入 ATN 网络',
@@ -35,6 +38,9 @@ export type AtnKey = keyof typeof zh
 
 /** English observer labels. */
 export const en: Record<AtnKey, string> = {
+  substrate:'Shared substrate', substrateEpoch:'Step epoch', substrateMessages:'Messages', substrateAddress:'Address',
+  substrateTask:'Completed sub-task', substrateWeight:'Message citation weight (operator only)', substrateRefs:'Refs / citers',
+  substrateMetrics:'Publishes / reads', substrateNotBilling:'Separate from mail; not provider tokens or billing', substrateEvidence:'Delivery evidence chain (not a quality score)',
   trigger: 'ATN network status', title: 'ATN network', close: 'Close network view',
   description: 'Observe agents, their current work, and the collaboration links they choose.',
   loading: 'Loading network…', empty: 'This session has not joined an ATN network',

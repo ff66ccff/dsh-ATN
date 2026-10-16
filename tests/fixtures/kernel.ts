@@ -142,7 +142,7 @@ export interface Kernel {
  */
 export async function bootKernel(
   scratch: string,
-  deps: { store?: NetworkStore; clock?: () => number; cleanupTimeoutMs?: number; presets?: boolean } = {},
+  deps: { store?: NetworkStore; clock?: () => number; cleanupTimeoutMs?: number; presets?: boolean; config?: Partial<AtnConfig> } = {},
 ): Promise<Kernel> {
   const ctx = new Context()
   try {
@@ -173,9 +173,9 @@ export async function bootKernel(
           super(inner, config, deps)
         }
       }
-      await ctx.plugin(SeededAtnRuntime, testConfig())
+      await ctx.plugin(SeededAtnRuntime, testConfig(deps.config))
     } else {
-      await ctx.plugin(plugin, testConfig())
+      await ctx.plugin(plugin, testConfig(deps.config))
     }
     if (deps.presets) {
       await ctx.plugin(Loader)

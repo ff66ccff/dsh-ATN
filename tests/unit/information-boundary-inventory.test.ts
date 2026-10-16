@@ -8,12 +8,12 @@ import { networkRecordSchema } from '../../src/schema.ts'
 import { makeChain } from '../fixtures/network.ts'
 
 // Readable audit classes, independent of implementation discovery.
-const outbound = ['start', 'spawn', 'send', 'feedback', 'claim', 'rewire', 'finish', 'deliver', 'propose', 'vote', 'renew']
+const outbound = ['start', 'spawn', 'send', 'feedback', 'claim', 'rewire', 'finish', 'deliver', 'propose', 'vote', 'renew', 'publish']
 const reads = ['networkForSession', 'now', 'callerContext', 'resolveNode', 'peers', 'tasks',
-  'deliveryHolder', 'network', 'networkIds', 'findBySessionId', 'ownsHandle', 'handleFor', 'pendingMail']
+  'deliveryHolder', 'network', 'networkIds', 'findBySessionId', 'ownsHandle', 'handleFor', 'pendingMail', 'exportSubstrate']
 const trusted = ['installSendPolicy', 'installOutboundPolicy', 'refreshCustody', 'openStore', 'admitStep',
   'deliverMail', 'verifyTask', 'provisionRecoveryTask', 'stop', 'failNode', 'tick', 'recover', 'shutdown']
-const compound = ['status']
+const compound = ['status', 'search', 'visit']
 
 function auditPublicMethods(text: string) {
   const file = ts.createSourceFile('runtime.ts', text, ts.ScriptTarget.Latest, true)
@@ -26,7 +26,7 @@ function auditPublicMethods(text: string) {
 
 function auditTools(text: string) {
   const advertised = [...text.matchAll(/name:\s*'(atn_[a-z]+)'/g)].map(row => row[1]).sort()
-  assert.deepEqual(advertised, ['atn_finish', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status'], 'register every new tool in the boundary inventory')
+  assert.deepEqual(advertised, ['atn_finish', 'atn_publish', 'atn_search', 'atn_send', 'atn_spawn', 'atn_start', 'atn_status', 'atn_visit'], 'register every new tool in the boundary inventory')
   const file = ts.createSourceFile('tools.ts', text, ts.ScriptTarget.Latest, true)
   const fields: Record<string, string[]> = {}
   const property = (object: ts.ObjectLiteralExpression, key: string) => object.properties.find(item =>
@@ -54,6 +54,9 @@ function auditTools(text: string) {
   }
   inspect(file)
   assert.deepEqual(fields, {
+    atn_publish: ['artifact', 'rationale', 'refs', 'sub_task'],
+    atn_search: ['query'],
+    atn_visit: ['addresses'],
     atn_start: ['constraints', 'objective', 'successCriteria'],
     atn_spawn: ['context', 'dependsOn', 'leaseMs', 'retryOf', 'task'],
     atn_send: ['body', 'dependsOn', 'evidence', 'kind', 'messageId', 'outcome', 'retryOf', 'summary', 'taskId', 'to'],
@@ -83,6 +86,7 @@ test('BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged', () => {
     'fact-requests-and-owner-results-only', 'extra-transport-fields',
     'invalid-fact-request', 'fixed-edge-required', 'invalid-setup-receipt', 'invalid-owner-result',
     'async-policy',
+    'ref-unresolved', 'ref-not-owned', 'ref-not-visible', 'rationale-missing-ref', 'custody-unavailable', 'substrate-full',
   ])
 })
 

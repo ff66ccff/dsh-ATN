@@ -5,12 +5,14 @@ import type {
 import type { RequesterFeedbackInput } from './requester-feedback.ts'
 import type { NetworkRecord, NodeRecord } from './schema.ts'
 import { AtnRefusal } from './refusal.ts'
+import type { PublishInput } from './substrate.ts'
 
 /** Explicit protocol inventory; additions require an audit and a coverage case. */
 export const OUTBOUND_CHANNELS = [
   'start', 'spawn', 'send.task', 'send.note', 'send.result',
   'status.review', 'status.claim', 'status.rewire',
   'finish.node', 'finish.network', 'propose', 'vote', 'renew',
+  'publish',
 ] as const
 export type OutboundChannel = (typeof OUTBOUND_CHANNELS)[number]
 
@@ -27,6 +29,7 @@ export type OutboundOperation =
   | { channel: 'propose'; input: ProposeInput }
   | { channel: 'vote'; input: VoteInput }
   | { channel: 'renew'; input: RenewInput }
+  | { channel: 'publish'; input: PublishInput }
 
 export type ArtifactIds = ReadonlySet<string> | readonly string[]
 /** Actual host-held artifacts; receiving or mentioning an id does not confer custody. */

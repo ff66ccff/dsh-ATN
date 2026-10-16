@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-16",
+  "preconditionCommit": "80ef94b",
+  "commands": [
+    {
+      "command": "npm ci",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run pack:tarball",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run smoke:profile",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run smoke:visualization",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:sidebar",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run render:screenshot",
+      "exitCode": 0
+    }
+  ],
+  "runtimeAndIntegration": {
+    "tests": 588,
+    "failed": 0,
+    "skipped": 0
+  },
+  "client": {
+    "tests": 15,
+    "failed": 0,
+    "skipped": 0
+  },
+  "externalModelCalls": 0,
+  "wholeSidebarProviderActivation": "not-verified: upstream webRuntime service missing",
+  "fixedContext": {
+    "before": 5910,
+    "enabled": 7956,
+    "disabled": 5910
+  }
+}

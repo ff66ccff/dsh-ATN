@@ -1,0 +1,106 @@
+TAP version 13
+# Subtest: SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+ok 1 - SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authentic and never wakes others
+  ---
+  duration_ms: 158.9126
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+ok 2 - SUBSTRATE-ATOMIC: all refusals preserve messages, cursor, weights, steps, events, store writes and agents
+  ---
+  duration_ms: 15.179
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+ok 3 - SUBSTRATE-LIFETIME: failure, orphan claim, cold records and stopped read-only archives retain findings
+  ---
+  duration_ms: 174.8417
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+ok 4 - SUBSTRATE-COLD-LEGACY: a domain-v1 record with no substrate or substrate limits loads unchanged
+  ---
+  duration_ms: 37.2202
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+ok 5 - SUBSTRATE-CONCURRENT: atomic allocation, store failure and retired producers preserve the append-only log
+  ---
+  duration_ms: 18.733
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+ok 6 - SUBSTRATE-DELIVERY: finish.network evidence exports the message transitive closure after completion
+  ---
+  duration_ms: 65.3071
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CONFIG: defaults, frozen limits, relations and strict legacy compatibility
+ok 7 - SUBSTRATE-CONFIG: defaults, frozen limits, relations and strict legacy compatibility
+  ---
+  duration_ms: 8.6622
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-ADMISSION: every invalid reference/field refuses atomically and names the reference
+ok 8 - SUBSTRATE-ADMISSION: every invalid reference/field refuses atomically and names the reference
+  ---
+  duration_ms: 4.2757
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CAPACITY: envelope bytes, count and total caps never evict or consume addresses
+ok 9 - SUBSTRATE-CAPACITY: envelope bytes, count and total caps never evict or consume addresses
+  ---
+  duration_ms: 0.3617
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-TOKENIZE: NFKC, mixed CJK, punctuation and case are deterministic
+ok 10 - SUBSTRATE-TOKENIZE: NFKC, mixed CJK, punctuation and case are deterministic
+  ---
+  duration_ms: 1.5501
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-LN: monotone deterministic logarithm is within two fixed units of reference
+ok 11 - SUBSTRATE-LN: monotone deterministic logarithm is within two fixed units of reference
+  ---
+  duration_ms: 45.1474
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-BM25: integer score matches float reference with a bounded truncation error
+ok 12 - SUBSTRATE-BM25: integer score matches float reference with a bounded truncation error
+  ---
+  duration_ms: 0.6951
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-RANK: relevance gate, early ties, empty/k limits, order-independent replay and hidden fields
+ok 13 - SUBSTRATE-RANK: relevance gate, early ties, empty/k limits, order-independent replay and hidden fields
+  ---
+  duration_ms: 1.3241
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-WEIGHTS: exact hand examples, lazy step decay, disabled mode and history replay
+ok 14 - SUBSTRATE-WEIGHTS: exact hand examples, lazy step decay, disabled mode and history replay
+  ---
+  duration_ms: 0.5387
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-CHAIN: transitive chain/branch closure deduplicates, sorts addresses and includes resources
+ok 15 - SUBSTRATE-CHAIN: transitive chain/branch closure deduplicates, sorts addresses and includes resources
+  ---
+  duration_ms: 0.8476
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-INTEGER-AUDIT: no float literal, Math or clock in ranking/weight path
+ok 16 - SUBSTRATE-INTEGER-AUDIT: no float literal, Math or clock in ranking/weight path
+  ---
+  duration_ms: 14.1102
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1235.0554

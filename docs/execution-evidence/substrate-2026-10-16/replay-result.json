@@ -1,0 +1,103 @@
+{
+  "epoch": 7,
+  "actual": [
+    {
+      "address": "msg:1",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked ",
+      "refs": [],
+      "citedBy": [
+        "msg:4"
+      ]
+    },
+    {
+      "address": "msg:2",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked ",
+      "refs": [],
+      "citedBy": [
+        "msg:3"
+      ]
+    },
+    {
+      "address": "msg:3",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked msg:2",
+      "refs": [
+        "msg:2"
+      ],
+      "citedBy": [
+        "msg:4"
+      ]
+    },
+    {
+      "address": "msg:4",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked msg:1 msg:3",
+      "refs": [
+        "msg:1",
+        "msg:3"
+      ],
+      "citedBy": []
+    }
+  ],
+  "replayed": [
+    {
+      "address": "msg:1",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked ",
+      "refs": [],
+      "citedBy": [
+        "msg:4"
+      ]
+    },
+    {
+      "address": "msg:2",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked ",
+      "refs": [],
+      "citedBy": [
+        "msg:3"
+      ]
+    },
+    {
+      "address": "msg:3",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked msg:2",
+      "refs": [
+        "msg:2"
+      ],
+      "citedBy": [
+        "msg:4"
+      ]
+    },
+    {
+      "address": "msg:4",
+      "sub_task": "parser boundary",
+      "artifact": "intermediate lead",
+      "rationale": "checked msg:1 msg:3",
+      "refs": [
+        "msg:1",
+        "msg:3"
+      ],
+      "citedBy": []
+    }
+  ],
+  "weights": {
+    "msg:1": 294000,
+    "msg:2": 288120,
+    "msg:3": 294000,
+    "msg:4": 0
+  },
+  "byteIdentical": true,
+  "scriptedSetupRequests": 2,
+  "substrateAdditionalModelRequests": 0,
+  "externalModelCalls": 0
+}

@@ -1,0 +1,9 @@
+
+> dsh-atn@0.5.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client-test.json
+
+tests/integration/substrate.test.ts(61,32): error TS2339: Property 'substrate' does not exist on type 'AtnNetworkView'.
+tests/integration/substrate.test.ts(62,32): error TS2339: Property 'substrate' does not exist on type 'AtnNetworkView'.
+tests/integration/substrate.test.ts(63,114): error TS2339: Property 'substrate' does not exist on type 'AtnNetworkView'.
+tests/unit/substrate.test.ts(56,77): error TS2339: Property 'custody' does not exist on type '{ value: { rationale: string; sub_task: string; artifact: string; refs: string[]; }; code: string; ref: string; custody: () => string[]; } | { value: { sub_task: string; artifact: string; rationale: string; refs: string[]; }; code: string; ref: string; }'.
+  Property 'custody' does not exist on type '{ value: { sub_task: string; artifact: string; rationale: string; refs: string[]; }; code: string; ref: string; }'.

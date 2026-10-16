@@ -117,9 +117,17 @@ async function run(ctx) {
       body: '脚本验证：依赖数据不可用，任务失败。', summary: '依赖数据不可用，需要换人重试', evidence: ['smoke:scripted-failure'],
     })
     await settleAgents(ctx)
+    const noWakeRequests = adapter.requests
+    const noWakeInputs = ctx.agents.list().map(agent => [agent.id, agent.session.snapshotEvents().length])
+    await ctx.atn.publish(handle.agent, { sub_task:'解析器中间产物 parser boundary', artifact:'可复用的初步结果', rationale:'本地脚本检查' })
+    await ctx.atn.publish(left.agent, { sub_task:'parser 边界复核', artifact:'排除旧版本分支', rationale:'msg:1 提供初步结果', refs:['msg:1'] })
+    assert.equal(adapter.requests, noWakeRequests, 'publication never invokes a model')
+    assert.deepEqual(ctx.agents.list().map(agent => [agent.id, agent.session.snapshotEvents().length]), noWakeInputs, 'publication never appends another agent input')
     const initial = await rpc({ sessionId })
     assert.equal(initial.ok, true)
     assert.equal(initial.value.network.nodes.length, 6)
+    assert.equal(initial.value.network.substrate.messages.length, 2)
+    assert.equal(initial.value.network.substrate.messages[0].weight, 300000)
     assert.ok(initial.value.network.edges.some(edge => edge.kind === 'collaboration' && edge.source === leftLeaf.nodeId && edge.target === rightLeaf.nodeId))
     assert.ok(!initial.value.network.edges.some(edge => edge.kind === 'collaboration' && edge.source === rightLeaf.nodeId && edge.target === leftLeaf.nodeId), 'directed cross-branch edge is not fabricated as reciprocal')
     assert.ok(initial.value.network.edges.some(edge => edge.kind === 'birth' && edge.source === left.nodeId && edge.target === leftLeaf.nodeId))
@@ -154,6 +162,11 @@ async function run(ctx) {
       while (Date.now() < deadline) {
         if (await access(join(process.env.DSH_HOME, 'visualization-stop')).then(() => true, () => false)) break
         await new Promise(resolve => setTimeout(resolve, 3000))
+        // A long human inspection must not animate mail into a retired target.
+        // Retain the read-only page after its scripted receiver consumes the real step budget.
+        const current = await ctx.atn.network(networkId)
+        if ([leftLeaf.nodeId, rightLeaf.nodeId].some(id => current.nodes[id].lifecycle !== 'active'
+          || (current.nodes[id].stepsUsed ?? 0) >= current.limits.stepBudget)) continue
         await ctx.atn.rewire(leftLeaf.agent, { peers: ++round % 2 ? [rightLeaf.nodeId] : [started.nodeId, rightLeaf.nodeId] })
         await ctx.atn.send(leftLeaf.agent, { to: rightLeaf.nodeId, kind: 'note', body: `第 ${round} 次协作反馈：已验证跨分支邻接。` })
         await settleAgents(ctx)

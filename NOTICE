@@ -7,7 +7,7 @@ Third-party notices
 -------------------
 
 The client contains a narrow type-only projection of the public Tab API of
-dsh-better-sidebar 0.26.0 (MIT, Copyright (c) 2026 dsh-external). No provider
+dsh-better-sidebar 0.26.1 (MIT, Copyright (c) 2026 dsh-external). No provider
 implementation is bundled. Its license follows:
 
 MIT License
@@ -86,3 +86,19 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+Substrate mechanism attribution
+------------------------------
+Scaling Multi-Agent Intelligence with Substrate-Centric Coordination
+(ScaleMAS), Zhenting Qi, Zhuokai Zhao, Rulin Shao, Kerem Oktar, Zhiyuan Yao,
+Himabindu Lakkaraju, Wen-tau Yih, Ansong Ni, Bhargavi Paranjape, and Yilun Du.
+arXiv:2610.16120v1, 2026. https://arxiv.org/abs/2610.16120
+Paper licensed CC BY 4.0: https://creativecommons.org/licenses/by/4.0/
+
+The substrate design adapts the paper's append-only messages, publish/search/visit,
+citation graph and message ranking mechanisms. This TypeScript implementation,
+integer BM25/logarithm, custody gate and ATN integration were independently
+written for dsh-ATN; no paper implementation source code is bundled. ATN retains
+point-to-point tools and adds host custody/visibility gates, UTF-8 byte limits,
+integer arithmetic and admitted-model-step decay. The paper's results are not
+dsh-ATN performance claims. This product's code remains Apache-2.0 (LICENSE).

@@ -1,0 +1,27 @@
+
+> dsh-atn@0.5.0 test:client
+> node scripts/test-client.mjs
+
+✔ SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epoch and evidence links (84.3614ms)
+✔ shows the entry only for the current ATN preset, including metadata arriving later (21.0926ms)
+✔ leaving ATN hides the open panel, aborts polling, and resets it before returning (1065.5006ms)
+✔ switching from an ATN session to a non-ATN session hides the entry without fetching (5.8602ms)
+✔ does not fetch until opened, serializes polling, and aborts on close (2125.8375ms)
+✔ switching sessions cancels the old request and ignores its late response (10.8276ms)
+✔ unmount aborts the observer request (5.6387ms)
+✔ shows empty state, a disconnected last snapshot, and a working retry (1066.2497ms)
+✔ renders directed adjacency separately from birth links and node task results (20.4981ms)
+✔ SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service (20.8849ms)
+✔ SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload (6.9028ms)
+✔ SIDEBAR-PENDING: a required missing module blocks its apply, but late optional child registration does not block the header (6.3879ms)
+✔ SIDEBAR-VISIBLE: inactive tabs pause, active tabs serialize requests, and preset changes abort and reset (2136.0579ms)
+✔ VIEW-PROPS: displays quotas, bounded submission history, abandoned attempts and locale-owned groups from props (13.0904ms)
+✔ SIDEBAR-MENU: descriptor gates non-ATN sessions and uses right sidebar rather than bottom-only (15.1111ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 15
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7570.6871

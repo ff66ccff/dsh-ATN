@@ -1,0 +1,30 @@
+
+> dsh-atn@0.5.0 smoke:visualization
+> node --import tsx/esm tests/smoke/visualization-smoke.ts
+
+visualization smoke: isolated home=D:\PersonalFile\Temp\dsh-atn-visualization-kVv54r
+ATN_VISUALIZATION_SMOKE {"nodes":6,"directedCrossBranch":true,"failedResult":true,"liveChange":true,"strictGateway":true,"readOnly":true,"clientServed":true,"sessionId":"atn-visualization-entry","origin":"http://127.0.0.1:54486","preview":true,"readyPath":"D:\\PersonalFile\\Temp\\dsh-atn-visualization-kVv54r\\visualization-ready.json"}
+ATN_VISUALIZATION_READY {"origin":"http://127.0.0.1:54486","sessionId":"atn-visualization-entry","readyPath":"D:\\PersonalFile\\Temp\\dsh-atn-visualization-kVv54r\\visualization-ready.json"}
+ATN_VISUALIZATION_SMOKE_FAILED TopologyError: collaborator node-12 must be active and published
+D:\dsh-ATN\tests\smoke\visualization-smoke.ts:58
+      if (timedOut || code !== 0) reject(new Error(`Isolated dsh command failed (${timedOut ? 'timeout' : code}):\n${redact(output).slice(-12_000)}`))
+                                         ^
+
+Error: Isolated dsh command failed (1):
+dsh web: http://127.0.0.1:54486/?token=<redacted>
+ATN_VISUALIZATION_SMOKE {"nodes":6,"directedCrossBranch":true,"failedResult":true,"liveChange":true,"strictGateway":true,"readOnly":true,"clientServed":true,"sessionId":"atn-visualization-entry","origin":"http://127.0.0.1:54486","preview":true,"readyPath":"D:\\PersonalFile\\Temp\\dsh-atn-visualization-kVv54r\\visualization-ready.json"}
+ATN_VISUALIZATION_READY {"origin":"http://127.0.0.1:54486","sessionId":"atn-visualization-entry","readyPath":"D:\\PersonalFile\\Temp\\dsh-atn-visualization-kVv54r\\visualization-ready.json"}
+ATN_VISUALIZATION_SMOKE_FAILED TopologyError: collaborator node-12 must be active and published
+    at rewireNode (file:///D:/PersonalFile/Temp/dsh-atn-visualization-kVv54r/profiles/atn-visualization/node_modules/dsh-atn/lib/topology.js:193:19)
+    at file:///D:/PersonalFile/Temp/dsh-atn-visualization-kVv54r/profiles/atn-visualization/node_modules/dsh-atn/lib/runtime.js:1393:29
+    at file:///D:/PersonalFile/Temp/dsh-atn-visualization-kVv54r/profiles/atn-visualization/node_modules/dsh-atn/lib/runtime.js:266:29
+    at file:///D:/dsh-ATN/.scratch/harness-alpha4/node_modules/@deepseek-ai/dsh-storage-domain/lib/index.js:281:17 {
+  code: 'target-not-active'
+}
+
+    at ChildProcess.<anonymous> (D:\dsh-ATN\tests\smoke\visualization-smoke.ts:58:42)
+    at ChildProcess.emit (node:events:509:28)
+    at maybeClose (node:internal/child_process:1141:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:306:5)
+
+Node.js v24.19.0

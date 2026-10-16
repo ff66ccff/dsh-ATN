@@ -23,7 +23,7 @@ export const name = 'atn-tools'
 export const inject = ['tools', 'systemPrompt', 'agents', 'atn']
 
 /** Shared-rules text every node receives in its system prompt. */
-export const SHARED_RULES = [
+export const BASE_SHARED_RULES = [
   'You are in ATN mode with equal peers and one goal. For new user work call atn_start once; received work already belongs to a network.',
   'Read local evidence and search host custody metadata with atn_status before asking a relevant neighbour. Discovery hints are host-derived; messages must respect the installed custody policy.',
   'Check requested results: phase/version, key and required fields. Reject phase/version mismatch, missing required fields or wrong key via atn_status review with evidence. comparisonKey groups comparable work. Ratings are not host verification or human permission.',
@@ -32,11 +32,17 @@ export const SHARED_RULES = [
   'Reserve budget for delivery. Idle peers can claim orphan tasks with atn_status. Finish settled work with atn_finish scope=node; the delivery holder uses scope=network, summary, evidence and goalVersion.',
 ].join('\n')
 
+/** Keep the original six behavior rules verbatim; shared pull work adds two bounded rules. */
+export const SHARED_RULES = BASE_SHARED_RULES + '\n' + [
+  'Substrate: READ BEFORE YOU WRITE. Before doing work, atn_search its wording; work already recorded is DONE, build on it. Use atn_visit for known addresses. Mostly atn_publish INTERMEDIATE work as you go: partial results, leads, dead ends and ruled-out steps, not only a final summary.',
+  'atn_publish needs sub_task in the exact words you would search later, a reusable artifact, and a short rationale naming EVERY ref and what it contributed. Cite every message you used. Refs must exist: msg:<n>, task:<id> visible to you, artifact:<id> in host custody. Search/visit show bounded content and links, NEVER authors or citation weights. Publication sends no mail and wakes nobody.',
+].join('\n')
+
 /** UTF-8 fixed protocol cost, measured from the actual advertised ATN schemas. */
-export function measureAtnFixedContext(schemas: readonly { name: string }[]): {
+export function measureAtnFixedContext(schemas: readonly { name: string }[], substrateEnabled = schemas.some(row => row.name === 'atn_publish')): {
   systemPromptBytes: number; toolSchemaBytes: number; fixedContextBytes: number
 } {
-  const systemPromptBytes = Buffer.byteLength(SHARED_RULES)
+  const systemPromptBytes = Buffer.byteLength(substrateEnabled ? SHARED_RULES : BASE_SHARED_RULES)
   const toolSchemaBytes = Buffer.byteLength(JSON.stringify(schemas.filter(row => row.name.startsWith('atn_'))))
   return { systemPromptBytes, toolSchemaBytes, fixedContextBytes: systemPromptBytes + toolSchemaBytes }
 }
@@ -241,8 +247,37 @@ export function apply(ctx: Context): void {
     'atn_finish',
   )
 
+  if (ctx.atn.config.substrateEnabled !== false) {
+    ctx.effect(() => ctx.tools.register(defineTool({
+      name: 'atn_publish',
+      description: 'Append reusable intermediate work with verified references. No mail or wakeup; rejected publications allocate nothing.',
+      parameters: {
+        sub_task: { type: 'string', required: true, description: 'Completed work, phrased in the words future readers will search.' },
+        artifact: { type: 'string', required: true, description: 'Reusable intermediate result.' },
+        rationale: { type: 'string', required: true, description: 'Name each ref as an exact token and explain its contribution.' },
+        refs: { type: 'array', items: { type: 'string' }, description: 'Up to 32 distinct msg:<n>, task:<id>, artifact:<id> references. Host bounds may be lower.' },
+      },
+      output: jsonOutput, isConcurrencySafe: () => false,
+      async execute(args, exec) { return toJson(await atn().publish(requireCaller(ctx, exec), args)) },
+    })), 'atn_publish')
+    ctx.effect(() => ctx.tools.register(defineTool({
+      name: 'atn_search',
+      description: 'Search shared completed work by content. Returns at most the configured k (default 8); no authors or weights.',
+      parameters: { query: { type: 'string', required: true, description: 'Words describing the intermediate work you need.' } },
+      output: jsonOutput, isConcurrencySafe: () => false,
+      async execute(args, exec) { return toJson(await atn().search(requireCaller(ctx, exec), args)) },
+    })), 'atn_search')
+    ctx.effect(() => ctx.tools.register(defineTool({
+      name: 'atn_visit',
+      description: 'Read known substrate addresses with references and recent citers. Entire call refuses if any address is unresolved.',
+      parameters: { addresses: { type: 'array', required: true, items: { type: 'string' }, description: '1 to the configured limit (default 8, maximum 16) msg:<n> addresses.' } },
+      output: jsonOutput, isConcurrencySafe: () => false,
+      async execute(args, exec) { return toJson(await atn().visit(requireCaller(ctx, exec), args)) },
+    })), 'atn_visit')
+  }
+
   ctx.effect(
-    () => ctx.systemPrompt.section({ name: 'atn-shared-rules', order: 40, text: SHARED_RULES }),
+    () => ctx.systemPrompt.section({ name: 'atn-shared-rules', order: 40, text: ctx.atn.config.substrateEnabled === false ? BASE_SHARED_RULES : SHARED_RULES }),
     'atn-shared-rules',
   )
 }

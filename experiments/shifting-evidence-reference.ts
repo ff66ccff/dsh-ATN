@@ -17,7 +17,7 @@ import { shiftingMechanisms, type SimplificationArm } from './simplification-arm
 import { ShiftingEvidenceScenario, createShiftingEvidenceTask, evaluateChain, shiftingPrompt, validateRequestedEvidence, BINDING_SETUP_TASK, type ChainAnswer, type EvidenceFact } from './shifting-evidence-task.ts'
 
 export function shiftingConfig(agents: number, steps: number, timeoutMs: number, maxCollaborationPeers = 2): Config {
-  return Config({ ...Config(), maxResidentNodes: agents, maxTotalNodes: agents, maxCollaborationPeers,
+  return Config({ ...Config(), substrateEnabled: false, maxResidentNodes: agents, maxTotalNodes: agents, maxCollaborationPeers,
     maxTasks: 128, maxRetainedMail: 256, maxPendingMailPerNode: 32, maxMessageBytes: 8192,
     stepBudget: steps, networkDeadlineMs: timeoutMs, defaultLeaseMs: timeoutMs,
     maxLeaseExtensionMs: timeoutMs, proposalDeadlineMs: Math.min(timeoutMs, 60_000) })

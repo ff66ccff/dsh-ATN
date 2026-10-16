@@ -55,6 +55,24 @@ function snapshot(objective = 'Inspect actual network'): AtnObserverSnapshot {
   }
 }
 
+test('SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epoch and evidence links', async () => {
+  const state=snapshot()
+  state.network!.substrate={ epoch:3, capacity:{messages:2,maxMessages:128,bytes:412,maxBytes:131072},
+    metrics:{publishCalls:2,publishedBytes:412,readCalls:1,readMessages:1,readBytes:210},
+    messages:[{address:'msg:1',sub_task:'Parser intermediate lead',authorId:'root',weight:300000,refCount:0,citerCount:1},
+      {address:'msg:2',sub_task:'Ruled out stale version',authorId:'child',refCount:1,citerCount:0}],
+    evidenceChains:[{taskId:'task-1',addresses:['msg:1','msg:2'],total:2,truncated:false}],
+  }
+  await act(async()=>root.render(<NetworkView sessionId="session-a" snapshot={state} error={null} selectedId="root" selectNode={()=>{}} retry={()=>{}} t={key=>zh[key]} />))
+  const section=document.querySelector('[aria-label="共享 Substrate"]')!
+  assert.ok(section)
+  assert.match(section.textContent!,/Parser intermediate lead/)
+  assert.match(section.textContent!,/412.*131072/)
+  assert.match(section.textContent!,/msg:1.*msg:2/)
+  assert.match(section.textContent!,/步纪元.*3/)
+  assert.match(section.textContent!,/UTF-8/)
+})
+
 type Pending = { sessionId: string; signal: AbortSignal; resolve: (value: AtnObserverSnapshot) => void; reject: (error: Error) => void }
 function reader() {
   const calls: Pending[] = []

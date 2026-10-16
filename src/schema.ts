@@ -349,6 +349,49 @@ export const proposalRecordSchema = z
 /** {@link proposalRecordSchema} value type. */
 export type ProposalRecord = z.infer<typeof proposalRecordSchema>
 
+/** Immutable published content. Citation weights live separately from the append-only message sequence. */
+export const substrateMessageSchema = z.object({
+  address: z.string().regex(/^msg:[1-9]\d*$/),
+  sub_task: z.string().refine(value => value.trim().length > 0),
+  artifact: z.string().refine(value => value.trim().length > 0),
+  rationale: z.string().refine(value => value.trim().length > 0),
+  refs: z.array(z.string().regex(/^(msg|task|artifact):.+$/u)).max(32),
+  authorId: z.string(), publishedEpoch: z.number().int().safe().nonnegative(),
+}).strict()
+export type SubstrateMessage = z.infer<typeof substrateMessageSchema>
+export const substrateWeightSchema = z.object({
+  value: z.number().int().min(0).max(1000000), epoch: z.number().int().safe().nonnegative(),
+}).strict()
+export type SubstrateWeight = z.infer<typeof substrateWeightSchema>
+const substrateCounter = z.number().int().safe().nonnegative()
+export const substrateStateSchema = z.object({
+  messages: z.array(substrateMessageSchema), nextAddress: z.number().int().safe().positive(),
+  epoch: substrateCounter, totalBytes: substrateCounter,
+  weights: z.record(z.string().regex(/^msg:[1-9]\d*$/), substrateWeightSchema).optional(),
+  /** ATN UTF-8 payload observations, separate from mail; never provider usage or billing. */
+  metrics: z.object({ publishCalls: substrateCounter, publishedBytes: substrateCounter,
+    readCalls: substrateCounter, readMessages: substrateCounter, readBytes: substrateCounter }).strict(),
+}).strict().superRefine((state, ctx) => {
+  if (state.nextAddress !== state.messages.length + 1) ctx.addIssue({ code:'custom', message:'substrate address cursor is inconsistent' })
+  let bytes = 0
+  for (const [index, message] of state.messages.entries()) {
+    if (message.address !== `msg:${index + 1}` || new Set(message.refs).size !== message.refs.length) {
+      ctx.addIssue({ code:'custom', message:'substrate messages must have unique sequential addresses and refs' })
+    }
+    for (const ref of message.refs.filter(ref => ref.startsWith('msg:'))) {
+      if (!/^msg:[1-9]\d*$/.test(ref) || Number(ref.slice(4)) > index) ctx.addIssue({ code:'custom', message:`substrate future reference ${ref}` })
+    }
+    bytes += new TextEncoder().encode(JSON.stringify(message)).length
+  }
+  if (bytes !== state.totalBytes) ctx.addIssue({ code:'custom', message:'substrate byte counter is inconsistent' })
+  for (const [address, weight] of Object.entries(state.weights ?? {})) {
+    if (!state.messages.some(message => message.address === address) || weight.epoch > state.epoch) {
+      ctx.addIssue({ code:'custom', message:'substrate weight address/epoch is inconsistent' })
+    }
+  }
+})
+export type SubstrateState = z.infer<typeof substrateStateSchema>
+
 /** Effective bounds of one network. Every bound is a positive integer count or a duration. */
 export const networkLimitsSchema = z
   .object({
@@ -356,6 +399,15 @@ export const networkLimitsSchema = z
     maxCollaborationPeers: z.number().int().min(1).max(MAX_COLLABORATION_PEERS).optional(),
     /** Terminal requester ratings required on each compared edge; legacy default is two. */
     requesterMinSamples: z.number().int().positive().optional(),
+    substrateEnabled: z.boolean().optional(),
+    maxSubstrateMessages: z.number().int().safe().positive().optional(),
+    maxSubstrateMessageBytes: z.number().int().safe().positive().optional(),
+    maxSubstrateTotalBytes: z.number().int().safe().positive().optional(),
+    substrateSearchResults: z.number().int().min(1).max(16).optional(),
+    substrateVisitLimit: z.number().int().min(1).max(16).optional(),
+    substrateRefsPerMessage: z.number().int().min(1).max(32).optional(),
+    substrateCitationWeight: z.boolean().optional(),
+    substrateCitersShown: z.number().int().min(1).max(8).optional(),
     /** Resident working nodes (`provisioning` and `draining` included). */
     maxResidentNodes: z.number().int().positive(),
     /** Cumulative nodes ever created in this network. */
@@ -500,6 +552,8 @@ export const networkRecordSchema = z.preprocess(value => {
     mails: z.record(z.string(), mailRecordSchema),
     /** Proposals by id. */
     proposals: z.record(z.string(), proposalRecordSchema),
+    /** Optional additive field: old records load without creating a store or changing domain version. */
+    substrate: substrateStateSchema.optional(),
     /** Durable edge totals, reconstructed from digest-bound opinions when loading legacy data. */
     requesterEdges: z.array(requesterEdgeSchema).optional(),
     /** Audit of explicit rewires. Birth and failed-node repair are separate. */
@@ -537,7 +591,21 @@ export const networkRecordSchema = z.preprocess(value => {
     /** Human-readable terminal reason, when the network is not open. */
     note: z.string().nullable(),
   })
-  .strict())
+  .strict().superRefine((record, ctx) => {
+    if (record.substrate === undefined) return
+    const state = record.substrate
+    if (state.epoch > record.stepsUsed) ctx.addIssue({code:'custom',message:'substrate epoch exceeds admitted steps'})
+    let previousEpoch = 0
+    for (const message of state.messages) {
+      if (message.publishedEpoch < previousEpoch || message.publishedEpoch > state.epoch || record.nodes[message.authorId] === undefined) {
+        ctx.addIssue({code:'custom',message:'substrate message author/epoch is inconsistent'})
+      }
+      previousEpoch = message.publishedEpoch
+    }
+    if (record.limits.substrateCitationWeight === false && state.weights !== undefined) {
+      ctx.addIssue({code:'custom',message:'disabled citation weights must not be stored'})
+    }
+  }))
 
 /** {@link networkRecordSchema} value type. */
 export type NetworkRecord = z.infer<typeof networkRecordSchema>

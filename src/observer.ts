@@ -10,8 +10,10 @@ import { taskResultDigest } from './tasks.ts'
 import type { AtnEventView, AtnNetworkView, AtnObserverSnapshot } from './observer-types.ts'
 import {
   createObserverDescriptor, observerSessionIdSchema, observerSnapshotSchema,
-  OBSERVER_MAX_EVENTS, OBSERVER_MAX_TASKS, OBSERVER_TEXT_LIMIT,
+  OBSERVER_MAX_EVENTS, OBSERVER_MAX_TASKS, OBSERVER_TEXT_LIMIT, OBSERVER_MAX_SUBSTRATE,
 } from './observer-schema.ts'
+import { citers, evidenceChain, substrateLimits } from './substrate.ts'
+import { weightAt } from './substrate-ranking.ts'
 
 declare module '@deepseek-ai/cordis' {
   interface Context { atnObserver: AtnObserver }
@@ -243,6 +245,21 @@ export class AtnObserver extends Service {
       objective: display(latest.document.objective), stepsUsed: record.stepsUsed,
       stepBudget: record.limits.stepBudget, deadlineAt: record.deadlineAt,
       maxCollaborationPeers: collaborationPeerLimit(record),
+      ...(record.substrate === undefined ? {} : { substrate: {
+        epoch: record.stepsUsed,
+        capacity: { messages:record.substrate.messages.length, maxMessages:substrateLimits(record).maxSubstrateMessages,
+          bytes:record.substrate.totalBytes, maxBytes:substrateLimits(record).maxSubstrateTotalBytes },
+        metrics: { ...record.substrate.metrics },
+        messages:record.substrate.messages.slice(-OBSERVER_MAX_SUBSTRATE).map(message => ({
+          address:message.address, sub_task:display(message.sub_task), authorId:message.authorId,
+          ...(record.limits.substrateCitationWeight === false ? {} : { weight:weightAt(record,message.address) }),
+          refCount:message.refs.length, citerCount:citers(record,message.address).length,
+        })),
+        evidenceChains:tasks.filter(task => task.result?.evidence.some(ref => ref.startsWith('msg:'))).slice(-OBSERVER_MAX_TASKS).map(task => {
+          const addresses=evidenceChain(record,task.result!.evidence.filter(ref => record.substrate!.messages.some(message => message.address===ref)))
+          return {taskId:task.id,addresses:addresses.slice(0,OBSERVER_MAX_SUBSTRATE),total:addresses.length,truncated:addresses.length>OBSERVER_MAX_SUBSTRATE}
+        }),
+      } }),
       nodes,
       edges: nodes.flatMap(node => [
         ...node.peers.map(target => ({ source: node.id, target, kind: 'collaboration' as const })),

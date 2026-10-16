@@ -19,6 +19,16 @@ export interface AtnNetworkView {
   edges: AtnEdgeView[]
   tasks: AtnTaskView[]
   events: AtnEventView[]
+  substrate?: AtnSubstrateView
+}
+
+/** Bounded operator projection; complete immutable payloads are available from the host export API. */
+export interface AtnSubstrateView {
+  epoch: number
+  capacity: { messages: number; maxMessages: number; bytes: number; maxBytes: number }
+  metrics: { publishCalls: number; publishedBytes: number; readCalls: number; readMessages: number; readBytes: number }
+  messages: { address: string; sub_task: string; authorId: string; weight?: number; refCount: number; citerCount: number }[]
+  evidenceChains: { taskId: string; addresses: string[]; total: number; truncated: boolean }[]
 }
 
 export interface AtnNodeView {

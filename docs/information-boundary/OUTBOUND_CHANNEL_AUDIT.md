@@ -1,6 +1,6 @@
-# 0.5.0 出站通道审计与拒绝码契约
+# 出站通道审计与拒绝码契约（2026-10-16：14 条）
 
-审计对象为 `src/tools.ts` 的全部五个模型工具和 `AtnRuntime` 的全部公开方法；不只审计邮件。宿主策略接收 `{ channel, input }`，`input` 为完整业务输入，包括所有可选字段。身份取自实际调用 Agent，策略同步执行，抛错则不提交该操作。
+审计对象为 `src/tools.ts` 的全部八个模型工具和 `AtnRuntime` 的全部公开方法；不只审计邮件。宿主策略接收 `{ channel, input }`，`input` 为完整业务输入，包括所有可选字段。身份取自实际调用 Agent，策略同步执行，抛错则不提交该操作。
 
 | 登记通道 | 实际入口 | 被检查的载荷 | 可见/持久化去向与检查位置 |
 |---|---|---|---|
@@ -17,18 +17,21 @@
 | `propose` | 宿主保留 API `propose` | document、rationale | 投票请求及共享目标版本；提案与广播邮件写之前。模型工具面未恢复此工具。 |
 | `vote` | 宿主保留 API `vote` | proposalId、approve、reason | 共享提案中的理由与决议；记录投票之前。 |
 | `renew` | 宿主保留 API `renew` | extendMs、taskId、basis | 共享节点的续租说明；租约变更之前。 |
+| `publish` | `atn_publish` / `publish` | 完整 sub_task、artifact、rationale、refs | 全网络 substrate 只追加消息与独立计量；同一 mutation 内核验引用/点名、调用 admitOutbound，再分配地址并更新消息权重，不产生邮件或唤醒。 |
 
 `status` 的 query/taskIds、`peers`、`tasks`、callerContext、resolveNode、network、networkIds、findBySessionId、networkForSession、deliveryHolder、ownsHandle、handleFor、pendingMail、now 是读取/身份路径，查询参数不写给其他节点。它们返回此前已提交的记录，不提供额外的接收者隐私控制。`status` 的三个可选写入口分别委托到登记的 claim、feedback、rewire。
 
 installOutboundPolicy、installSendPolicy、refreshCustody、openStore、admitStep、deliverMail、verifyTask、provisionRecoveryTask、stop、failNode、tick、recover、shutdown 是可信宿主、调度、持久化或已有载荷回放路径。它们不是模型输入接口。重放已有邮件不会重新授予保管身份；相同 messageId 的新调用仍重新检查策略。
 
-白板正文、发布/删除、`publishKnowledge` 与 `atn_board` 已删除，没有豁免通道。加载旧记录时丢弃白板字段；无来源标记的旧自报知识不参与保管元数据。保留宿主 `knowledgeFingerprint` 快照供恢复与观察，实时发现优先读取当前安装策略的 custody。
+0.5.0 的发布禁令在本轮被有据地、受限地解除：只解除“结构化可核验发布”。自由文本白板、删除/编辑、`publishKnowledge` 与 `atn_board` 仍删除，没有豁免通道。加载旧记录时丢弃白板字段；无来源标记的旧自报知识不参与保管元数据。保留宿主 `knowledgeFingerprint` 快照供恢复与观察，实时发现优先读取当前安装策略的 custody。
+
+`search` / `visit` 是主动读取与独立读取计量的复合路径，不向其他节点发送查询；终态网络读取不写计量。模型投影只含地址、四字段和最近被引地址，绝不加作者/权重元数据。`exportSubstrate` 是宿主只读审计 API，可导出作者、权重、四字段、引用及任务交付传递闭包，不是工具或发现来源。
 
 ## 漂移检测
 
-`tests/integration/information-boundary.test.ts` 手写枚举以上 13 条通道，逐条尝试洗数据，断言策略被调用、网络状态/写次数/Agent 数量/模型请求数不变。不能从运行时列表自动生成测试用例。
+`tests/integration/information-boundary.test.ts` 手写枚举以上 14 条通道，逐条尝试洗数据，断言策略被调用、网络状态/写次数/Agent 数量/模型请求数不变。不能从运行时列表自动生成测试用例。
 
-`tests/unit/information-boundary-inventory.test.ts` 独立列出公开方法的审计分类和五工具的顶层/嵌套参数、邮件 kind、finish scope。增加公开方法、工具、字段、邮件类型或登记通道而未更新审计及覆盖会失败。测试还实际插入未登记 API、工具和字段，验证检查能抓住这些变更。
+`tests/unit/information-boundary-inventory.test.ts` 独立列出公开方法的审计分类和八工具的顶层/嵌套参数、邮件 kind、finish scope。增加公开方法、工具、字段、邮件类型或登记通道而未更新审计及覆盖会失败。测试还实际插入未登记 API、工具和字段，验证检查能抓住这些变更。
 
 ## 公开拒绝码
 
@@ -46,5 +49,13 @@ installOutboundPolicy、installSendPolicy、refreshCustody、openStore、admitSt
 | `invalid-setup-receipt` | setup 回执不是固定 `{"ready":true}` 与空 evidence。 |
 | `invalid-owner-result` | 所有者结果未满足请求 key、body、summary、evidence、outcome 约束。 |
 | `async-policy` | 策略/域验证返回 Promise，未同步完成，拒绝提交。0.5.0 新增。 |
+| `ref-unresolved` | 引用不存在、未来／非法消息地址或重复/超限引用；visit 任一地址未解析整体拒绝。 |
+| `ref-not-owned` | artifact 引用不在同一 CustodyResolver 的真实集合中。 |
+| `ref-not-visible` | task 引用的作者既不是 holder，也不是 requester。 |
+| `rationale-missing-ref` | 理由没有按精确 token 点名某条引用；不代表已核验语义贡献。 |
+| `custody-unavailable` | artifact 引用没有可信宿主保管解析器。 |
+| `substrate-full` | 达到消息数或消息序列字节容量；不驱逐、不覆盖。 |
 
 既有码未改名。域验证先于通用保管集合检查，以保留旧邮件拒绝优先级；重写前后的完整有序记录见 `binding-before.json`、`binding-after.json`。宿主须正确维护 custody 和 extractClaims；工厂不会自行识别任意自然语言事实。
+
+消息引文权重仅在相关结果内部重排，不是节点声誉，不参与权限、换边、认领或评价。宿主只验证引用可解析／可见／持有与理由点名，不核验自然语言真实性。旧记录继续丢弃 whiteboard 字段，schema 未放宽未知字段。

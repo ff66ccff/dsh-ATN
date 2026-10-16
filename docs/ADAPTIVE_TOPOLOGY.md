@@ -1,8 +1,8 @@
 # 最小自适应拓扑
 
-当前源码通过局部运行时遥测、请求者评价、宿主派生发现、每节点预算和原子认领支持自适应协作。默认模型工具为 `atn_start`、`atn_status`、`atn_spawn`、`atn_send`、`atn_finish` 五个；宿主验收是可选的更强质量证据，不决定能否重连。出生谱系保留用于追溯，不决定后续协作。[任务验收与观测说明](VERIFIED_COLLABORATION.md)区分执行结果、验收结果与重连观测。
+当前源码通过局部运行时遥测、请求者评价、宿主派生发现、每节点预算和原子认领支持自适应协作。默认模型工具为 `atn_start`、`atn_status`、`atn_spawn`、`atn_send`、`atn_finish`、`atn_publish`、`atn_search`、`atn_visit` 八个；宿主验收是可选的更强质量证据，不决定能否重连。出生谱系保留用于追溯，不决定后续协作。[任务验收与观测说明](VERIFIED_COLLABORATION.md)区分执行结果、验收结果与重连观测。
 
-请求者通过 `atn_status(review=...)` 记录本地判定；知识发现由宿主真实 custody/descriptor 派生，不提供自由发布或白板工具。发现排序参考派生主题、任务、真实评价与负载；重连把 `requesterEvaluation` 与宿主 `evaluation` 分开保存。历史反馈/发布机制及其确定性对照见 [P0/P1 机制实验](FEEDBACK_MILESTONE.md)，其中旧工具面不是现行契约。
+请求者通过 `atn_status(review=...)` 记录本地判定；知识发现由宿主真实 custody/descriptor 派生，不恢复自由文本白板或自报知识工具；结构化 substrate 发布在独立写侧准入下提供。发现排序参考派生主题、任务、真实评价与负载；重连把 `requesterEvaluation` 与宿主 `evaluation` 分开保存。历史反馈/发布机制及其确定性对照见 [P0/P1 机制实验](FEEDBACK_MILESTONE.md)，其中旧工具面不是现行契约。
 
 ## 节点自主决定什么
 
@@ -44,10 +44,14 @@
 
 每次重连冻结旧邻居的局部观测，同时记录新邻居的当前观测。后续任务及步数 mutation 更新该节点最近一次重连的 `observations.after`，该节点再次重连后前一条冻结。数量是调用者对该同伴累计委派任务的计数，延迟/任务步数均值使用最近有界样本；它不是自动匹配工作量的实验，更不是重连的因果效果。宿主验收可补充独立的质量、成本单位与可比任务信息。
 
-确定性测试能验证连接改变通信、断边保留旧任务、逐节点预算、并发认领、无额外调用的反馈及持久恢复。它们不能证明真实模型会选择有用的拓扑，更不能证明完成质量、成本或速度优于 agent team。历史实验把八节点的出度冻结为二，初始双向环直径为四，并加入私有证据位置和阶段变化；十六节点的同类环直径为八也有确定性测试。历史白板跨拓扑可读，禁白板臂仍有知识索引；这些旧版条件不是现行五工具的能力。各臂记录提交质量、消耗、完成时间及实际边变化；保持原边集不算有效换边。详见[完整实验记录](FULL_FEEDBACK_EXPERIMENT.md)。
+确定性测试能验证连接改变通信、断边保留旧任务、逐节点预算、并发认领、无额外调用的反馈及持久恢复。它们不能证明真实模型会选择有用的拓扑，更不能证明完成质量、成本或速度优于 agent team。历史实验把八节点的出度冻结为二，初始双向环直径为四，并加入私有证据位置和阶段变化；十六节点的同类环直径为八也有确定性测试。历史白板跨拓扑可读，禁白板臂仍有知识索引；这些旧版条件不是现行八工具的能力。各臂记录提交质量、消耗、完成时间及实际边变化；保持原边集不算有效换边。详见[完整实验记录](FULL_FEEDBACK_EXPERIMENT.md)。
 
 此文记录 `dsh-atn@0.3.1` 发布时的自适应拓扑与验收结果。当前版本为 `0.5.0`，安装方式及现行工具面见 [README](../README.md)，信息边界与白板移除见 [0.5.0 实施报告](INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md)。上一版预览 `dsh-atn@0.2.0` 和 Git 标签 `v0.2.0` 不含这些能力。
 
 此前最小自适应拓扑阶段通过 173 项测试，覆盖轮转探索、显式失败结果、局部变化摘要、跨分支协作、断边义务、并发重连、退出补位、旧记录迁移和冷恢复。后续 pilot 与本阶段验收机制的验证分别记录，不把历史测试数量当作当前总数。
 
-历史 tarball 的 Web profile smoke 曾确认十工具/九工具版本。当前源码的真实目标 Harness smoke 确认五个 ATN 工具、子节点继承及 Standard 隔离；使用确定性模型，结果见 [A 报告](HARNESS_0_2_1_IMPLEMENTATION_REPORT.md) 与 [C 报告](BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)。不将旧白板实验或安装记录当作当前工具面的承诺。
+历史 tarball 的 Web profile smoke 曾确认十工具/九工具版本。A/C 历史目标 Harness smoke 确认五个 ATN 工具、子节点继承及 Standard 隔离；使用确定性模型，结果见 [A 报告](HARNESS_0_2_1_IMPLEMENTATION_REPORT.md) 与 [C 报告](BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)。本轮 alpha.4 profile smoke 另已实测八工具及三个 substrate 操作，见 [Substrate 报告](SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)。不将旧白板实验或安装记录当作当前工具面的承诺。
+
+## Substrate 与拓扑／发现
+
+Substrate 是全网络纯拉取的中间产物序列，读取不依赖协作边。边继续决定 atn_send 可达性、重连与出度；二者并行存在。Substrate 不参与 atn_status 的节点发现，不影响 custody、rewire、claim、review 或验收。发布不推送／不唤醒，退休与失败不删除消息。0.5.0 发布禁令仅对结构化可核验发布受限解除；原自由文本白板和 publishKnowledge 仍删除。默认八工具；关闭 substrate 保留原五工具协议。

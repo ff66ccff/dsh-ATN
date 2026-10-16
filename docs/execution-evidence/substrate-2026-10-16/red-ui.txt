@@ -1,0 +1,42 @@
+✖ SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epoch and evidence links (75.2681ms)
+✔ shows the entry only for the current ATN preset, including metadata arriving later (15.7232ms)
+✔ leaving ATN hides the open panel, aborts polling, and resets it before returning (1071.6243ms)
+✔ switching from an ATN session to a non-ATN session hides the entry without fetching (7.9252ms)
+✔ does not fetch until opened, serializes polling, and aborts on close (2121.4271ms)
+✔ switching sessions cancels the old request and ignores its late response (10.0568ms)
+✔ unmount aborts the observer request (4.9949ms)
+✔ shows empty state, a disconnected last snapshot, and a working retry (1072.7209ms)
+✔ renders directed adjacency separately from birth links and node task results (20.0738ms)
+✔ SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service (23.1089ms)
+✔ SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload (6.9419ms)
+✔ SIDEBAR-PENDING: a required missing module blocks its apply, but late optional child registration does not block the header (21.0496ms)
+✔ SIDEBAR-VISIBLE: inactive tabs pause, active tabs serialize requests, and preset changes abort and reset (2130.3151ms)
+✔ VIEW-PROPS: displays quotas, bounded submission history, abandoned attempts and locale-owned groups from props (10.9077ms)
+✔ SIDEBAR-MENU: descriptor gates non-ATN sessions and uses right sidebar rather than bottom-only (12.0112ms)
+ℹ tests 15
+ℹ suites 0
+ℹ pass 14
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7442.7337
+
+✖ failing tests:
+
+test at .artifacts\tests-client\observer-ui.test.mjs:753:1
+✖ SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epoch and evidence links (75.2681ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(section)
+  
+      at TestContext.<anonymous> (file:///D:/dsh-ATN/.artifacts/tests-client/observer-ui.test.mjs:769:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

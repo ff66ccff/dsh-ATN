@@ -1,0 +1,168 @@
+{
+  "id": "atn-dbec62f9-c179-4015-9e7e-e6e85da40f19",
+  "entrySessionId": "substrate-replay",
+  "entryNodeId": "node-1",
+  "status": "open",
+  "limits": {
+    "maxCollaborationPeers": 8,
+    "requesterMinSamples": 2,
+    "substrateEnabled": true,
+    "maxSubstrateMessages": 128,
+    "maxSubstrateMessageBytes": 2048,
+    "maxSubstrateTotalBytes": 131072,
+    "substrateSearchResults": 8,
+    "substrateVisitLimit": 8,
+    "substrateRefsPerMessage": 32,
+    "substrateCitationWeight": true,
+    "substrateCitersShown": 8,
+    "maxResidentNodes": 8,
+    "maxTotalNodes": 32,
+    "maxTasks": 256,
+    "maxProposals": 64,
+    "maxPendingMailPerNode": 64,
+    "maxRetainedMail": 1024,
+    "maxMessageBytes": 8192,
+    "maxDocumentBytes": 8192,
+    "defaultLeaseMs": 300000,
+    "maxLeaseExtensionMs": 1800000,
+    "networkDeadlineMs": 3600000,
+    "proposalDeadlineMs": 120000,
+    "stepBudget": 64
+  },
+  "goalHistory": [
+    {
+      "version": 1,
+      "document": {
+        "objective": "Replay shared work",
+        "successCriteria": "Exact ranks",
+        "constraints": "Zero model calls"
+      },
+      "proposedBy": null,
+      "approvedBy": [],
+      "committedAt": 100
+    }
+  ],
+  "stepsUsed": 7,
+  "nodes": {
+    "node-1": {
+      "id": "node-1",
+      "sessionId": "substrate-replay",
+      "creatorId": null,
+      "selectedChildId": null,
+      "peerIds": [],
+      "lifecycle": "active",
+      "leaseDeadlineAt": null,
+      "modelRoute": {
+        "provider": "atn-script",
+        "model": "deterministic",
+        "effort": null
+      },
+      "presetId": null,
+      "permissionSeed": null,
+      "isEntry": true,
+      "creationState": "published",
+      "lastGoalVersionSent": 1,
+      "stepsUsed": 7,
+      "note": "host-owned entry node",
+      "createdAt": 100
+    }
+  },
+  "tasks": {
+    "task-2": {
+      "id": "task-2",
+      "holderId": "node-1",
+      "requesterId": "node-1",
+      "description": "Replay shared work",
+      "context": "Initial task derived from the shared goal: Exact ranks",
+      "dependsOn": [],
+      "retryOf": null,
+      "holderStepsAtCreation": 0,
+      "acceptance": null,
+      "status": "open",
+      "result": null,
+      "settledBy": null,
+      "createdAt": 100,
+      "settledAt": null
+    }
+  },
+  "mails": {},
+  "proposals": {},
+  "substrate": {
+    "messages": [
+      {
+        "address": "msg:1",
+        "sub_task": "parser boundary",
+        "artifact": "intermediate lead",
+        "rationale": "checked ",
+        "refs": [],
+        "authorId": "node-1",
+        "publishedEpoch": 3
+      },
+      {
+        "address": "msg:2",
+        "sub_task": "parser boundary",
+        "artifact": "intermediate lead",
+        "rationale": "checked ",
+        "refs": [],
+        "authorId": "node-1",
+        "publishedEpoch": 4
+      },
+      {
+        "address": "msg:3",
+        "sub_task": "parser boundary",
+        "artifact": "intermediate lead",
+        "rationale": "checked msg:2",
+        "refs": [
+          "msg:2"
+        ],
+        "authorId": "node-1",
+        "publishedEpoch": 5
+      },
+      {
+        "address": "msg:4",
+        "sub_task": "parser boundary",
+        "artifact": "intermediate lead",
+        "rationale": "checked msg:1 msg:3",
+        "refs": [
+          "msg:1",
+          "msg:3"
+        ],
+        "authorId": "node-1",
+        "publishedEpoch": 6
+      }
+    ],
+    "nextAddress": 5,
+    "epoch": 6,
+    "totalBytes": 642,
+    "weights": {
+      "msg:1": {
+        "value": 300000,
+        "epoch": 6
+      },
+      "msg:2": {
+        "value": 300000,
+        "epoch": 5
+      },
+      "msg:3": {
+        "value": 300000,
+        "epoch": 6
+      },
+      "msg:4": {
+        "value": 0,
+        "epoch": 6
+      }
+    },
+    "metrics": {
+      "publishCalls": 4,
+      "publishedBytes": 642,
+      "readCalls": 1,
+      "readMessages": 4,
+      "readBytes": 577
+    }
+  },
+  "requesterEdges": [],
+  "sequence": 2,
+  "createdAt": 100,
+  "deadlineAt": 3600100,
+  "note": null
+}
