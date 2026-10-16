@@ -31,8 +31,6 @@ jobs:
         os: [ubuntu-latest, windows-latest]
         provider: [published, upstream]
     runs-on: ${{ matrix.os }}
-    env:
-      SIDEBAR_PACKAGE_DIR: ${{ matrix.provider == 'upstream' && format('{0}/.scratch/sidebar-source', github.workspace) || format('{0}/atn-sidebar-provider/node_modules/dsh-better-sidebar', runner.temp) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/checkout@v4
@@ -51,3 +49,5 @@ jobs:
       - if: matrix.provider == 'published'
         run: npm install --prefix "${{ runner.temp }}/atn-sidebar-provider" --ignore-scripts --legacy-peer-deps --package-lock=false --no-audit --no-fund --save=false dsh-better-sidebar@0.26.1
       - run: npm run verify:sidebar
+        env:
+          SIDEBAR_PACKAGE_DIR: ${{ matrix.provider == 'upstream' && format('{0}/.scratch/sidebar-source', github.workspace) || format('{0}/atn-sidebar-provider/node_modules/dsh-better-sidebar', runner.temp) }}
