@@ -4,6 +4,8 @@ V2 工程卫生：七个零直接引用包按真实宿主依赖图保留并逐�
 
 网络局部 `msg:`、node/task 标识及宿主 custody 的跨网络补证见 [两张判定表](docs/execution-evidence/round-v2-phase1/README.md)；网络仍不等于认证租户。
 
+宿主可显式安装 [substrate 读侧策略](docs/OBSERVER_READ_AUTHORIZATION.md#节点-substrate-读侧策略v2-阶段-2)，复用既有主体/资源/action；默认关闭，八工具和固定上下文不变。它约束消息读取及声明引用，不证明任意自然语言保密。
+
 <div align="center">
 
 ### **布线会变，边界不变。**

@@ -63,6 +63,7 @@ import { randomUUID } from 'node:crypto'
 import { appendSubstrate, searchSubstrate, visitSubstrate, recordSubstrateRead, substrateLimits, citers,
   evidenceChain, type PublishInput, type SubstrateMessageView } from './substrate.ts'
 import { weightAt } from './substrate-ranking.ts'
+import { substrateReadView, type SubstrateReadPolicy } from './substrate-read-policy.ts'
 
 /** Abort the store transform without a write when a queued read reaches an archived network. */
 class ArchivedSubstrateRead extends Error {
@@ -436,6 +437,7 @@ export class AtnRuntime extends Service<Config> {
   private readonly mutationTails = new Map<string, Promise<unknown>>()
   private readonly sendPolicies = new Map<string, NetworkSendPolicy>()
   private readonly outboundPolicies = new Map<string, NetworkOutboundPolicy>()
+  private readonly substrateReadPolicies = new Map<string, SubstrateReadPolicy>()
   /** Handle-release bookkeeping shared by retirement, completion and stop. */
   private readonly releaser: HandleReleaser
   /** Reports returned by earlier stop calls, so a repeat is idempotent. */
@@ -512,6 +514,31 @@ export class AtnRuntime extends Service<Config> {
     return local?.custody === undefined ? this.outboundPolicies.get('*') : local
   }
 
+  /** Optional host-installed read mapping. Missing policy retains the paper's all-network read semantics. */
+  installSubstrateReadPolicy(networkId: string, policy: SubstrateReadPolicy): () => void {
+    if (this.substrateReadPolicies.has(networkId)) throw new Error('Network substrate read policy already installed')
+    this.substrateReadPolicies.set(networkId, policy)
+    return () => { if (this.substrateReadPolicies.get(networkId) === policy) this.substrateReadPolicies.delete(networkId) }
+  }
+
+  private substrateReadView(record: NetworkRecord, nodeId: string): NetworkRecord {
+    return substrateReadView(record, record.nodes[nodeId], this.substrateReadPolicies.get(record.id))
+  }
+
+  /** Task evidence is also a model read path; do not expose hidden substrate roots through status. */
+  private substrateTaskViews(record: NetworkRecord, nodeId: string, tasks: TaskRecord[]): TaskRecord[] {
+    const copies = structuredClone(tasks)
+    if (!this.substrateReadPolicies.has(record.id)) return copies
+    const visible = new Set(this.substrateReadView(record, nodeId).substrate?.messages.map(message => message.address) ?? [])
+    const filter = (refs: string[]) => refs.filter(ref => !ref.startsWith('msg:') || visible.has(ref))
+    for (const task of copies) {
+      if (task.result) task.result.evidence = filter(task.result.evidence)
+      if (task.localFeedback) task.localFeedback.evidence = filter(task.localFeedback.evidence)
+      if (task.acceptance) task.acceptance.evidence = filter(task.acceptance.evidence)
+    }
+    return copies
+  }
+
   private admitOutbound(record: NetworkRecord, sender: NodeRecord, operation: OutboundOperation): void {
     assertSynchronousAdmission(this.outboundPolicies.get('*')?.(record, sender, operation))
     assertSynchronousAdmission(this.outboundPolicies.get(record.id)?.(record, sender, operation))
@@ -526,6 +553,7 @@ export class AtnRuntime extends Service<Config> {
     const committed = await this.mutate(record.id, current => {
       const next = appendSubstrate(current, node.id, input, {
         custody: this.knowledgePolicy(current)?.custody,
+        readView: this.substrateReadView(current, node.id),
         admit: () => this.admitOutbound(current, current.nodes[node.id], { channel: 'publish', input }),
       })
       return { record: next, value: { address: next.substrate!.messages.at(-1)!.address, epoch: current.stepsUsed } }
@@ -544,11 +572,11 @@ export class AtnRuntime extends Service<Config> {
   }
 
   private async substrateRead(agent: Agent, read: (record: NetworkRecord) => SubstrateMessageView[]) {
-    const { record } = await this.callerContext(agent)
-    if (record.status !== 'open') return { messages: read(record) }
+    const { record, node } = await this.callerContext(agent)
+    if (record.status !== 'open') return { messages: read(this.substrateReadView(record, node.id)) }
     try {
       return (await this.mutate(record.id, current => {
-        const messages = read(current)
+        const messages = read(this.substrateReadView(current, node.id))
         if (current.status !== 'open') throw new ArchivedSubstrateRead(messages)
         return { record: recordSubstrateRead(current, messages), value: { messages } }
       })).value
@@ -1408,6 +1436,7 @@ export class AtnRuntime extends Service<Config> {
             `mail ${reused.id} already settles task ${String(reused.taskId)} with a different result; a stable id cannot be reused for a different message`,
           )
         }
+        evidenceChain(this.substrateReadView(current, senderId), input.evidence ?? [])
         return { record: current, value: { mailId: reused.id, duplicate: true } }
       }
       if (current.tasks[taskId]?.kind === 'delivery') {
@@ -1431,7 +1460,7 @@ export class AtnRuntime extends Service<Config> {
         ...(input.messageId === undefined ? {} : { id: input.messageId }),
       })
       // Task settlement and its outbox row commit in one network mutation.
-      evidenceChain(current, input.evidence ?? [])
+      evidenceChain(this.substrateReadView(current, senderId), input.evidence ?? [])
       return { record: enqueued.record, value: { mailId: enqueued.mailId, duplicate: enqueued.duplicate } }
     })
     if (committed.value.duplicate) {
@@ -1672,9 +1701,10 @@ export class AtnRuntime extends Service<Config> {
       }
       this.admitOutbound(current, caller, { channel: 'status.review', input })
       const updated = recordRequesterFeedback(current, node.id, input, this.now())
+      if (this.substrateReadPolicies.has(current.id)) evidenceChain(this.substrateReadView(current, node.id), input.evidence)
       return { record: updated.record, value: updated.task }
     })
-    return structuredClone(committed.value)
+    return this.substrateTaskViews(committed.record, node.id, [committed.value])[0]
   }
 
   /** Stage a host-defined recovery obligation before failing its current holder. No model tool exposes this API. */
@@ -1705,7 +1735,7 @@ export class AtnRuntime extends Service<Config> {
         if (task === undefined) throw new AtnRefusal('unknown-task', `unknown task ${id}`)
         return task
       })
-    return structuredClone(tasks)
+    return this.substrateTaskViews(record, node.id, tasks)
   }
 
   /** Inspect work and resources; an idle node may select one orphan to recover. */
@@ -1727,7 +1757,7 @@ export class AtnRuntime extends Service<Config> {
       const text = `${task.description} ${task.context}`.toLowerCase()
       return terms.some(term => text.includes(term))
     })
-    return { ...peers, tasks, orphanTasks: structuredClone(relevant.slice(0, 16)),
+    return { ...peers, tasks, orphanTasks: this.substrateTaskViews(record, node.id, relevant.slice(0, 16)),
       orphanTasksRemaining: Math.max(0, relevant.length - 16),
       budget: { stepsUsed: node.stepsUsed ?? 0, stepBudget: record.limits.stepBudget,
         maxCollaborationPeers: collaborationPeerLimit(record),
@@ -2146,7 +2176,7 @@ export class AtnRuntime extends Service<Config> {
         return { record: current, value: { accepted: false, reason: `completion refused: ${blockers.join('; ')}` } }
       }
 
-      evidenceChain(current, input.evidence)
+      evidenceChain(this.substrateReadView(current, holder.id), input.evidence)
       const ownTasks = openTasks(current).filter((task) => task.holderId === holder.id)
       const tasks = { ...current.tasks }
       for (const task of ownTasks) {

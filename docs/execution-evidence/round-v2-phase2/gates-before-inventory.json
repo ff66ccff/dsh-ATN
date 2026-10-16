@@ -1,0 +1,27 @@
+{
+  "DSH_CLI": "D:\\dsh-ATN\\.scratch\\harness-alpha4\\node_modules\\.bin\\dsh.cmd",
+  "SIDEBAR_PACKAGE_DIR": "D:\\dsh-ATN\\.scratch\\sidebar-0261\\node_modules\\dsh-better-sidebar",
+  "results": [
+    {
+      "command": "npm ci",
+      "code": 0,
+      "startedAt": "2026-10-16T17:48:40.392Z",
+      "finishedAt": "2026-10-16T17:48:58.383Z",
+      "file": "npm-ci.txt"
+    },
+    {
+      "command": "npm run typecheck",
+      "code": 0,
+      "startedAt": "2026-10-16T17:48:58.388Z",
+      "finishedAt": "2026-10-16T17:49:04.174Z",
+      "file": "npm-run-typecheck.txt"
+    },
+    {
+      "command": "npm test",
+      "code": 1,
+      "startedAt": "2026-10-16T17:49:04.176Z",
+      "finishedAt": "2026-10-16T17:49:50.673Z",
+      "file": "npm-test.txt"
+    }
+  ]
+}

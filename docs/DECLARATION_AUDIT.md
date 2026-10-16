@@ -76,3 +76,5 @@
 后续新增读取面的强制核对项：B-HOST-EXPORT 的可信宿主、无调用者校验前提；`atn-observation` 整网 session 别名；`atnObserver/snapshot` 与 `atnObserver/metadata` 独立 action。每次扩展都复核 principal/resource/action、严格 schema、授权先于加载与未知标识行为。
 
 V2 阶段 1：`NAMESPACE-STRUCTURE` / `NAMESPACE-LIVE` 补足 msg/node/task/artifact 网络局部解析与双主体 Gateway 证据，无生产语义变更。负对照显式注入错误 resolver；不宣称生产代码曾存在该漏洞。artifact 外网独有仍按既有 custody 返回 ref-not-owned，不改变优先级。
+
+V2 阶段 2 公开增量：installSubstrateReadPolicy、defineSubstrateReadPolicy、SubstrateReadPolicy/Options、substrateResourceId、ATN_SUBSTRATE_READER。资源 atn-substrate/action atnSubstrate/read；仅宿主映射 live node，模型工具面不变。READ-POLICY* 与 fixed-context 精确 7956/5910 锚定开启/关闭、被引/证据、排序权重、错误不可区分、失败原子性和冷重放。论文偏离新增第 8 项，默认未安装保持全读。

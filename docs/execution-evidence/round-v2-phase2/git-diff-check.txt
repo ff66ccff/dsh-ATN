@@ -1,0 +1,13 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ADAPTIVE_TOPOLOGY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/DECLARATION_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/OBSERVER_READ_AUTHORIZATION.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/THREAT_MODEL.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/index.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/runtime.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'src/substrate.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/integration/fixed-context.test.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'tests/unit/information-boundary-inventory.test.ts', LF will be replaced by CRLF the next time Git touches it

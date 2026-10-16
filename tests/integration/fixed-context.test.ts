@@ -20,6 +20,7 @@ test('RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed by
     assert.equal(measured.systemPromptBytes, Buffer.byteLength(SHARED_RULES))
     assert.equal(measured.toolSchemaBytes, Buffer.byteLength(JSON.stringify(schemas)))
     assert.ok(measured.fixedContextBytes < 8500, `fixed context ${measured.fixedContextBytes} must fit the reviewed eight-tool UTF-8 ceiling`)
+    assert.equal(measured.fixedContextBytes, 7956, 'round-v2 forbids any change to model tools, parameters or fixed context')
     for (const schema of schemas) assert.match(schema.name, /^atn_[a-z]+$/)
     assert.doesNotMatch(SHARED_RULES, /atn_(feedback|rewire)\b/)
   } finally {

@@ -29,11 +29,11 @@ flowchart LR
 | B-NAMESPACE | msg/node/task/artifact 重名必须在调用者网络内解析；外网独有不触发外网查找。是否把局部地址当成全局键？ | `NAMESPACE-STRUCTURE` / `NAMESPACE-LIVE`；[分区与授权矩阵](execution-evidence/round-v2-phase1/README.md) |
 | B-OUTBOUND | 14 通道检查完整输入；拒绝在提交前发生。新增字段/方法是否绕过策略？ | `BOUNDARY-CHANNELS`、`BOUNDARY-FIELDS`、`BOUNDARY-SYNC`（information-boundary.test.ts）；`BOUNDARY-INVENTORY` |
 | B-ATOMIC | 拒绝不追加消息、消耗地址、改权重/步数或产生邮件/模型唤醒。失败是否留下业务写入？ | `SUBSTRATE-ATOMIC`（integration/substrate.test.ts）、`SUBSTRATE-CAPACITY`（unit/substrate.test.ts） |
-| B-MODEL-READ | search/visit 仅限实际调用者网络；网络内消息目前全网可读，隐藏作者/权重。新读取是否扩大网络或引入新发现来源？ | `SUBSTRATE-KERNEL`、`SUBSTRATE-ADMISSION`、`SUBSTRATE-RANK` |
+| B-MODEL-READ | search/visit 仅限实际调用者网络；无策略全网可读，显式安装策略时以 live node 映射 principal，以 atn-substrate/[networkId,address]、atnSubstrate/read 复用 remoteAccess。排序前过滤，引用闭包与权重只用可见消息；隐藏地址同未知地址拒绝。新读取是否扩大网络或引入新发现来源？ | `SUBSTRATE-KERNEL`、`READ-POLICY*`（unit/integration）；[策略契约](OBSERVER_READ_AUTHORIZATION.md#节点-substrate-读侧策略v2-阶段-2) |
 | B-OBSERVE | 非 owner 读取须经 Gateway 的资源/action 判定；内容快照与纯元数据权限分开。新增结果字段是否把文本/作者放进元数据？ | `READ-AUTH-*`（integration/observer.test.ts）；`OBSERVER-01/04/06` |
 | B-HOST-EXPORT | **明确选择宿主信任假设**：exportSubstrate(networkId) 不校验调用者，可信插件可导出任意网络。新 HTTP/RPC/工具包装是否直接传递用户输入而未授权？若是，越界，须单独授权后才能调用。 | `SUBSTRATE-KERNEL` 的完整 export 断言；`BOUNDARY-INVENTORY` 的宿主读取分类 |
 
-三类读取分别判定：search/visit 校验 ATN 节点身份但不做主体级读侧分区；观察 RPC 由网关校验主体，ATN 负责结果形状；宿主直接调用 observer、network/findBySessionId/exportSubstrate 等原始 API 均不构成沙箱。不得将网关测试扩写成整个宿主的租户隔离证明。
+三类读取分别判定：search/visit 校验 ATN 节点身份，读侧策略缺省关闭、宿主显式安装时按主体分区；观察 RPC 由网关校验主体，ATN 负责结果形状；宿主直接调用 observer、network/findBySessionId/exportSubstrate 等原始 API 均不构成沙箱。不得将网关测试扩写成整个宿主的租户隔离证明。
 
 ## 观察权限契约
 
@@ -49,7 +49,7 @@ flowchart LR
 
 授权模型使用上游 remoteAccess 的角色 action 与资源绑定；ATN 不注册新的 principal kind 或占用宿主策略槽。资源 reader 由 Remote 方法元数据提供（alpha.4 的 InvocationDescriptor 本身没有 resources 字段）。不注册全局默认 sessionId 字段，避免改变其他服务的资源集合。能力检查针对运行时资源 API/方法 reader，不能比较版本号推定安全。需要经过本仓库网关集成测试的兼容实现；API 存在本身不能证明网关语义。
 
-未来 need-to-know、Topology-as-ACL、舰队读取必须沿用同一 principal/resource/action 模型，并重新列举每个读取资源，不得通过消息权重授予权限。本轮不实现这些后续能力。
+V2 need-to-know 已按 B-MODEL-READ 落地；Topology-as-ACL、舰队读取扩展必须沿用同一 principal/resource/action 模型，并重新列举每个读取资源，不得通过消息权重授予权限。
 
 ## 明确排除的四项
 

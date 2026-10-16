@@ -40,7 +40,7 @@ function namesRef(rationale: string, ref: string): boolean {
 
 /** Caller holds the network mutation lock. Admission runs last, before allocating any durable state. */
 export function appendSubstrate(record: NetworkRecord, authorId: string, input: PublishInput,
-  host: { custody?: CustodyResolver; admit?: () => void } = {}): NetworkRecord {
+  host: { custody?: CustodyResolver; admit?: () => void; readView?: NetworkRecord } = {}): NetworkRecord {
   requireEnabled(record)
   if (record.status !== 'open') throw new AtnRefusal('network-closed', `network ${record.id} is ${record.status}`)
   const author = record.nodes[authorId]
@@ -63,7 +63,7 @@ export function appendSubstrate(record: NetworkRecord, authorId: string, input: 
     const match = /^(msg|task|artifact):(.+)$/u.exec(ref)
     if (!match) throw new AtnRefusal('ref-unresolved', `unresolved reference ${ref}`)
     const [, kind, id] = match
-    if (kind === 'msg' && (!/^msg:[1-9]\d*$/.test(ref) || !state.messages.some(m => m.address === ref) || addressNumber(ref) >= state.nextAddress)) {
+    if (kind === 'msg' && (!/^msg:[1-9]\d*$/.test(ref) || !(host.readView ?? record).substrate?.messages.some(m => m.address === ref) || addressNumber(ref) >= state.nextAddress)) {
       throw new AtnRefusal('ref-unresolved', `unresolved or future reference ${ref}`)
     }
     if (kind === 'task') {

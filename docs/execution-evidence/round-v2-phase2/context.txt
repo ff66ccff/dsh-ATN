@@ -1,0 +1,2 @@
+{"substrateEnabled":true,"tools":["atn_start","atn_spawn","atn_send","atn_status","atn_finish","atn_publish","atn_search","atn_visit"],"systemPromptBytes":1837,"toolSchemaBytes":6119,"fixedContextBytes":7956}
+{"substrateEnabled":false,"tools":["atn_start","atn_spawn","atn_send","atn_status","atn_finish"],"systemPromptBytes":1161,"toolSchemaBytes":4749,"fixedContextBytes":5910}

@@ -11,7 +11,7 @@ import { makeChain } from '../fixtures/network.ts'
 const outbound = ['start', 'spawn', 'send', 'feedback', 'claim', 'rewire', 'finish', 'deliver', 'propose', 'vote', 'renew', 'publish']
 const reads = ['networkForSession', 'now', 'callerContext', 'resolveNode', 'peers', 'tasks',
   'deliveryHolder', 'network', 'networkIds', 'findBySessionId', 'ownsHandle', 'handleFor', 'pendingMail', 'exportSubstrate']
-const trusted = ['installSendPolicy', 'installOutboundPolicy', 'refreshCustody', 'openStore', 'admitStep',
+const trusted = ['installSendPolicy', 'installOutboundPolicy', 'installSubstrateReadPolicy', 'refreshCustody', 'openStore', 'admitStep',
   'deliverMail', 'verifyTask', 'provisionRecoveryTask', 'stop', 'failNode', 'tick', 'recover', 'shutdown']
 const compound = ['status', 'search', 'visit']
 

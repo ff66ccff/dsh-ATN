@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+not ok 1 - READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+  ---
+  duration_ms: 28.2521
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\substrate-read-policy.test.ts:1:1003'
+  failureType: 'testCodeFailure'
+  error: 'feature.defineSubstrateReadPolicy is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\substrate-read-policy.test.ts:38:26)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+not ok 2 - READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+  ---
+  duration_ms: 13.6481
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\substrate-read-policy.test.ts:1:3598'
+  failureType: 'testCodeFailure'
+  error: 'feature.defineSubstrateReadPolicy is not a function'
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\substrate-read-policy.test.ts:75:27)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 0
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 621.0632

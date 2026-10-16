@@ -61,4 +61,28 @@ ctx.remoteAccess.invalidate({ kind: 'business-operator', id: 'content-user' })
 
 `node --import tsx/esm --test tests/integration/observer.test.ts` 覆盖原有 6 项观察契约及 READ-AUTH 的 global 负例、双主体会话隔离、撤销、额外参数伪造、纯元数据、缺省/抛错策略、冷记录、启动能力缺失。红灯和全量验证见 [实施报告](READ_BOUNDARY_IMPLEMENTATION_REPORT.md)。
 
-ATN 层：live 节点身份、网络分区、严格结果投影；Gateway 层：非 owner 资源/action 授权；宿主前提：Peer 身份、权限表、存储和进程内插件可信。未证明框架外存储/凭据/模型路由隔离，未实现节点 need-to-know、跨网络聚合或完整导出授权。
+ATN 层：live 节点身份、网络分区、严格结果投影；Gateway 层：非 owner 资源/action 授权；宿主前提：Peer 身份、权限表、存储和进程内插件可信。未证明框架外存储/凭据/模型路由隔离；完整导出仍为可信宿主 API。
+
+## 节点 substrate 读侧策略（V2 阶段 2）
+
+| principal / resource / action | 授权与读取 |
+|---|---|
+| 宿主从真实 live node 映射的非 owner principal / `atn-substrate`，ID 为 `substrateResourceId(networkId,address)`（JSON 二元组） / `atnSubstrate/read` | 同一 remoteAccess.decide；缺失映射零可见，owner 映射拒绝。宿主显式安装后生效；不是新增 RPC 或模型工具 |
+| 未安装读策略 | 维持论文的网内全读语义；不自行生成映射或默认 ACL |
+| 已授权观察主体／可信宿主 export | 继续按各自整网披露前提读取，不把 node 策略当作宿主沙箱 |
+
+```ts
+import { defineSubstrateReadPolicy, ATN_SUBSTRATE_READER, substrateResourceId } from 'dsh-atn'
+// 宿主为既有 principal kind 的同一策略添加 ATN_SUBSTRATE_READER 绑定，
+// resource: {kind:'atn-substrate', id:substrateResourceId(networkId,address)}。
+const disposeRead = ctx.atn.installSubstrateReadPolicy(networkId, defineSubstrateReadPolicy({
+  principalFor: (node, record) => hostPrincipals.lookup(record.id, node.id),
+  decide: request => ctx.remoteAccess.decide(request),
+}))
+```
+
+授予前必须保证映射和 bindings 是持久记录加宿主策略版本/授予快照的纯函数：不读时钟、不按消息权重授权、不调用异步 IAM。冷加载需重新安装同版本映射与授予。ATN 不持久化函数或虚构宿主映射，也不保证任意有状态宿主函数可重放。策略缺失与安装后无授权是不同的显式选择。
+
+search 在排序/k 之前构造可见语料；任何 msg 祖先不可见时整条引用消息也隐藏。citedBy 仅统计可见 citer；排序权重从可见记录重放，不使用全网权重缓存。隐藏 visit 与未知 visit 使用完全相同的 ref-unresolved 码与模板；publish/result/delivery/review 的声明引用按相同投影验证。status 的任务证据数组也过滤不可见 msg 根。抛错/无效策略为 custody-unavailable；异步策略为既有 async-policy；失败不写读计数或业务数据。
+
+这不是任意自然语言保密、历史会话清除或合法接收者禁止转述。宿主可见消息的正文由宿主授权披露；已发邮件与框架外工具仍受原威胁模型前提约束。读侧策略不产生发现主题，atn_status 的发现仍只来自 custody/descriptor。

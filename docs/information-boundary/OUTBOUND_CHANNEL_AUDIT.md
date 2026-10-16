@@ -4,6 +4,8 @@ V2 阶段 0 无通道改动。读取面的后续核对项与依赖处置见 [声
 
 V2 阶段 1 无通道/拒绝码变更；`NAMESPACE-*` 覆盖同名本地引用及外网独有引用，见 [分区补证](../execution-evidence/round-v2-phase1/README.md)。
 
+V2 阶段 2 不新增出站通道或公开拒绝码。新增宿主读策略使用 atn-substrate/atnSubstrate/read；隐藏 msg 的 visit/publish/evidence 仍为 ref-unresolved，抛错 custody-unavailable，异步 async-policy。status 任务证据投影也过滤隐藏根。见 [读取契约](../OBSERVER_READ_AUTHORIZATION.md) 与 B-MODEL-READ。
+
 审计对象为 `src/tools.ts` 的全部八个模型工具和 `AtnRuntime` 的全部公开方法；不只审计邮件。宿主策略接收 `{ channel, input }`，`input` 为完整业务输入，包括所有可选字段。身份取自实际调用 Agent，策略同步执行，抛错则不提交该操作。
 
 | 登记通道 | 实际入口 | 被检查的载荷 | 可见/持久化去向与检查位置 |

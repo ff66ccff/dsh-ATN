@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+ok 1 - RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes
+  ---
+  duration_ms: 24.5251
+  type: 'test'
+  ...
+# Subtest: SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+ok 2 - SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline
+  ---
+  duration_ms: 10.1251
+  type: 'test'
+  ...
+# Subtest: READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+ok 3 - READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+  ---
+  duration_ms: 38.1658
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-K: invisible matches take no result slots and hidden citation weights cannot change visible ordering
+ok 4 - READ-POLICY-K: invisible matches take no result slots and hidden citation weights cannot change visible ordering
+  ---
+  duration_ms: 10.8437
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-TASKS: status evidence and review cannot tunnel a hidden message root
+ok 5 - READ-POLICY-TASKS: status evidence and review cannot tunnel a hidden message root
+  ---
+  duration_ms: 13.5039
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+ok 6 - READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+  ---
+  duration_ms: 20.6588
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-PURE: persisted facts plus the same policy replay byte-identically without mutating the record
+ok 7 - READ-POLICY-PURE: persisted facts plus the same policy replay byte-identically without mutating the record
+  ---
+  duration_ms: 5.3538
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-IDENTITY: resource IDs cannot collide and missing/owner mappings cannot authorize nodes
+ok 8 - READ-POLICY-IDENTITY: resource IDs cannot collide and missing/owner mappings cannot authorize nodes
+  ---
+  duration_ms: 0.2259
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 717.2085

@@ -66,7 +66,7 @@ BM25 k1=3/2、b=3/4 使用精确整数变形：每词项 `idf * 20*tf*sumDl / (8
 
 证据目录：[substrate-2026-10-16](execution-evidence/substrate-2026-10-16/)。red-gates.tap 是三个既有闸门有意变更后的原始红灯（4 失败），red-substrate.tap 是新增模块缺失时红灯，red-ui.txt 是新增分区缺失时红灯。core.tap 是包括新用例与三处闸门的全绿 TAP；test.txt 是 npm test 全量输出。未把旧证据重写为新版通过。
 
-## 与论文的七项偏离（逐条核验）
+## 与论文的八项偏离（逐条核验，V2 增量）
 
 | # | 偏离 | 实现一致性与依据 |
 |---|---|---|
@@ -77,6 +77,7 @@ BM25 k1=3/2、b=3/4 使用精确整数变形：每词项 `idf * 20*tf*sumDl / (8
 | 5 | 定点整数 | 一致；BigInt BM25/ln/权重，持久缓存为安全整数，偏差与 AST 审计如上。 |
 | 6 | CJK 字符二元组 | 一致；混合中英、标点、全半角、大小写测试；不声称检索质量。 |
 | 7 | 无策略拒绝 artifact ref | 一致；custody-unavailable 原子拒绝，有策略但未持有为 ref-not-owned。 |
+| 8 | 可关闭的宿主读侧分区 | V2 可选 `installSubstrateReadPolicy` 复用 principal/resource/action；论文假设网内全读。缺省未安装时逐字节保留原语义；安装后按可见闭包重算排序/被引，不授予新模型能力。READ-POLICY* 有关闭/开启、冷重放与失败原子性对照。 |
 
 ## 战略红线原文留档
 
@@ -123,7 +124,7 @@ BM25 k1=3/2、b=3/4 使用精确整数变形：每词项 `idf * 20*tf*sumDl / (8
 
 README、ADAPTIVE_TOPOLOGY、OUTBOUND_CHANNEL_AUDIT、DECLARATION_AUDIT、STRATEGY_AND_POSITIONING 与索引同步八工具／十四通道／发布禁令修订／消息权重边界。NOTICE 引用本地论文 arXiv:2610.16120v1（CC BY 4.0）及作者，说明机制改编与独立实现来源；软件 LICENSE 仍为原 Apache-2.0，不改写标准许可文本。没有复制论文实现代码，没有新增运行时依赖。
 
-真实模型会不会正确使用 substrate、任务正确率／效率／吞吐／成本／延迟、CJK 检索质量、语义贡献核验与任意自然语言泄漏防护，均**未验证且不主张**。论文的基准数字不迁移；本轮与论文有上述七项偏离，等预算线保持收束。当前代码验证的是网络内部结构与宿主策略，不是网络即认证租户。完整 better-sidebar provider host 激活仍因 webRuntime 缺失未验证，未打补丁；真实浏览器验收使用可用的顶栏回退。
+真实模型会不会正确使用 substrate、任务正确率／效率／吞吐／成本／延迟、CJK 检索质量、语义贡献核验与任意自然语言泄漏防护，均**未验证且不主张**。论文的基准数字不迁移；与论文的偏离现为上述八项，等预算线保持收束。当前代码验证的是网络内部结构与宿主策略，不是网络即认证租户。完整 better-sidebar provider host 激活仍因 webRuntime 缺失未验证，未打补丁；真实浏览器验收使用可用的顶栏回退。
 
 ### 额外同步性修复与优先级复核
 

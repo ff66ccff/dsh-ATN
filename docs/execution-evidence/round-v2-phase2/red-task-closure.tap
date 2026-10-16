@@ -1,0 +1,55 @@
+TAP version 13
+# Subtest: READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+ok 1 - READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs
+  ---
+  duration_ms: 35.6039
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-K: invisible matches take no result slots and hidden citation weights cannot change visible ordering
+ok 2 - READ-POLICY-K: invisible matches take no result slots and hidden citation weights cannot change visible ordering
+  ---
+  duration_ms: 16.1465
+  type: 'test'
+  ...
+# Subtest: READ-POLICY-TASKS: status evidence and review cannot tunnel a hidden message root
+not ok 3 - READ-POLICY-TASKS: status evidence and review cannot tunnel a hidden message root
+  ---
+  duration_ms: 12.7672
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\integration\\substrate-read-policy.test.ts:1:4939'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   'msg:2'
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0: 'msg:2'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (D:\dsh-ATN\tests\integration\substrate-read-policy.test.ts:98:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+ok 4 - READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes
+  ---
+  duration_ms: 21.2849
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 643.544

@@ -1,0 +1,144 @@
+TAP version 13
+# Subtest: BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+not ok 1 - BOUNDARY-INVENTORY: every public runtime path and every model tool has an explicit classification
+  ---
+  duration_ms: 48.9813
+  type: 'test'
+  location: 'D:\\dsh-ATN\\tests\\unit\\information-boundary-inventory.test.ts:1:4134'
+  failureType: 'testCodeFailure'
+  error: |-
+    classify and test every new public runtime API
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'admitStep',
+        'callerContext',
+        'claim',
+        'deliver',
+    ...
+        'installSendPolicy',
+    +   'installSubstrateReadPolicy',
+        'network',
+        'networkForSession',
+        'networkIds',
+        'now',
+        'openStore',
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'admitStep'
+    1: 'callerContext'
+    2: 'claim'
+    3: 'deliver'
+    4: 'deliverMail'
+    5: 'deliveryHolder'
+    6: 'exportSubstrate'
+    7: 'failNode'
+    8: 'feedback'
+    9: 'findBySessionId'
+    10: 'finish'
+    11: 'handleFor'
+    12: 'installOutboundPolicy'
+    13: 'installSendPolicy'
+    14: 'network'
+    15: 'networkForSession'
+    16: 'networkIds'
+    17: 'now'
+    18: 'openStore'
+    19: 'ownsHandle'
+    20: 'peers'
+    21: 'pendingMail'
+    22: 'propose'
+    23: 'provisionRecoveryTask'
+    24: 'publish'
+    25: 'recover'
+    26: 'refreshCustody'
+    27: 'renew'
+    28: 'resolveNode'
+    29: 'rewire'
+    30: 'search'
+    31: 'send'
+    32: 'shutdown'
+    33: 'spawn'
+    34: 'start'
+    35: 'status'
+    36: 'stop'
+    37: 'tasks'
+    38: 'tick'
+    39: 'verifyTask'
+    40: 'visit'
+    41: 'vote'
+  actual:
+    0: 'admitStep'
+    1: 'callerContext'
+    2: 'claim'
+    3: 'deliver'
+    4: 'deliverMail'
+    5: 'deliveryHolder'
+    6: 'exportSubstrate'
+    7: 'failNode'
+    8: 'feedback'
+    9: 'findBySessionId'
+    10: 'finish'
+    11: 'handleFor'
+    12: 'installOutboundPolicy'
+    13: 'installSendPolicy'
+    14: 'installSubstrateReadPolicy'
+    15: 'network'
+    16: 'networkForSession'
+    17: 'networkIds'
+    18: 'now'
+    19: 'openStore'
+    20: 'ownsHandle'
+    21: 'peers'
+    22: 'pendingMail'
+    23: 'propose'
+    24: 'provisionRecoveryTask'
+    25: 'publish'
+    26: 'recover'
+    27: 'refreshCustody'
+    28: 'renew'
+    29: 'resolveNode'
+    30: 'rewire'
+    31: 'search'
+    32: 'send'
+    33: 'shutdown'
+    34: 'spawn'
+    35: 'start'
+    36: 'status'
+    37: 'stop'
+    38: 'tasks'
+    39: 'tick'
+    40: 'verifyTask'
+    41: 'visit'
+    42: 'vote'
+  operator: 'deepStrictEqual'
+  stack: |-
+    auditPublicMethods (D:\dsh-ATN\tests\unit\information-boundary-inventory.test.ts:24:10)
+    TestContext.<anonymous> (D:\dsh-ATN\tests\unit\information-boundary-inventory.test.ts:75:3)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+ok 2 - BOUNDARY-CONTRACT: refusal vocabulary stays public and unchanged
+  ---
+  duration_ms: 1.1649
+  type: 'test'
+  ...
+# Subtest: BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+ok 3 - BOUNDARY-UPGRADE: loading old durable records discards board bodies and leaves other state intact
+  ---
+  duration_ms: 5.1711
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 2
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 546.4324
