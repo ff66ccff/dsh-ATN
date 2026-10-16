@@ -1,0 +1,15 @@
+✔ PROBE-Q1: complete current batch is separate from censored legacy survivors, with provenance (23.8131ms)
+✔ PROBE-Q2: pairing fails closed on censoring, duplicates, mismatched seeds and unmatched finishes (3.5797ms)
+✔ PROBE-Q3: nearest rank and four-scenario arithmetic, deadline-only rejection and exact admission control (26.0875ms)
+✔ PROBE-Q4: completed-obligation quiescence is a genuine negative control (0.2268ms)
+✔ PROBE-Q5: retained events locate every holder and preserve each distinct entry termination (33.4878ms)
+✔ PROBE-Q6: tool identities have per-call session proof and structural corroboration; status is not always discovery (16.0464ms)
+✔ PROBE-Q7: offline recomputation imports no account, provider, runner or network surface (2.4137ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 580.6654

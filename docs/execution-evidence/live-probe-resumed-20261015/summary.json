@@ -1,0 +1,367 @@
+{
+  "route": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-tiered",
+    "reasoningEffort": "medium"
+  },
+  "conditions": {
+    "agents": 8,
+    "chainLength": 2,
+    "perNodeSteps": 12,
+    "maxCalls": 96,
+    "maxOutputTokens": 4096,
+    "observedTokenLimit": 400000,
+    "timeoutMs": 600000,
+    "autoAdvance": false
+  },
+  "planned": 5,
+  "completed": 5,
+  "successful": 0,
+  "notStarted": [],
+  "stopped": null,
+  "actualProviderDispatches": 224,
+  "totalIssuedCalls": 224,
+  "totalKnownInput": 1645795,
+  "totalKnownOutput": 10776,
+  "summary": [
+    {
+      "seed": 17,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 46,
+      "dispatches": 46,
+      "aborted": 0,
+      "elapsedMs": 398871,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": false
+        }
+      ],
+      "budget": {
+        "issued": 46,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 39,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 341388,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2064,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 64327,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        }
+      },
+      "timing": {
+        "queueMs": 1425401,
+        "serviceMs": 398368,
+        "cleanupMs": 4,
+        "attemptTotalMs": 1823773,
+        "legacyModelDurationMs": 1823776,
+        "successfulServiceCount": 46,
+        "successfulServiceMeanMs": 8660.173913043478,
+        "boundaryDeltaMs": 3
+      }
+    },
+    {
+      "seed": 31,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": false,
+      "phase2Submitted": false,
+      "issuedCalls": 34,
+      "dispatches": 34,
+      "aborted": 0,
+      "elapsedMs": 350055,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 11,
+      "entrySteps": 11,
+      "checkpointShapes": [],
+      "budget": {
+        "issued": 34,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 33,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 248837,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 1491,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 33800,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        }
+      },
+      "timing": {
+        "queueMs": 1146003,
+        "serviceMs": 349576,
+        "cleanupMs": 6,
+        "attemptTotalMs": 1495585,
+        "legacyModelDurationMs": 1495586,
+        "successfulServiceCount": 34,
+        "successfulServiceMeanMs": 10281.64705882353,
+        "boundaryDeltaMs": 1
+      }
+    },
+    {
+      "seed": 45,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 58,
+      "dispatches": 58,
+      "aborted": 0,
+      "elapsedMs": 551725,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": true
+        }
+      ],
+      "budget": {
+        "issued": 58,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 57,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 436495,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2917,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 199421,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        }
+      },
+      "timing": {
+        "queueMs": 2274333,
+        "serviceMs": 551255,
+        "cleanupMs": 4,
+        "attemptTotalMs": 2825592,
+        "legacyModelDurationMs": 2825597,
+        "successfulServiceCount": 58,
+        "successfulServiceMeanMs": 9504.396551724138,
+        "boundaryDeltaMs": 5
+      }
+    },
+    {
+      "seed": 59,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": false,
+      "phase2Submitted": false,
+      "issuedCalls": 32,
+      "dispatches": 32,
+      "aborted": 0,
+      "elapsedMs": 369019,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 9,
+      "entrySteps": 9,
+      "checkpointShapes": [],
+      "budget": {
+        "issued": 32,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 31,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 1,
+      "toolErrors": 0,
+      "failures": [
+        {
+          "code": "UPSTREAM",
+          "status": null
+        }
+      ],
+      "tokens": {
+        "inputTokens": {
+          "known": 218009,
+          "unknownCalls": 1
+        },
+        "outputTokens": {
+          "known": 1749,
+          "unknownCalls": 1
+        },
+        "cacheReadTokens": {
+          "known": 38445,
+          "unknownCalls": 1
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        }
+      },
+      "timing": {
+        "queueMs": 1411807,
+        "serviceMs": 368517,
+        "cleanupMs": 9,
+        "attemptTotalMs": 1780333,
+        "legacyModelDurationMs": 1780336,
+        "successfulServiceCount": 31,
+        "successfulServiceMeanMs": 11132.612903225807,
+        "boundaryDeltaMs": 3
+      }
+    },
+    {
+      "seed": 73,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 54,
+      "dispatches": 54,
+      "aborted": 0,
+      "elapsedMs": 439584,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": true
+        }
+      ],
+      "budget": {
+        "issued": 54,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 51,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 401066,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2555,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 112673,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        }
+      },
+      "timing": {
+        "queueMs": 1669922,
+        "serviceMs": 439067,
+        "cleanupMs": 9,
+        "attemptTotalMs": 2108998,
+        "legacyModelDurationMs": 2109003,
+        "successfulServiceCount": 54,
+        "successfulServiceMeanMs": 8130.87037037037,
+        "boundaryDeltaMs": 5
+      }
+    }
+  ],
+  "caveat": "Strict evidence-causal bound is necessary, planning gate is conditional; no performance or topology claim."
+}

@@ -1,0 +1,25 @@
+{
+  "provider": "agy",
+  "model": "gemini-3.8-flash-tiered",
+  "reasoningEffort": "medium",
+  "plugin": "dsh-agy",
+  "pluginVersion": "0.4.4",
+  "name": "Gemini 3.8 Flash",
+  "reasoning": {
+    "efforts": [
+      {
+        "id": "low",
+        "name": "Low"
+      },
+      {
+        "id": "medium",
+        "name": "Medium"
+      },
+      {
+        "id": "high",
+        "name": "High"
+      }
+    ]
+  },
+  "pluginEntrySha256": "b06efd5660791708ef2ecde7c69f582a3dde5b73e5c93698247fb7aa07c44573"
+}

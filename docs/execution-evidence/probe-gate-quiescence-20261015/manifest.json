@@ -1,0 +1,39 @@
+{
+  "execution": "offline-zero-model",
+  "actualModelCalls": 0,
+  "sourceHashesUnchanged": 37,
+  "srcDiffEmpty": true,
+  "implementationSha256": {
+    "experiments/live-probe-history.ts": "d2061fe3de95cebc33698e03fe4c2f493ba0e00380b1c51c83c18d373cf84946",
+    "experiments/live-probe-feasibility.ts": "4f026e431fd122e779f4e4c3f38fb26f6805df0a7b0abdd2f3ec2ffa09b47d2a",
+    "experiments/probe-gate-quiescence.ts": "4eabd006e968ecdf1749e1c5e7d00514e2b4b3410405d67149747b59cc1f823a",
+    "scripts/recompute-probe-gate.ts": "7b7820f22e258d794294a2463184090c347c6e37e0122fd420dbdac4b3587f5c",
+    "scripts/extract-probe-tool-evidence.ts": "e45ef39f5ad0dcfb5d9b73ead0978b5c066737941473fc3785985f72154a414f",
+    "scripts/live-probe-feasibility.ts": "509794139512c1d32e35adaaa6066389aa8f30764624e162bc1ebe754920122e",
+    "scripts/run-live-probe-agy.ts": "965ca74692f616cafa67233ca8a71bd8beb8a6b768e146c49681ef90822eca58",
+    "tests/unit/probe-gate-quiescence.test.ts": "4c08e7506f4aac39e31834c575cad82876bcc9a57a6c4a01b85bdca7b3a6d5d9",
+    "README.md": "5289579b334e23991681c431cda73843c4ce412aadf1344bda27ce208e7e8450",
+    "docs/README.md": "b5907e68fc113b57a50948c9f6bdea462a53c32675e2ba89920c914e68066a0c"
+  },
+  "evidenceSha256": {
+    "docs/execution-evidence/probe-gate-quiescence-20261015/analysis-tables.md": "f535f225c9ed6d4537937134cf9f30f0519dfb8276395f5aebbf73a128dba8ba",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/build.txt": "2cc927370f5041417d0e691be1c7d78e6d9ce5ce7c78c40db0ed7790b2d51303",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/driver-dry-run.json": "bda58f70dfe96fe26ede3334a582ca8709decfbbaa76f52cd6b23554e3c2746b",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/feasibility.txt": "67f16bae8b4521cb9098dfdfd9b2d604814b6e1c3efc0235f679ff937e14089d",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/first-test-process-failure.txt": "71e0929ffae93c45553022c75138953d286c56f18da70e836faf26839f04a948",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/knowledge-isolated.txt": "99c8afe2aa994f0027685c88ffed196f878c920847ba42f65eb35f9730d807d6",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/knowledge-mail-race-full-suite.txt": "3568a877972d709ad4ce8a22f3b867e01ff30c6fca85c0dc1bd4e2407ab020d6",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/pack-tarball.txt": "58b14ce896dec96658afb0b81ab94b5f5d1f91fd0f069b3b759cc2f6b49360ee",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/pre-fix-tests.txt": "2869f0b912fea6500c7775be1dd3851db06f9ec3284d8cbd856a3cc2e028d3c3",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/recomputation.json": "b39d525f25b1f94898496730ac48e0d5e55cf810800ef2d1392e4f04c0b668ef",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/recompute.txt": "d7b3c6fce9da61aa294f2b368f513ad9a5019c8a4bcd619cbfa480529dfc1203",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/result-outcome-isolated.txt": "3aae55a52fe7158bc090c75396a90a80cf77965d9d2ef6481622cedb55df7a61",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/script-typecheck.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/targeted-tests.txt": "bf69e8824e5c14a179d31fa94ce66502474f2705d308e8b4f6181786d7fbd410",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/test.txt": "b5dd20dbfe8ed217c380a706c73025db1a744baf03c2db78abebb781b5ca2f42",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/tool-identities.json": "5f75d879af705a1a0624f1d74f004076d58f2f28cb8dcaa7e5d236b1bdb6efc1",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/typecheck.txt": "41427cf1fbf2d4863171cb5f85448ff71204a2997993e138896dacc7c4db2654",
+    "docs/execution-evidence/probe-gate-quiescence-20261015/validation.json": "35cd6f65afde3916320941cb468a3340d5a0fa5e1eae0bdeb30b74e9e65f25b9",
+    "docs/PROBE_GATE_AND_QUIESCENCE_IMPLEMENTATION_REPORT.md": "2c1379ca5907af9f7dfbfa1b72bc2c044da2e53ae36364b381893f5b9001532c"
+  }
+}

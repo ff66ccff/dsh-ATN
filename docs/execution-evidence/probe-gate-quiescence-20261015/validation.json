@@ -1,0 +1,119 @@
+{
+  "execution": "offline-zero-model",
+  "realModelCalls": 0,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "output": "test.txt",
+      "summary": "565 runtime/integration +14 UI passed; zero failures/skips; unchanged baseline assertions",
+      "sha256": "b5dd20dbfe8ed217c380a706c73025db1a744baf03c2db78abebb781b5ca2f42"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "output": "typecheck.txt",
+      "summary": "Main and client test TypeScript checks passed",
+      "sha256": "41427cf1fbf2d4863171cb5f85448ff71204a2997993e138896dacc7c4db2654"
+    },
+    {
+      "command": "tsc --noEmit --strict (4 changed/new scripts)",
+      "exitCode": 0,
+      "output": "script-typecheck.txt",
+      "summary": "recompute-probe-gate, extract-probe-tool-evidence, live-probe-feasibility, run-live-probe-agy passed",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "output": "build.txt",
+      "summary": "Runtime types and client bundle built",
+      "sha256": "2cc927370f5041417d0e691be1c7d78e6d9ce5ce7c78c40db0ed7790b2d51303"
+    },
+    {
+      "command": "npm run pack:tarball",
+      "exitCode": 0,
+      "output": "pack-tarball.txt",
+      "summary": "dsh-atn-0.5.0.tgz generated; no publish",
+      "sha256": "58b14ce896dec96658afb0b81ab94b5f5d1f91fd0f069b3b759cc2f6b49360ee"
+    },
+    {
+      "command": "node --import tsx/esm scripts/recompute-probe-gate.ts",
+      "exitCode": 0,
+      "output": "recompute.txt",
+      "summary": "Offline zero-model; 224 samples, p90=23406 ms; 600000/120000 both rejected for deadline alone; 37 source hashes unchanged",
+      "sha256": "d7b3c6fce9da61aa294f2b368f513ad9a5019c8a4bcd619cbfa480529dfc1203"
+    },
+    {
+      "command": "node --import tsx/esm scripts/live-probe-feasibility.ts",
+      "exitCode": 0,
+      "output": "feasibility.txt",
+      "summary": "Updated history input; exact deadline and concurrency arithmetic controls generated offline",
+      "sha256": "67f16bae8b4521cb9098dfdfd9b2d604814b6e1c3efc0235f679ff937e14089d"
+    },
+    {
+      "command": "node --import tsx/esm scripts/run-live-probe-agy.ts",
+      "exitCode": 0,
+      "output": "driver-dry-run.json",
+      "summary": "execute=false; all five 600-second gates refuse; only three effective budget dimensions",
+      "sha256": "bda58f70dfe96fe26ede3334a582ca8709decfbbaa76f52cd6b23554e3c2746b"
+    },
+    {
+      "command": "node --import tsx/esm scripts/extract-probe-tool-evidence.ts",
+      "exitCode": 0,
+      "output": "tool-identities.json",
+      "summary": "170 tool calls uniquely joined to 40 existing persisted sessions; no new collection or model calls",
+      "sha256": "5f75d879af705a1a0624f1d74f004076d58f2f28cb8dcaa7e5d236b1bdb6efc1"
+    },
+    {
+      "command": "node --import tsx/esm --test --test-reporter=tap tests/integration/result-outcome.test.ts",
+      "exitCode": 0,
+      "output": "result-outcome-isolated.txt",
+      "summary": "All five unchanged existing cases pass in isolation after first full-suite subprocess failure",
+      "sha256": "3aae55a52fe7158bc090c75396a90a80cf77965d9d2ef6481622cedb55df7a61"
+    },
+    {
+      "command": "git diff --exit-code -- src",
+      "exitCode": 0,
+      "summary": "No src modifications"
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "summary": "No whitespace errors in tracked changes"
+    },
+    {
+      "command": "node --import tsx/esm --test tests/unit/probe-gate-quiescence.test.ts",
+      "exitCode": 0,
+      "output": "targeted-tests.txt",
+      "summary": "All 7 final analysis, token-dimension and report-content checks passed",
+      "sha256": "bf69e8824e5c14a179d31fa94ce66502474f2705d308e8b4f6181786d7fbd410"
+    },
+    {
+      "command": "node --import tsx/esm --test --test-reporter=tap tests/integration/knowledge-feedback.test.ts",
+      "exitCode": 0,
+      "output": "knowledge-isolated.txt",
+      "summary": "All 8 unchanged knowledge-feedback tests passed in isolation",
+      "sha256": "99c8afe2aa994f0027685c88ffed196f878c920847ba42f65eb35f9730d807d6"
+    }
+  ],
+  "firstFailure": {
+    "command": "npm test",
+    "exitCode": 1,
+    "output": "first-test-process-failure.txt",
+    "sha256": "71e0929ffae93c45553022c75138953d286c56f18da70e836faf26839f04a948",
+    "detail": "result-outcome.test.ts subprocess failed without assertion diagnostics; isolated five tests and complete suite rerun passed; cause undetermined"
+  },
+  "preFix": {
+    "output": "pre-fix-tests.txt",
+    "sha256": "2869f0b912fea6500c7775be1dd3851db06f9ec3284d8cbd856a3cc2e028d3c3",
+    "detail": "New module missing before implementation; one import-level failure, not seven executed failing assertions"
+  },
+  "invariant": "37 archived sourceHashes recomputed unchanged; no src, schemas or archived sourceHashes rewritten; no account access, provider mounting or network in recomputation",
+  "additionalObservedInstability": {
+    "output": "knowledge-mail-race-full-suite.txt",
+    "sha256": "3568a877972d709ad4ce8a22f3b867e01ff30c6fca85c0dc1bd4e2407ab020d6",
+    "exitCode": 1,
+    "detail": "Existing KNOWLEDGE-02 compared mail snapshots while mail-10 transitioned queued to delivered. No runtime or existing test edits. Isolated 8 cases and final complete npm test passed; instability remains documented."
+  }
+}

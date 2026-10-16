@@ -1,0 +1,404 @@
+{
+  "route": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-tiered",
+    "reasoningEffort": "medium"
+  },
+  "conditions": {
+    "agents": 8,
+    "chainLength": 2,
+    "perNodeSteps": 12,
+    "maxCalls": 96,
+    "maxOutputTokens": 4096,
+    "observedTokenLimit": 400000,
+    "timeoutMs": 600000,
+    "autoAdvance": false
+  },
+  "planned": 5,
+  "completed": 5,
+  "successful": 0,
+  "notStarted": [],
+  "stopped": null,
+  "actualProviderDispatches": 224,
+  "totalIssuedCalls": 224,
+  "totalKnownInput": 1645795,
+  "totalKnownOutput": 10776,
+  "summary": [
+    {
+      "seed": 17,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 46,
+      "dispatches": 46,
+      "aborted": 0,
+      "elapsedMs": 398871,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": false
+        }
+      ],
+      "budget": {
+        "issued": 46,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 39,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 341388,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2064,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 64327,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 46
+        }
+      },
+      "timing": {
+        "queueMs": 1425401,
+        "serviceMs": 398368,
+        "cleanupMs": 4,
+        "attemptTotalMs": 1823773,
+        "legacyModelDurationMs": 1823776,
+        "successfulServiceCount": 46,
+        "successfulServiceMeanMs": 8660.173913043478,
+        "boundaryDeltaMs": 3
+      }
+    },
+    {
+      "seed": 31,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": false,
+      "phase2Submitted": false,
+      "issuedCalls": 34,
+      "dispatches": 34,
+      "aborted": 0,
+      "elapsedMs": 350055,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 11,
+      "entrySteps": 11,
+      "checkpointShapes": [],
+      "budget": {
+        "issued": 34,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 33,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 248837,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 1491,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 33800,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 34
+        }
+      },
+      "timing": {
+        "queueMs": 1146003,
+        "serviceMs": 349576,
+        "cleanupMs": 6,
+        "attemptTotalMs": 1495585,
+        "legacyModelDurationMs": 1495586,
+        "successfulServiceCount": 34,
+        "successfulServiceMeanMs": 10281.64705882353,
+        "boundaryDeltaMs": 1
+      }
+    },
+    {
+      "seed": 45,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 58,
+      "dispatches": 58,
+      "aborted": 0,
+      "elapsedMs": 551725,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": true
+        }
+      ],
+      "budget": {
+        "issued": 58,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 57,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 436495,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2917,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 199421,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 58
+        }
+      },
+      "timing": {
+        "queueMs": 2274333,
+        "serviceMs": 551255,
+        "cleanupMs": 4,
+        "attemptTotalMs": 2825592,
+        "legacyModelDurationMs": 2825597,
+        "successfulServiceCount": 58,
+        "successfulServiceMeanMs": 9504.396551724138,
+        "boundaryDeltaMs": 5
+      }
+    },
+    {
+      "seed": 59,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": false,
+      "phase2Submitted": false,
+      "issuedCalls": 32,
+      "dispatches": 32,
+      "aborted": 0,
+      "elapsedMs": 369019,
+      "stopReason": "phase-1-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 9,
+      "entrySteps": 9,
+      "checkpointShapes": [],
+      "budget": {
+        "issued": 32,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 31,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 1,
+      "toolErrors": 0,
+      "failures": [
+        {
+          "code": "UPSTREAM",
+          "status": null
+        }
+      ],
+      "tokens": {
+        "inputTokens": {
+          "known": 218009,
+          "unknownCalls": 1
+        },
+        "outputTokens": {
+          "known": 1749,
+          "unknownCalls": 1
+        },
+        "cacheReadTokens": {
+          "known": 38445,
+          "unknownCalls": 1
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 32
+        }
+      },
+      "timing": {
+        "queueMs": 1411807,
+        "serviceMs": 368517,
+        "cleanupMs": 9,
+        "attemptTotalMs": 1780333,
+        "legacyModelDurationMs": 1780336,
+        "successfulServiceCount": 31,
+        "successfulServiceMeanMs": 11132.612903225807,
+        "boundaryDeltaMs": 3
+      }
+    },
+    {
+      "seed": 73,
+      "passed": false,
+      "phase1": false,
+      "phase2": false,
+      "phase1Submitted": true,
+      "phase2Submitted": false,
+      "issuedCalls": 54,
+      "dispatches": 54,
+      "aborted": 0,
+      "elapsedMs": 439584,
+      "stopReason": "phase-2-quiescence",
+      "cleanup": "released",
+      "maxNodeSteps": 12,
+      "entrySteps": 12,
+      "checkpointShapes": [
+        {
+          "phase": 1,
+          "chainLength": 1,
+          "terminalIsString": true
+        }
+      ],
+      "budget": {
+        "issued": 54,
+        "denied": 0,
+        "lastRejection": null,
+        "unknownUsageCalls": 51,
+        "tokenLimitKind": "observed-total-token admission threshold, not a hard token ceiling"
+      },
+      "errors": 0,
+      "toolErrors": 0,
+      "failures": [],
+      "tokens": {
+        "inputTokens": {
+          "known": 401066,
+          "unknownCalls": 0
+        },
+        "outputTokens": {
+          "known": 2555,
+          "unknownCalls": 0
+        },
+        "cacheReadTokens": {
+          "known": 112673,
+          "unknownCalls": 0
+        },
+        "cacheWriteTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        },
+        "reasoningTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        },
+        "totalTokens": {
+          "known": 0,
+          "unknownCalls": 54
+        }
+      },
+      "timing": {
+        "queueMs": 1669922,
+        "serviceMs": 439067,
+        "cleanupMs": 9,
+        "attemptTotalMs": 2108998,
+        "legacyModelDurationMs": 2109003,
+        "successfulServiceCount": 54,
+        "successfulServiceMeanMs": 8130.87037037037,
+        "boundaryDeltaMs": 5
+      }
+    }
+  ],
+  "caveat": "Strict evidence-causal bound is necessary, planning gate is conditional; no performance or topology claim.",
+  "sha256": {
+    "feasibility.json": "f85125b0a27872d63faac9201097496b0db60f04329965f81f9fd549f36f6765",
+    "feasibility-output.txt": "e75cab59f03ee30ea2c34836364c788b8d01cea4118a8b5aedfc2d46607f2e45",
+    "timing-proof.json": "3c3af506b66615f2dd952e3f8141cd937fc4dfad421b0320dd8735591a6f1515",
+    "targeted-tests.txt": "1e4497c8aef0135c596f6fdbc76960ca3b8921a84cee674f9bcf7d5a9491d20e",
+    "test.txt": "13e9f30c712d26cb0756912d7e7b64998b217cc85c634d9edae60d83252b80b7",
+    "typecheck.txt": "41427cf1fbf2d4863171cb5f85448ff71204a2997993e138896dacc7c4db2654",
+    "script-typecheck.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "driver-dry-run.json": "dae9c8e03e30e8e9eb7698d4286dbe12f312501db7306b72e23aef2cb82034a7",
+    "execution.txt": "32cdea24185e3a7dc385aa399d34b7e0b3850e6d1dd82aaf3709bfc6115008b1",
+    "build.txt": "a2032ef3c7990b8655d2cea34ef955daf9b9800fa7217f8caeb22717444f1676",
+    "pack-tarball.txt": "da428f0cdbd5aa2836e4745f85ef84c076ea771127a5638c3fe6ee66a6424414",
+    "summary.json": "007dd38346a6d10cd5b08c1026f28959d88794d26adc4d0198eb5bbbfe284da5",
+    "plan.json": "0d5f008664a2eb980051673dd61fc80d88532de4cd6149e1a646d74077ba91fe",
+    "discovery.json": "1c46f632d8030658a9e74afc54b8f76135f4c2b01520bac2141675438421ee94",
+    "provider-calls.jsonl": "b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731",
+    "seed-17-report.json": "cabb1fe71c17094bb2128c5b46d4de6fea571ec196d7513ea01ab97dc4503a76",
+    "seed-17-manifest.json": "047d25e6ef8272b32f09d95cf7156d29381957d1350c947e938fc7a9e59bb317",
+    "seed-17-timing.json": "e674ae0c505bd02c6a3055a7933b7f41d50e6c267fa261cab3417647ef69db26",
+    "seed-17-events.jsonl": "461445228cb9ccf9f7d4b87b990f25ddfe5fadd89f28d19303d178718d322553",
+    "seed-31-report.json": "7be2a07935e96763f9caffdec4ebeee015d362b480a3151e05bf2c4b89e1a6b7",
+    "seed-31-manifest.json": "7815dddaf8e022b58e8d25aed4c44866ae83e3d9764af0996bfd97935a5ed69f",
+    "seed-31-timing.json": "a643992403d01485a31809a5b93d95e486d43715f203ffd96b311b1fe2fce2d4",
+    "seed-31-events.jsonl": "af173db17e614b15a7f05603aca80fbc381cfbc44421d50a2f47dc0b412b918c",
+    "seed-45-report.json": "9aef187499b25516880124bedf5dfcab73b03195347743b8860110d1d5557f26",
+    "seed-45-manifest.json": "314c5b4ce9d37d7d2c1eec099adb2c53482d1208452cc28f77c175e76ba82406",
+    "seed-45-timing.json": "cc19c24f11459af4ba2a5190923578acaeb50fb1dbd3653db9cd3b3aba2c618d",
+    "seed-45-events.jsonl": "df9acc5a427ed052f8a95c91d880cdb9e72e777f644548f44f92af123779a409",
+    "seed-59-report.json": "340aca07db20a9c9d9f5282ef1c4ba9170d6e832ee548e6fbb0995fa63e8488e",
+    "seed-59-manifest.json": "b8618df3cfb079f36ed5370a02454e9d9fa571399b928c473e475af1649f377d",
+    "seed-59-timing.json": "7dc04858470b95d5c73b111c54606ef476a8f26aa7fe45d60436665852b1460d",
+    "seed-59-events.jsonl": "aba3bb769d36284cdb3a68a0241cdba92e92d657af0fc142a8b314e51c8a1c0c",
+    "seed-73-report.json": "58a8b50a389496ac401edab7832496a29a0c724967126fedff897b2238c6a9ae",
+    "seed-73-manifest.json": "29f38f596c5607dbb2e844d7605ade93fd6e1a2b214d87fe5ecaba478930a0fa",
+    "seed-73-timing.json": "4cdec80fbd0b774206d753cd44e029ccecf4f92a606cdc26c441617c4585e55b",
+    "seed-73-events.jsonl": "22b57b70de5df59bc8687b17acde494868f4d357738e79bff1dffd98293d40ce"
+  }
+}

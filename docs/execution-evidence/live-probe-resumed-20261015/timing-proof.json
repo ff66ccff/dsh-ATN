@@ -1,0 +1,37 @@
+{
+  "execution": "deterministic-zero-network",
+  "rows": [
+    {
+      "id": 1,
+      "session": "first",
+      "enteredAt": 0,
+      "dispatchAt": 0,
+      "providerSettledAt": 100,
+      "settledAt": 100,
+      "queueMs": 0,
+      "serviceMs": 100,
+      "cleanupMs": 0,
+      "totalMs": 100,
+      "status": "stop",
+      "associated": true
+    },
+    {
+      "id": 2,
+      "session": "second",
+      "enteredAt": 10,
+      "dispatchAt": 100,
+      "providerSettledAt": 200,
+      "settledAt": 200,
+      "queueMs": 90,
+      "serviceMs": 100,
+      "cleanupMs": 0,
+      "totalMs": 190,
+      "status": "stop",
+      "associated": true
+    }
+  ],
+  "wallMs": 200,
+  "legacyModelDurationMs": 290,
+  "serviceSumMs": 200,
+  "meaning": "Sum of settled llm/stream attempt lifetimes including pre-dispatch queue/preparation and cleanup; aborted attempts count if settled before telemetry closes."
+}

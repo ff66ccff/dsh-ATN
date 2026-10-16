@@ -1,0 +1,19 @@
+{
+  "execution": "offline-zero-model",
+  "actualModelCalls": 0,
+  "sampleCount": 224,
+  "latencyP90Ms": 23406,
+  "requiredDeadlineMs": 1621608,
+  "admitted600000": false,
+  "admitted120000": false,
+  "failureCounts": {
+    "incorrect-proof": 3,
+    "submission-discipline": 2
+  },
+  "quiescenceCounts": {
+    "quiescence-with-obligations-open": 5,
+    "quiescence-with-obligations-complete": 0
+  },
+  "verifiedSourceHashes": 37,
+  "directory": "D:\\dsh-ATN\\docs\\execution-evidence\\probe-gate-quiescence-20261015"
+}

@@ -1,0 +1,8 @@
+
+> dsh-atn@0.5.0 build
+> node scripts/clean-build.mjs && tsc -p tsconfig.build.json && node scripts/build-client.mjs
+
+
+  lib\client.js  468.5kb
+
+Done in 39ms

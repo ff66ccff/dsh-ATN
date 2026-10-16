@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: KNOWLEDGE-01: removed publication cannot forge custody; feedback derives live caller identity
+ok 1 - KNOWLEDGE-01: removed publication cannot forge custody; feedback derives live caller identity
+  ---
+  duration_ms: 386.6267
+  type: 'test'
+  ...
+# Subtest: KNOWLEDGE-02: identical assignments become discoverable and requester quality breaks relevance ties
+ok 2 - KNOWLEDGE-02: identical assignments become discoverable and requester quality breaks relevance ties
+  ---
+  duration_ms: 330.765
+  type: 'test'
+  ...
+# Subtest: KNOWLEDGE-03: concurrent local updates do not lose writes or wake peers and survive cold recovery
+ok 3 - KNOWLEDGE-03: concurrent local updates do not lose writes or wake peers and survive cold recovery
+  ---
+  duration_ms: 423.4986
+  type: 'test'
+  ...
+# Subtest: KNOWLEDGE-04: automatic local samples feed both requester and stronger host evaluation
+ok 4 - KNOWLEDGE-04: automatic local samples feed both requester and stronger host evaluation
+  ---
+  duration_ms: 286.6911
+  type: 'test'
+  ...
+# Subtest: RECOVERY-EDGE-01: genuinely new edges become measurable after two ratings and survive restart
+ok 5 - RECOVERY-EDGE-01: genuinely new edges become measurable after two ratings and survive restart
+  ---
+  duration_ms: 562.7052
+  type: 'test'
+  ...
+# Subtest: RECOVERY-EDGE-02: unused feedback and unused new edges have distinct reasons without positive claims
+ok 6 - RECOVERY-EDGE-02: unused feedback and unused new edges have distinct reasons without positive claims
+  ---
+  duration_ms: 204.5011
+  type: 'test'
+  ...
+# Subtest: RECOVERY-DISCOVERY: host custody is discoverable without a board; new host assignments replace the index
+ok 7 - RECOVERY-DISCOVERY: host custody is discoverable without a board; new host assignments replace the index
+  ---
+  duration_ms: 234.7536
+  type: 'test'
+  ...
+# Subtest: RECOVERY-STATUS: competing optional writes are refused before either can mutate
+ok 8 - RECOVERY-STATUS: competing optional writes are refused before either can mutate
+  ---
+  duration_ms: 203.5383
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3609.4466

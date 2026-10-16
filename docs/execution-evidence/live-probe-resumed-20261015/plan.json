@@ -1,0 +1,762 @@
+{
+  "createdAt": "2026-10-15T07:57:11.922Z",
+  "execution": "live-provider",
+  "purpose": "adaptive-probe",
+  "route": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-tiered",
+    "reasoningEffort": "medium"
+  },
+  "seeds": [
+    17,
+    31,
+    45,
+    59,
+    73
+  ],
+  "planned": 5,
+  "conditions": {
+    "agents": 8,
+    "chainLength": 2,
+    "perNodeSteps": 12,
+    "maxCalls": 96,
+    "maxOutputTokens": 4096,
+    "observedTokenLimit": 400000,
+    "timeoutMs": 600000,
+    "autoAdvance": false
+  },
+  "maxConcurrentProviderStreams": 1,
+  "changes": {
+    "timeoutMs": {
+      "previous": 120000,
+      "current": 600000,
+      "requiredUnderPlanningAssumptions": 583792
+    }
+  },
+  "history": {
+    "latency": {
+      "provider": "agy",
+      "model": "gemini-3.8-flash-tiered",
+      "reasoningEffort": "medium",
+      "ms": 8144,
+      "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+      "limitations": [
+        "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+        "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+        "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+        "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+      ]
+    },
+    "fileSha256": "b87f69d308e437dd2717e2eee5dff049c89a939511d40584a01cef0316d0e781",
+    "sampleCount": 71,
+    "excludedCalls": [
+      19,
+      33,
+      48,
+      62,
+      76
+    ],
+    "unfinishedCalls": [],
+    "meanMs": 8143.30985915493,
+    "minMs": 2071,
+    "maxMs": 26514
+  },
+  "gates": [
+    {
+      "version": 1,
+      "admitted": true,
+      "verdict": "admitted-under-assumptions",
+      "dimensions": [
+        {
+          "dimension": "nodeSteps",
+          "sufficient": true,
+          "available": 12,
+          "required": 9,
+          "margin": 3
+        },
+        {
+          "dimension": "callCap",
+          "sufficient": true,
+          "available": 96,
+          "required": 68,
+          "margin": 28
+        },
+        {
+          "dimension": "deadline",
+          "sufficient": true,
+          "available": 600000,
+          "required": 583792,
+          "margin": 16208
+        }
+      ],
+      "insufficient": [],
+      "primaryInsufficiency": null,
+      "requiredDeadlineMs": 583792,
+      "requiredConcurrency": 1,
+      "plannedCalls": 68,
+      "plannedMaxNodeSteps": 9,
+      "necessaryConditionalWorkMs": 81440,
+      "arithmetic": {
+        "calls": "max(10, ceil(60 * 1.125)) = 68",
+        "steps": "max(2, ceil(8 * 1.125)) = 9",
+        "deadline": "ceil(68 * 8144 / 1 + 30000) = 583792"
+      },
+      "assumptions": [
+        "Reference actions are a planning prior, never a strict model-call requirement.",
+        "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+        "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+        "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+        "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+      ],
+      "input": {
+        "lowerBound": {
+          "version": 1,
+          "seed": 17,
+          "facts": [
+            {
+              "phase": 1,
+              "document": "phase-1:key-00",
+              "owner": 4,
+              "key": "key-00"
+            },
+            {
+              "phase": 1,
+              "document": "phase-1:key-13",
+              "owner": 5,
+              "key": "key-13"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-00",
+              "owner": 3,
+              "key": "key-00"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-09",
+              "owner": 6,
+              "key": "key-09"
+            }
+          ],
+          "requiredOwners": [
+            4,
+            5,
+            3,
+            6
+          ],
+          "unconditionalModelCalls": 1,
+          "evidenceCausalModelCalls": 10,
+          "maxNodeStepsLowerBound": 2,
+          "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+          "assumptions": [
+            "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+            "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+            "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+            "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+            "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+          ],
+          "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+        },
+        "reference": {
+          "actions": 60,
+          "maxNodeActions": 8,
+          "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive policy only"
+        },
+        "conditions": {
+          "agents": 8,
+          "perNodeSteps": 12,
+          "maxCalls": 96,
+          "timeoutMs": 600000,
+          "concurrency": 1
+        },
+        "latency": {
+          "provider": "agy",
+          "model": "gemini-3.8-flash-tiered",
+          "reasoningEffort": "medium",
+          "ms": 8144,
+          "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+          "limitations": [
+            "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+            "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+            "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+            "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+          ]
+        },
+        "margin": {
+          "actionFactor": 1.125,
+          "nodeFactor": 1.125,
+          "overheadMs": 30000,
+          "rationale": "12.5% planning headroom on reference action/node counts and 30 seconds host/preparation reserve. Not sufficient for guaranteed success."
+        },
+        "schedulingRemedy": "deadline"
+      }
+    },
+    {
+      "version": 1,
+      "admitted": true,
+      "verdict": "admitted-under-assumptions",
+      "dimensions": [
+        {
+          "dimension": "nodeSteps",
+          "sufficient": true,
+          "available": 12,
+          "required": 9,
+          "margin": 3
+        },
+        {
+          "dimension": "callCap",
+          "sufficient": true,
+          "available": 96,
+          "required": 68,
+          "margin": 28
+        },
+        {
+          "dimension": "deadline",
+          "sufficient": true,
+          "available": 600000,
+          "required": 583792,
+          "margin": 16208
+        }
+      ],
+      "insufficient": [],
+      "primaryInsufficiency": null,
+      "requiredDeadlineMs": 583792,
+      "requiredConcurrency": 1,
+      "plannedCalls": 68,
+      "plannedMaxNodeSteps": 9,
+      "necessaryConditionalWorkMs": 81440,
+      "arithmetic": {
+        "calls": "max(10, ceil(60 * 1.125)) = 68",
+        "steps": "max(2, ceil(8 * 1.125)) = 9",
+        "deadline": "ceil(68 * 8144 / 1 + 30000) = 583792"
+      },
+      "assumptions": [
+        "Reference actions are a planning prior, never a strict model-call requirement.",
+        "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+        "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+        "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+        "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+      ],
+      "input": {
+        "lowerBound": {
+          "version": 1,
+          "seed": 31,
+          "facts": [
+            {
+              "phase": 1,
+              "document": "phase-1:key-00",
+              "owner": 6,
+              "key": "key-00"
+            },
+            {
+              "phase": 1,
+              "document": "phase-1:key-12",
+              "owner": 4,
+              "key": "key-12"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-00",
+              "owner": 5,
+              "key": "key-00"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-15",
+              "owner": 2,
+              "key": "key-15"
+            }
+          ],
+          "requiredOwners": [
+            6,
+            4,
+            5,
+            2
+          ],
+          "unconditionalModelCalls": 1,
+          "evidenceCausalModelCalls": 10,
+          "maxNodeStepsLowerBound": 2,
+          "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+          "assumptions": [
+            "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+            "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+            "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+            "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+            "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+          ],
+          "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+        },
+        "reference": {
+          "actions": 60,
+          "maxNodeActions": 8,
+          "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive policy only"
+        },
+        "conditions": {
+          "agents": 8,
+          "perNodeSteps": 12,
+          "maxCalls": 96,
+          "timeoutMs": 600000,
+          "concurrency": 1
+        },
+        "latency": {
+          "provider": "agy",
+          "model": "gemini-3.8-flash-tiered",
+          "reasoningEffort": "medium",
+          "ms": 8144,
+          "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+          "limitations": [
+            "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+            "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+            "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+            "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+          ]
+        },
+        "margin": {
+          "actionFactor": 1.125,
+          "nodeFactor": 1.125,
+          "overheadMs": 30000,
+          "rationale": "12.5% planning headroom on reference action/node counts and 30 seconds host/preparation reserve. Not sufficient for guaranteed success."
+        },
+        "schedulingRemedy": "deadline"
+      }
+    },
+    {
+      "version": 1,
+      "admitted": true,
+      "verdict": "admitted-under-assumptions",
+      "dimensions": [
+        {
+          "dimension": "nodeSteps",
+          "sufficient": true,
+          "available": 12,
+          "required": 9,
+          "margin": 3
+        },
+        {
+          "dimension": "callCap",
+          "sufficient": true,
+          "available": 96,
+          "required": 68,
+          "margin": 28
+        },
+        {
+          "dimension": "deadline",
+          "sufficient": true,
+          "available": 600000,
+          "required": 583792,
+          "margin": 16208
+        }
+      ],
+      "insufficient": [],
+      "primaryInsufficiency": null,
+      "requiredDeadlineMs": 583792,
+      "requiredConcurrency": 1,
+      "plannedCalls": 68,
+      "plannedMaxNodeSteps": 9,
+      "necessaryConditionalWorkMs": 81440,
+      "arithmetic": {
+        "calls": "max(10, ceil(60 * 1.125)) = 68",
+        "steps": "max(2, ceil(8 * 1.125)) = 9",
+        "deadline": "ceil(68 * 8144 / 1 + 30000) = 583792"
+      },
+      "assumptions": [
+        "Reference actions are a planning prior, never a strict model-call requirement.",
+        "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+        "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+        "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+        "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+      ],
+      "input": {
+        "lowerBound": {
+          "version": 1,
+          "seed": 45,
+          "facts": [
+            {
+              "phase": 1,
+              "document": "phase-1:key-00",
+              "owner": 2,
+              "key": "key-00"
+            },
+            {
+              "phase": 1,
+              "document": "phase-1:key-01",
+              "owner": 4,
+              "key": "key-01"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-00",
+              "owner": 6,
+              "key": "key-00"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-08",
+              "owner": 3,
+              "key": "key-08"
+            }
+          ],
+          "requiredOwners": [
+            2,
+            4,
+            6,
+            3
+          ],
+          "unconditionalModelCalls": 1,
+          "evidenceCausalModelCalls": 10,
+          "maxNodeStepsLowerBound": 2,
+          "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+          "assumptions": [
+            "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+            "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+            "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+            "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+            "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+          ],
+          "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+        },
+        "reference": {
+          "actions": 60,
+          "maxNodeActions": 8,
+          "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive policy only"
+        },
+        "conditions": {
+          "agents": 8,
+          "perNodeSteps": 12,
+          "maxCalls": 96,
+          "timeoutMs": 600000,
+          "concurrency": 1
+        },
+        "latency": {
+          "provider": "agy",
+          "model": "gemini-3.8-flash-tiered",
+          "reasoningEffort": "medium",
+          "ms": 8144,
+          "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+          "limitations": [
+            "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+            "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+            "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+            "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+          ]
+        },
+        "margin": {
+          "actionFactor": 1.125,
+          "nodeFactor": 1.125,
+          "overheadMs": 30000,
+          "rationale": "12.5% planning headroom on reference action/node counts and 30 seconds host/preparation reserve. Not sufficient for guaranteed success."
+        },
+        "schedulingRemedy": "deadline"
+      }
+    },
+    {
+      "version": 1,
+      "admitted": true,
+      "verdict": "admitted-under-assumptions",
+      "dimensions": [
+        {
+          "dimension": "nodeSteps",
+          "sufficient": true,
+          "available": 12,
+          "required": 9,
+          "margin": 3
+        },
+        {
+          "dimension": "callCap",
+          "sufficient": true,
+          "available": 96,
+          "required": 68,
+          "margin": 28
+        },
+        {
+          "dimension": "deadline",
+          "sufficient": true,
+          "available": 600000,
+          "required": 583792,
+          "margin": 16208
+        }
+      ],
+      "insufficient": [],
+      "primaryInsufficiency": null,
+      "requiredDeadlineMs": 583792,
+      "requiredConcurrency": 1,
+      "plannedCalls": 68,
+      "plannedMaxNodeSteps": 9,
+      "necessaryConditionalWorkMs": 81440,
+      "arithmetic": {
+        "calls": "max(10, ceil(60 * 1.125)) = 68",
+        "steps": "max(2, ceil(8 * 1.125)) = 9",
+        "deadline": "ceil(68 * 8144 / 1 + 30000) = 583792"
+      },
+      "assumptions": [
+        "Reference actions are a planning prior, never a strict model-call requirement.",
+        "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+        "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+        "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+        "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+      ],
+      "input": {
+        "lowerBound": {
+          "version": 1,
+          "seed": 59,
+          "facts": [
+            {
+              "phase": 1,
+              "document": "phase-1:key-00",
+              "owner": 3,
+              "key": "key-00"
+            },
+            {
+              "phase": 1,
+              "document": "phase-1:key-02",
+              "owner": 5,
+              "key": "key-02"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-00",
+              "owner": 2,
+              "key": "key-00"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-01",
+              "owner": 4,
+              "key": "key-01"
+            }
+          ],
+          "requiredOwners": [
+            3,
+            5,
+            2,
+            4
+          ],
+          "unconditionalModelCalls": 1,
+          "evidenceCausalModelCalls": 10,
+          "maxNodeStepsLowerBound": 2,
+          "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+          "assumptions": [
+            "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+            "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+            "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+            "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+            "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+          ],
+          "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+        },
+        "reference": {
+          "actions": 60,
+          "maxNodeActions": 8,
+          "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive policy only"
+        },
+        "conditions": {
+          "agents": 8,
+          "perNodeSteps": 12,
+          "maxCalls": 96,
+          "timeoutMs": 600000,
+          "concurrency": 1
+        },
+        "latency": {
+          "provider": "agy",
+          "model": "gemini-3.8-flash-tiered",
+          "reasoningEffort": "medium",
+          "ms": 8144,
+          "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+          "limitations": [
+            "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+            "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+            "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+            "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+          ]
+        },
+        "margin": {
+          "actionFactor": 1.125,
+          "nodeFactor": 1.125,
+          "overheadMs": 30000,
+          "rationale": "12.5% planning headroom on reference action/node counts and 30 seconds host/preparation reserve. Not sufficient for guaranteed success."
+        },
+        "schedulingRemedy": "deadline"
+      }
+    },
+    {
+      "version": 1,
+      "admitted": true,
+      "verdict": "admitted-under-assumptions",
+      "dimensions": [
+        {
+          "dimension": "nodeSteps",
+          "sufficient": true,
+          "available": 12,
+          "required": 9,
+          "margin": 3
+        },
+        {
+          "dimension": "callCap",
+          "sufficient": true,
+          "available": 96,
+          "required": 68,
+          "margin": 28
+        },
+        {
+          "dimension": "deadline",
+          "sufficient": true,
+          "available": 600000,
+          "required": 583792,
+          "margin": 16208
+        }
+      ],
+      "insufficient": [],
+      "primaryInsufficiency": null,
+      "requiredDeadlineMs": 583792,
+      "requiredConcurrency": 1,
+      "plannedCalls": 68,
+      "plannedMaxNodeSteps": 9,
+      "necessaryConditionalWorkMs": 81440,
+      "arithmetic": {
+        "calls": "max(10, ceil(60 * 1.125)) = 68",
+        "steps": "max(2, ceil(8 * 1.125)) = 9",
+        "deadline": "ceil(68 * 8144 / 1 + 30000) = 583792"
+      },
+      "assumptions": [
+        "Reference actions are a planning prior, never a strict model-call requirement.",
+        "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+        "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+        "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+        "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+      ],
+      "input": {
+        "lowerBound": {
+          "version": 1,
+          "seed": 73,
+          "facts": [
+            {
+              "phase": 1,
+              "document": "phase-1:key-00",
+              "owner": 3,
+              "key": "key-00"
+            },
+            {
+              "phase": 1,
+              "document": "phase-1:key-02",
+              "owner": 2,
+              "key": "key-02"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-00",
+              "owner": 4,
+              "key": "key-00"
+            },
+            {
+              "phase": 2,
+              "document": "phase-2:key-10",
+              "owner": 5,
+              "key": "key-10"
+            }
+          ],
+          "requiredOwners": [
+            3,
+            2,
+            4,
+            5
+          ],
+          "unconditionalModelCalls": 1,
+          "evidenceCausalModelCalls": 10,
+          "maxNodeStepsLowerBound": 2,
+          "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+          "assumptions": [
+            "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+            "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+            "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+            "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+            "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+          ],
+          "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+        },
+        "reference": {
+          "actions": 60,
+          "maxNodeActions": 8,
+          "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive policy only"
+        },
+        "conditions": {
+          "agents": 8,
+          "perNodeSteps": 12,
+          "maxCalls": 96,
+          "timeoutMs": 600000,
+          "concurrency": 1
+        },
+        "latency": {
+          "provider": "agy",
+          "model": "gemini-3.8-flash-tiered",
+          "reasoningEffort": "medium",
+          "ms": 8144,
+          "source": "docs/execution-evidence/agy-model-20261015/provider-calls.jsonl; pair dispatch.at -> finish.at; arithmetic mean of non-aborted successful finishes, rounded up to ms",
+          "limitations": [
+            "Same plugin/model/medium and output limit 4096, earlier 120-second batch; present load may differ.",
+            "5 aborted calls are right-censored and excluded. Successful-call mean has survivor bias; future or incomplete calls can be slower.",
+            "Finish chunk precedes iterator settlement; provider preparation and host work are outside this interval. Explicit overhead reserve is required.",
+            "This is not 120 seconds divided by dispatch count, not modelDurationMs divided by attempts, and not a hard latency lower bound."
+          ]
+        },
+        "margin": {
+          "actionFactor": 1.125,
+          "nodeFactor": 1.125,
+          "overheadMs": 30000,
+          "rationale": "12.5% planning headroom on reference action/node counts and 30 seconds host/preparation reserve. Not sufficient for guaranteed success."
+        },
+        "schedulingRemedy": "deadline"
+      }
+    }
+  ],
+  "sourceHashes": {
+    "shifting-evidence-run.ts": "76a142d3e3234be2fd0e7285254a9848bbc86322db66eb11e7ee85781f390049",
+    "shifting-evidence-task.ts": "4de8727ae51ea9465ff54b241cea763d7e0498daef9dfbfd15941abe59ec266c",
+    "shifting-evidence-reference.ts": "7268164c3d691bf2317cccd9fdc38fc29d8129e00dedea4f1213dbe64b4985a0",
+    "shifting-evidence-profile-run.ts": "7f26875c88f2c9e6740d786e1b1f2e291b07a5c9a866df5c955968212a52de1c",
+    "simplification-arms.ts": "4f55609671f39faf958b4d16753c3c26b2a748e065db42abb8e923f541bb72d9",
+    "simplification-protocol.ts": "623fb9321a2703616af33224e30a076565645d79128a234ebcd4047b2f45d504",
+    "simplification-statistics.ts": "3dc9c5001a83c53b2ff06a7b04c46ec6b3eeb773a639107a3ac62099c0001434",
+    "simplification-reference.ts": "4eaf3dfff711a439b82998e6f056b50478243ea6f45255d0f031cf1983d9c169",
+    "shifting-evidence-access.ts": "c4e77013c08ccc0f90d0d68cc37ad62df975c06c05866854e0a8ce597ad33cd1",
+    "shifting-evidence-protocol.ts": "bc3cefcd0b14878443be909c4015a3aa8dd51f153e3b228a8b0c46c7bfc369a2",
+    "shifting-evidence-script.ts": "b1a4c3a897533a3ff46f17b7b0cb027d28c7cdad358b697abf7656da69692920",
+    "shifting-evidence-calibration.ts": "c45074021be0e3aa85be812b4028a6053bfef45ca75f42ff363ba0b44edfb01e",
+    "topology-binding-proof.ts": "6fca6b220ce998d57e93fb6eb114d28438ae570b6800c6d6035f99f2eaf2bebf",
+    "topology-binding-access.ts": "055085e0eeeec1dce7bca84ca7bb19ddc0c2924d54d0187cf3819910ef11b846",
+    "topology-binding-audit.ts": "c6018e0782bd07b4030949417143495b2ba8b1d0ef2018fa41329fd211e028ca",
+    "topology-binding-reference.ts": "bc978d6ee16b9aae337c9a836308569301f6c42439a3362c0d974ba4fe76865f",
+    "static-wide-topology.ts": "e8e708f9c1d5c0ae29319db18e3163fe36081fc05617b048b0d192a57b797285",
+    "comparison-statistics.ts": "daa0709d40076b965d149798cec276e667960e1b4e7db1a169241ca9929e60de",
+    "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+    "provider.ts": "831b89eeadc408874cf3d4b9833e4340cfc62a024690153c3c8b123c4075e776",
+    "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+    "telemetry.ts": "ac961c2d125769ef659f6c37b9b61de400332312054a87451f3db4c0dad1965c",
+    "atn-cost.ts": "47b258954901e4accb4c88a3df893a99932331639741f94ec4a3abd72b8206b5",
+    "../src/runtime.ts": "32bb1888b3701c429f0a5ffd18facf206cc872a09d772926a938067162dc1aab",
+    "../src/schema.ts": "2259bbc42344abdfd6b75c8f9d84fbe0c2a8c4d012f230bf39bf0896b65ae714",
+    "../src/config.ts": "79da1a273aa3d8ff739a261e1cbf7f153a4ccf7b8cb0cef3399ad1892ba27852",
+    "../src/tools.ts": "d9ba2a4a6c25a039448ae809bbb3fef6d4c8c076b400edfa8a0f78414f7d5885",
+    "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+    "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+    "../src/knowledge.ts": "7e796402e09123915ec12ad83109eed98e8bb5cf41a634034bf48cc49a1aebe7",
+    "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+    "../src/topology.ts": "d2a6e836c734842b9744232cc2674a77ef6a4bebd454f2e5cef63a2d2a9fbc98",
+    "../src/topology-feedback.ts": "4f2cc013f8c2be5878862dace9635d92727c64a1bc32958b048b906093998b06",
+    "../src/information-boundary.ts": "33217bbc54fc421b1e91cdf1789f99b1eef080e111636f864efeb96ffef392c0",
+    "../src/refusal.ts": "edb120ccfe09bf3eec9e4074eaf78bf2ded40d5350d3bce415d8d603bbbbd425",
+    "../package.json": "fbec0bf866296cf443f5a27cb8acc7ce87c751ddca87718b96701d75d64c942b",
+    "../package-lock.json": "476ea5475cc7acb66508e2118e836668af80fe3a3df59571f5f4de5b85219dfc"
+  },
+  "extensionHashes": {
+    "scripts/run-live-probe-agy.ts": "5b9a6e652d3d5ee89c456dd2f645886d5e6daaa959b2539af4704a1dd2eafa1b",
+    "scripts/live-probe-feasibility.ts": "88a83b16a0e15ae32d523c6798673b6abd344d754c2b888ff3405e48e24e5001",
+    "experiments/live-probe-feasibility.ts": "bdfffb3f9c3903e133a6b98b4bda1384e498e5a372c98908e832235cf8b163e4",
+    "experiments/live-probe-history.ts": "87ec538cb1d59a2dd2a341fc33736831d7411788b333e4eb9f8bdb98e9739438",
+    "experiments/live-probe-timing.ts": "fbca9f78c56f295970fd6ba0c3622aaf3f0f6cf89c3eacf9f7f167a347541617",
+    "tests/unit/live-probe-feasibility.test.ts": "9728be13b54d4d90da9971cf3898905bd25d49cf700198ce05e89044d917539d",
+    "tests/integration/live-probe-timing.test.ts": "fec9d6313b798f61fb3b5ab669ef64bf3891c372ef2246eb52b0f2fa15d00461"
+  },
+  "directHttpInference": false,
+  "causalClaim": false,
+  "caveat": "Genuine evidence-causal lower bound and a separate planning margin. Not a mathematical impossibility or completion guarantee."
+}

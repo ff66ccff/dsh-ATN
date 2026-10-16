@@ -1,0 +1,13 @@
+✔ PROBE-TIMING: real llm waterfall proves queue-inclusive legacy duration; serial services never overlap; decomposition is exact (15.0977ms)
+✔ PROBE-TIMING: cancelled queued request has no provider dispatch and decomposes as queue only (1.966ms)
+✔ PROBE-BOUND: 5 frozen seeds have four distinct remote owners; conditional bound is 10 calls / 2 steps, never 60 / 8 (1.5402ms)
+✔ PROBE-G3/G4: old allocation fails planning deadline alone, exact boundary passes, selected concurrency remedy is distinguished (0.9503ms)
+✔ PROBE-ADMISSION: refusal precedes mount; provenance and actual latency input control the result (0.751ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 294.9263

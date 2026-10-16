@@ -1,0 +1,286 @@
+{
+  "runId": "98a6014b-e0f1-451f-8838-064df7ca62e9",
+  "experiment": "shifting-evidence",
+  "protocolRevision": 4,
+  "mode": "adaptive",
+  "purpose": "adaptive-probe",
+  "execution": "live-provider",
+  "providerProvenance": {
+    "provider": "agy",
+    "plugin": "dsh-agy",
+    "profile": "installed-desktop-plugin",
+    "modelImport": "installed-dsh-agy",
+    "mount": "dsh-installed-plugin",
+    "model": "gemini-3.8-flash-tiered",
+    "reasoningEffort": "medium"
+  },
+  "taskHash": "2c95bc68426b6498e5afbac4378604199842314b106504f46b7fbab860f289bc",
+  "seed": 31,
+  "model": {
+    "id": "gemini-3.8-flash-tiered",
+    "name": "Gemini 3.8 Flash",
+    "api": "agy",
+    "contextWindow": 1048576,
+    "catalogFree": false,
+    "referenceCostPerMillion": null
+  },
+  "topologyProof": null,
+  "staticTopologyProof": null,
+  "limits": {
+    "agents": 8,
+    "degree": 2,
+    "steps": 12,
+    "calls": 96,
+    "chainLength": 2,
+    "autoAdvance": false,
+    "outputTokens": 4096,
+    "timeoutMs": 600000,
+    "observedTokenLimit": 400000
+  },
+  "reference": {
+    "seed": 31,
+    "topologyMode": "fixed",
+    "mechanisms": {
+      "requesterFeedback": true,
+      "sharedBoard": false
+    },
+    "requesterRatings": 14,
+    "policy": "hub-synthesis-via-fixed-ring",
+    "evaluation": [
+      {
+        "phase": 1,
+        "passed": true,
+        "submitted": true
+      },
+      {
+        "phase": 2,
+        "passed": true,
+        "submitted": true
+      }
+    ],
+    "passed": true,
+    "issuedModelCalls": 0,
+    "actions": 60,
+    "actionsByNode": {
+      "node-1": 8,
+      "node-3": 8,
+      "node-6": 8,
+      "node-9": 8,
+      "node-12": 8,
+      "node-15": 8,
+      "node-18": 8,
+      "node-21": 4
+    },
+    "maxNodeActions": 8,
+    "entrySteps": 8,
+    "receivedFacts": [],
+    "unavailable": [],
+    "checkpoints": [],
+    "topologyProof": null,
+    "staticTopologyProof": null,
+    "requiredFactCount": 0,
+    "obtainedRequiredFacts": [],
+    "obtainedRequiredFactCount": 0,
+    "factFlowAudit": null,
+    "topology": {
+      "nodes": 8,
+      "maxPeers": 2,
+      "reachableFromEntry": 8,
+      "diameter": 4
+    },
+    "initialPeerIds": {
+      "node-1": [
+        "node-21",
+        "node-3"
+      ],
+      "node-3": [
+        "node-1",
+        "node-6"
+      ],
+      "node-6": [
+        "node-3",
+        "node-9"
+      ],
+      "node-9": [
+        "node-6",
+        "node-12"
+      ],
+      "node-12": [
+        "node-9",
+        "node-15"
+      ],
+      "node-15": [
+        "node-12",
+        "node-18"
+      ],
+      "node-18": [
+        "node-15",
+        "node-21"
+      ],
+      "node-21": [
+        "node-18",
+        "node-1"
+      ]
+    },
+    "staticSelection": null,
+    "manipulation": {
+      "phase": 2,
+      "registeredNodes": 8,
+      "deniedReads": 0,
+      "distinctDocumentReads": 36,
+      "transitionReason": "phase-1-checkpoint",
+      "automaticAdvanceOccurred": false,
+      "checks": {
+        "boundedNodes": true,
+        "rootHolderChanged": true,
+        "routeChanged": true,
+        "phaseChanged": true
+      },
+      "evidenceVariance": {
+        "currentVersionByPhase": [
+          1,
+          2
+        ],
+        "staleSlotsByPhase": [
+          [
+            1
+          ],
+          [
+            7
+          ]
+        ],
+        "staleRootHolderChanged": true,
+        "staleCopiesByPhase": [
+          2,
+          2
+        ],
+        "capabilityChanges": false
+      },
+      "causalClaim": false
+    },
+    "messages": 35,
+    "hops": 35,
+    "payloadBytes": 31412,
+    "maxContextBytes": 5987,
+    "board": {
+      "reads": 0,
+      "writes": 0,
+      "readBytes": 0,
+      "writeBytes": 0
+    },
+    "totalInteractions": 35,
+    "totalTransferBytes": 31412,
+    "contextBytesByNode": {
+      "network-1:node-3": 5987,
+      "network-1:node-6": 5176,
+      "network-1:node-9": 4538,
+      "network-1:node-12": 3734,
+      "network-1:node-15": 3099,
+      "network-1:node-18": 2298,
+      "network-1:node-21": 1342,
+      "network-1:node-1": 5238
+    },
+    "interpretation": "Feasible central synthesis with the same ACL, ring, step and message limits; not a proven optimum. All task/results count."
+  },
+  "bindingReference": null,
+  "sourceHashes": {
+    "shifting-evidence-run.ts": "76a142d3e3234be2fd0e7285254a9848bbc86322db66eb11e7ee85781f390049",
+    "shifting-evidence-task.ts": "4de8727ae51ea9465ff54b241cea763d7e0498daef9dfbfd15941abe59ec266c",
+    "shifting-evidence-reference.ts": "7268164c3d691bf2317cccd9fdc38fc29d8129e00dedea4f1213dbe64b4985a0",
+    "shifting-evidence-profile-run.ts": "7f26875c88f2c9e6740d786e1b1f2e291b07a5c9a866df5c955968212a52de1c",
+    "simplification-arms.ts": "4f55609671f39faf958b4d16753c3c26b2a748e065db42abb8e923f541bb72d9",
+    "simplification-protocol.ts": "623fb9321a2703616af33224e30a076565645d79128a234ebcd4047b2f45d504",
+    "simplification-statistics.ts": "3dc9c5001a83c53b2ff06a7b04c46ec6b3eeb773a639107a3ac62099c0001434",
+    "simplification-reference.ts": "4eaf3dfff711a439b82998e6f056b50478243ea6f45255d0f031cf1983d9c169",
+    "shifting-evidence-access.ts": "c4e77013c08ccc0f90d0d68cc37ad62df975c06c05866854e0a8ce597ad33cd1",
+    "shifting-evidence-protocol.ts": "bc3cefcd0b14878443be909c4015a3aa8dd51f153e3b228a8b0c46c7bfc369a2",
+    "shifting-evidence-script.ts": "b1a4c3a897533a3ff46f17b7b0cb027d28c7cdad358b697abf7656da69692920",
+    "shifting-evidence-calibration.ts": "c45074021be0e3aa85be812b4028a6053bfef45ca75f42ff363ba0b44edfb01e",
+    "topology-binding-proof.ts": "6fca6b220ce998d57e93fb6eb114d28438ae570b6800c6d6035f99f2eaf2bebf",
+    "topology-binding-access.ts": "055085e0eeeec1dce7bca84ca7bb19ddc0c2924d54d0187cf3819910ef11b846",
+    "topology-binding-audit.ts": "c6018e0782bd07b4030949417143495b2ba8b1d0ef2018fa41329fd211e028ca",
+    "topology-binding-reference.ts": "bc978d6ee16b9aae337c9a836308569301f6c42439a3362c0d974ba4fe76865f",
+    "static-wide-topology.ts": "e8e708f9c1d5c0ae29319db18e3163fe36081fc05617b048b0d192a57b797285",
+    "comparison-statistics.ts": "daa0709d40076b965d149798cec276e667960e1b4e7db1a169241ca9929e60de",
+    "reference-kernel.ts": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+    "provider.ts": "831b89eeadc408874cf3d4b9833e4340cfc62a024690153c3c8b123c4075e776",
+    "budget.ts": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+    "telemetry.ts": "ac961c2d125769ef659f6c37b9b61de400332312054a87451f3db4c0dad1965c",
+    "atn-cost.ts": "47b258954901e4accb4c88a3df893a99932331639741f94ec4a3abd72b8206b5",
+    "../src/runtime.ts": "32bb1888b3701c429f0a5ffd18facf206cc872a09d772926a938067162dc1aab",
+    "../src/schema.ts": "2259bbc42344abdfd6b75c8f9d84fbe0c2a8c4d012f230bf39bf0896b65ae714",
+    "../src/config.ts": "79da1a273aa3d8ff739a261e1cbf7f153a4ccf7b8cb0cef3399ad1892ba27852",
+    "../src/tools.ts": "d9ba2a4a6c25a039448ae809bbb3fef6d4c8c076b400edfa8a0f78414f7d5885",
+    "../src/tasks.ts": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+    "../src/messages.ts": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+    "../src/knowledge.ts": "7e796402e09123915ec12ad83109eed98e8bb5cf41a634034bf48cc49a1aebe7",
+    "../src/requester-feedback.ts": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+    "../src/topology.ts": "d2a6e836c734842b9744232cc2674a77ef6a4bebd454f2e5cef63a2d2a9fbc98",
+    "../src/topology-feedback.ts": "4f2cc013f8c2be5878862dace9635d92727c64a1bc32958b048b906093998b06",
+    "../src/information-boundary.ts": "33217bbc54fc421b1e91cdf1789f99b1eef080e111636f864efeb96ffef392c0",
+    "../src/refusal.ts": "edb120ccfe09bf3eec9e4074eaf78bf2ded40d5350d3bce415d8d603bbbbd425",
+    "../package.json": "fbec0bf866296cf443f5a27cb8acc7ce87c751ddca87718b96701d75d64c942b",
+    "../package-lock.json": "476ea5475cc7acb66508e2118e836668af80fe3a3df59571f5f4de5b85219dfc"
+  },
+  "initialTopology": {
+    "nodes": 8,
+    "maxPeers": 2,
+    "reachableFromEntry": 8,
+    "diameter": 4
+  },
+  "initialPeerIds": {
+    "node-1": [
+      "node-21",
+      "node-3"
+    ],
+    "node-3": [
+      "node-1",
+      "node-6"
+    ],
+    "node-6": [
+      "node-3",
+      "node-9"
+    ],
+    "node-9": [
+      "node-6",
+      "node-12"
+    ],
+    "node-12": [
+      "node-9",
+      "node-15"
+    ],
+    "node-15": [
+      "node-12",
+      "node-18"
+    ],
+    "node-18": [
+      "node-15",
+      "node-21"
+    ],
+    "node-21": [
+      "node-18",
+      "node-1"
+    ]
+  },
+  "staticSelection": null,
+  "fixedContext": {
+    "systemPromptBytes": 1161,
+    "toolSchemaBytes": 4749,
+    "fixedContextBytes": 5910
+  },
+  "phaseTrigger": "phase-1 checkpoint only",
+  "evidenceAccess": "host-enforced local snapshot holder ACL, including stable stale copies; no fixture file tool access",
+  "discoveryAccess": "canonical current local metadata only; no task/result prose or content search; task reads restricted to holder/requester; no orphan claims or early retirement",
+  "transportAccess": "legacy ring relays and metered board evidence",
+  "primaryMetrics": [
+    "issuedModelCalls conditional on phase1Correct && phase2Correct"
+  ],
+  "secondaryMetrics": [
+    "atnTotalInteractions",
+    "atnTotalTransferBytes",
+    "entrySteps",
+    "two-phase completion with Wilson interval and paired power statement"
+  ],
+  "experimentClass": "bounded efficacy smoke, not calibrated effect-size measurement",
+  "causalClaim": false
+}

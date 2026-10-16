@@ -1,0 +1,87 @@
+{
+  "execution": "offline-zero-real-model",
+  "actualRealModelCalls": 0,
+  "accountReads": 0,
+  "networkAccess": false,
+  "installedProviderLoaded": false,
+  "scriptedKernelControlsExecuted": true,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 0,
+      "backendPassed": 569,
+      "clientPassed": 14,
+      "failed": 0,
+      "log": "npm-test-final.log"
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0,
+      "log": "typecheck-final.log"
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "npm run pack:tarball",
+      "exitCode": 0,
+      "log": "pack.log",
+      "tarball": ".artifacts/dsh-atn-0.5.0.tgz"
+    },
+    {
+      "command": "node --import tsx/esm scripts/audit-probe-liveness-v2.ts",
+      "exitCode": 0,
+      "log": "audit-command.log",
+      "seeds": 5,
+      "normalReceipts": 60,
+      "unreachableMails": 1,
+      "mechanismGapsInHistoricalBatch": 0,
+      "controlScenariosPassed": 5,
+      "frozenHashesVerified": 37
+    },
+    {
+      "command": "node scripts/reproduce-probe-flakes-v2.mjs 10",
+      "exitCode": 0,
+      "resultOutcomeFailures": 0,
+      "knowledgeFeedbackFailures": 0,
+      "attemptsPerFile": 10,
+      "evidence": "flaky-reproduction.json"
+    },
+    {
+      "command": "node --import tsx/esm --test tests/integration/probe-liveness-v2.test.ts tests/unit/probe-liveness-v2.test.ts",
+      "exitCode": 0,
+      "passed": 4,
+      "log": "new-tests-final.log"
+    },
+    {
+      "command": "git diff --exit-code HEAD -- src tests/integration/result-outcome.test.ts tests/integration/knowledge-feedback.test.ts",
+      "exitCode": 0,
+      "evidence": "The audit entry executes this check before reading historical seed data; final invocation also passed."
+    }
+  ],
+  "earlierRunsThisIteration": [
+    {
+      "log": "npm-test.log",
+      "exitCode": 0,
+      "backendPassed": 567,
+      "clientPassed": 14,
+      "meaning": "Before adding the two archival unit cases; superseded by the final complete run."
+    },
+    {
+      "log": "npm-test-intermediate.log",
+      "exitCode": 1,
+      "failedCase": "LIVENESS-V2: archived five-seed support, regression and declared replay conditions",
+      "reason": "New test mistakenly required an input step for the intentionally unreachable mail. Corrected the new test to cover the already defined unreachable category; existing tests were not changed.",
+      "clientSuiteExecuted": false
+    }
+  ],
+  "notRun": [],
+  "requiredDeliverablesIncomplete": [],
+  "limitations": [
+    "Full historical replay adopts brief 4.6(b), requiring the untracked 40 sessions and 5 network files listed in audit.json.replay.",
+    "Neither historical flaky failure was reproduced in 10 isolated repetitions per file; root causes remain unconfirmed.",
+    "Fault controls prove classifier reachability under injected failures; they do not prove a production scheduler defect."
+  ]
+}

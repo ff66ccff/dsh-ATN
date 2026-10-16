@@ -1,0 +1,25 @@
+{
+  "status": "stopped-section-7.2",
+  "liveModelCalls": 0,
+  "archivedSourceHashesUnchanged": 37,
+  "checks": {
+    "test": {
+      "runtime": 553,
+      "ui": 14,
+      "failed": 0,
+      "skipped": 0
+    },
+    "typecheck": 0,
+    "build": 0,
+    "packTarball": 0
+  },
+  "sha256": {
+    "reference-audit.json": "7af6ed9ba07323645fa86ca1c838868e15592273a5a1f8dd7b2e2aa798625d43",
+    "reference-without-ratings.ts.txt": "fa2e088b56f3e0714f5d3e5cd22e99281ba9161e7c6e9db5f43a4f3c41e9e8ef",
+    "test.txt": "3ae70383c191bdf58cb1cf6d148eb0a2253b93d0d6f34ecf9ee7e3bcaecdd89f",
+    "typecheck.txt": "41427cf1fbf2d4863171cb5f85448ff71204a2997993e138896dacc7c4db2654",
+    "build.txt": "7b33e765fa5c1f399dde75149cd3ad0f0975457bab92373479d42fc97843edda",
+    "pack-tarball.txt": "6a2f97abf74cacf95563da0c05c5b1fad8d7521ec52225ffaa5dbbfe4a21b277",
+    "../../../scripts/audit-live-probe-reference.ts": "952ff249c76398289709cce0fe5e1b72495be2acbfb2340d968f5afbc3a55711"
+  }
+}

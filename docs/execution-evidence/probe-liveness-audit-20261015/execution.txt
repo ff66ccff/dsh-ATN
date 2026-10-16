@@ -1,0 +1,80 @@
+{
+  "status": "stopped",
+  "briefStopCondition": "7.3",
+  "output": "D:\\dsh-ATN\\docs\\execution-evidence\\probe-liveness-audit-20261015\\precondition.json",
+  "scans": [
+    {
+      "seed": 17,
+      "delivered": 11,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      }
+    },
+    {
+      "seed": 31,
+      "delivered": 11,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      }
+    },
+    {
+      "seed": 45,
+      "delivered": 14,
+      "temporalCountsOnly": {
+        "laterInput": 14,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      }
+    },
+    {
+      "seed": 59,
+      "delivered": 12,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 1,
+        "unreachable": 0
+      }
+    },
+    {
+      "seed": 73,
+      "delivered": 12,
+      "temporalCountsOnly": {
+        "laterInput": 12,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      }
+    }
+  ],
+  "exceptional": {
+    "seed": 59,
+    "mail": "mail-10",
+    "task": "task-3",
+    "node": "node-2",
+    "session": "session-2",
+    "deliveredSequence": 287,
+    "lifecycle": "active",
+    "remainingSteps": 7,
+    "queuedSequence": 274,
+    "stepStartSequence": 285,
+    "modelStartSequence": 286,
+    "modelEndSequence": 305,
+    "modelEndStatus": "completed",
+    "stepEndSequence": 306,
+    "turnEndSequence": 307,
+    "turnEndReason": "completed",
+    "source": {
+      "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+      "sha256": "66bb0ba3aa17ea0fb87f79d60c29f9dea3a96e735e5b45abe465b48e9e5d59d2",
+      "stepSourceSeq": 36,
+      "receiptSourceSeq": 37,
+      "receiptTime": 1792052620525
+    },
+    "finding": "The only temporal candidate already received this mail in its final model step. No subsequent step is required by deliverMail for a delivered receipt."
+  },
+  "archivedSourceHashCount": 37,
+  "actualModelCalls": 0
+}

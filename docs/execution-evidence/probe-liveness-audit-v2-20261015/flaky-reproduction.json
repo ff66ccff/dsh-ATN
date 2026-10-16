@@ -1,0 +1,183 @@
+{
+  "execution": "offline-scripted-tests",
+  "node": "v24.19.0",
+  "repeatCommand": "node scripts/reproduce-probe-flakes-v2.mjs 10",
+  "results": [
+    {
+      "file": "tests/integration/result-outcome.test.ts",
+      "command": "node --import tsx/esm --test tests/integration/result-outcome.test.ts",
+      "repetitions": 10,
+      "failures": 0,
+      "runs": [
+        {
+          "attempt": 1,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 881,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-1.log"
+        },
+        {
+          "attempt": 2,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 893,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-2.log"
+        },
+        {
+          "attempt": 3,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 918,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-3.log"
+        },
+        {
+          "attempt": 4,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 883,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-4.log"
+        },
+        {
+          "attempt": 5,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 909,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-5.log"
+        },
+        {
+          "attempt": 6,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 893,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-6.log"
+        },
+        {
+          "attempt": 7,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 865,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-7.log"
+        },
+        {
+          "attempt": 8,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 881,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-8.log"
+        },
+        {
+          "attempt": 9,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 887,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-9.log"
+        },
+        {
+          "attempt": 10,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 884,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/result-outcome.test.ts.repeat-10.log"
+        }
+      ]
+    },
+    {
+      "file": "tests/integration/knowledge-feedback.test.ts",
+      "command": "node --import tsx/esm --test tests/integration/knowledge-feedback.test.ts",
+      "repetitions": 10,
+      "failures": 0,
+      "runs": [
+        {
+          "attempt": 1,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1457,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-1.log"
+        },
+        {
+          "attempt": 2,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1474,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-2.log"
+        },
+        {
+          "attempt": 3,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1418,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-3.log"
+        },
+        {
+          "attempt": 4,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1470,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-4.log"
+        },
+        {
+          "attempt": 5,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1438,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-5.log"
+        },
+        {
+          "attempt": 6,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1487,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-6.log"
+        },
+        {
+          "attempt": 7,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1404,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-7.log"
+        },
+        {
+          "attempt": 8,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1456,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-8.log"
+        },
+        {
+          "attempt": 9,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1417,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-9.log"
+        },
+        {
+          "attempt": 10,
+          "exitCode": 0,
+          "signal": null,
+          "errorCode": null,
+          "elapsedMs": 1474,
+          "log": "docs/execution-evidence/probe-liveness-audit-v2-20261015/knowledge-feedback.test.ts.repeat-10.log"
+        }
+      ]
+    }
+  ]
+}

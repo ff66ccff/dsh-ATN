@@ -1,0 +1,1048 @@
+{
+  "execution": "offline-zero-model",
+  "lowerBounds": [
+    {
+      "version": 1,
+      "seed": 17,
+      "facts": [
+        {
+          "phase": 1,
+          "document": "phase-1:key-00",
+          "owner": 4,
+          "key": "key-00"
+        },
+        {
+          "phase": 1,
+          "document": "phase-1:key-13",
+          "owner": 5,
+          "key": "key-13"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-00",
+          "owner": 3,
+          "key": "key-00"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-09",
+          "owner": 6,
+          "key": "key-09"
+        }
+      ],
+      "requiredOwners": [
+        4,
+        5,
+        3,
+        6
+      ],
+      "unconditionalModelCalls": 1,
+      "evidenceCausalModelCalls": 10,
+      "maxNodeStepsLowerBound": 2,
+      "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+      "assumptions": [
+        "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+        "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+        "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+        "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+        "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+      ],
+      "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+    },
+    {
+      "version": 1,
+      "seed": 31,
+      "facts": [
+        {
+          "phase": 1,
+          "document": "phase-1:key-00",
+          "owner": 6,
+          "key": "key-00"
+        },
+        {
+          "phase": 1,
+          "document": "phase-1:key-12",
+          "owner": 4,
+          "key": "key-12"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-00",
+          "owner": 5,
+          "key": "key-00"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-15",
+          "owner": 2,
+          "key": "key-15"
+        }
+      ],
+      "requiredOwners": [
+        6,
+        4,
+        5,
+        2
+      ],
+      "unconditionalModelCalls": 1,
+      "evidenceCausalModelCalls": 10,
+      "maxNodeStepsLowerBound": 2,
+      "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+      "assumptions": [
+        "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+        "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+        "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+        "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+        "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+      ],
+      "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+    },
+    {
+      "version": 1,
+      "seed": 45,
+      "facts": [
+        {
+          "phase": 1,
+          "document": "phase-1:key-00",
+          "owner": 2,
+          "key": "key-00"
+        },
+        {
+          "phase": 1,
+          "document": "phase-1:key-01",
+          "owner": 4,
+          "key": "key-01"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-00",
+          "owner": 6,
+          "key": "key-00"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-08",
+          "owner": 3,
+          "key": "key-08"
+        }
+      ],
+      "requiredOwners": [
+        2,
+        4,
+        6,
+        3
+      ],
+      "unconditionalModelCalls": 1,
+      "evidenceCausalModelCalls": 10,
+      "maxNodeStepsLowerBound": 2,
+      "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+      "assumptions": [
+        "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+        "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+        "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+        "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+        "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+      ],
+      "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+    },
+    {
+      "version": 1,
+      "seed": 59,
+      "facts": [
+        {
+          "phase": 1,
+          "document": "phase-1:key-00",
+          "owner": 3,
+          "key": "key-00"
+        },
+        {
+          "phase": 1,
+          "document": "phase-1:key-02",
+          "owner": 5,
+          "key": "key-02"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-00",
+          "owner": 2,
+          "key": "key-00"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-01",
+          "owner": 4,
+          "key": "key-01"
+        }
+      ],
+      "requiredOwners": [
+        3,
+        5,
+        2,
+        4
+      ],
+      "unconditionalModelCalls": 1,
+      "evidenceCausalModelCalls": 10,
+      "maxNodeStepsLowerBound": 2,
+      "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+      "assumptions": [
+        "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+        "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+        "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+        "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+        "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+      ],
+      "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+    },
+    {
+      "version": 1,
+      "seed": 73,
+      "facts": [
+        {
+          "phase": 1,
+          "document": "phase-1:key-00",
+          "owner": 3,
+          "key": "key-00"
+        },
+        {
+          "phase": 1,
+          "document": "phase-1:key-02",
+          "owner": 2,
+          "key": "key-02"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-00",
+          "owner": 4,
+          "key": "key-00"
+        },
+        {
+          "phase": 2,
+          "document": "phase-2:key-10",
+          "owner": 5,
+          "key": "key-10"
+        }
+      ],
+      "requiredOwners": [
+        3,
+        2,
+        4,
+        5
+      ],
+      "unconditionalModelCalls": 1,
+      "evidenceCausalModelCalls": 10,
+      "maxNodeStepsLowerBound": 2,
+      "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+      "assumptions": [
+        "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+        "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+        "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+        "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+        "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+      ],
+      "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+    }
+  ],
+  "history": {
+    "latency": {
+      "provider": "agy",
+      "model": "gemini-3.8-flash-tiered",
+      "reasoningEffort": "medium",
+      "ms": 23406,
+      "source": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl; SHA-256 b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731; all dispatch.at -> finish.at intervals, nearest-rank p90",
+      "coverage": {
+        "quantile": 0.9,
+        "sampleCount": 224,
+        "principle": "Service-level planning policy: cover 90% of observed individual service times using empirical nearest-rank p90, without fitting the policy to a desired admission outcome."
+      },
+      "limitations": [
+        "Empirical coverage of individual observed service times, not a probability bound for an entire 68-call run or a guarantee for future traffic.",
+        "Uncensored means every dispatch has a finish and aborted=0; includes one observed error interval, not 224 successful responses.",
+        "Provider preparation and iterator cleanup lie outside dispatch-to-finish; the separate 30000 ms host reserve remains a planning assumption.",
+        "Earlier censored survivors are reported separately, never pooled."
+      ]
+    },
+    "file": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl",
+    "fileSha256": "b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731",
+    "metricsSources": [
+      {
+        "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-17-report.json",
+        "sha256": "cabb1fe71c17094bb2128c5b46d4de6fea571ec196d7513ea01ab97dc4503a76",
+        "attempts": 46,
+        "aborted": 0
+      },
+      {
+        "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-31-report.json",
+        "sha256": "7be2a07935e96763f9caffdec4ebeee015d362b480a3151e05bf2c4b89e1a6b7",
+        "attempts": 34,
+        "aborted": 0
+      },
+      {
+        "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-45-report.json",
+        "sha256": "9aef187499b25516880124bedf5dfcab73b03195347743b8860110d1d5557f26",
+        "attempts": 58,
+        "aborted": 0
+      },
+      {
+        "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-59-report.json",
+        "sha256": "340aca07db20a9c9d9f5282ef1c4ba9170d6e832ee548e6fbb0995fa63e8488e",
+        "attempts": 32,
+        "aborted": 0
+      },
+      {
+        "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-73-report.json",
+        "sha256": "58a8b50a389496ac401edab7832496a29a0c724967126fedff897b2238c6a9ae",
+        "attempts": 54,
+        "aborted": 0
+      }
+    ],
+    "sampleCount": 224,
+    "dispatchCount": 224,
+    "expectedAttempts": 224,
+    "aborted": 0,
+    "censoring": "uncensored",
+    "excludedCalls": [],
+    "unfinishedCalls": [],
+    "quantiles": [
+      {
+        "quantile": 0.5,
+        "ms": 5976
+      },
+      {
+        "quantile": 0.75,
+        "ms": 10838
+      },
+      {
+        "quantile": 0.9,
+        "ms": 23406
+      },
+      {
+        "quantile": 0.95,
+        "ms": 27584
+      }
+    ],
+    "meanMs": 9405.098214285714,
+    "finishReasons": {
+      "stop": 221,
+      "max-tokens": 2,
+      "error": 1
+    },
+    "perSeed": [
+      {
+        "seed": 17,
+        "count": 46,
+        "meanMs": 8659.826086956522,
+        "successfulMeanMs": 8659.826086956522,
+        "quantiles": [
+          {
+            "quantile": 0.5,
+            "ms": 5475
+          },
+          {
+            "quantile": 0.75,
+            "ms": 8252
+          },
+          {
+            "quantile": 0.9,
+            "ms": 19991
+          },
+          {
+            "quantile": 0.95,
+            "ms": 27395
+          }
+        ]
+      },
+      {
+        "seed": 31,
+        "count": 34,
+        "meanMs": 10281.470588235294,
+        "successfulMeanMs": 10281.470588235294,
+        "quantiles": [
+          {
+            "quantile": 0.5,
+            "ms": 6010
+          },
+          {
+            "quantile": 0.75,
+            "ms": 13104
+          },
+          {
+            "quantile": 0.9,
+            "ms": 22146
+          },
+          {
+            "quantile": 0.95,
+            "ms": 28971
+          }
+        ]
+      },
+      {
+        "seed": 45,
+        "count": 58,
+        "meanMs": 9504.293103448275,
+        "successfulMeanMs": 9504.293103448275,
+        "quantiles": [
+          {
+            "quantile": 0.5,
+            "ms": 5975
+          },
+          {
+            "quantile": 0.75,
+            "ms": 11459
+          },
+          {
+            "quantile": 0.9,
+            "ms": 23408
+          },
+          {
+            "quantile": 0.95,
+            "ms": 31243
+          }
+        ]
+      },
+      {
+        "seed": 59,
+        "count": 32,
+        "meanMs": 11516,
+        "successfulMeanMs": 11132.451612903225,
+        "quantiles": [
+          {
+            "quantile": 0.5,
+            "ms": 8045
+          },
+          {
+            "quantile": 0.75,
+            "ms": 10838
+          },
+          {
+            "quantile": 0.9,
+            "ms": 26655
+          },
+          {
+            "quantile": 0.95,
+            "ms": 27936
+          }
+        ]
+      },
+      {
+        "seed": 73,
+        "count": 54,
+        "meanMs": 8130.722222222223,
+        "successfulMeanMs": 8130.722222222223,
+        "quantiles": [
+          {
+            "quantile": 0.5,
+            "ms": 4728
+          },
+          {
+            "quantile": 0.75,
+            "ms": 7118
+          },
+          {
+            "quantile": 0.9,
+            "ms": 21963
+          },
+          {
+            "quantile": 0.95,
+            "ms": 26541
+          }
+        ]
+      }
+    ],
+    "differenceFromPrevious": "Current: 224/224 observed finishes, aborted=0, no censoring; previous: 71/76 successful survivors with five excluded right-censored aborted calls. No pooling."
+  },
+  "previous": {
+    "version": 1,
+    "admitted": false,
+    "verdict": "not-admitted-under-assumptions",
+    "coverageMeaning": "Planning covers p90 of 224 individual observed service times; not whole-run or future-service coverage.",
+    "dimensions": [
+      {
+        "dimension": "nodeSteps",
+        "sufficient": true,
+        "available": 12,
+        "required": 9,
+        "margin": 3
+      },
+      {
+        "dimension": "callCap",
+        "sufficient": true,
+        "available": 96,
+        "required": 68,
+        "margin": 28
+      },
+      {
+        "dimension": "deadline",
+        "sufficient": false,
+        "available": 120000,
+        "required": 1621608,
+        "margin": -1501608
+      }
+    ],
+    "insufficient": [
+      "deadline"
+    ],
+    "primaryInsufficiency": "deadline",
+    "effectiveBudgetDimensions": [
+      "nodeSteps",
+      "callCap",
+      "deadline"
+    ],
+    "unavailableBudgetDimensions": [
+      {
+        "dimension": "totalTokens",
+        "active": false,
+        "reason": "AGY reports no totalTokens in the retained batch. The historical 400000 threshold is not an effective budget constraint."
+      }
+    ],
+    "requiredDeadlineMs": 1621608,
+    "requiredConcurrency": 18,
+    "plannedCalls": 68,
+    "plannedMaxNodeSteps": 9,
+    "necessaryConditionalWorkMs": 234060,
+    "arithmetic": {
+      "calls": "max(10, ceil(60 * 1.125)) = 68",
+      "steps": "max(2, ceil(8 * 1.125)) = 9",
+      "deadline": "ceil(68 * 23406 / 1 + 30000) = 1621608"
+    },
+    "assumptions": [
+      "Reference actions are a planning prior, never a strict model-call requirement.",
+      "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+      "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+      "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+      "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+    ],
+    "input": {
+      "lowerBound": {
+        "version": 1,
+        "seed": 17,
+        "facts": [
+          {
+            "phase": 1,
+            "document": "phase-1:key-00",
+            "owner": 4,
+            "key": "key-00"
+          },
+          {
+            "phase": 1,
+            "document": "phase-1:key-13",
+            "owner": 5,
+            "key": "key-13"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-00",
+            "owner": 3,
+            "key": "key-00"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-09",
+            "owner": 6,
+            "key": "key-09"
+          }
+        ],
+        "requiredOwners": [
+          4,
+          5,
+          3,
+          6
+        ],
+        "unconditionalModelCalls": 1,
+        "evidenceCausalModelCalls": 10,
+        "maxNodeStepsLowerBound": 2,
+        "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+        "assumptions": [
+          "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+          "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+          "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+          "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+          "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+        ],
+        "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+      },
+      "latency": {
+        "provider": "agy",
+        "model": "gemini-3.8-flash-tiered",
+        "reasoningEffort": "medium",
+        "ms": 23406,
+        "source": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl; SHA-256 b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731; all dispatch.at -> finish.at intervals, nearest-rank p90",
+        "coverage": {
+          "quantile": 0.9,
+          "sampleCount": 224,
+          "principle": "Service-level planning policy: cover 90% of observed individual service times using empirical nearest-rank p90, without fitting the policy to a desired admission outcome."
+        },
+        "limitations": [
+          "Empirical coverage of individual observed service times, not a probability bound for an entire 68-call run or a guarantee for future traffic.",
+          "Uncensored means every dispatch has a finish and aborted=0; includes one observed error interval, not 224 successful responses.",
+          "Provider preparation and iterator cleanup lie outside dispatch-to-finish; the separate 30000 ms host reserve remains a planning assumption.",
+          "Earlier censored survivors are reported separately, never pooled."
+        ]
+      },
+      "reference": {
+        "actions": 60,
+        "maxNodeActions": 8,
+        "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive-policy counts only"
+      },
+      "conditions": {
+        "agents": 8,
+        "perNodeSteps": 12,
+        "maxCalls": 96,
+        "timeoutMs": 120000,
+        "concurrency": 1
+      },
+      "margin": {
+        "actionFactor": 1.125,
+        "nodeFactor": 1.125,
+        "overheadMs": 30000,
+        "rationale": "12.5% explicit action/node planning headroom plus 30 seconds for preparation, tools and host work. Bounded smoke, not a completion guarantee."
+      },
+      "schedulingRemedy": "deadline"
+    }
+  },
+  "feasible": {
+    "version": 1,
+    "admitted": true,
+    "verdict": "admitted-under-assumptions",
+    "coverageMeaning": "Planning covers p90 of 224 individual observed service times; not whole-run or future-service coverage.",
+    "dimensions": [
+      {
+        "dimension": "nodeSteps",
+        "sufficient": true,
+        "available": 12,
+        "required": 9,
+        "margin": 3
+      },
+      {
+        "dimension": "callCap",
+        "sufficient": true,
+        "available": 96,
+        "required": 68,
+        "margin": 28
+      },
+      {
+        "dimension": "deadline",
+        "sufficient": true,
+        "available": 1621608,
+        "required": 1621608,
+        "margin": 0
+      }
+    ],
+    "insufficient": [],
+    "primaryInsufficiency": null,
+    "effectiveBudgetDimensions": [
+      "nodeSteps",
+      "callCap",
+      "deadline"
+    ],
+    "unavailableBudgetDimensions": [
+      {
+        "dimension": "totalTokens",
+        "active": false,
+        "reason": "AGY reports no totalTokens in the retained batch. The historical 400000 threshold is not an effective budget constraint."
+      }
+    ],
+    "requiredDeadlineMs": 1621608,
+    "requiredConcurrency": 1,
+    "plannedCalls": 68,
+    "plannedMaxNodeSteps": 9,
+    "necessaryConditionalWorkMs": 234060,
+    "arithmetic": {
+      "calls": "max(10, ceil(60 * 1.125)) = 68",
+      "steps": "max(2, ceil(8 * 1.125)) = 9",
+      "deadline": "ceil(68 * 23406 / 1 + 30000) = 1621608"
+    },
+    "assumptions": [
+      "Reference actions are a planning prior, never a strict model-call requirement.",
+      "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+      "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+      "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+      "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+    ],
+    "input": {
+      "lowerBound": {
+        "version": 1,
+        "seed": 17,
+        "facts": [
+          {
+            "phase": 1,
+            "document": "phase-1:key-00",
+            "owner": 4,
+            "key": "key-00"
+          },
+          {
+            "phase": 1,
+            "document": "phase-1:key-13",
+            "owner": 5,
+            "key": "key-13"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-00",
+            "owner": 3,
+            "key": "key-00"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-09",
+            "owner": 6,
+            "key": "key-09"
+          }
+        ],
+        "requiredOwners": [
+          4,
+          5,
+          3,
+          6
+        ],
+        "unconditionalModelCalls": 1,
+        "evidenceCausalModelCalls": 10,
+        "maxNodeStepsLowerBound": 2,
+        "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+        "assumptions": [
+          "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+          "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+          "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+          "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+          "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+        ],
+        "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+      },
+      "latency": {
+        "provider": "agy",
+        "model": "gemini-3.8-flash-tiered",
+        "reasoningEffort": "medium",
+        "ms": 23406,
+        "source": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl; SHA-256 b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731; all dispatch.at -> finish.at intervals, nearest-rank p90",
+        "coverage": {
+          "quantile": 0.9,
+          "sampleCount": 224,
+          "principle": "Service-level planning policy: cover 90% of observed individual service times using empirical nearest-rank p90, without fitting the policy to a desired admission outcome."
+        },
+        "limitations": [
+          "Empirical coverage of individual observed service times, not a probability bound for an entire 68-call run or a guarantee for future traffic.",
+          "Uncensored means every dispatch has a finish and aborted=0; includes one observed error interval, not 224 successful responses.",
+          "Provider preparation and iterator cleanup lie outside dispatch-to-finish; the separate 30000 ms host reserve remains a planning assumption.",
+          "Earlier censored survivors are reported separately, never pooled."
+        ]
+      },
+      "reference": {
+        "actions": 60,
+        "maxNodeActions": 8,
+        "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive-policy counts only"
+      },
+      "conditions": {
+        "agents": 8,
+        "perNodeSteps": 12,
+        "maxCalls": 96,
+        "timeoutMs": 1621608,
+        "concurrency": 1
+      },
+      "margin": {
+        "actionFactor": 1.125,
+        "nodeFactor": 1.125,
+        "overheadMs": 30000,
+        "rationale": "12.5% explicit action/node planning headroom plus 30 seconds for preparation, tools and host work. Bounded smoke, not a completion guarantee."
+      },
+      "schedulingRemedy": "deadline"
+    }
+  },
+  "concurrency": {
+    "version": 1,
+    "admitted": false,
+    "verdict": "not-admitted-under-assumptions",
+    "coverageMeaning": "Planning covers p90 of 224 individual observed service times; not whole-run or future-service coverage.",
+    "dimensions": [
+      {
+        "dimension": "nodeSteps",
+        "sufficient": true,
+        "available": 12,
+        "required": 9,
+        "margin": 3
+      },
+      {
+        "dimension": "callCap",
+        "sufficient": true,
+        "available": 96,
+        "required": 68,
+        "margin": 28
+      },
+      {
+        "dimension": "concurrency",
+        "sufficient": false,
+        "available": 1,
+        "required": 18,
+        "margin": -17
+      }
+    ],
+    "insufficient": [
+      "concurrency"
+    ],
+    "primaryInsufficiency": "concurrency",
+    "effectiveBudgetDimensions": [
+      "nodeSteps",
+      "callCap",
+      "concurrency"
+    ],
+    "unavailableBudgetDimensions": [
+      {
+        "dimension": "totalTokens",
+        "active": false,
+        "reason": "AGY reports no totalTokens in the retained batch. The historical 400000 threshold is not an effective budget constraint."
+      }
+    ],
+    "requiredDeadlineMs": 1621608,
+    "requiredConcurrency": 18,
+    "plannedCalls": 68,
+    "plannedMaxNodeSteps": 9,
+    "necessaryConditionalWorkMs": 234060,
+    "arithmetic": {
+      "calls": "max(10, ceil(60 * 1.125)) = 68",
+      "steps": "max(2, ceil(8 * 1.125)) = 9",
+      "deadline": "ceil(68 * 23406 / 1 + 30000) = 1621608"
+    },
+    "assumptions": [
+      "Reference actions are a planning prior, never a strict model-call requirement.",
+      "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+      "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+      "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+      "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+    ],
+    "input": {
+      "lowerBound": {
+        "version": 1,
+        "seed": 17,
+        "facts": [
+          {
+            "phase": 1,
+            "document": "phase-1:key-00",
+            "owner": 4,
+            "key": "key-00"
+          },
+          {
+            "phase": 1,
+            "document": "phase-1:key-13",
+            "owner": 5,
+            "key": "key-13"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-00",
+            "owner": 3,
+            "key": "key-00"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-09",
+            "owner": 6,
+            "key": "key-09"
+          }
+        ],
+        "requiredOwners": [
+          4,
+          5,
+          3,
+          6
+        ],
+        "unconditionalModelCalls": 1,
+        "evidenceCausalModelCalls": 10,
+        "maxNodeStepsLowerBound": 2,
+        "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+        "assumptions": [
+          "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+          "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+          "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+          "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+          "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+        ],
+        "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+      },
+      "latency": {
+        "provider": "agy",
+        "model": "gemini-3.8-flash-tiered",
+        "reasoningEffort": "medium",
+        "ms": 23406,
+        "source": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl; SHA-256 b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731; all dispatch.at -> finish.at intervals, nearest-rank p90",
+        "coverage": {
+          "quantile": 0.9,
+          "sampleCount": 224,
+          "principle": "Service-level planning policy: cover 90% of observed individual service times using empirical nearest-rank p90, without fitting the policy to a desired admission outcome."
+        },
+        "limitations": [
+          "Empirical coverage of individual observed service times, not a probability bound for an entire 68-call run or a guarantee for future traffic.",
+          "Uncensored means every dispatch has a finish and aborted=0; includes one observed error interval, not 224 successful responses.",
+          "Provider preparation and iterator cleanup lie outside dispatch-to-finish; the separate 30000 ms host reserve remains a planning assumption.",
+          "Earlier censored survivors are reported separately, never pooled."
+        ]
+      },
+      "reference": {
+        "actions": 60,
+        "maxNodeActions": 8,
+        "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive-policy counts only"
+      },
+      "conditions": {
+        "agents": 8,
+        "perNodeSteps": 12,
+        "maxCalls": 96,
+        "timeoutMs": 120000,
+        "concurrency": 1
+      },
+      "margin": {
+        "actionFactor": 1.125,
+        "nodeFactor": 1.125,
+        "overheadMs": 30000,
+        "rationale": "12.5% explicit action/node planning headroom plus 30 seconds for preparation, tools and host work. Bounded smoke, not a completion guarantee."
+      },
+      "schedulingRemedy": "concurrency"
+    }
+  },
+  "frozen": {
+    "version": 1,
+    "admitted": false,
+    "verdict": "not-admitted-under-assumptions",
+    "coverageMeaning": "Planning covers p90 of 224 individual observed service times; not whole-run or future-service coverage.",
+    "dimensions": [
+      {
+        "dimension": "nodeSteps",
+        "sufficient": true,
+        "available": 12,
+        "required": 9,
+        "margin": 3
+      },
+      {
+        "dimension": "callCap",
+        "sufficient": true,
+        "available": 96,
+        "required": 68,
+        "margin": 28
+      },
+      {
+        "dimension": "deadline",
+        "sufficient": false,
+        "available": 600000,
+        "required": 1621608,
+        "margin": -1021608
+      }
+    ],
+    "insufficient": [
+      "deadline"
+    ],
+    "primaryInsufficiency": "deadline",
+    "effectiveBudgetDimensions": [
+      "nodeSteps",
+      "callCap",
+      "deadline"
+    ],
+    "unavailableBudgetDimensions": [
+      {
+        "dimension": "totalTokens",
+        "active": false,
+        "reason": "AGY reports no totalTokens in the retained batch. The historical 400000 threshold is not an effective budget constraint."
+      }
+    ],
+    "requiredDeadlineMs": 1621608,
+    "requiredConcurrency": 3,
+    "plannedCalls": 68,
+    "plannedMaxNodeSteps": 9,
+    "necessaryConditionalWorkMs": 234060,
+    "arithmetic": {
+      "calls": "max(10, ceil(60 * 1.125)) = 68",
+      "steps": "max(2, ceil(8 * 1.125)) = 9",
+      "deadline": "ceil(68 * 23406 / 1 + 30000) = 1621608"
+    },
+    "assumptions": [
+      "Reference actions are a planning prior, never a strict model-call requirement.",
+      "Historical service latency is an explicit planning scenario, not a guaranteed future service bound.",
+      "Work/concurrency assumes full slot utilization; causal dependencies can reduce effective concurrency.",
+      "A scheduling shortfall can be remedied by either deadline or concurrency; the remedy label is explicit policy, not causal identification.",
+      "Admission permits an experiment; it does not guarantee success or completion within this allocation."
+    ],
+    "input": {
+      "lowerBound": {
+        "version": 1,
+        "seed": 17,
+        "facts": [
+          {
+            "phase": 1,
+            "document": "phase-1:key-00",
+            "owner": 4,
+            "key": "key-00"
+          },
+          {
+            "phase": 1,
+            "document": "phase-1:key-13",
+            "owner": 5,
+            "key": "key-13"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-00",
+            "owner": 3,
+            "key": "key-00"
+          },
+          {
+            "phase": 2,
+            "document": "phase-2:key-09",
+            "owner": 6,
+            "key": "key-09"
+          }
+        ],
+        "requiredOwners": [
+          4,
+          5,
+          3,
+          6
+        ],
+        "unconditionalModelCalls": 1,
+        "evidenceCausalModelCalls": 10,
+        "maxNodeStepsLowerBound": 2,
+        "arithmetic": "4 distinct non-entry owners * (read decision + later evidence-send decision) + 2 entry checkpoint decisions = 10",
+        "assumptions": [
+          "No guessed, hardcoded, prelearned or externally supplied hidden proofs; evidence is acquired through the advertised local read tool and directed mail.",
+          "A tool-call argument is fixed before its result is returned; no model consumes its own read result inside the same model response.",
+          "Phase-2 current evidence is read after checkpoint-only advancement; its owners and the two phase-1 owners are distinct.",
+          "The entry must receive current evidence before generating each checkpoint; its two decisions cannot be the same response.",
+          "This bound allows batched tool calls, relays and arbitrary legal rewiring. It omits discovery, requests, stale-copy checks, ratings, idle and extra model calls."
+        ],
+        "limitation": "The meaningful bound is conditional on evidence causality, not an unconditional guarantee about arbitrary lucky model output. The unconditional host bound is only >=1 model response. Neither bound proves 120 seconds impossible, or that 10 calls suffice."
+      },
+      "latency": {
+        "provider": "agy",
+        "model": "gemini-3.8-flash-tiered",
+        "reasoningEffort": "medium",
+        "ms": 23406,
+        "source": "docs/execution-evidence/live-probe-resumed-20261015/provider-calls.jsonl; SHA-256 b4a531cc601f1a83c4087ad054a5713ba3a4d474c1c32b8e027e336235dfd731; all dispatch.at -> finish.at intervals, nearest-rank p90",
+        "coverage": {
+          "quantile": 0.9,
+          "sampleCount": 224,
+          "principle": "Service-level planning policy: cover 90% of observed individual service times using empirical nearest-rank p90, without fitting the policy to a desired admission outcome."
+        },
+        "limitations": [
+          "Empirical coverage of individual observed service times, not a probability bound for an entire 68-call run or a guarantee for future traffic.",
+          "Uncensored means every dispatch has a finish and aborted=0; includes one observed error interval, not 224 successful responses.",
+          "Provider preparation and iterator cleanup lie outside dispatch-to-finish; the separate 30000 ms host reserve remains a planning assumption.",
+          "Earlier censored survivors are reported separately, never pooled."
+        ]
+      },
+      "reference": {
+        "actions": 60,
+        "maxNodeActions": 8,
+        "source": "docs/execution-evidence/agy-model-20261015/references.json; constructive-policy counts only"
+      },
+      "conditions": {
+        "agents": 8,
+        "perNodeSteps": 12,
+        "maxCalls": 96,
+        "timeoutMs": 600000,
+        "concurrency": 1
+      },
+      "margin": {
+        "actionFactor": 1.125,
+        "nodeFactor": 1.125,
+        "overheadMs": 30000,
+        "rationale": "12.5% explicit action/node planning headroom plus 30 seconds for preparation, tools and host work. Bounded smoke, not a completion guarantee."
+      },
+      "schedulingRemedy": "deadline"
+    }
+  },
+  "revision": "User authorized deriving a genuine lower bound after section-7.2 stop. Scheduling admission is conditional planning, not a mathematical impossibility certificate."
+}

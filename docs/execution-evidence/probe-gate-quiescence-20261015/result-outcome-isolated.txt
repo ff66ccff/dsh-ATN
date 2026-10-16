@@ -1,0 +1,40 @@
+TAP version 13
+# Subtest: RESULT-OUTCOME-01: a model can settle failed work and inform its disconnected requester
+ok 1 - RESULT-OUTCOME-01: a model can settle failed work and inform its disconnected requester
+  ---
+  duration_ms: 83.802
+  type: 'test'
+  ...
+# Subtest: RESULT-OUTCOME-02: omitted outcome keeps completed behavior and matches an explicit completed retry
+ok 2 - RESULT-OUTCOME-02: omitted outcome keeps completed behavior and matches an explicit completed retry
+  ---
+  duration_ms: 50.3592
+  type: 'test'
+  ...
+# Subtest: RESULT-OUTCOME-03: failed retries preserve their claim and refuse an outcome change under the same id
+ok 3 - RESULT-OUTCOME-03: failed retries preserve their claim and refuse an outcome change under the same id
+  ---
+  duration_ms: 37.8538
+  type: 'test'
+  ...
+# Subtest: RESULT-OUTCOME-04: invalid outcomes and outcomes on non-result mail are rejected before writing
+ok 4 - RESULT-OUTCOME-04: invalid outcomes and outcomes on non-result mail are rejected before writing
+  ---
+  duration_ms: 35.9239
+  type: 'test'
+  ...
+# Subtest: RESULT-OUTCOME-05: a queued failed result replays with its outcome after full runtime recovery
+ok 5 - RESULT-OUTCOME-05: a queued failed result replays with its outcome after full runtime recovery
+  ---
+  duration_ms: 76.5536
+  type: 'test'
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 791.8747

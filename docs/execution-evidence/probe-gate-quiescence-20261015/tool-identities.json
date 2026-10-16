@@ -1,0 +1,2973 @@
+{
+  "execution": "offline-zero-model",
+  "method": "Join first turn by exact time/turn; join tool/call to tool.start by session/time/turn/step. Unique matches required. Names and argument key names only; no argument values, prompts or responses.",
+  "seeds": [
+    {
+      "seed": 17,
+      "eventFile": "docs/execution-evidence/live-probe-resumed-20261015/seed-17-events.jsonl",
+      "eventSha256": "461445228cb9ccf9f7d4b87b990f25ddfe5fadd89f28d19303d178718d322553",
+      "sources": [
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-2973773b-627c-4398-9184-75c1e3a5f788/session.v4.jsonl",
+          "sha256": "fdcd0eb1d6d775410a884d8b647fd862cce9083e4235b667a7adc86c84df0805",
+          "session": "session-8",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 57
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-744eac0f-241a-49fc-a290-1ac7c78040f3/session.v4.jsonl",
+          "sha256": "54de0dd627d4634891959ea055a3f2e6805dc4c0dd6e53b58b3e1ddde59eea7d",
+          "session": "session-3",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 22
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7b9ea755-a435-419f-b056-4e1076012cb0/session.v4.jsonl",
+          "sha256": "94c51585f45a4d39f0fa460f0d447f80eff44c4f3e4c30512149d9f899e77064",
+          "session": "session-7",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 50
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7d4b8cc2-11a8-4c75-ac95-f46880b60f56/session.v4.jsonl",
+          "sha256": "80a9e7ef24531e655a6ed0be8496bc52f27008817961e1597f088293b5dff595",
+          "session": "session-6",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 43
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ab4e5cb4-0da9-40b1-9c20-f983782871b3/session.v4.jsonl",
+          "sha256": "97654fdfd31b5961a1d7fc3862871241ed5bd093a84b0f1d30982f1effa437e9",
+          "session": "session-2",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 14
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ef132644-3135-48e4-b74c-c7052213ed4d/session.v4.jsonl",
+          "sha256": "d9748acf0bebdfb8b843490736317917830f541d5880f12e2cdf98bcb80c083a",
+          "session": "session-4",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 29
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-f3b3d910-a489-4f33-80dc-d07959604aef/session.v4.jsonl",
+          "sha256": "ecb714c30b271072808787f375fb835c4273b4b8f07002c95fbadd14cea76e32",
+          "session": "session-5",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 36
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sha256": "a1d9bce42f24a8b11c8d1aa0f9330542df4420bcb6d911c8ec82a3ea9048b494",
+          "session": "session-1",
+          "firstTurnSourceSeq": 1,
+          "firstTurnEventSequence": 6
+        }
+      ],
+      "calls": [
+        {
+          "eventSequence": 113,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051041202,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 12,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 121,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051046674,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ab4e5cb4-0da9-40b1-9c20-f983782871b3/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 123,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051046681,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ab4e5cb4-0da9-40b1-9c20-f983782871b3/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 131,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051053305,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-744eac0f-241a-49fc-a290-1ac7c78040f3/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 133,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051053312,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-744eac0f-241a-49fc-a290-1ac7c78040f3/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 141,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051061139,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ef132644-3135-48e4-b74c-c7052213ed4d/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 143,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051061145,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ef132644-3135-48e4-b74c-c7052213ed4d/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 151,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051068704,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-f3b3d910-a489-4f33-80dc-d07959604aef/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 159,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051073850,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7d4b8cc2-11a8-4c75-ac95-f46880b60f56/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 161,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051073857,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7d4b8cc2-11a8-4c75-ac95-f46880b60f56/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 169,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051078253,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7b9ea755-a435-419f-b056-4e1076012cb0/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 171,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051078259,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7b9ea755-a435-419f-b056-4e1076012cb0/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 179,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051084500,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-2973773b-627c-4398-9184-75c1e3a5f788/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 181,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051084506,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-2973773b-627c-4398-9184-75c1e3a5f788/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 189,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051089618,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 20,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 206,
+          "session": "session-5",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051152845,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-f3b3d910-a489-4f33-80dc-d07959604aef/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 220,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051214949,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-2973773b-627c-4398-9184-75c1e3a5f788/session.v4.jsonl",
+          "sourceSeq": 20,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 228,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792051225822,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 25,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 250,
+          "session": "session-2",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051253063,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ab4e5cb4-0da9-40b1-9c20-f983782871b3/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 260,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 4,
+          "at": 1792051258446,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 272,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 5,
+          "at": 1792051266282,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 39,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 281,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 6,
+          "at": 1792051274047,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "rewire"
+          ],
+          "category": "rewire"
+        },
+        {
+          "eventSequence": 292,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 7,
+          "at": 1792051276965,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 49,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 310,
+          "session": "session-5",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051284676,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-f3b3d910-a489-4f33-80dc-d07959604aef/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 322,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 8,
+          "at": 1792051288630,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 55,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 334,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 9,
+          "at": 1792051296663,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 63,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 344,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 10,
+          "at": 1792051324069,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 68,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 352,
+          "session": "session-1",
+          "tool": "tool-4",
+          "name": "submit_checkpoint",
+          "turn": 1,
+          "step": 11,
+          "at": 1792051361013,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/shifting-e2c4bcc7-7298-43aa-bd35-89c7f90e05ba/session.v4.jsonl",
+          "sourceSeq": 73,
+          "argumentKeys": [
+            "answer",
+            "phase"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 414,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792051376638,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ab4e5cb4-0da9-40b1-9c20-f983782871b3/session.v4.jsonl",
+          "sourceSeq": 41,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 422,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051380736,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-744eac0f-241a-49fc-a290-1ac7c78040f3/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 430,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051383062,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-ef132644-3135-48e4-b74c-c7052213ed4d/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 438,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792051387034,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-f3b3d910-a489-4f33-80dc-d07959604aef/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 447,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051390499,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7d4b8cc2-11a8-4c75-ac95-f46880b60f56/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 449,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051390505,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7d4b8cc2-11a8-4c75-ac95-f46880b60f56/session.v4.jsonl",
+          "sourceSeq": 30,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 457,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051394717,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-7b9ea755-a435-419f-b056-4e1076012cb0/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 465,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051398748,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-17/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-17--/atn-2973773b-627c-4398-9184-75c1e3a5f788/session.v4.jsonl",
+          "sourceSeq": 33,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        }
+      ]
+    },
+    {
+      "seed": 31,
+      "eventFile": "docs/execution-evidence/live-probe-resumed-20261015/seed-31-events.jsonl",
+      "eventSha256": "af173db17e614b15a7f05603aca80fbc381cfbc44421d50a2f47dc0b412b918c",
+      "sources": [
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-125e178f-d2ff-46fd-9ec1-6135c2b0e72b/session.v4.jsonl",
+          "sha256": "359b7917e56632f2295d687de4eee4e300109488bf4d5e52e1970d5514b7871b",
+          "session": "session-7",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 50
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-300223c3-0168-4430-95d3-3dab5acd4d61/session.v4.jsonl",
+          "sha256": "3b49dcb40698b79354bc9137a485904a886bced1433127135007de907747fba4",
+          "session": "session-4",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 29
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-689c1a59-3631-49bc-a779-3b561466fbf7/session.v4.jsonl",
+          "sha256": "ffd4899cd866769ba09e5816c6693adc5c333e3020de7966d6dcc79ee7a97ff0",
+          "session": "session-5",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 36
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-7c103b87-e8d6-4bac-ac13-926d2ba3304a/session.v4.jsonl",
+          "sha256": "c41462dcfc721fe906fa24b3c442fe94d266741f6b1b759828c452ae6bb409c5",
+          "session": "session-6",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 43
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-86d2168f-fb46-4d99-a71a-4bdd8b5e11b0/session.v4.jsonl",
+          "sha256": "dc9d5bddfff9be904a578008ad4ca6cc0abaf02cc13aa4f4e48941f5e222c093",
+          "session": "session-2",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 14
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-8eb7084d-bc96-448f-8350-99c767723a32/session.v4.jsonl",
+          "sha256": "ee944522e1942b6c76cb2efa842d8d31f040983b907673e24a84fd3b4d3d9d94",
+          "session": "session-8",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 57
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-b1914142-45c8-4806-925f-4fb21aa892b6/session.v4.jsonl",
+          "sha256": "ab5a65be55df8405bc97f570c16feed71b7f30ef0a85a1384b90d61b5acd032e",
+          "session": "session-3",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 22
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sha256": "dab9395c1512b3c0005ead9f192aae936acbeb4e3b4c23928c39b2563d00d351",
+          "session": "session-1",
+          "firstTurnSourceSeq": 1,
+          "firstTurnEventSequence": 6
+        }
+      ],
+      "calls": [
+        {
+          "eventSequence": 113,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051436093,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 12,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 115,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051436099,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 14,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 123,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051441184,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-86d2168f-fb46-4d99-a71a-4bdd8b5e11b0/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 131,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051447928,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-b1914142-45c8-4806-925f-4fb21aa892b6/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 133,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051447936,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-b1914142-45c8-4806-925f-4fb21aa892b6/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 141,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051457440,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-300223c3-0168-4430-95d3-3dab5acd4d61/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 149,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051463075,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-689c1a59-3631-49bc-a779-3b561466fbf7/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 157,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051470535,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-7c103b87-e8d6-4bac-ac13-926d2ba3304a/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 165,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051475688,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-125e178f-d2ff-46fd-9ec1-6135c2b0e72b/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 173,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051479644,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-8eb7084d-bc96-448f-8350-99c767723a32/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 181,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051484841,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 22,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 189,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051487690,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-86d2168f-fb46-4d99-a71a-4bdd8b5e11b0/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 200,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051509840,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-300223c3-0168-4430-95d3-3dab5acd4d61/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 211,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051528258,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-7c103b87-e8d6-4bac-ac13-926d2ba3304a/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 219,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051533085,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-125e178f-d2ff-46fd-9ec1-6135c2b0e72b/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 227,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051540196,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-8eb7084d-bc96-448f-8350-99c767723a32/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 235,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792051551267,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 27,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 264,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 4,
+          "at": 1792051650314,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 32,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 272,
+          "session": "session-2",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 4,
+          "at": 1792051657993,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-86d2168f-fb46-4d99-a71a-4bdd8b5e11b0/session.v4.jsonl",
+          "sourceSeq": 29,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 282,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 5,
+          "at": 1792051663051,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 38,
+          "argumentKeys": [
+            "query",
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 294,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 6,
+          "at": 1792051674810,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 46,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 303,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 7,
+          "at": 1792051681768,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 51,
+          "argumentKeys": [
+            "rewire"
+          ],
+          "category": "rewire"
+        },
+        {
+          "eventSequence": 314,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 8,
+          "at": 1792051685992,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 56,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 332,
+          "session": "session-7",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792051691713,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/atn-125e178f-d2ff-46fd-9ec1-6135c2b0e72b/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 344,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 9,
+          "at": 1792051699547,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 62,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 356,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 10,
+          "at": 1792051754562,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-31/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-31--/shifting-98a6014b-e0f1-451f-8838-064df7ca62e9/session.v4.jsonl",
+          "sourceSeq": 70,
+          "argumentKeys": [
+            "query",
+            "review"
+          ],
+          "category": "protocol"
+        }
+      ]
+    },
+    {
+      "seed": 45,
+      "eventFile": "docs/execution-evidence/live-probe-resumed-20261015/seed-45-events.jsonl",
+      "eventSha256": "df9acc5a427ed052f8a95c91d880cdb9e72e777f644548f44f92af123779a409",
+      "sources": [
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sha256": "c44539feebb6f7d367bd2df3cfb1313caf5d804579dcc88b4e0721954200796a",
+          "session": "session-8",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 57
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-81175ff2-b682-40b2-a3e6-c52c04ae1069/session.v4.jsonl",
+          "sha256": "e499044c9a58aac7089bb7a9c0e5cc41c4023fe2bef4879fc897104a0507b98b",
+          "session": "session-3",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 22
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sha256": "8cfa666ac068dbce025a31ffd4c11f664d2476a79e00051f9a0058c1c4edcc3b",
+          "session": "session-2",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 14
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c26e2b20-d67e-428d-975a-1154039a993a/session.v4.jsonl",
+          "sha256": "9f32a31b029967f4538195754705d0d4ffad8a346c667a2a4f572ea17d644f2e",
+          "session": "session-4",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 29
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c412e96b-fa1c-41dc-8450-1a8f42484069/session.v4.jsonl",
+          "sha256": "51173c8baa2737154fe9cc51829f7bdcb1c09cb81d1b8548d5ead00db94aa98e",
+          "session": "session-6",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 43
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-d9e71157-eca1-4030-b6ee-ab1f313cd306/session.v4.jsonl",
+          "sha256": "c22d79a1140c62875298b5884611859e4d4390cfe822cab889c4ac02be545907",
+          "session": "session-7",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 50
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-dfa8eb8a-ba83-4adf-b66a-e41f7940caaf/session.v4.jsonl",
+          "sha256": "2b5ebae235635199cd361c97859817077f1bcd56a433071b52e18a0306bcadb4",
+          "session": "session-5",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 36
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sha256": "332968c8bdfa7bed65c5ca862de0e520a47cee41a7e95c43861915d2571fd579",
+          "session": "session-1",
+          "firstTurnSourceSeq": 1,
+          "firstTurnEventSequence": 6
+        }
+      ],
+      "calls": [
+        {
+          "eventSequence": 113,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051787504,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 12,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 115,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051787509,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 14,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 123,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051793127,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 125,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051793132,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 133,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051796606,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-81175ff2-b682-40b2-a3e6-c52c04ae1069/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 141,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051801798,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c26e2b20-d67e-428d-975a-1154039a993a/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 149,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051808294,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-dfa8eb8a-ba83-4adf-b66a-e41f7940caaf/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 157,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051814269,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c412e96b-fa1c-41dc-8450-1a8f42484069/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 165,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051819900,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-d9e71157-eca1-4030-b6ee-ab1f313cd306/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 173,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792051831329,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 181,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051842789,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 22,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 189,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051856466,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sourceSeq": 20,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 197,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051859031,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-81175ff2-b682-40b2-a3e6-c52c04ae1069/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 205,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051862060,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c26e2b20-d67e-428d-975a-1154039a993a/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 213,
+          "session": "session-5",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051864458,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-dfa8eb8a-ba83-4adf-b66a-e41f7940caaf/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 221,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051868225,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c412e96b-fa1c-41dc-8450-1a8f42484069/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 229,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051874973,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-d9e71157-eca1-4030-b6ee-ab1f313cd306/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 237,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792051880496,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 245,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792051908311,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 27,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 277,
+          "session": "session-8",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792052002115,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 23,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 296,
+          "session": "session-2",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 4,
+          "at": 1792052012085,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 312,
+          "session": "session-7",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052022974,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-d9e71157-eca1-4030-b6ee-ab1f313cd306/session.v4.jsonl",
+          "sourceSeq": 32,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 331,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052053356,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 41,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 334,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052053362,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 43,
+          "argumentKeys": [
+            "rewire"
+          ],
+          "category": "rewire"
+        },
+        {
+          "eventSequence": 339,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052053367,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 45,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 366,
+          "session": "session-3",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052097198,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-81175ff2-b682-40b2-a3e6-c52c04ae1069/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 388,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 3,
+          "at": 1792052141065,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 56,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 398,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 4,
+          "at": 1792052172321,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 61,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 406,
+          "session": "session-1",
+          "tool": "tool-4",
+          "name": "submit_checkpoint",
+          "turn": 2,
+          "step": 5,
+          "at": 1792052208305,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 66,
+          "argumentKeys": [
+            "answer",
+            "phase"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 458,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 6,
+          "at": 1792052213747,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 72,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 460,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 6,
+          "at": 1792052213754,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 74,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 468,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052218783,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-894ec14a-dea9-4bdb-a586-b9b30163c21a/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 476,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792052222269,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-81175ff2-b682-40b2-a3e6-c52c04ae1069/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 485,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052225581,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c26e2b20-d67e-428d-975a-1154039a993a/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 493,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052228949,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-dfa8eb8a-ba83-4adf-b66a-e41f7940caaf/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 501,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792052232556,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c412e96b-fa1c-41dc-8450-1a8f42484069/session.v4.jsonl",
+          "sourceSeq": 40,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 509,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792052237053,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-d9e71157-eca1-4030-b6ee-ab1f313cd306/session.v4.jsonl",
+          "sourceSeq": 45,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 517,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052241298,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 36,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 526,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 7,
+          "at": 1792052261299,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/shifting-1ce1b97c-4e70-40f6-8b17-c0b8fbb73de7/session.v4.jsonl",
+          "sourceSeq": 82,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 543,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 2,
+          "at": 1792052281056,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-c26e2b20-d67e-428d-975a-1154039a993a/session.v4.jsonl",
+          "sourceSeq": 36,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 560,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 2,
+          "at": 1792052311810,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 42,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 582,
+          "session": "session-8",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 3,
+          "at": 1792052329560,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-45/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-45--/atn-16f54fa8-10ad-4234-8716-898e5628d207/session.v4.jsonl",
+          "sourceSeq": 49,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        }
+      ]
+    },
+    {
+      "seed": 59,
+      "eventFile": "docs/execution-evidence/live-probe-resumed-20261015/seed-59-events.jsonl",
+      "eventSha256": "aba3bb769d36284cdb3a68a0241cdba92e92d657af0fc142a8b314e51c8a1c0c",
+      "sources": [
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-05f84602-0493-406b-a470-a35546b59926/session.v4.jsonl",
+          "sha256": "4224eb2b445688b5f39dbc023b330528694d57fdeb27c76b34accb1c8c97c234",
+          "session": "session-3",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 22
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4bbd81ed-c14a-4cf7-bc4c-5527799e7ee8/session.v4.jsonl",
+          "sha256": "92c67c1bcf2cc18efa89dca096b6ba1c6b1d806916bc922ca9c3b940b7fc642d",
+          "session": "session-5",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 36
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+          "sha256": "66bb0ba3aa17ea0fb87f79d60c29f9dea3a96e735e5b45abe465b48e9e5d59d2",
+          "session": "session-2",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 14
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-57a35b6d-9798-47e5-b0a2-34b2c2367276/session.v4.jsonl",
+          "sha256": "9cdef11b59068dd85ee05a03805a96a2604aa6c241a1a99df4c2e11116e0bf08",
+          "session": "session-6",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 43
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-71502afc-8c19-4a34-a46d-bf9177943754/session.v4.jsonl",
+          "sha256": "db9df8171fd72be3335160b0d325646f35514347abafd2844be8c2b35f52d93b",
+          "session": "session-7",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 50
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-999fb667-a85e-4b18-bc75-d3e25621a008/session.v4.jsonl",
+          "sha256": "5e194b00668cfbe9c49f62a4c843ac14410303666a7577acc481fd1815daf547",
+          "session": "session-4",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 29
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-d0897f95-0c8d-462f-b256-654536a4c30a/session.v4.jsonl",
+          "sha256": "d13feda9b611115db6cd15eec00888ba39279e309e2003b126d18bd5a76da2a1",
+          "session": "session-8",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 57
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sha256": "b877c16d5d5b95b80d89baa45d7dd6027a947f4e4a16215956a5ec8418b88012",
+          "session": "session-1",
+          "firstTurnSourceSeq": 1,
+          "firstTurnEventSequence": 6
+        }
+      ],
+      "calls": [
+        {
+          "eventSequence": 113,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052341047,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 12,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 115,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052341053,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 14,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 123,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052347762,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 125,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052347769,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 133,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052356124,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-05f84602-0493-406b-a470-a35546b59926/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 141,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052360799,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-999fb667-a85e-4b18-bc75-d3e25621a008/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 143,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052360805,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-999fb667-a85e-4b18-bc75-d3e25621a008/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 151,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052369104,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4bbd81ed-c14a-4cf7-bc4c-5527799e7ee8/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 159,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052375374,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-57a35b6d-9798-47e5-b0a2-34b2c2367276/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 161,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052375381,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-57a35b6d-9798-47e5-b0a2-34b2c2367276/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 169,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052383262,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-71502afc-8c19-4a34-a46d-bf9177943754/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 171,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052383269,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-71502afc-8c19-4a34-a46d-bf9177943754/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 179,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052389677,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-d0897f95-0c8d-462f-b256-654536a4c30a/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 181,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052389684,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-d0897f95-0c8d-462f-b256-654536a4c30a/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 189,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052400516,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 22,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 200,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052428052,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-05f84602-0493-406b-a470-a35546b59926/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 211,
+          "session": "session-5",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052465082,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4bbd81ed-c14a-4cf7-bc4c-5527799e7ee8/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 228,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792052571579,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 27,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "messageId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 244,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 3,
+          "at": 1792052579625,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-05f84602-0493-406b-a470-a35546b59926/session.v4.jsonl",
+          "sourceSeq": 23,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 255,
+          "session": "session-2",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052597108,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 272,
+          "session": "session-3",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 4,
+          "at": 1792052613159,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-05f84602-0493-406b-a470-a35546b59926/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 289,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 5,
+          "at": 1792052639521,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 39,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 292,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 5,
+          "at": 1792052639530,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 41,
+          "argumentKeys": [
+            "rewire"
+          ],
+          "category": "rewire"
+        },
+        {
+          "eventSequence": 309,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 6,
+          "at": 1792052659158,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 46,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "messageId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 327,
+          "session": "session-4",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052666870,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-999fb667-a85e-4b18-bc75-d3e25621a008/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 349,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 8,
+          "at": 1792052680587,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/shifting-1a90220c-8296-4b67-811a-1cc49f75977c/session.v4.jsonl",
+          "sourceSeq": 58,
+          "argumentKeys": [
+            "query",
+            "review"
+          ],
+          "category": "protocol"
+        }
+      ]
+    },
+    {
+      "seed": 73,
+      "eventFile": "docs/execution-evidence/live-probe-resumed-20261015/seed-73-events.jsonl",
+      "eventSha256": "22b57b70de5df59bc8687b17acde494868f4d357738e79bff1dffd98293d40ce",
+      "sources": [
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sha256": "5e96943d195adda622f699ab25b37925f5ac83ff9c90889177788380c884729b",
+          "session": "session-8",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 57
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sha256": "99cd8e9c1726a58a7816446de1a5ade52c06ad8438bba3e940cf914dda3755b2",
+          "session": "session-4",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 29
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4409c311-ae20-4cf2-8037-3fcaa69cb844/session.v4.jsonl",
+          "sha256": "329a63108e3294d975b89eff00a50f324402f611d826f589b7f9bf4e87878c77",
+          "session": "session-2",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 14
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4dd0a1dc-0b4c-4d9e-af6d-aa99e74d22ac/session.v4.jsonl",
+          "sha256": "23cc59012bfef34d05fa712dc1a69426aee8d765074610c39976e14216a5b781",
+          "session": "session-5",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 36
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-5dc8dab6-fc4d-44d7-8f5e-186ccbdbdda4/session.v4.jsonl",
+          "sha256": "e0af30b29cd5e90f4aa0b7ab90f3d87b3eacc0626d1d199280c1216ba8154a8a",
+          "session": "session-7",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 50
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-6908b620-7365-4d45-8c55-49acac9ab730/session.v4.jsonl",
+          "sha256": "cc02275d46b7d30bcf008b63c941f01ab243208f68003fb5342d4cf63409ac1d",
+          "session": "session-6",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 43
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-88103e5a-232c-4c06-ba9b-d802731489b7/session.v4.jsonl",
+          "sha256": "31662404c1d1adfc91f32547afbf14f88209bee4316ce4be651ffacff48b4fc2",
+          "session": "session-3",
+          "firstTurnSourceSeq": 2,
+          "firstTurnEventSequence": 22
+        },
+        {
+          "path": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sha256": "56640d722d9ca3d179eef1cf7a54dd65eef0b43479a031545eb215636bf5f9c7",
+          "session": "session-1",
+          "firstTurnSourceSeq": 1,
+          "firstTurnEventSequence": 6
+        }
+      ],
+      "calls": [
+        {
+          "eventSequence": 113,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052709780,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 12,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 115,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052709786,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 14,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 123,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052715348,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4409c311-ae20-4cf2-8037-3fcaa69cb844/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 125,
+          "session": "session-2",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052715354,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4409c311-ae20-4cf2-8037-3fcaa69cb844/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 133,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052722189,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-88103e5a-232c-4c06-ba9b-d802731489b7/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 141,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052726153,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 149,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052733265,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4dd0a1dc-0b4c-4d9e-af6d-aa99e74d22ac/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 151,
+          "session": "session-5",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052733271,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4dd0a1dc-0b4c-4d9e-af6d-aa99e74d22ac/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 159,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052739719,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-6908b620-7365-4d45-8c55-49acac9ab730/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 167,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052747094,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-5dc8dab6-fc4d-44d7-8f5e-186ccbdbdda4/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 175,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052751083,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sourceSeq": 13,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 177,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 1,
+          "at": 1792052751090,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sourceSeq": 15,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 185,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052758415,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 22,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 196,
+          "session": "session-3",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052787435,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-88103e5a-232c-4c06-ba9b-d802731489b7/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 204,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052790857,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 215,
+          "session": "session-6",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052811380,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-6908b620-7365-4d45-8c55-49acac9ab730/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 223,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052817441,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-5dc8dab6-fc4d-44d7-8f5e-186ccbdbdda4/session.v4.jsonl",
+          "sourceSeq": 18,
+          "argumentKeys": [
+            "taskIds"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 231,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 2,
+          "at": 1792052843210,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sourceSeq": 20,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 239,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 3,
+          "at": 1792052848331,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 27,
+          "argumentKeys": [
+            "query"
+          ],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 253,
+          "session": "session-6",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 3,
+          "at": 1792052902026,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-6908b620-7365-4d45-8c55-49acac9ab730/session.v4.jsonl",
+          "sourceSeq": 23,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 275,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 4,
+          "at": 1792052957830,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 32,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 297,
+          "session": "session-2",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792052976698,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4409c311-ae20-4cf2-8037-3fcaa69cb844/session.v4.jsonl",
+          "sourceSeq": 28,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 317,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 6,
+          "at": 1792052989936,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 326,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 7,
+          "at": 1792052995587,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 49,
+          "argumentKeys": [
+            "rewire"
+          ],
+          "category": "rewire"
+        },
+        {
+          "eventSequence": 337,
+          "session": "session-1",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 1,
+          "step": 8,
+          "at": 1792053000213,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 54,
+          "argumentKeys": [
+            "body",
+            "kind",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 355,
+          "session": "session-4",
+          "tool": "tool-3",
+          "name": "atn_send",
+          "turn": 2,
+          "step": 1,
+          "at": 1792053005309,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "body",
+            "evidence",
+            "kind",
+            "outcome",
+            "summary",
+            "taskId",
+            "to"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 377,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 10,
+          "at": 1792053038009,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 66,
+          "argumentKeys": [
+            "review"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 387,
+          "session": "session-1",
+          "tool": "tool-4",
+          "name": "submit_checkpoint",
+          "turn": 1,
+          "step": 11,
+          "at": 1792053065051,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 71,
+          "argumentKeys": [
+            "answer",
+            "phase"
+          ],
+          "category": "protocol"
+        },
+        {
+          "eventSequence": 440,
+          "session": "session-1",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 1,
+          "step": 12,
+          "at": 1792053068933,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 77,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 442,
+          "session": "session-1",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 1,
+          "step": 12,
+          "at": 1792053068939,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/shifting-f3e74b01-5a68-460f-8bf4-2db2eb2cb3ea/session.v4.jsonl",
+          "sourceSeq": 79,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 453,
+          "session": "session-2",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792053073581,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4409c311-ae20-4cf2-8037-3fcaa69cb844/session.v4.jsonl",
+          "sourceSeq": 41,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 462,
+          "session": "session-3",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792053077814,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-88103e5a-232c-4c06-ba9b-d802731489b7/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 470,
+          "session": "session-4",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792053081278,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sourceSeq": 44,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 479,
+          "session": "session-5",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 3,
+          "step": 1,
+          "at": 1792053085563,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-4dd0a1dc-0b4c-4d9e-af6d-aa99e74d22ac/session.v4.jsonl",
+          "sourceSeq": 37,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 487,
+          "session": "session-6",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792053089454,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-6908b620-7365-4d45-8c55-49acac9ab730/session.v4.jsonl",
+          "sourceSeq": 36,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 495,
+          "session": "session-7",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792053092167,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-5dc8dab6-fc4d-44d7-8f5e-186ccbdbdda4/session.v4.jsonl",
+          "sourceSeq": 31,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 503,
+          "session": "session-8",
+          "tool": "tool-1",
+          "name": "read_evidence",
+          "turn": 2,
+          "step": 1,
+          "at": 1792053096377,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sourceSeq": 33,
+          "argumentKeys": [
+            "id"
+          ],
+          "category": "other"
+        },
+        {
+          "eventSequence": 517,
+          "session": "session-4",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 3,
+          "step": 2,
+          "at": 1792053114208,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-0c093f7e-03ff-4d10-a9fb-ac4b9501ad36/session.v4.jsonl",
+          "sourceSeq": 49,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 532,
+          "session": "session-7",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 2,
+          "at": 1792053128568,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-5dc8dab6-fc4d-44d7-8f5e-186ccbdbdda4/session.v4.jsonl",
+          "sourceSeq": 36,
+          "argumentKeys": [],
+          "category": "discovery"
+        },
+        {
+          "eventSequence": 540,
+          "session": "session-8",
+          "tool": "tool-2",
+          "name": "atn_status",
+          "turn": 2,
+          "step": 2,
+          "at": 1792053132293,
+          "source": ".artifacts/live-probe-resumed/20261015/batch/seed-73/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-73--/atn-05077409-1cf4-40de-aba5-1a1ce5d754d5/session.v4.jsonl",
+          "sourceSeq": 38,
+          "argumentKeys": [],
+          "category": "discovery"
+        }
+      ]
+    }
+  ]
+}

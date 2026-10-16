@@ -1,0 +1,337 @@
+{
+  "status": "stopped",
+  "briefStopCondition": "7.3",
+  "execution": "offline-zero-model",
+  "actualModelCalls": 0,
+  "accountReads": 0,
+  "networkAccess": false,
+  "providerLoaded": false,
+  "route": {
+    "provider": "agy",
+    "model": "gemini-3.8-flash-tiered",
+    "reasoningEffort": "medium"
+  },
+  "code": [
+    {
+      "path": "src/runtime.ts",
+      "sha256": "32bb1888b3701c429f0a5ffd18facf206cc872a09d772926a938067162dc1aab"
+    },
+    {
+      "path": "src/mailbox.ts",
+      "sha256": "38316061b4ed29c77a976e04f6c892bae0acbe0c28782ae181e6a35f62083619"
+    },
+    {
+      "path": "node_modules/@deepseek-ai/dsh-agent-loop/lib/index.js",
+      "sha256": "cf57e3ecd487ac5c2553455aaa5cef2c6fb41e6bd61be5aa455675d1d7193033"
+    }
+  ],
+  "identitySource": {
+    "path": "docs/execution-evidence/probe-gate-quiescence-20261015/tool-identities.json",
+    "sha256": "5f75d879af705a1a0624f1d74f004076d58f2f28cb8dcaa7e5d236b1bdb6efc1"
+  },
+  "scans": [
+    {
+      "seed": 17,
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-17-events.jsonl",
+      "sha256": "461445228cb9ccf9f7d4b87b990f25ddfe5fadd89f28d19303d178718d322553",
+      "delivered": 11,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      },
+      "candidates": [],
+      "verdict": "not-issued: section-7.3-precondition-stop"
+    },
+    {
+      "seed": 31,
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-31-events.jsonl",
+      "sha256": "af173db17e614b15a7f05603aca80fbc381cfbc44421d50a2f47dc0b412b918c",
+      "delivered": 11,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      },
+      "candidates": [],
+      "verdict": "not-issued: section-7.3-precondition-stop"
+    },
+    {
+      "seed": 45,
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-45-events.jsonl",
+      "sha256": "df9acc5a427ed052f8a95c91d880cdb9e72e777f644548f44f92af123779a409",
+      "delivered": 14,
+      "temporalCountsOnly": {
+        "laterInput": 14,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      },
+      "candidates": [],
+      "verdict": "not-issued: section-7.3-precondition-stop"
+    },
+    {
+      "seed": 59,
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-59-events.jsonl",
+      "sha256": "aba3bb769d36284cdb3a68a0241cdba92e92d657af0fc142a8b314e51c8a1c0c",
+      "delivered": 12,
+      "temporalCountsOnly": {
+        "laterInput": 11,
+        "candidateActiveWithSteps": 1,
+        "unreachable": 0
+      },
+      "candidates": [
+        {
+          "mail": "mail-10",
+          "task": "task-3",
+          "node": "node-2",
+          "session": "session-2",
+          "deliveredSequence": 287,
+          "lifecycle": "active",
+          "remainingSteps": 7
+        }
+      ],
+      "verdict": "not-issued: section-7.3-precondition-stop"
+    },
+    {
+      "seed": 73,
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-73-events.jsonl",
+      "sha256": "22b57b70de5df59bc8687b17acde494868f4d357738e79bff1dffd98293d40ce",
+      "delivered": 12,
+      "temporalCountsOnly": {
+        "laterInput": 12,
+        "candidateActiveWithSteps": 0,
+        "unreachable": 0
+      },
+      "candidates": [],
+      "verdict": "not-issued: section-7.3-precondition-stop"
+    }
+  ],
+  "exceptional": {
+    "seed": 59,
+    "mail": "mail-10",
+    "task": "task-3",
+    "node": "node-2",
+    "session": "session-2",
+    "deliveredSequence": 287,
+    "lifecycle": "active",
+    "remainingSteps": 7,
+    "queuedSequence": 274,
+    "stepStartSequence": 285,
+    "modelStartSequence": 286,
+    "modelEndSequence": 305,
+    "modelEndStatus": "completed",
+    "stepEndSequence": 306,
+    "turnEndSequence": 307,
+    "turnEndReason": "completed",
+    "source": {
+      "path": ".artifacts/live-probe-resumed/20261015/batch/seed-59/sessions/--D-dsh-ATN-.artifacts-live-probe-resumed-20261015-batch-seed-59--/atn-4c415252-2dd4-46a8-a1ec-d1c85d27c3c8/session.v4.jsonl",
+      "sha256": "66bb0ba3aa17ea0fb87f79d60c29f9dea3a96e735e5b45abe465b48e9e5d59d2",
+      "stepSourceSeq": 36,
+      "receiptSourceSeq": 37,
+      "receiptTime": 1792052620525
+    },
+    "finding": "The only temporal candidate already received this mail in its final model step. No subsequent step is required by deliverMail for a delivered receipt."
+  },
+  "reason": "Code wakes/replays queued mail awaiting logged input, not delivered mail already durably logged. The demanded delivered-only positive control does not establish an unfulfilled wake obligation. Manufacturing that verdict would broaden the code-derived definition.",
+  "controls": {
+    "mechanismGap": "not-established; stopped rather than broaden wake eligibility",
+    "noWakeEligibleWork": "not-certified as a classifier control; no binary classifier delivered"
+  },
+  "integrity": {
+    "archivedSourceHashCount": 37,
+    "hashes": [
+      {
+        "file": "shifting-evidence-run.ts",
+        "expected": "76a142d3e3234be2fd0e7285254a9848bbc86322db66eb11e7ee85781f390049",
+        "actual": "76a142d3e3234be2fd0e7285254a9848bbc86322db66eb11e7ee85781f390049"
+      },
+      {
+        "file": "shifting-evidence-task.ts",
+        "expected": "4de8727ae51ea9465ff54b241cea763d7e0498daef9dfbfd15941abe59ec266c",
+        "actual": "4de8727ae51ea9465ff54b241cea763d7e0498daef9dfbfd15941abe59ec266c"
+      },
+      {
+        "file": "shifting-evidence-reference.ts",
+        "expected": "7268164c3d691bf2317cccd9fdc38fc29d8129e00dedea4f1213dbe64b4985a0",
+        "actual": "7268164c3d691bf2317cccd9fdc38fc29d8129e00dedea4f1213dbe64b4985a0"
+      },
+      {
+        "file": "shifting-evidence-profile-run.ts",
+        "expected": "7f26875c88f2c9e6740d786e1b1f2e291b07a5c9a866df5c955968212a52de1c",
+        "actual": "7f26875c88f2c9e6740d786e1b1f2e291b07a5c9a866df5c955968212a52de1c"
+      },
+      {
+        "file": "simplification-arms.ts",
+        "expected": "4f55609671f39faf958b4d16753c3c26b2a748e065db42abb8e923f541bb72d9",
+        "actual": "4f55609671f39faf958b4d16753c3c26b2a748e065db42abb8e923f541bb72d9"
+      },
+      {
+        "file": "simplification-protocol.ts",
+        "expected": "623fb9321a2703616af33224e30a076565645d79128a234ebcd4047b2f45d504",
+        "actual": "623fb9321a2703616af33224e30a076565645d79128a234ebcd4047b2f45d504"
+      },
+      {
+        "file": "simplification-statistics.ts",
+        "expected": "3dc9c5001a83c53b2ff06a7b04c46ec6b3eeb773a639107a3ac62099c0001434",
+        "actual": "3dc9c5001a83c53b2ff06a7b04c46ec6b3eeb773a639107a3ac62099c0001434"
+      },
+      {
+        "file": "simplification-reference.ts",
+        "expected": "4eaf3dfff711a439b82998e6f056b50478243ea6f45255d0f031cf1983d9c169",
+        "actual": "4eaf3dfff711a439b82998e6f056b50478243ea6f45255d0f031cf1983d9c169"
+      },
+      {
+        "file": "shifting-evidence-access.ts",
+        "expected": "c4e77013c08ccc0f90d0d68cc37ad62df975c06c05866854e0a8ce597ad33cd1",
+        "actual": "c4e77013c08ccc0f90d0d68cc37ad62df975c06c05866854e0a8ce597ad33cd1"
+      },
+      {
+        "file": "shifting-evidence-protocol.ts",
+        "expected": "bc3cefcd0b14878443be909c4015a3aa8dd51f153e3b228a8b0c46c7bfc369a2",
+        "actual": "bc3cefcd0b14878443be909c4015a3aa8dd51f153e3b228a8b0c46c7bfc369a2"
+      },
+      {
+        "file": "shifting-evidence-script.ts",
+        "expected": "b1a4c3a897533a3ff46f17b7b0cb027d28c7cdad358b697abf7656da69692920",
+        "actual": "b1a4c3a897533a3ff46f17b7b0cb027d28c7cdad358b697abf7656da69692920"
+      },
+      {
+        "file": "shifting-evidence-calibration.ts",
+        "expected": "c45074021be0e3aa85be812b4028a6053bfef45ca75f42ff363ba0b44edfb01e",
+        "actual": "c45074021be0e3aa85be812b4028a6053bfef45ca75f42ff363ba0b44edfb01e"
+      },
+      {
+        "file": "topology-binding-proof.ts",
+        "expected": "6fca6b220ce998d57e93fb6eb114d28438ae570b6800c6d6035f99f2eaf2bebf",
+        "actual": "6fca6b220ce998d57e93fb6eb114d28438ae570b6800c6d6035f99f2eaf2bebf"
+      },
+      {
+        "file": "topology-binding-access.ts",
+        "expected": "055085e0eeeec1dce7bca84ca7bb19ddc0c2924d54d0187cf3819910ef11b846",
+        "actual": "055085e0eeeec1dce7bca84ca7bb19ddc0c2924d54d0187cf3819910ef11b846"
+      },
+      {
+        "file": "topology-binding-audit.ts",
+        "expected": "c6018e0782bd07b4030949417143495b2ba8b1d0ef2018fa41329fd211e028ca",
+        "actual": "c6018e0782bd07b4030949417143495b2ba8b1d0ef2018fa41329fd211e028ca"
+      },
+      {
+        "file": "topology-binding-reference.ts",
+        "expected": "bc978d6ee16b9aae337c9a836308569301f6c42439a3362c0d974ba4fe76865f",
+        "actual": "bc978d6ee16b9aae337c9a836308569301f6c42439a3362c0d974ba4fe76865f"
+      },
+      {
+        "file": "static-wide-topology.ts",
+        "expected": "e8e708f9c1d5c0ae29319db18e3163fe36081fc05617b048b0d192a57b797285",
+        "actual": "e8e708f9c1d5c0ae29319db18e3163fe36081fc05617b048b0d192a57b797285"
+      },
+      {
+        "file": "comparison-statistics.ts",
+        "expected": "daa0709d40076b965d149798cec276e667960e1b4e7db1a169241ca9929e60de",
+        "actual": "daa0709d40076b965d149798cec276e667960e1b4e7db1a169241ca9929e60de"
+      },
+      {
+        "file": "reference-kernel.ts",
+        "expected": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9",
+        "actual": "f207fe5e2b3ef5cf695acdd38504eb8492238e8940c53d745f513923e60599e9"
+      },
+      {
+        "file": "provider.ts",
+        "expected": "831b89eeadc408874cf3d4b9833e4340cfc62a024690153c3c8b123c4075e776",
+        "actual": "831b89eeadc408874cf3d4b9833e4340cfc62a024690153c3c8b123c4075e776"
+      },
+      {
+        "file": "budget.ts",
+        "expected": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41",
+        "actual": "028b660ec93de4eda6497e2c52810f156382040492fd597ebfafe663a3c66e41"
+      },
+      {
+        "file": "telemetry.ts",
+        "expected": "ac961c2d125769ef659f6c37b9b61de400332312054a87451f3db4c0dad1965c",
+        "actual": "ac961c2d125769ef659f6c37b9b61de400332312054a87451f3db4c0dad1965c"
+      },
+      {
+        "file": "atn-cost.ts",
+        "expected": "47b258954901e4accb4c88a3df893a99932331639741f94ec4a3abd72b8206b5",
+        "actual": "47b258954901e4accb4c88a3df893a99932331639741f94ec4a3abd72b8206b5"
+      },
+      {
+        "file": "../src/runtime.ts",
+        "expected": "32bb1888b3701c429f0a5ffd18facf206cc872a09d772926a938067162dc1aab",
+        "actual": "32bb1888b3701c429f0a5ffd18facf206cc872a09d772926a938067162dc1aab"
+      },
+      {
+        "file": "../src/schema.ts",
+        "expected": "2259bbc42344abdfd6b75c8f9d84fbe0c2a8c4d012f230bf39bf0896b65ae714",
+        "actual": "2259bbc42344abdfd6b75c8f9d84fbe0c2a8c4d012f230bf39bf0896b65ae714"
+      },
+      {
+        "file": "../src/config.ts",
+        "expected": "79da1a273aa3d8ff739a261e1cbf7f153a4ccf7b8cb0cef3399ad1892ba27852",
+        "actual": "79da1a273aa3d8ff739a261e1cbf7f153a4ccf7b8cb0cef3399ad1892ba27852"
+      },
+      {
+        "file": "../src/tools.ts",
+        "expected": "d9ba2a4a6c25a039448ae809bbb3fef6d4c8c076b400edfa8a0f78414f7d5885",
+        "actual": "d9ba2a4a6c25a039448ae809bbb3fef6d4c8c076b400edfa8a0f78414f7d5885"
+      },
+      {
+        "file": "../src/tasks.ts",
+        "expected": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728",
+        "actual": "8ace66d4615d9b1f7f0796e9a6eed48cebd42fc9aa2205cdc3e63a7368722728"
+      },
+      {
+        "file": "../src/messages.ts",
+        "expected": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151",
+        "actual": "e82fe80d8a0fb8963b021915b6a441b4ba1c942ae8b21fc69a5203313aa95151"
+      },
+      {
+        "file": "../src/knowledge.ts",
+        "expected": "7e796402e09123915ec12ad83109eed98e8bb5cf41a634034bf48cc49a1aebe7",
+        "actual": "7e796402e09123915ec12ad83109eed98e8bb5cf41a634034bf48cc49a1aebe7"
+      },
+      {
+        "file": "../src/requester-feedback.ts",
+        "expected": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029",
+        "actual": "1dc410c1e76437e14b562ce29ce749aa2792e27acdaa7f370dddc18a9999d029"
+      },
+      {
+        "file": "../src/topology.ts",
+        "expected": "d2a6e836c734842b9744232cc2674a77ef6a4bebd454f2e5cef63a2d2a9fbc98",
+        "actual": "d2a6e836c734842b9744232cc2674a77ef6a4bebd454f2e5cef63a2d2a9fbc98"
+      },
+      {
+        "file": "../src/topology-feedback.ts",
+        "expected": "4f2cc013f8c2be5878862dace9635d92727c64a1bc32958b048b906093998b06",
+        "actual": "4f2cc013f8c2be5878862dace9635d92727c64a1bc32958b048b906093998b06"
+      },
+      {
+        "file": "../src/information-boundary.ts",
+        "expected": "33217bbc54fc421b1e91cdf1789f99b1eef080e111636f864efeb96ffef392c0",
+        "actual": "33217bbc54fc421b1e91cdf1789f99b1eef080e111636f864efeb96ffef392c0"
+      },
+      {
+        "file": "../src/refusal.ts",
+        "expected": "edb120ccfe09bf3eec9e4074eaf78bf2ded40d5350d3bce415d8d603bbbbd425",
+        "actual": "edb120ccfe09bf3eec9e4074eaf78bf2ded40d5350d3bce415d8d603bbbbd425"
+      },
+      {
+        "file": "../package.json",
+        "expected": "fbec0bf866296cf443f5a27cb8acc7ce87c751ddca87718b96701d75d64c942b",
+        "actual": "fbec0bf866296cf443f5a27cb8acc7ce87c751ddca87718b96701d75d64c942b"
+      },
+      {
+        "file": "../package-lock.json",
+        "expected": "476ea5475cc7acb66508e2118e836668af80fe3a3df59571f5f4de5b85219dfc",
+        "actual": "476ea5475cc7acb66508e2118e836668af80fe3a3df59571f5f4de5b85219dfc"
+      }
+    ]
+  },
+  "incomplete": [
+    "binary classifier and two constructive controls",
+    "full task/last-action audit",
+    "sum gate comparison",
+    "flaky test reproduction",
+    "npm test/typecheck/build/pack; not run after mandatory precondition stop"
+  ]
+}

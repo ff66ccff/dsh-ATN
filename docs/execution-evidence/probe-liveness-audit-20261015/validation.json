@@ -1,0 +1,39 @@
+{
+  "checks": [
+    {
+      "exitCode": 0,
+      "command": "node --import tsx/esm scripts/audit-probe-liveness-precondition.ts"
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit --strict --target ES2023 --module NodeNext --moduleResolution NodeNext --allowImportingTsExtensions --skipLibCheck scripts/audit-probe-liveness-precondition.ts",
+      "exitCode": 0,
+      "output": []
+    },
+    {
+      "command": "git diff --exit-code HEAD -- src tests/integration/result-outcome.test.ts tests/integration/knowledge-feedback.test.ts",
+      "exitCode": 0,
+      "output": []
+    },
+    {
+      "command": "git status --porcelain -- src tests/integration/result-outcome.test.ts tests/integration/knowledge-feedback.test.ts",
+      "exitCode": 0,
+      "output": []
+    },
+    {
+      "command": "git diff --check",
+      "exitCode": 0,
+      "output": [
+        "warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it",
+        "warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it"
+      ]
+    }
+  ],
+  "notRun": [
+    "npm test",
+    "npm run typecheck",
+    "npm run build",
+    "npm run pack:tarball",
+    "flaky test reproductions"
+  ],
+  "scope": "mandatory precondition stop 7.3; not full acceptance"
+}

@@ -1,0 +1,128 @@
+{
+  "phase": 2,
+  "controls": [
+    {
+      "fault": "normal",
+      "facts": {
+        "mail": "control-normal",
+        "input": true,
+        "modelStarted": true,
+        "delivered": true,
+        "terminalAtDelivery": false
+      },
+      "classification": {
+        "category": "normal-receipt",
+        "defect": false
+      },
+      "verdict": "no-wake-eligible-work",
+      "injectionHits": 0,
+      "modelStarts": 1,
+      "inputSourceSeq": 19,
+      "finalMailStatus": "delivered",
+      "idle": true,
+      "sameStepReceipt": false,
+      "inputDurablyFlushed": true,
+      "recovery": null,
+      "genuineKernel": true
+    },
+    {
+      "fault": "request-build-failure",
+      "facts": {
+        "mail": "control-request-build-failure",
+        "input": true,
+        "modelStarted": false,
+        "delivered": true,
+        "terminalAtDelivery": false
+      },
+      "classification": {
+        "category": "input-without-model",
+        "defect": true
+      },
+      "verdict": "mechanism-gap",
+      "injectionHits": 1,
+      "modelStarts": 0,
+      "inputSourceSeq": 19,
+      "finalMailStatus": "delivered",
+      "idle": true,
+      "sameStepReceipt": false,
+      "inputDurablyFlushed": true,
+      "recovery": null,
+      "genuineKernel": true
+    },
+    {
+      "fault": "receipt-flush-failure",
+      "facts": {
+        "mail": "control-receipt-flush-failure",
+        "input": true,
+        "modelStarted": true,
+        "delivered": false,
+        "terminalAtDelivery": false
+      },
+      "classification": {
+        "category": "receipt-missing",
+        "defect": true
+      },
+      "verdict": "mechanism-gap",
+      "injectionHits": 2,
+      "modelStarts": 1,
+      "inputSourceSeq": 19,
+      "finalMailStatus": "queued",
+      "idle": true,
+      "sameStepReceipt": false,
+      "inputDurablyFlushed": true,
+      "recovery": {
+        "finalMailStatus": "delivered",
+        "extraModelStarts": 0
+      },
+      "genuineKernel": true
+    },
+    {
+      "fault": "terminal-retired",
+      "facts": {
+        "mail": "control-terminal-retired",
+        "input": false,
+        "modelStarted": false,
+        "delivered": false,
+        "terminalAtDelivery": true
+      },
+      "classification": {
+        "category": "unreachable",
+        "defect": false
+      },
+      "verdict": "no-wake-eligible-work",
+      "injectionHits": 0,
+      "modelStarts": 0,
+      "inputSourceSeq": null,
+      "finalMailStatus": "undeliverable",
+      "idle": true,
+      "sameStepReceipt": false,
+      "inputDurablyFlushed": false,
+      "recovery": null,
+      "genuineKernel": true
+    },
+    {
+      "fault": "terminal-failed",
+      "facts": {
+        "mail": "control-terminal-failed",
+        "input": false,
+        "modelStarted": false,
+        "delivered": false,
+        "terminalAtDelivery": true
+      },
+      "classification": {
+        "category": "unreachable",
+        "defect": false
+      },
+      "verdict": "no-wake-eligible-work",
+      "injectionHits": 0,
+      "modelStarts": 0,
+      "inputSourceSeq": null,
+      "finalMailStatus": "undeliverable",
+      "idle": true,
+      "sameStepReceipt": false,
+      "inputDurablyFlushed": false,
+      "recovery": null,
+      "genuineKernel": true
+    }
+  ]
+}
