@@ -1,0 +1,227 @@
+[
+  {
+    "contract": "held:start",
+    "channel": "start",
+    "held": true
+  },
+  {
+    "contract": "unheld:start",
+    "channel": "start",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:spawn",
+    "channel": "spawn",
+    "held": true
+  },
+  {
+    "contract": "unheld:spawn",
+    "channel": "spawn",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:send.task",
+    "channel": "send.task",
+    "held": true
+  },
+  {
+    "contract": "unheld:send.task",
+    "channel": "send.task",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:send.note",
+    "channel": "send.note",
+    "held": true
+  },
+  {
+    "contract": "unheld:send.note",
+    "channel": "send.note",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:send.result",
+    "channel": "send.result",
+    "held": true
+  },
+  {
+    "contract": "unheld:send.result",
+    "channel": "send.result",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:status.review",
+    "channel": "status.review",
+    "held": true
+  },
+  {
+    "contract": "unheld:status.review",
+    "channel": "status.review",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:status.claim",
+    "channel": "status.claim",
+    "held": true
+  },
+  {
+    "contract": "unheld:status.claim",
+    "channel": "status.claim",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:status.rewire",
+    "channel": "status.rewire",
+    "held": true
+  },
+  {
+    "contract": "unheld:status.rewire",
+    "channel": "status.rewire",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:finish.node",
+    "channel": "finish.node",
+    "held": true
+  },
+  {
+    "contract": "unheld:finish.node",
+    "channel": "finish.node",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:finish.network",
+    "channel": "finish.network",
+    "held": true
+  },
+  {
+    "contract": "unheld:finish.network",
+    "channel": "finish.network",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:propose",
+    "channel": "propose",
+    "held": true
+  },
+  {
+    "contract": "unheld:propose",
+    "channel": "propose",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:vote",
+    "channel": "vote",
+    "held": true
+  },
+  {
+    "contract": "unheld:vote",
+    "channel": "vote",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:renew",
+    "channel": "renew",
+    "held": true
+  },
+  {
+    "contract": "unheld:renew",
+    "channel": "renew",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "held:publish",
+    "channel": "publish",
+    "held": true
+  },
+  {
+    "contract": "unheld:publish",
+    "channel": "publish",
+    "held": false,
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "transport:messageId",
+    "field": "messageId",
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "transport:dependsOn",
+    "field": "dependsOn",
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "transport:retryOf",
+    "field": "retryOf",
+    "code": "evidence-not-owned"
+  },
+  {
+    "contract": "msg-existing"
+  },
+  {
+    "contract": "msg-future",
+    "code": "ref-unresolved"
+  },
+  {
+    "contract": "msg-self",
+    "code": "ref-unresolved"
+  },
+  {
+    "contract": "task-visible"
+  },
+  {
+    "contract": "task-hidden",
+    "code": "ref-not-visible"
+  },
+  {
+    "contract": "task-missing",
+    "code": "ref-unresolved"
+  },
+  {
+    "contract": "artifact-owned"
+  },
+  {
+    "contract": "artifact-unowned",
+    "code": "ref-not-owned"
+  },
+  {
+    "contract": "artifact-no-policy",
+    "code": "custody-unavailable"
+  },
+  {
+    "contract": "rationale",
+    "code": "rationale-missing-ref"
+  },
+  {
+    "contract": "capacity",
+    "code": "substrate-full"
+  },
+  {
+    "contract": "read-policy-missing"
+  },
+  {
+    "contract": "read-policy-throw",
+    "code": "custody-unavailable"
+  },
+  {
+    "contract": "read-policy-async",
+    "code": "async-policy"
+  },
+  {
+    "contract": "read-policy-hidden",
+    "code": "ref-unresolved"
+  }
+]

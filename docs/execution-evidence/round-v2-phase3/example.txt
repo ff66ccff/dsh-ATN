@@ -1,0 +1,1 @@
+Owned note/result accepted; unowned review refused atomically; custody discovery works without a board.

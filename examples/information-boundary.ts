@@ -4,20 +4,14 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { SessionId } from '@deepseek-ai/dsh-session'
-import { defineCustodyPolicy } from '../src/index.ts'
+import { createExampleCustodyPolicy } from './information-boundary-policy.ts'
 import { bootKernel, createHostAgent, settle } from '../tests/fixtures/kernel.ts'
 
 const scratch = await mkdtemp(join(tmpdir(), 'atn-boundary-example-'))
 const kernel = await bootKernel(scratch, { clock: () => 1_000_000 })
 try {
   const custody = new Map<string, Set<string>>([['node-1', new Set(['root-document'])]])
-  const policy = defineCustodyPolicy({
-    custody: nodeId => custody.get(nodeId) ?? [],
-    // Demonstration protocol only: claim:ID means "I hold artifact ID".
-    // Production hosts must extract their actual structured claims from every field.
-    extractClaims: input => [...JSON.stringify(input).matchAll(/claim:([a-z-]+)/g)].map(match => match[1]),
-    describeArtifact: id => ({ topics: [id] }),
-  })
+  const policy = createExampleCustodyPolicy(nodeId => custody.get(nodeId) ?? [])
   const dispose = kernel.atn.installOutboundPolicy('*', policy)
   const root = await createHostAgent(kernel, 'example-entry')
   const started = await kernel.atn.start(root, { objective: 'Check actual local custody.',

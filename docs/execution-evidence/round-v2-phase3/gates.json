@@ -1,0 +1,69 @@
+{
+  "DSH_CLI": "D:\\dsh-ATN\\.scratch\\harness-alpha4\\node_modules\\.bin\\dsh.cmd",
+  "SIDEBAR_PACKAGE_DIR": "D:\\dsh-ATN\\.scratch\\sidebar-0261\\node_modules\\dsh-better-sidebar",
+  "results": [
+    {
+      "command": "npm ci",
+      "code": 0,
+      "startedAt": "2026-10-16T17:55:27.869Z",
+      "finishedAt": "2026-10-16T17:55:45.342Z",
+      "file": "npm-ci.txt"
+    },
+    {
+      "command": "npm run typecheck",
+      "code": 0,
+      "startedAt": "2026-10-16T17:55:45.344Z",
+      "finishedAt": "2026-10-16T17:55:51.135Z",
+      "file": "npm-run-typecheck.txt"
+    },
+    {
+      "command": "npm test",
+      "code": 0,
+      "startedAt": "2026-10-16T17:55:51.137Z",
+      "finishedAt": "2026-10-16T17:56:40.212Z",
+      "file": "npm-test.txt"
+    },
+    {
+      "command": "npm run build",
+      "code": 0,
+      "startedAt": "2026-10-16T17:56:40.214Z",
+      "finishedAt": "2026-10-16T17:56:42.614Z",
+      "file": "npm-run-build.txt"
+    },
+    {
+      "command": "npm run pack:tarball",
+      "code": 0,
+      "startedAt": "2026-10-16T17:56:42.616Z",
+      "finishedAt": "2026-10-16T17:56:44.117Z",
+      "file": "npm-run-pack-tarball.txt"
+    },
+    {
+      "command": "npm run smoke:profile",
+      "code": 0,
+      "startedAt": "2026-10-16T17:56:44.119Z",
+      "finishedAt": "2026-10-16T17:56:54.955Z",
+      "file": "npm-run-smoke-profile.txt"
+    },
+    {
+      "command": "npm run smoke:visualization",
+      "code": 0,
+      "startedAt": "2026-10-16T17:56:54.956Z",
+      "finishedAt": "2026-10-16T17:57:05.696Z",
+      "file": "npm-run-smoke-visualization.txt"
+    },
+    {
+      "command": "npm run verify:sidebar",
+      "code": 0,
+      "startedAt": "2026-10-16T17:57:05.697Z",
+      "finishedAt": "2026-10-16T17:57:07.879Z",
+      "file": "npm-run-verify-sidebar.txt"
+    },
+    {
+      "command": "git diff --check",
+      "code": 0,
+      "startedAt": "2026-10-16T17:57:07.881Z",
+      "finishedAt": "2026-10-16T17:57:08.025Z",
+      "file": "git-diff-check.txt"
+    }
+  ]
+}

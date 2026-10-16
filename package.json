@@ -21,12 +21,17 @@
       "import": "./lib/tools.js"
     },
     "./package.json": "./package.json",
+    "./conformance": {
+      "types": "./conformance/index.d.mts",
+      "import": "./conformance/index.mjs"
+    },
     "./client": {
       "default": "./lib/client.js"
     }
   },
   "files": [
     "lib",
+    "conformance",
     "cordis.patch.yml",
     "README.md",
     "LICENSE",

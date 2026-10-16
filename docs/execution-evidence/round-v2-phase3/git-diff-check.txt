@@ -1,0 +1,7 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ADAPTIVE_TOPOLOGY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/DECLARATION_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'examples/information-boundary.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'package.json', LF will be replaced by CRLF the next time Git touches it

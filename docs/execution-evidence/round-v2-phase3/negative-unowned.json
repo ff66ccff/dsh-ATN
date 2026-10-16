@@ -1,0 +1,260 @@
+{
+  "passed": 29,
+  "failed": 17,
+  "failures": [
+    {
+      "contract": "unheld:start",
+      "message": "Missing expected rejection: unheld:start"
+    },
+    {
+      "contract": "unheld:spawn",
+      "message": "Missing expected rejection: unheld:spawn"
+    },
+    {
+      "contract": "unheld:send.task",
+      "message": "Missing expected rejection: unheld:send.task"
+    },
+    {
+      "contract": "unheld:send.note",
+      "message": "Missing expected rejection: unheld:send.note"
+    },
+    {
+      "contract": "unheld:send.result",
+      "message": "Missing expected rejection: unheld:send.result"
+    },
+    {
+      "contract": "unheld:status.review",
+      "message": "Missing expected rejection: unheld:status.review"
+    },
+    {
+      "contract": "unheld:status.claim",
+      "message": "Missing expected rejection: unheld:status.claim"
+    },
+    {
+      "contract": "unheld:status.rewire",
+      "message": "Missing expected rejection: unheld:status.rewire"
+    },
+    {
+      "contract": "unheld:finish.node",
+      "message": "Missing expected rejection: unheld:finish.node"
+    },
+    {
+      "contract": "unheld:finish.network",
+      "message": "Missing expected rejection: unheld:finish.network"
+    },
+    {
+      "contract": "unheld:propose",
+      "message": "Missing expected rejection: unheld:propose"
+    },
+    {
+      "contract": "unheld:vote",
+      "message": "Missing expected rejection: unheld:vote"
+    },
+    {
+      "contract": "unheld:renew",
+      "message": "Missing expected rejection: unheld:renew"
+    },
+    {
+      "contract": "unheld:publish",
+      "message": "Missing expected rejection: unheld:publish"
+    },
+    {
+      "contract": "transport:messageId",
+      "message": "Missing expected rejection: transport:messageId"
+    },
+    {
+      "contract": "transport:dependsOn",
+      "message": "transport:dependsOn"
+    },
+    {
+      "contract": "transport:retryOf",
+      "message": "transport:retryOf"
+    }
+  ],
+  "results": [
+    {
+      "contract": "held:start",
+      "passed": true
+    },
+    {
+      "contract": "unheld:start",
+      "passed": false
+    },
+    {
+      "contract": "held:spawn",
+      "passed": true
+    },
+    {
+      "contract": "unheld:spawn",
+      "passed": false
+    },
+    {
+      "contract": "held:send.task",
+      "passed": true
+    },
+    {
+      "contract": "unheld:send.task",
+      "passed": false
+    },
+    {
+      "contract": "held:send.note",
+      "passed": true
+    },
+    {
+      "contract": "unheld:send.note",
+      "passed": false
+    },
+    {
+      "contract": "held:send.result",
+      "passed": true
+    },
+    {
+      "contract": "unheld:send.result",
+      "passed": false
+    },
+    {
+      "contract": "held:status.review",
+      "passed": true
+    },
+    {
+      "contract": "unheld:status.review",
+      "passed": false
+    },
+    {
+      "contract": "held:status.claim",
+      "passed": true
+    },
+    {
+      "contract": "unheld:status.claim",
+      "passed": false
+    },
+    {
+      "contract": "held:status.rewire",
+      "passed": true
+    },
+    {
+      "contract": "unheld:status.rewire",
+      "passed": false
+    },
+    {
+      "contract": "held:finish.node",
+      "passed": true
+    },
+    {
+      "contract": "unheld:finish.node",
+      "passed": false
+    },
+    {
+      "contract": "held:finish.network",
+      "passed": true
+    },
+    {
+      "contract": "unheld:finish.network",
+      "passed": false
+    },
+    {
+      "contract": "held:propose",
+      "passed": true
+    },
+    {
+      "contract": "unheld:propose",
+      "passed": false
+    },
+    {
+      "contract": "held:vote",
+      "passed": true
+    },
+    {
+      "contract": "unheld:vote",
+      "passed": false
+    },
+    {
+      "contract": "held:renew",
+      "passed": true
+    },
+    {
+      "contract": "unheld:renew",
+      "passed": false
+    },
+    {
+      "contract": "held:publish",
+      "passed": true
+    },
+    {
+      "contract": "unheld:publish",
+      "passed": false
+    },
+    {
+      "contract": "transport:messageId",
+      "passed": false
+    },
+    {
+      "contract": "transport:dependsOn",
+      "passed": false
+    },
+    {
+      "contract": "transport:retryOf",
+      "passed": false
+    },
+    {
+      "contract": "msg-existing",
+      "passed": true
+    },
+    {
+      "contract": "msg-future",
+      "passed": true
+    },
+    {
+      "contract": "msg-self",
+      "passed": true
+    },
+    {
+      "contract": "task-visible",
+      "passed": true
+    },
+    {
+      "contract": "task-hidden",
+      "passed": true
+    },
+    {
+      "contract": "task-missing",
+      "passed": true
+    },
+    {
+      "contract": "artifact-owned",
+      "passed": true
+    },
+    {
+      "contract": "artifact-unowned",
+      "passed": true
+    },
+    {
+      "contract": "artifact-no-policy",
+      "passed": true
+    },
+    {
+      "contract": "rationale",
+      "passed": true
+    },
+    {
+      "contract": "capacity",
+      "passed": true
+    },
+    {
+      "contract": "read-policy-missing",
+      "passed": true
+    },
+    {
+      "contract": "read-policy-throw",
+      "passed": true
+    },
+    {
+      "contract": "read-policy-async",
+      "passed": true
+    },
+    {
+      "contract": "read-policy-hidden",
+      "passed": true
+    }
+  ]
+}

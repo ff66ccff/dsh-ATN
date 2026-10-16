@@ -6,6 +6,8 @@ V2 工程卫生：七个零直接引用包按真实宿主依赖图保留并逐�
 
 宿主可显式安装 [substrate 读侧策略](docs/OBSERVER_READ_AUTHORIZATION.md#节点-substrate-读侧策略v2-阶段-2)，复用既有主体/资源/action；默认关闭，八工具和固定上下文不变。它约束消息读取及声明引用，不证明任意自然语言保密。
 
+随包提供 [宿主一致性套件](conformance/README.md)（`dsh-atn/conformance`）；宿主接入自己的真实策略/运行端口后独立运行，失败会给出契约名。套件验证结构契约，不认证任意语义提取器。
+
 <div align="center">
 
 ### **布线会变，边界不变。**

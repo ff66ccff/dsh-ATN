@@ -1,0 +1,22 @@
+TAP version 13
+# Subtest: CONFORMANCE-HOST: the example custody host passes the portable contract suite
+ok 1 - CONFORMANCE-HOST: the example custody host passes the portable contract suite
+  ---
+  duration_ms: 841.38
+  type: 'test'
+  ...
+# Subtest: CONFORMANCE-NEGATIVE: unowned allow and asynchronous host fixtures fail with exact contract names
+ok 2 - CONFORMANCE-NEGATIVE: unowned allow and asynchronous host fixtures fail with exact contract names
+  ---
+  duration_ms: 1580.2333
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2993.3394

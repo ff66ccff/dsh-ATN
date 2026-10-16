@@ -78,3 +78,5 @@
 V2 阶段 1：`NAMESPACE-STRUCTURE` / `NAMESPACE-LIVE` 补足 msg/node/task/artifact 网络局部解析与双主体 Gateway 证据，无生产语义变更。负对照显式注入错误 resolver；不宣称生产代码曾存在该漏洞。artifact 外网独有仍按既有 custody 返回 ref-not-owned，不改变优先级。
 
 V2 阶段 2 公开增量：installSubstrateReadPolicy、defineSubstrateReadPolicy、SubstrateReadPolicy/Options、substrateResourceId、ATN_SUBSTRATE_READER。资源 atn-substrate/action atnSubstrate/read；仅宿主映射 live node，模型工具面不变。READ-POLICY* 与 fixed-context 精确 7956/5910 锚定开启/关闭、被引/证据、排序权重、错误不可区分、失败原子性和冷重放。论文偏离新增第 8 项，默认未安装保持全读。
+
+V2 阶段 3 公开增量：npm 白名单的 conformance/、`dsh-atn/conformance` 类型和 JS 入口、CLI 与宿主接入指南。46 个黑箱 case 对示例策略全绿；两个错误宿主 fixture 必须红灯。16 拒绝码词汇全冻结；8 个协议专属码无通用 custody 触发，按停止条件 4 收窄可携带语义范围，保留 reference-policy 真实协议测试，不增测试后门、不声称通用套件能证明任意宿主协议。

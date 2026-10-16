@@ -1,0 +1,364 @@
+{
+  "passed": 3,
+  "failed": 43,
+  "failures": [
+    {
+      "contract": "held:start",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:start",
+      "message": "unheld:start"
+    },
+    {
+      "contract": "held:spawn",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:spawn",
+      "message": "unheld:spawn"
+    },
+    {
+      "contract": "held:send.task",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:send.task",
+      "message": "unheld:send.task"
+    },
+    {
+      "contract": "held:send.note",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:send.note",
+      "message": "unheld:send.note"
+    },
+    {
+      "contract": "held:send.result",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:send.result",
+      "message": "unheld:send.result"
+    },
+    {
+      "contract": "held:status.review",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:status.review",
+      "message": "unheld:status.review"
+    },
+    {
+      "contract": "held:status.claim",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:status.claim",
+      "message": "unheld:status.claim"
+    },
+    {
+      "contract": "held:status.rewire",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:status.rewire",
+      "message": "unheld:status.rewire"
+    },
+    {
+      "contract": "held:finish.node",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:finish.node",
+      "message": "unheld:finish.node"
+    },
+    {
+      "contract": "held:finish.network",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:finish.network",
+      "message": "unheld:finish.network"
+    },
+    {
+      "contract": "held:propose",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:propose",
+      "message": "unheld:propose"
+    },
+    {
+      "contract": "held:vote",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:vote",
+      "message": "unheld:vote"
+    },
+    {
+      "contract": "held:renew",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:renew",
+      "message": "unheld:renew"
+    },
+    {
+      "contract": "held:publish",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "unheld:publish",
+      "message": "unheld:publish"
+    },
+    {
+      "contract": "transport:messageId",
+      "message": "transport:messageId"
+    },
+    {
+      "contract": "transport:dependsOn",
+      "message": "transport:dependsOn"
+    },
+    {
+      "contract": "transport:retryOf",
+      "message": "transport:retryOf"
+    },
+    {
+      "contract": "msg-existing",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "msg-future",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "msg-self",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "task-visible",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "artifact-owned",
+      "message": "custody unavailable for artifact:owned-document"
+    },
+    {
+      "contract": "artifact-unowned",
+      "message": "artifact-unowned"
+    },
+    {
+      "contract": "rationale",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "capacity",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "read-policy-missing",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "read-policy-throw",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "read-policy-async",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    },
+    {
+      "contract": "read-policy-hidden",
+      "message": "async-policy: outbound admission must finish synchronously before persistence"
+    }
+  ],
+  "results": [
+    {
+      "contract": "held:start",
+      "passed": false
+    },
+    {
+      "contract": "unheld:start",
+      "passed": false
+    },
+    {
+      "contract": "held:spawn",
+      "passed": false
+    },
+    {
+      "contract": "unheld:spawn",
+      "passed": false
+    },
+    {
+      "contract": "held:send.task",
+      "passed": false
+    },
+    {
+      "contract": "unheld:send.task",
+      "passed": false
+    },
+    {
+      "contract": "held:send.note",
+      "passed": false
+    },
+    {
+      "contract": "unheld:send.note",
+      "passed": false
+    },
+    {
+      "contract": "held:send.result",
+      "passed": false
+    },
+    {
+      "contract": "unheld:send.result",
+      "passed": false
+    },
+    {
+      "contract": "held:status.review",
+      "passed": false
+    },
+    {
+      "contract": "unheld:status.review",
+      "passed": false
+    },
+    {
+      "contract": "held:status.claim",
+      "passed": false
+    },
+    {
+      "contract": "unheld:status.claim",
+      "passed": false
+    },
+    {
+      "contract": "held:status.rewire",
+      "passed": false
+    },
+    {
+      "contract": "unheld:status.rewire",
+      "passed": false
+    },
+    {
+      "contract": "held:finish.node",
+      "passed": false
+    },
+    {
+      "contract": "unheld:finish.node",
+      "passed": false
+    },
+    {
+      "contract": "held:finish.network",
+      "passed": false
+    },
+    {
+      "contract": "unheld:finish.network",
+      "passed": false
+    },
+    {
+      "contract": "held:propose",
+      "passed": false
+    },
+    {
+      "contract": "unheld:propose",
+      "passed": false
+    },
+    {
+      "contract": "held:vote",
+      "passed": false
+    },
+    {
+      "contract": "unheld:vote",
+      "passed": false
+    },
+    {
+      "contract": "held:renew",
+      "passed": false
+    },
+    {
+      "contract": "unheld:renew",
+      "passed": false
+    },
+    {
+      "contract": "held:publish",
+      "passed": false
+    },
+    {
+      "contract": "unheld:publish",
+      "passed": false
+    },
+    {
+      "contract": "transport:messageId",
+      "passed": false
+    },
+    {
+      "contract": "transport:dependsOn",
+      "passed": false
+    },
+    {
+      "contract": "transport:retryOf",
+      "passed": false
+    },
+    {
+      "contract": "msg-existing",
+      "passed": false
+    },
+    {
+      "contract": "msg-future",
+      "passed": false
+    },
+    {
+      "contract": "msg-self",
+      "passed": false
+    },
+    {
+      "contract": "task-visible",
+      "passed": false
+    },
+    {
+      "contract": "task-hidden",
+      "passed": true
+    },
+    {
+      "contract": "task-missing",
+      "passed": true
+    },
+    {
+      "contract": "artifact-owned",
+      "passed": false
+    },
+    {
+      "contract": "artifact-unowned",
+      "passed": false
+    },
+    {
+      "contract": "artifact-no-policy",
+      "passed": true
+    },
+    {
+      "contract": "rationale",
+      "passed": false
+    },
+    {
+      "contract": "capacity",
+      "passed": false
+    },
+    {
+      "contract": "read-policy-missing",
+      "passed": false
+    },
+    {
+      "contract": "read-policy-throw",
+      "passed": false
+    },
+    {
+      "contract": "read-policy-async",
+      "passed": false
+    },
+    {
+      "contract": "read-policy-hidden",
+      "passed": false
+    }
+  ]
+}
