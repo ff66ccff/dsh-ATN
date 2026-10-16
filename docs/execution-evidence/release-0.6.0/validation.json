@@ -73,7 +73,7 @@
       "atn_visit": 363
     }
   },
-  "tarballSha256": "fa43e019fc1d55078e675ad114fadb0b1e1b6b7004d0e7efe313bbe7b36a97e3",
+  "tarballSha256": "81073da47b3ba285030072b4399fe70b8074063b0916b0adebc956f27c8cf8e7",
   "remoteModelCalls": 0,
   "hostedCi": {
     "runId": 38951903940,
@@ -84,10 +84,35 @@
     "skippedHistoricalPrivateArchive": 1
   },
   "npmPublish": {
-    "status": "blocked",
-    "publishError": "E404 permission denied",
-    "whoamiError": "E401",
-    "registryLatest": "0.5.0",
-    "published": false
-  }
+    "status": "published",
+    "version": "0.6.0",
+    "registryLatest": "0.6.0",
+    "published": true,
+    "integrity": "sha512-raTCJFDHIUimqfiuE0mCfOUCTxdkHC2Pf2lQ9lQi39gBq6p6nE6MtJXqpVIHertS+CnA1GlxfqV/lQ+gWWSL6g==",
+    "registryInstallSmokeExitCode": 0,
+    "initialAuthenticationFailureResolved": true
+  },
+  "prepublishCi": [
+    {
+      "runId": 38953584060,
+      "branch": "main",
+      "commit": "88c6bced528c548b9ceebd3b0c1c9df11742bb17",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38953584060"
+    },
+    {
+      "runId": 38953583634,
+      "branch": "codex/release-ready",
+      "commit": "88c6bced528c548b9ceebd3b0c1c9df11742bb17",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38953583634"
+    },
+    {
+      "runId": 38952630374,
+      "branch": "v0.6.0",
+      "commit": "bf4fbd22a021a8da5cbc5e2ce2bfb62596c5a330",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38952630374"
+    }
+  ]
 }

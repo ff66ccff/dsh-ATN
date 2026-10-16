@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "version": "0.6.0",
+  "registry": "https://registry.npmjs.org/",
+  "latest": "0.6.0",
+  "npmUrl": "https://www.npmjs.com/package/dsh-atn/v/0.6.0",
+  "integrity": "sha512-raTCJFDHIUimqfiuE0mCfOUCTxdkHC2Pf2lQ9lQi39gBq6p6nE6MtJXqpVIHertS+CnA1GlxfqV/lQ+gWWSL6g==",
+  "sha256": "81073da47b3ba285030072b4399fe70b8074063b0916b0adebc956f27c8cf8e7",
+  "gitHubRelease": "https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.0",
+  "githubAsset": "https://github.com/ff66ccff/dsh-ATN/releases/download/v0.6.0/dsh-atn-0.6.0.tgz",
+  "registryAndGithubArtifactIdentical": true,
+  "prepublishCi": [
+    {
+      "runId": 38953584060,
+      "branch": "main",
+      "commit": "88c6bced528c548b9ceebd3b0c1c9df11742bb17",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38953584060"
+    },
+    {
+      "runId": 38953583634,
+      "branch": "codex/release-ready",
+      "commit": "88c6bced528c548b9ceebd3b0c1c9df11742bb17",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38953583634"
+    },
+    {
+      "runId": 38952630374,
+      "branch": "v0.6.0",
+      "commit": "bf4fbd22a021a8da5cbc5e2ce2bfb62596c5a330",
+      "conclusion": "success",
+      "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38952630374"
+    }
+  ],
+  "registryInstallSmoke": {
+    "command": "ATN_INSTALL_SPEC=dsh-atn@0.6.0 npm run smoke:profile (Harness alpha.5 CLI)",
+    "exitCode": 0,
+    "modelCalls": 0
+  }
+}

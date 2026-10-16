@@ -42,4 +42,13 @@ GitHub 托管 CI 在 [Actions](https://github.com/ff66ccff/dsh-ATN/actions) 公�
 
 托管 CI [38951903940](https://github.com/ff66ccff/dsh-ATN/actions/runs/38951903940) 六个 job 全部成功，覆盖 Ubuntu / Windows 的完整检查与两个侧栏目标；每个平台 606 项 runtime 通过、1 项历史私有归档按原规则跳过，另 17 项 UI 全通过。[汇总](execution-evidence/release-0.6.0/hosted-ci.json)。
 
-npm 发布状态：实际 `npm publish` 被注册表以 E404 / 权限不足拒绝，`npm whoami` 同时返回 E401。交付时 npm `latest` 仍为 0.5.0，0.6.0 尚未发布。需维护者重新登录具备该包发布权限的 npm 账号后继续。GitHub Release 和本地 tarball 可用，不把发布预检通过记为 npm 发布成功。
+首次 npm 尝试因认证失败返回 E404 / E401。维护者随后完成重新登录及本次发布的独立二次验证；最终发布结果见下文，早期失败不再是当前发布状态。
+
+
+## 最终 npm 发布结果
+
+**0.6.0 已于 2026-10-17 发布到 [npm](https://www.npmjs.com/package/dsh-atn/v/0.6.0)，`latest` 已指向 0.6.0。** 按用户要求，先完成 main 与工作分支最终安装说明提交 `88c6bce` 的全部 CI，再执行真实 npm 发布；`v0.6.0` 标签 CI 也已全绿。最终 [main CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/38953584060) 与[标签 CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/38952630374) 均成功。
+
+从 npm 安装 `dsh-atn@0.6.0` 到全新的真实 Harness alpha.5 profile 后，八工具继承、shared substrate 与原 profile 不被改写等 smoke 断言全部通过，无外部模型调用。GitHub Release 附件已同步为与 npm 相同的 tarball（包含清理后的安装文档），两端完整性校验一致；Git 标签保留原始发布快照，后续提交仅补充安装文档和发布证据。
+
+发布 tarball SHA-256：`81073da47b3ba285030072b4399fe70b8074063b0916b0adebc956f27c8cf8e7`。详见 [npm 发布元数据](execution-evidence/release-0.6.0/npm-published.json) 与 [npm 实际安装输出](execution-evidence/release-0.6.0/npm-registry-profile.txt)。
