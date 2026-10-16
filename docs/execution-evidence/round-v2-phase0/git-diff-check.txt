@@ -1,0 +1,6 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ADAPTIVE_TOPOLOGY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/DECLARATION_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/STRATEGY_AND_POSITIONING.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md', LF will be replaced by CRLF the next time Git touches it

@@ -1,5 +1,7 @@
 # dsh-ATN：DeepSeek Harness 自适应拓扑网络
 
+V2 工程卫生：七个零直接引用包按真实宿主依赖图保留并逐项说明，见 [声明审计](docs/DECLARATION_AUDIT.md)。
+
 <div align="center">
 
 ### **布线会变，边界不变。**

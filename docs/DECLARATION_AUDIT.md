@@ -58,3 +58,19 @@
 | 本轮开工实测 | 593 runtime/集成 + 15 UI，零失败零跳过；八工具 7956 字节，关闭 substrate 为 5910 | execution-evidence/round-v2-preflight/tests.txt、context.txt |
 
 用户已批准 MASTER_EXECUTION_PLAN_V2 §12 三项推荐：读策略缺省关闭、套件随包发布、舰队显式授权且缺省不授予。原有探针记录仅收尾归档，本轮不执行外部模型探针。
+
+## V2 阶段 0：无直接引用包的逐项处置
+
+以下包全名均带 `@deepseek-ai/` 前缀，版本均精确为 alpha.4。保留不是声称有直接 import；依据是已安装发布包的 manifest 与本仓库覆盖的真实宿主依赖图。所有 override 钉版也继续保留。
+
+| 包 | 处置 | 为何声明 |
+|---|---|---|
+| dsh-brand | 保留 | agent-loop/session/llm 等真实 kernel peer；顶层 peer 保证运行时身份品牌一致；并覆盖 dsh-opencode-go 的旧 dependency，避免双版本品牌 |
+| dsh-attachment | 保留 | llm/subagent 与 api-session-controller 的传递 peer；精确 dev 钉版供实际 Agent/profile/Web 组装 |
+| dsh-client-store | 保留 | client-connection/client-locale/client-ui-conversation 的传递 peer；用于客户端构建与 Web profile 验证 |
+| dsh-credentials | 保留 | client-connection/api-session-controller 的传递 peer；实际 Web 认证装配需统一 alpha.4，未执行凭据或付费模型请求 |
+| dsh-launch-environment | 保留 | dsh-opencode-go 声明的非 optional peer；保留测试用 provider 依赖闭包及 overrides，未激活真实 provider |
+| dsh-settings | 保留 | agent-preset-registry/client-locale 等传递 peer，实际 preset/kernel 路径依赖 |
+| dsh-timeout | 保留 | llm/api-gateway/session-persistence 等传递 peer，真实 Agent/RPC/JSONL 路径依赖 |
+
+后续新增读取面的强制核对项：B-HOST-EXPORT 的可信宿主、无调用者校验前提；`atn-observation` 整网 session 别名；`atnObserver/snapshot` 与 `atnObserver/metadata` 独立 action。每次扩展都复核 principal/resource/action、严格 schema、授权先于加载与未知标识行为。
