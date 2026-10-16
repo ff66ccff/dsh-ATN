@@ -1,0 +1,21 @@
+
+> dsh-atn@0.5.0 smoke:visualization
+> node --import tsx/esm tests/smoke/visualization-smoke.ts
+
+visualization smoke: isolated home=D:\PersonalFile\Temp\dsh-atn-visualization-mAI2hN
+ATN_VISUALIZATION_SMOKE_FAILED Error: cannot get property "remoteAccess" without inject
+D:\dsh-ATN\tests\smoke\visualization-smoke.ts:58
+      if (timedOut || code !== 0) reject(new Error(`Isolated dsh command failed (${timedOut ? 'timeout' : code}):\n${redact(output).slice(-12_000)}`))
+                                         ^
+
+Error: Isolated dsh command failed (1):
+dsh web: http://127.0.0.1:50750/?token=<redacted>
+ATN_VISUALIZATION_SMOKE_FAILED Error: cannot get property "remoteAccess" without inject
+    at run (file:///D:/PersonalFile/Temp/dsh-atn-visualization-mAI2hN/profiles/atn-visualization/visualization-observer.mjs:171:11)
+
+    at ChildProcess.<anonymous> (D:\dsh-ATN\tests\smoke\visualization-smoke.ts:58:42)
+    at ChildProcess.emit (node:events:509:28)
+    at maybeClose (node:internal/child_process:1141:16)
+    at ChildProcess._handle.onexit (node:internal/child_process:306:5)
+
+Node.js v24.19.0

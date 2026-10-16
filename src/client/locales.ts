@@ -3,6 +3,9 @@ export const NS = 'atn-network' as const
 
 /** Chinese observer labels. */
 export const zh = {
+  fleet: '舰队', singleNetwork: '当前网络', viewPartition: '观察分区', refusals: '拒绝计数',
+  fleetHelp: '仅展示显式授权网络；步数是结构预算，不是 token 账单。', fleetEmpty: '当前主体没有可读取的网络',
+  fleetHealth: '活跃 / 失败节点', fleetTruncated: '仅展示前 32 个授权网络', fleetVolatile: '易失计数：服务重启或桶淘汰后清零，不是审计日志',
   substrate:'共享 Substrate', substrateEpoch:'步纪元', substrateMessages:'消息', substrateAddress:'地址',
   substrateTask:'已完成子任务', substrateWeight:'消息引用权重（仅观察面）', substrateRefs:'引用 / 被引',
   substrateMetrics:'发布 / 读取', substrateNotBilling:'与邮件分列；不是 Provider token 或账单', substrateEvidence:'交付证据链（非质量分）',
@@ -38,6 +41,9 @@ export type AtnKey = keyof typeof zh
 
 /** English observer labels. */
 export const en: Record<AtnKey, string> = {
+  fleet: 'Fleet', singleNetwork: 'Current network', viewPartition: 'Observation partition', refusals: 'Refusal counts',
+  fleetHelp: 'Explicitly granted networks only. Steps are structural budgets, not token billing.', fleetEmpty: 'No readable networks for this principal',
+  fleetHealth: 'Active / failed nodes', fleetTruncated: 'Showing the first 32 granted networks', fleetVolatile: 'Volatile counts: reset on service restart or bucket eviction; not an audit journal',
   substrate:'Shared substrate', substrateEpoch:'Step epoch', substrateMessages:'Messages', substrateAddress:'Address',
   substrateTask:'Completed sub-task', substrateWeight:'Message citation weight (operator only)', substrateRefs:'Refs / citers',
   substrateMetrics:'Publishes / reads', substrateNotBilling:'Separate from mail; not provider tokens or billing', substrateEvidence:'Delivery evidence chain (not a quality score)',

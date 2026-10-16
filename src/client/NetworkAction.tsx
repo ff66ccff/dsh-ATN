@@ -8,9 +8,12 @@ import type {} from '@deepseek-ai/dsh-agent-preset-registry/types'
 import type { AtnObserverSnapshot } from '../observer-types.ts'
 import { NS } from './locales.ts'
 import { NetworkView, type Translate } from './NetworkView.tsx'
+import { FleetHost } from './FleetView.tsx'
+import type { AtnFleetSnapshot } from '../observer-schema.ts'
 
 export interface NetworkActionInjected {
   readSnapshot: (sessionId: string, signal: AbortSignal) => Promise<AtnObserverSnapshot>
+  readFleet?: (signal: AbortSignal) => Promise<AtnFleetSnapshot>
 }
 export type NetworkActionProps = PropsRuntime<'conversation.session.header.actions'>
   & PropsLocale<typeof NS> & NetworkActionInjected
@@ -20,21 +23,32 @@ export function NetworkAction(props: NetworkActionProps) {
   return isAtn ? <HeaderObserver {...props} /> : null
 }
 
-function HeaderObserver({ sessionId, readSnapshot, t }: NetworkActionProps) {
+function HeaderObserver({ sessionId, readSnapshot, readFleet, t }: NetworkActionProps) {
   const [open, setOpen] = useState(false)
   return <>
     <button type="button" className="atn-trigger" aria-label={t('trigger')} title={t('trigger')}
       aria-haspopup="dialog" aria-expanded={open} onClick={() => setOpen(true)}>{t('trigger')}</button>
     <Modal open={open} onClose={() => setOpen(false)} title={t('title')} className="atn-modal" headless>
       <button type="button" className="atn-close" aria-label={t('close')} onClick={() => setOpen(false)}>×</button>
-      <ObserverHost sessionId={sessionId} readSnapshot={readSnapshot} t={t} visible={open} />
+      <ObserverHost sessionId={sessionId} readSnapshot={readSnapshot} readFleet={readFleet} t={t} visible={open} />
     </Modal>
   </>
 }
 
 export interface ObserverHostProps extends NetworkActionInjected { sessionId: string; visible: boolean; t: Translate }
 /** Both carriers share serial, cancellable, visible-only polling. */
-export function ObserverHost({ sessionId, visible, readSnapshot, t }: ObserverHostProps) {
+export function ObserverHost(props: ObserverHostProps) {
+ const [selection, setSelection] = useState({ sessionId: props.sessionId, fleet: false })
+ const fleet = selection.sessionId === props.sessionId && selection.fleet
+ return <div className="atn-shell">
+  {props.readFleet && <nav className="atn-partitions" aria-label={props.t('viewPartition')}>
+   <button className="atn-control" aria-pressed={!fleet} onClick={() => setSelection({ sessionId: props.sessionId, fleet: false })}>{props.t('singleNetwork')}</button>
+   <button className="atn-control" aria-pressed={fleet} onClick={() => setSelection({ sessionId: props.sessionId, fleet: true })}>{props.t('fleet')}</button>
+  </nav>}
+  {fleet && props.readFleet ? <FleetHost key={props.sessionId} readFleet={props.readFleet} visible={props.visible} t={props.t} /> : <SingleNetworkHost {...props} />}
+ </div>
+}
+function SingleNetworkHost({ sessionId, visible, readSnapshot, t }: ObserverHostProps) {
   const [retry, setRetry] = useState(0)
   const [observation, setObservation] = useState<{ sessionId: string; snapshot: AtnObserverSnapshot | null; error: string | null }>({ sessionId, snapshot: null, error: null })
   const [selection, setSelection] = useState<{ sessionId: string; nodeId: string | null }>({ sessionId, nodeId: null })

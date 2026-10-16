@@ -1,6 +1,6 @@
 # ATN 威胁模型与读取边界
 
-2026-10-16；范围为 ROADMAP_NEXT_DIRECTIONS_V2 §3/§4。这里的网络是业务分区键，不是租户或认证主体。策略只约束可识别的 artifact 声明与明确登记的读取入口，不证明任意语义泄漏不可行。
+2026-10-17；范围含 ROADMAP_NEXT_DIRECTIONS_V2 §3/§4 与 MASTER_EXECUTION_PLAN_V2 已实施增量。这里的网络是业务分区键，不是租户或认证主体。策略只约束可识别的 artifact 声明与明确登记的读取入口，不证明任意语义泄漏不可行。
 
 ## 对手与信任前提
 
@@ -30,7 +30,7 @@ flowchart LR
 | B-OUTBOUND | 14 通道检查完整输入；拒绝在提交前发生。新增字段/方法是否绕过策略？ | `BOUNDARY-CHANNELS`、`BOUNDARY-FIELDS`、`BOUNDARY-SYNC`（information-boundary.test.ts）；`BOUNDARY-INVENTORY` |
 | B-ATOMIC | 拒绝不追加消息、消耗地址、改权重/步数或产生邮件/模型唤醒。失败是否留下业务写入？ | `SUBSTRATE-ATOMIC`（integration/substrate.test.ts）、`SUBSTRATE-CAPACITY`（unit/substrate.test.ts） |
 | B-MODEL-READ | search/visit 仅限实际调用者网络；无策略全网可读，显式安装策略时以 live node 映射 principal，以 atn-substrate/[networkId,address]、atnSubstrate/read 复用 remoteAccess。排序前过滤，引用闭包与权重只用可见消息；隐藏地址同未知地址拒绝。新读取是否扩大网络或引入新发现来源？ | `SUBSTRATE-KERNEL`、`READ-POLICY*`（unit/integration）；[策略契约](OBSERVER_READ_AUTHORIZATION.md#节点-substrate-读侧策略v2-阶段-2) |
-| B-OBSERVE | 非 owner 读取须经 Gateway 的资源/action 判定；内容快照与纯元数据权限分开。新增结果字段是否把文本/作者放进元数据？ | `READ-AUTH-*`（integration/observer.test.ts）；`OBSERVER-01/04/06` |
+| B-OBSERVE | 非 owner 读取须经 Gateway 的资源/action 判定；内容快照、纯元数据、舰队权限分开。舰队用 atn-fleet/index + 逐网络同 action 绑定，默认不授予；显式拒绝 owner；从自己的 grants 派生网络，未知网络不提供外部指名入口。新增字段是否泄漏未授权网络或把文本/作者放进计数？ | `READ-AUTH-*`、`FLEET-AUTH/COLD`；`OBSERVER-01/04/06`；[舰队契约](FLEET_OBSERVATION_CONTRACT.md) |
 | B-HOST-EXPORT | **明确选择宿主信任假设**：exportSubstrate(networkId) 不校验调用者，可信插件可导出任意网络。新 HTTP/RPC/工具包装是否直接传递用户输入而未授权？若是，越界，须单独授权后才能调用。 | `SUBSTRATE-KERNEL` 的完整 export 断言；`BOUNDARY-INVENTORY` 的宿主读取分类 |
 
 三类读取分别判定：search/visit 校验 ATN 节点身份，读侧策略缺省关闭、宿主显式安装时按主体分区；观察 RPC 由网关校验主体，ATN 负责结果形状；宿主直接调用 observer、network/findBySessionId/exportSubstrate 等原始 API 均不构成沙箱。不得将网关测试扩写成整个宿主的租户隔离证明。
@@ -41,10 +41,11 @@ flowchart LR
 
 | 主体 / action | 可读范围 |
 |---|---|
-| owner | Gateway 按上游协议允许所有观察；必须由可信认证载体建立 |
+| owner | snapshot/metadata 由 Gateway 按上游协议放行；fleet 显式拒绝 owner。身份必须由可信认证载体建立 |
 | 非 owner / `atnObserver/snapshot` | 仅显式授予的 atn-observation/sessionId；包含目标、任务文本、事件摘要、节点与会话身份、substrate 子任务/作者/权重/证据链等有界投影 |
 | 非 owner / `atnObserver/metadata` | 同一资源上独立授予；只含网络 ID、状态、步数/预算、节点/任务数量与 substrate 容量；无目标/任务/事件/消息文本、节点/作者身份、权重、引用与证据链 |
 | 无绑定、只有 global 绑定、其他 session 绑定 | 拒绝；精确参数校验阻止 wire principal、networkId 等额外字段 |
+| 非 owner / `atnObserver/fleet` | 仅显式 atn-fleet/index 加逐网络 `fleetNetworkResourceId(id)` 绑定；网络 ID/状态/健康计数/步数预算/容量/易失拒绝计数，无任务或消息文本；owner 也拒绝 |
 | 进程内可信宿主调用 | 无主体校验；不得直接暴露给不可信请求 |
 
 授权模型使用上游 remoteAccess 的角色 action 与资源绑定；ATN 不注册新的 principal kind 或占用宿主策略槽。资源 reader 由 Remote 方法元数据提供（alpha.4 的 InvocationDescriptor 本身没有 resources 字段）。不注册全局默认 sessionId 字段，避免改变其他服务的资源集合。能力检查针对运行时资源 API/方法 reader，不能比较版本号推定安全。需要经过本仓库网关集成测试的兼容实现；API 存在本身不能证明网关语义。

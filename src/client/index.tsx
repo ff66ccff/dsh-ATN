@@ -7,7 +7,7 @@ import type {} from 'dsh-better-sidebar'
 import { NetworkAction, type NetworkActionInjected } from './NetworkAction.tsx'
 import { NS, en, zh, type AtnKey } from './locales.ts'
 import { styles } from './styles.ts'
-import { createSnapshotReader, transportInject } from './transport.ts'
+import { createSnapshotReader, createFleetReader, transportInject } from './transport.ts'
 import { SidebarObserver } from './SidebarObserver.tsx'
 
 declare module '@deepseek-ai/dsh-client-ui-slots' {
@@ -31,9 +31,10 @@ export function apply(ctx: Context): void {
     return () => { sheet.remove() }
   }, 'atn observer: styles')
   const readSnapshot = createSnapshotReader(ctx)
+  const readFleet = createFleetReader(ctx)
   ctx.effect(() => ctx.slots.inject('conversation.session.header.actions', () => ctx.slots.register({
     name: 'conversation.session.header.actions', id: 'atn-network', order: 10, locale: NS,
-    inject: (): NetworkActionInjected => ({ readSnapshot }),
+    inject: (): NetworkActionInjected => ({ readSnapshot, readFleet }),
   }, NetworkAction)), 'atn observer: header action')
   // A pending child scope cannot prevent the parent header, styles or locale from activating.
   ctx.inject(['betterSidebar', 'sessions'], inner => {
@@ -46,7 +47,7 @@ export function apply(ctx: Context): void {
       available: (_ctx, scope) => Object.entries(sessions.getSnapshot().byId).some(([id, summary]) =>
         id === scope.sessionId && summary.projectionValues?.agentPreset === 'atn'),
       component: ({ scope, visible }) => <SidebarObserver sessionId={scope.sessionId} visible={visible}
-        sessions={sessions} locale={locale} t={t} readSnapshot={readSnapshot} />,
+        sessions={sessions} locale={locale} t={t} readSnapshot={readSnapshot} readFleet={readFleet} />,
     }), 'atn observer: optional sidebar tab')
   })
 }

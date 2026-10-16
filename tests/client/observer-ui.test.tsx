@@ -12,6 +12,9 @@ import type { AtnObserverSnapshot } from '../../src/observer-types.ts'
 import type { SessionListState } from '@deepseek-ai/dsh-api-session-controller/client'
 import { NetworkView } from '../../src/client/NetworkView.tsx'
 import { SidebarObserver } from '../../src/client/SidebarObserver.tsx'
+import { FleetView } from '../../src/client/FleetView.tsx'
+import { ObserverHost } from '../../src/client/NetworkAction.tsx'
+import type { AtnFleetSnapshot } from '../../src/observer-schema.ts'
 import type { TabDescriptor } from 'dsh-better-sidebar'
 
 let dom: JSDOM
@@ -71,6 +74,37 @@ test('SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epo
   assert.match(section.textContent!,/msg:1.*msg:2/)
   assert.match(section.textContent!,/步纪元.*3/)
   assert.match(section.textContent!,/UTF-8/)
+})
+
+test('FLEET-VIEW: network partitions display health, refusal counts and capacity with volatile-counter limits', async () => {
+ const value = { observedAt: 100, truncated: false, networks: ['alpha', 'beta'].map(id => ({
+  id, status: 'open', health: { activeNodes: 2, failedNodes: 1 }, stepsUsed: 7, stepBudget: 40,
+  substrate: { messages: 3, maxMessages: 128, bytes: 450, maxBytes: 131072 },
+  refusals: { persistence: 'volatile', capPerBucket: 65535, total: 2, buckets: { 'ref-unresolved': 2 } },
+ })) } as AtnFleetSnapshot
+ await act(async () => root.render(<FleetView snapshot={value} error={null} retry={() => {}} t={key => zh[key]} />))
+ assert.equal(document.querySelectorAll('[data-fleet-network]').length, 2)
+ assert.match(document.body.textContent!, /alpha.*beta/s)
+ assert.match(document.body.textContent!, /易失|重启/)
+ assert.match(document.body.textContent!, /65535/)
+ assert.doesNotMatch(document.body.textContent!, /undefined/)
+})
+
+test('FLEET-LIFETIME: existing panel partition switch aborts old reads and ignores late responses', async () => {
+ const single = reader()
+ const calls: { signal: AbortSignal; resolve: (value: AtnFleetSnapshot) => void }[] = []
+ const readFleet = (signal: AbortSignal): Promise<AtnFleetSnapshot> => new Promise(resolve => calls.push({ signal, resolve }))
+ const props = { sessionId: 'session-a', visible: true, readSnapshot: single.readSnapshot, readFleet, t: (key: keyof typeof zh) => zh[key] }
+ await act(async () => root.render(<ObserverHost {...props} />))
+ await click(button(zh.fleet))
+ assert.equal(single.calls[0].signal.aborted, true)
+ assert.equal(calls.length, 1)
+ await click(button(zh.singleNetwork))
+ assert.equal(calls[0].signal.aborted, true)
+ await act(async () => calls[0].resolve({ observedAt: 0, networks: [], truncated: false }))
+ assert.equal(document.querySelector('[data-fleet-view]'), null)
+ await act(async () => root.render(<ObserverHost {...props} visible={false} />))
+ assert.equal(single.calls.at(-1)!.signal.aborted, true)
 })
 
 type Pending = { sessionId: string; signal: AbortSignal; resolve: (value: AtnObserverSnapshot) => void; reject: (error: Error) => void }

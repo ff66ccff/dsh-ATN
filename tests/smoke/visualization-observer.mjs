@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { Peer } from '@deepseek-ai/dsh-client-connection'
 import { LlmAdapter, createUserMessage } from '@deepseek-ai/dsh-llm'
 
-export const inject = ['appReady', 'appExit', 'agentPresets', 'agents', 'llm', 'atn', 'atnObserver', 'typertGateway', 'connection', 'webServer', 'clientModules']
+export const inject = ['appReady', 'appExit', 'agentPresets', 'agents', 'llm', 'atn', 'atnObserver', 'typertGateway', 'remoteAccess', 'connection', 'webServer', 'clientModules']
 
 class ScriptedAdapter extends LlmAdapter {
   requests = 0
@@ -159,6 +159,34 @@ async function run(ctx) {
     assert.equal(updated.ok, true)
     assert.ok(updated.value.network.edges.some(edge => edge.kind === 'collaboration' && edge.source === leftLeaf.nodeId && edge.target === started.nodeId))
     assert.ok(updated.value.network.events.some(event => event.kind === 'edge-added' && event.nodeId === leftLeaf.nodeId && event.targetId === started.nodeId))
+
+    // Fleet uses an independent non-owner principal and explicit per-network resources.
+    const fleetHandle = await ctx.agents.create({ sessionId: 'atn-visualization-fleet-second',
+      meta: { agentPreset: 'atn', cwd: process.cwd() }, agentOptions: { provider: 'atn-visualization-smoke', model: 'deterministic' },
+      setup: async agentCtx => { await ctx.agentPresets.mount(agentCtx, 'atn') } })
+    let fleetSecondId
+    try {
+      fleetSecondId = (await ctx.atn.start(fleetHandle.agent, { objective: 'Fleet second partition', successCriteria: 'Read-only authorized counters', constraints: 'Scripted only' })).networkId
+      await settleAgents(ctx)
+      ctx.remoteAccess.registerPolicy('atn-visualization-fleet', { bindings: () => [
+        'index', ...[networkId, fleetSecondId].map(id => JSON.stringify(['network', id])),
+      ].map(id => ({ role: { name: 'fleet-reader', resource: 'atn-fleet', actions: ['atnObserver/fleet'] }, resource: { kind: 'atn-fleet', id } })) })
+      const fleetPeer = new Peer(ctx, { principal: { kind: 'atn-visualization-fleet', id: 'explicit-operator' } })
+      const beforeFleet = JSON.stringify(await Promise.all([ctx.atn.network(networkId), ctx.atn.network(fleetSecondId)]))
+      const fleetRequests = adapter.requests
+      const fleet = await ctx.typertGateway.invoke({ peer: fleetPeer, namespace: 'atnObserver', method: 'fleet', args: {}, signal: new AbortController().signal })
+      assert.deepEqual(fleet.networks.map(row => row.id).sort(), [networkId, fleetSecondId].sort())
+      assert.ok(fleet.networks.every(row => row.refusals.persistence === 'volatile'))
+      const ownerFleet = await rpc({}, 'fleet')
+      assert.equal(ownerFleet.ok, false, 'fleet must not use owner bypass')
+      assert.equal(ownerFleet.error.code, 'remote-access/denied')
+      assert.equal(JSON.stringify(await Promise.all([ctx.atn.network(networkId), ctx.atn.network(fleetSecondId)])), beforeFleet)
+      assert.equal(adapter.requests, fleetRequests)
+      console.log('ATN_VISUALIZATION_FLEET ' + JSON.stringify({ networks: 2, explicitNonOwner: true, ownerDenied: true, readOnly: true }))
+    } finally {
+      if (fleetSecondId) await ctx.atn.stop(fleetSecondId, 'fleet smoke complete')
+      await fleetHandle.dispose()
+    }
 
     const readyPath = join(process.env.DSH_HOME, 'visualization-ready.json')
     await writeFile(readyPath, JSON.stringify({ origin, authenticatedUrl, sessionId, networkId, clientUrl: client.url }, null, 2), 'utf8')

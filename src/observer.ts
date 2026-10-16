@@ -1,7 +1,8 @@
 /** Operator-only ATN observation. No tools, prompts, wakeups, or network mutations. */
 import { Context, Service } from '@deepseek-ai/cordis'
 import { SessionId, type Session, type SessionEvent } from '@deepseek-ai/dsh-session'
-import { bindTypertRemote, Remote } from '@deepseek-ai/dsh-typert-protocol'
+import { bindTypertRemote, Remote, principalOf, RemoteError } from '@deepseek-ai/dsh-typert-protocol'
+import type {} from '@deepseek-ai/dsh-api-remote-access'
 import type TypertRegistry from '@deepseek-ai/dsh-typert-registry'
 import type {} from './runtime.ts'
 import type { NetworkRecord } from './schema.ts'
@@ -15,13 +16,16 @@ import {
 } from './observer-schema.ts'
 import { citers, evidenceChain, substrateLimits } from './substrate.ts'
 import { weightAt } from './substrate-ranking.ts'
-import { assertObserverReadCapabilities } from './observer-access.ts'
+import { assertObserverReadCapabilities, fleetNetworkResourceId } from './observer-access.ts'
+import { createFleetDescriptor, fleetSnapshotSchema, FLEET_NETWORK_MAX, type AtnFleetSnapshot } from './observer-schema.ts'
+import { RefusalCounters } from './refusal-counters.ts'
 
 declare module '@deepseek-ai/cordis' {
   interface Context { atnObserver: AtnObserver }
   interface Events {
     /** Post-commit observation only; never a model-facing event. */
     'atn/network-updated'(payload: { record: NetworkRecord; at: number }): void
+    'atn/operation-refused'(payload: { networkId: string; code: string }): void
   }
 }
 
@@ -111,6 +115,7 @@ export class AtnObserver extends Service {
   readonly typertRemote = bindTypertRemote(this, 'atnObserver')
   private readonly observations = new Map<string, Observation>()
   private serial = 0
+  private readonly refusals = new RefusalCounters()
 
   constructor(ctx: Context) {
     super(ctx, 'atnObserver')
@@ -118,13 +123,14 @@ export class AtnObserver extends Service {
     ;(ctx.typert as TypertRegistry).register({
       package: 'dsh-atn-observer', face: 'host', schemas: [],
       model: { services: [], events: [], objects: [] },
-      invocations: [createObserverDescriptor(), createObserverMetadataDescriptor()],
+      invocations: [createObserverDescriptor(), createObserverMetadataDescriptor(), createFleetDescriptor()],
     })
     ctx.on('atn/network-updated', ({ record, at }) => {
       // Observer failures must never turn a committed operation into a tool failure.
       try { this.observeTopology(record, at) }
       catch (error) { ctx.logger.warn(`ATN observation skipped: ${String(error)}`) }
     })
+    ctx.on('atn/operation-refused', ({ networkId, code }) => this.refusals.record(networkId, code))
     ctx.on('atn/task-claimed', ({ networkId, sourceTask, task, at }) => {
       try {
         this.push(this.observation(networkId), { id: `task:${task.id}:claimed`, kind: 'task-claimed', at,
@@ -207,6 +213,54 @@ export class AtnObserver extends Service {
       id: `session:${session.id}:${event.seq}`, kind: event.type, at: event.time, nodeId,
       targetId: null, taskId: null, summary: display(summary),
     })
+  }
+
+  /** Counts-only action; its grant never implies the snapshot action. Direct host calls are trusted. */
+  @Remote({ resources: { 'atn-fleet': () => 'index' } })
+  async fleet(signal: AbortSignal): Promise<AtnFleetSnapshot> {
+    signal.throwIfAborted()
+    const principal = principalOf(this.ctx.invocation)
+    const access = this.ctx.get('remoteAccess')
+    if (!principal || principal.kind === 'owner' || !access) {
+      throw new RemoteError('remote-access/denied', 'fleet requires an explicitly granted non-owner operator', { action: 'atnObserver/fleet', reason: 'no-allow' })
+    }
+    const grants = access.snapshotFor(principal)
+    const allowed = (id: string) => access.decide({ principal, action: 'atnObserver/fleet', resources: [{ kind: 'atn-fleet', id }] }).kind === 'allow'
+    if (!allowed('index')) throw new RemoteError('remote-access/denied', 'fleet access denied', { action: 'atnObserver/fleet', reason: 'no-allow' })
+    const ids = new Set<string>()
+    if (!grants.owner) for (const grant of grants.grants) {
+      if (grant.resource.kind !== 'atn-fleet' || !grant.actions.includes('atnObserver/fleet')) continue
+      try {
+        const value = JSON.parse(grant.resource.id)
+        if (Array.isArray(value) && value.length === 2 && value[0] === 'network' && typeof value[1] === 'string' && fleetNetworkResourceId(value[1]) === grant.resource.id && allowed(grant.resource.id)) ids.add(value[1])
+      } catch { /* Not a canonical per-network resource; it grants no network rows. */ }
+    }
+    const candidates = [...ids].sort()
+    const networks: AtnFleetSnapshot['networks'] = []
+    for (const id of candidates.slice(0, FLEET_NETWORK_MAX)) {
+      signal.throwIfAborted()
+      const resource = fleetNetworkResourceId(id)
+      if (!allowed(resource)) continue
+      try {
+        const record = await this.ctx.atn.network(id)
+        signal.throwIfAborted()
+        if (!allowed(resource) || !allowed('index')) continue
+        const limits = substrateLimits(record)
+        networks.push({ id, status: record.status, health: {
+          activeNodes: Object.values(record.nodes).filter(node => node.lifecycle === 'active').length,
+          failedNodes: Object.values(record.nodes).filter(node => node.lifecycle === 'failed').length,
+        }, stepsUsed: record.stepsUsed, stepBudget: record.limits.stepBudget,
+          substrate: { messages: record.substrate?.messages.length ?? 0, maxMessages: limits.maxSubstrateMessages,
+            bytes: record.substrate?.totalBytes ?? 0, maxBytes: limits.maxSubstrateTotalBytes }, refusals: this.refusals.snapshot(id) })
+      } catch (error) {
+        signal.throwIfAborted()
+        // Unknown authorized names and deleted networks both disappear; no existence oracle for other names.
+        if (error instanceof Error && 'code' in error && error.code === 'unknown-network') continue
+        if (allowed(resource) && allowed('index')) networks.push({ id, status: 'unavailable', health: null, stepsUsed: null, stepBudget: null, substrate: null, refusals: this.refusals.snapshot(id) })
+      }
+    }
+    if (!allowed('index')) throw new RemoteError('remote-access/denied', 'fleet access denied', { action: 'atnObserver/fleet', reason: 'no-allow' })
+    return fleetSnapshotSchema.parse({ observedAt: Date.now(), networks: networks.filter(row => allowed(fleetNetworkResourceId(row.id))), truncated: candidates.length > FLEET_NETWORK_MAX })
   }
 
   /** Counts-only action; its grant never implies the snapshot action. Direct host calls are trusted. */

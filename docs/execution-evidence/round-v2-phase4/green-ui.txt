@@ -1,0 +1,29 @@
+
+> dsh-atn@0.5.0 test:client
+> node scripts/test-client.mjs
+
+✔ SUBSTRATE-VIEW: shared view renders bounded message summary, capacity, epoch and evidence links (72.9739ms)
+✔ FLEET-VIEW: network partitions display health, refusal counts and capacity with volatile-counter limits (7.2177ms)
+✔ FLEET-LIFETIME: existing panel partition switch aborts old reads and ignores late responses (10.277ms)
+✔ shows the entry only for the current ATN preset, including metadata arriving later (8.2519ms)
+✔ leaving ATN hides the open panel, aborts polling, and resets it before returning (1062.3921ms)
+✔ switching from an ATN session to a non-ATN session hides the entry without fetching (5.1063ms)
+✔ does not fetch until opened, serializes polling, and aborts on close (2133.6037ms)
+✔ switching sessions cancels the old request and ignores its late response (9.0976ms)
+✔ unmount aborts the observer request (5.893ms)
+✔ shows empty state, a disconnected last snapshot, and a working retry (1077.6656ms)
+✔ renders directed adjacency separately from birth links and node task results (15.8216ms)
+✔ SIDEBAR-ABSENT: apply registers a usable structured header fallback without the optional service (14.0108ms)
+✔ SIDEBAR-PRESENT: registers one namespaced tab and releases it on plugin unload (5.5017ms)
+✔ SIDEBAR-PENDING: a required missing module blocks its apply, but late optional child registration does not block the header (15.9044ms)
+✔ SIDEBAR-VISIBLE: inactive tabs pause, active tabs serialize requests, and preset changes abort and reset (2128.7527ms)
+✔ VIEW-PROPS: displays quotas, bounded submission history, abandoned attempts and locale-owned groups from props (9.9441ms)
+✔ SIDEBAR-MENU: descriptor gates non-ATN sessions and uses right sidebar rather than bottom-only (11.8318ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7208.9066

@@ -1,5 +1,6 @@
 /** Shared structured panel consumes Harness semantic theme tokens. */
 export const styles = `
+.atn-partitions{display:flex;gap:8px;padding:10px 20px;border-bottom:1px solid var(--dsw-alias-border-l1)}.atn-partitions button[aria-pressed=true]{background:var(--dsw-alias-bg-layer-2);font-weight:600}
 .atn-trigger,.atn-control,.atn-link,.atn-close{font:inherit;cursor:pointer;color:var(--dsw-alias-label-primary);background:transparent;border:1px solid var(--dsw-alias-border-l1);border-radius:5px;padding:5px 8px}
 .atn-trigger{border:0;font-size:12px}.atn-link{color:var(--dsw-alias-state-business-primary);font-size:12px}.atn-link[aria-pressed=true]{background:var(--dsw-alias-bg-layer-2)}
 .atn-trigger:hover,.atn-link:hover,.atn-control:hover{background:var(--dsw-alias-bg-layer-2)}.atn-trigger:focus-visible,.atn-link:focus-visible,.atn-control:focus-visible,.atn-close:focus-visible{outline:2px solid var(--dsw-alias-state-business-primary);outline-offset:2px}

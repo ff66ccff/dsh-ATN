@@ -1,0 +1,22 @@
+- banner:
+  - heading "ATN 舰队观察验证" [level=1]
+  - paragraph: 脚本宿主 · 真实 Gateway 授权 · 不调用外部模型
+  - text: 测试主体
+  - combobox "测试主体":
+    - option "运营者：两个网络"
+    - option "主体 A：仅网络 A"
+    - option "主体 B：仅网络 B"
+    - option "未授权主体" [selected]
+- main:
+  - navigation "观察分区":
+    - button "当前网络"
+    - button "舰队" [active] [pressed]
+  - region "舰队":
+    - heading "舰队" [level=2]
+    - paragraph: 仅展示显式授权网络；步数是结构预算，不是 token 账单。
+    - alert:
+      - text: 网络读取失败
+      - button "重试"
+    - paragraph: 网络读取失败
+    - text: 易失计数：服务重启或桶淘汰后清零，不是审计日志 · 65535 / 拒绝计数
+    - generic: 只读视图

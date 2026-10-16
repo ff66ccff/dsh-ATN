@@ -1,6 +1,6 @@
 /** Sequential, fail-fast phase gates. Runs only the repository's scripted providers. */
 import { spawn } from 'node:child_process'
-import { mkdir, writeFile } from 'node:fs/promises'
+import { mkdir, writeFile, readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 const directory = process.argv[2]
 if (!/^docs\/execution-evidence\/round-v2-(phase[0-5]|final)$/.test(directory ?? '')) throw new Error('Expected a round-v2 evidence directory')
@@ -9,8 +9,12 @@ const env = { ...process.env,
  DSH_CLI: resolve('.scratch/harness-alpha4/node_modules/.bin/dsh.cmd'),
  SIDEBAR_PACKAGE_DIR: resolve('.scratch/sidebar-0261/node_modules/dsh-better-sidebar'),
 }
+// Resume is only for a repaired failed gate whose earlier successful prerequisites did not change.
+const previous = process.argv[3] === '--resume' ? JSON.parse(await readFile(`${directory}/gates.json`, 'utf8')).results : []
 const results = []
 for (const command of ['npm ci', 'npm run typecheck', 'npm test', 'npm run build', 'npm run pack:tarball', 'npm run smoke:profile', 'npm run smoke:visualization', 'npm run verify:sidebar', 'git diff --check']) {
+ const success = previous.find(row => row.command === command && row.code === 0)
+ if (success) { results.push(success); console.log(`GATE REUSE ${command}: 0`); continue }
  console.log(`GATE START ${command}`)
  const startedAt = new Date().toISOString()
  const result = await new Promise((done, reject) => {

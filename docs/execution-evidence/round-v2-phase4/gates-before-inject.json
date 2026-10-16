@@ -1,0 +1,55 @@
+{
+  "DSH_CLI": "D:\\dsh-ATN\\.scratch\\harness-alpha4\\node_modules\\.bin\\dsh.cmd",
+  "SIDEBAR_PACKAGE_DIR": "D:\\dsh-ATN\\.scratch\\sidebar-0261\\node_modules\\dsh-better-sidebar",
+  "results": [
+    {
+      "command": "npm ci",
+      "code": 0,
+      "startedAt": "2026-10-16T18:04:16.713Z",
+      "finishedAt": "2026-10-16T18:04:30.494Z",
+      "file": "npm-ci.txt"
+    },
+    {
+      "command": "npm run typecheck",
+      "code": 0,
+      "startedAt": "2026-10-16T18:04:30.496Z",
+      "finishedAt": "2026-10-16T18:04:36.400Z",
+      "file": "npm-run-typecheck.txt"
+    },
+    {
+      "command": "npm test",
+      "code": 0,
+      "startedAt": "2026-10-16T18:04:36.402Z",
+      "finishedAt": "2026-10-16T18:05:26.108Z",
+      "file": "npm-test.txt"
+    },
+    {
+      "command": "npm run build",
+      "code": 0,
+      "startedAt": "2026-10-16T18:05:26.110Z",
+      "finishedAt": "2026-10-16T18:05:28.495Z",
+      "file": "npm-run-build.txt"
+    },
+    {
+      "command": "npm run pack:tarball",
+      "code": 0,
+      "startedAt": "2026-10-16T18:05:28.497Z",
+      "finishedAt": "2026-10-16T18:05:29.970Z",
+      "file": "npm-run-pack-tarball.txt"
+    },
+    {
+      "command": "npm run smoke:profile",
+      "code": 0,
+      "startedAt": "2026-10-16T18:05:29.972Z",
+      "finishedAt": "2026-10-16T18:05:40.637Z",
+      "file": "npm-run-smoke-profile.txt"
+    },
+    {
+      "command": "npm run smoke:visualization",
+      "code": 1,
+      "startedAt": "2026-10-16T18:05:40.638Z",
+      "finishedAt": "2026-10-16T18:05:51.315Z",
+      "file": "npm-run-smoke-visualization.txt"
+    }
+  ]
+}

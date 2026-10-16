@@ -1,0 +1,42 @@
+- banner:
+  - heading "ATN 舰队观察验证" [level=1]
+  - paragraph: 脚本宿主 · 真实 Gateway 授权 · 不调用外部模型
+  - text: 测试主体
+  - combobox "测试主体":
+    - option "运营者：两个网络" [selected]
+    - option "主体 A：仅网络 A"
+    - option "主体 B：仅网络 B"
+    - option "未授权主体"
+- main:
+  - navigation "观察分区":
+    - button "当前网络"
+    - button "舰队" [active] [pressed]
+  - region "舰队":
+    - heading "舰队" [level=2]
+    - paragraph: 仅展示显式授权网络；步数是结构预算，不是 token 账单。
+    - heading "atn-3d43ea67-6eb6-4497-97a4-adc6de96367a open" [level=3]
+    - term: 活跃 / 失败节点
+    - definition: 1 / 0
+    - term: 全网累计步数
+    - definition: "2 · 每节点步数上限: 64"
+    - term: 消息
+    - definition: 0 / 128
+    - term: UTF-8
+    - definition: 0 / 131072
+    - term: 拒绝计数
+    - definition: "0"
+    - paragraph: "0"
+    - heading "atn-bcb038ad-1605-4465-955a-8f1d36cb86e6 open" [level=3]
+    - term: 活跃 / 失败节点
+    - definition: 1 / 0
+    - term: 全网累计步数
+    - definition: "2 · 每节点步数上限: 64"
+    - term: 消息
+    - definition: 1 / 128
+    - term: UTF-8
+    - definition: 135 / 131072
+    - term: 拒绝计数
+    - definition: "1"
+    - paragraph: "ref-unresolved: 1"
+    - text: 易失计数：服务重启或桶淘汰后清零，不是审计日志 · 65535 / 拒绝计数
+    - generic: 只读视图

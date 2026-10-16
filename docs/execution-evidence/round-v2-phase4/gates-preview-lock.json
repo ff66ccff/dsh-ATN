@@ -1,0 +1,13 @@
+{
+  "DSH_CLI": "D:\\dsh-ATN\\.scratch\\harness-alpha4\\node_modules\\.bin\\dsh.cmd",
+  "SIDEBAR_PACKAGE_DIR": "D:\\dsh-ATN\\.scratch\\sidebar-0261\\node_modules\\dsh-better-sidebar",
+  "results": [
+    {
+      "command": "npm ci",
+      "code": 4294963248,
+      "startedAt": "2026-10-16T18:04:01.248Z",
+      "finishedAt": "2026-10-16T18:04:05.306Z",
+      "file": "npm-ci.txt"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "observedAt": 1792173665719,
+  "truncated": false,
+  "networks": [
+    {
+      "id": "atn-c39b584f-6a89-48d0-9396-124ce482b1f3",
+      "status": "open",
+      "health": {
+        "activeNodes": 1,
+        "failedNodes": 0
+      },
+      "stepsUsed": 2,
+      "stepBudget": 64,
+      "substrate": {
+        "messages": 0,
+        "maxMessages": 128,
+        "bytes": 0,
+        "maxBytes": 131072
+      },
+      "refusals": {
+        "persistence": "volatile",
+        "capPerBucket": 65535,
+        "total": 1,
+        "buckets": {
+          "evidence-not-owned": 0,
+          "not-task-holder": 0,
+          "metadata-only": 0,
+          "fact-requests-and-owner-results-only": 0,
+          "extra-transport-fields": 0,
+          "invalid-fact-request": 0,
+          "fixed-edge-required": 0,
+          "invalid-setup-receipt": 0,
+          "invalid-owner-result": 0,
+          "async-policy": 0,
+          "ref-unresolved": 1,
+          "ref-not-owned": 0,
+          "ref-not-visible": 0,
+          "rationale-missing-ref": 0,
+          "custody-unavailable": 0,
+          "substrate-full": 0,
+          "other": 0
+        }
+      }
+    },
+    {
+      "id": "atn-47ea219c-c109-4664-85ab-a85791a7c25d",
+      "status": "open",
+      "health": {
+        "activeNodes": 1,
+        "failedNodes": 0
+      },
+      "stepsUsed": 1,
+      "stepBudget": 64,
+      "substrate": {
+        "messages": 0,
+        "maxMessages": 128,
+        "bytes": 0,
+        "maxBytes": 131072
+      },
+      "refusals": {
+        "persistence": "volatile",
+        "capPerBucket": 65535,
+        "total": 0,
+        "buckets": {
+          "evidence-not-owned": 0,
+          "not-task-holder": 0,
+          "metadata-only": 0,
+          "fact-requests-and-owner-results-only": 0,
+          "extra-transport-fields": 0,
+          "invalid-fact-request": 0,
+          "fixed-edge-required": 0,
+          "invalid-setup-receipt": 0,
+          "invalid-owner-result": 0,
+          "async-policy": 0,
+          "ref-unresolved": 0,
+          "ref-not-owned": 0,
+          "ref-not-visible": 0,
+          "rationale-missing-ref": 0,
+          "custody-unavailable": 0,
+          "substrate-full": 0,
+          "other": 0
+        }
+      }
+    }
+  ]
+}

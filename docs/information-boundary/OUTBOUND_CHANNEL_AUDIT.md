@@ -8,6 +8,8 @@ V2 阶段 2 不新增出站通道或公开拒绝码。新增宿主读策略使�
 
 V2 阶段 3 的 [可携带套件](../../conformance/README.md)逐条覆盖 14 通道 held/unheld、传输字段、三类引用与原子拒绝。16 码词汇冻结；宿主特定协议语义仍由 reference-policy 测试验证，不冒充通用宿主断言。
 
+V2 阶段 4 新增读取 RPC atnObserver/fleet（atn-fleet/index + 每网络资源），不新增出站通道或模型工具。结构化拒绝仅向观察服务发 networkId/code 事件，16 公开码 + other 固定桶、65535/桶、64 网络、易失；绝不保存被拒载荷/异常文本或写业务记录。见 [舰队口径](../FLEET_OBSERVATION_CONTRACT.md)。
+
 审计对象为 `src/tools.ts` 的全部八个模型工具和 `AtnRuntime` 的全部公开方法；不只审计邮件。宿主策略接收 `{ channel, input }`，`input` 为完整业务输入，包括所有可选字段。身份取自实际调用 Agent，策略同步执行，抛错则不提交该操作。
 
 | 登记通道 | 实际入口 | 被检查的载荷 | 可见/持久化去向与检查位置 |

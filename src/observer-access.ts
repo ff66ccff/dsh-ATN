@@ -5,10 +5,13 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertResourceMap {
     /** A session alias authorizing observation of its entire ATN network. */
     'atn-observation': TypertResource<string>
+    'atn-fleet': TypertResource<string>
   }
 }
 
 export const ATN_OBSERVATION_RESOURCE = 'atn-observation' as const
+export const ATN_FLEET_READER = { name: 'atn-fleet-reader', resource: 'atn-fleet', actions: ['atnObserver/fleet'] } as const
+export function fleetNetworkResourceId(networkId: string): string { return JSON.stringify(['network', networkId]) }
 export const ATN_CONTENT_READER = {
   name: 'atn-content-reader', resource: ATN_OBSERVATION_RESOURCE,
   actions: ['atnObserver/snapshot'],
@@ -29,4 +32,6 @@ export function assertObserverReadCapabilities(registry: TypertRegistryContract,
       throw new Error(`ATN observation requires a resource reader for ${method}`)
     }
   }
+  const fleetReader = remoteMethods(service).find(marker => marker.method === 'fleet')?.resources?.['atn-fleet']
+  if (typeof fleetReader !== 'function' || fleetReader() !== 'index') throw new Error('ATN fleet requires an independent resource reader')
 }

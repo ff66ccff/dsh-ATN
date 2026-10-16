@@ -1,0 +1,31 @@
+
+> dsh-atn@0.5.0 test:client
+> node scripts/test-client.mjs
+
+X [ERROR] Could not resolve "../../src/client/FleetView.tsx"
+
+    tests/client/observer-ui.test.tsx:15:26:
+      15 │ import { FleetView } from '../../src/client/FleetView.tsx'
+         ╵                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+D:\dsh-ATN\node_modules\esbuild\lib\main.js:1467
+  let error = new Error(text);
+              ^
+
+Error: Build failed with 1 error:
+tests/client/observer-ui.test.tsx:15:26: ERROR: Could not resolve "../../src/client/FleetView.tsx"
+    at failureErrorWithLog (D:\dsh-ATN\node_modules\esbuild\lib\main.js:1467:15)
+    at D:\dsh-ATN\node_modules\esbuild\lib\main.js:926:25
+    at D:\dsh-ATN\node_modules\esbuild\lib\main.js:878:52
+    at buildResponseToResult (D:\dsh-ATN\node_modules\esbuild\lib\main.js:924:7)
+    at D:\dsh-ATN\node_modules\esbuild\lib\main.js:951:16
+    at responseCallbacks.<computed> (D:\dsh-ATN\node_modules\esbuild\lib\main.js:603:9)
+    at handleIncomingPacket (D:\dsh-ATN\node_modules\esbuild\lib\main.js:658:12)
+    at Socket.readFromStdout (D:\dsh-ATN\node_modules\esbuild\lib\main.js:581:7)
+    at Socket.emit (node:events:509:28)
+    at addChunk (node:internal/streams/readable:563:12) {
+  errors: [Getter/Setter],
+  warnings: [Getter/Setter]
+}
+
+Node.js v24.19.0

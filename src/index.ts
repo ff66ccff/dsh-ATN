@@ -32,6 +32,8 @@ export { ATN_OBSERVATION_RESOURCE, ATN_CONTENT_READER, ATN_METADATA_READER } fro
 export type { AtnObserverMetadata } from './observer-schema.ts'
 export { defineSubstrateReadPolicy, substrateResourceId, ATN_SUBSTRATE_READER } from './substrate-read-policy.ts'
 export type { SubstrateReadPolicy, SubstrateReadPolicyOptions } from './substrate-read-policy.ts'
+export { ATN_FLEET_READER, fleetNetworkResourceId } from './observer-access.ts'
+export type { AtnFleetSnapshot } from './observer-schema.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.

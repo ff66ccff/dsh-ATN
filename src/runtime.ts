@@ -573,7 +573,10 @@ export class AtnRuntime extends Service<Config> {
 
   private async substrateRead(agent: Agent, read: (record: NetworkRecord) => SubstrateMessageView[]) {
     const { record, node } = await this.callerContext(agent)
-    if (record.status !== 'open') return { messages: read(this.substrateReadView(record, node.id)) }
+    if (record.status !== 'open') {
+      try { return { messages: read(this.substrateReadView(record, node.id)) } }
+      catch (error) { this.observeRefusal(record.id, error); throw error }
+    }
     try {
       return (await this.mutate(record.id, current => {
         const messages = read(this.substrateReadView(current, node.id))
@@ -642,9 +645,17 @@ export class AtnRuntime extends Service<Config> {
     this.mutationTails.set(networkId, tail)
     try {
       return await run
+    } catch (error) {
+      this.observeRefusal(networkId, error)
+      throw error
     } finally {
       if (this.mutationTails.get(networkId) === tail) this.mutationTails.delete(networkId)
     }
+  }
+
+  private observeRefusal(networkId: string, error: unknown): void {
+    if (!(error instanceof AtnRefusal)) return
+    try { this.ctx.emit('atn/operation-refused', { networkId, code: error.code }) } catch { /* Telemetry cannot change a refusal. */ }
   }
 
   private async mutateOnce<Value>(networkId: string, fn: Mutation<Value>, repairTopology: boolean): Promise<MutationResult<Value>> {

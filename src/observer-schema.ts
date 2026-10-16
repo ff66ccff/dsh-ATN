@@ -3,6 +3,7 @@ import { z } from 'zod'
 import { MAX_COLLABORATION_PEERS } from './topology.ts'
 import type { InvocationDescriptor } from '@deepseek-ai/dsh-typert-protocol'
 import type { AtnObserverSnapshot } from './observer-types.ts'
+import { REFUSAL_BUCKETS, REFUSAL_COUNT_MAX } from './refusal-counters.ts'
 
 export const OBSERVER_MAX_TASKS = 200
 export const OBSERVER_MAX_EVENTS = 120
@@ -65,6 +66,29 @@ export const observerMetadataSchema = z.object({
   }).strict().nullable(),
 }).strict()
 export type AtnObserverMetadata = z.infer<typeof observerMetadataSchema>
+
+export const FLEET_NETWORK_MAX = 32
+export const fleetSnapshotSchema = z.object({
+  observedAt: timestamp, truncated: z.boolean(),
+  networks: z.array(z.object({
+    id, status: z.enum(['open', 'completed', 'stopped', 'unavailable']),
+    health: z.object({ activeNodes: count, failedNodes: count }).strict().nullable(),
+    stepsUsed: count.nullable(), stepBudget: count.nullable(),
+    substrate: z.object({ messages: count, maxMessages: count, bytes: count, maxBytes: count }).strict().nullable(),
+    refusals: z.object({ persistence: z.literal('volatile'), capPerBucket: z.literal(REFUSAL_COUNT_MAX),
+      total: count.max(REFUSAL_BUCKETS.length * REFUSAL_COUNT_MAX),
+      buckets: z.object(Object.fromEntries(REFUSAL_BUCKETS.map(code => [code, count.max(REFUSAL_COUNT_MAX)]))).strict(),
+    }).strict(),
+  }).strict()).max(FLEET_NETWORK_MAX),
+}).strict()
+export type AtnFleetSnapshot = z.infer<typeof fleetSnapshotSchema>
+
+export function createFleetDescriptor(): InvocationDescriptor {
+  return { id: 'dsh-atn#atnObserver/fleet', service: 'atnObserver', namespace: 'atnObserver', method: 'fleet',
+    invocation: { kind: 'direct' }, parameters: [], cancellation: { parameter: 'signal' },
+    result: { mode: 'strict', typeSymbol: 'dsh-atn#AtnFleetSnapshot', create: () => fleetSnapshotSchema,
+      decode: value => fleetSnapshotSchema.parse(value) } }
+}
 
 /** Public Typert contribution, shared by the host and browser without a code generator. */
 export function createObserverDescriptor(): InvocationDescriptor {
