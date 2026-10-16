@@ -32,3 +32,10 @@
 - 本审计、C删除清单、B报告、输入brief的grep命令：引述旧声明/移除项，不是现行功能。不得为满足字面grep而删除证据。
 
 这些分类覆盖全部命中文档；原有历史参数和正文未被伪造。本审计独立docs提交，不混C代码/D决策。
+
+## 2026-10-16 上游适配
+
+| 声明 | 本轮变更 | 依据 |
+|---|---|---|
+| 当前验证版本 | Harness alpha.4、Cordis alpha.2、sidebar 0.26.1 精确 optional peer | UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT；engines.dsh 单独判兼容，范围内仅 alpha.4 实测 |
+| 运行行为 | 五工具与固定上下文保持，domain=1；JSONL 入口改为命名空间导入 | 上游移除 default export；类型检查、全量测试和真实 profile |

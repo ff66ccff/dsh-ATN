@@ -1,0 +1,4 @@
+$ node scripts/verify-sidebar-registry.mjs
+SIDEBAR_CONTRACT_REJECTED {"package":"dsh-better-sidebar","installedVersion":"0.25.0","declaredRange":"0.26.1","verifiedVersions":["0.26.1"],"message":"该包或版本未被验证，不在声明的兼容范围内；拒绝执行契约检查。"}
+
+EXIT_CODE=1

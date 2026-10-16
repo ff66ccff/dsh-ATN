@@ -86,7 +86,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - **节点状态与配额**：展示当前负载、工具、剩余步数/连接额度。历史统计仅为快照窗口内的提交/结算数，不等于验收率；遗留任务候选是否可认领由 `atn_status` 确认。
 - **只读观察**：复用认证 RPC 与严格 schema，可见时串行读取，隐藏/切会话/切预设/卸载取消；不写网络、不唤醒模型、不产生模型 token，仍有普通 RPC 处理开销。
 
-截图由真实展示组件与确定性示例数据生成。`dsh-better-sidebar@0.26.0` 是精确固定的 optional peer，仅此版本完成 API/注册服务验证，无须安装即可使用顶栏回退；当前 0.26.0 provider 在目标 Harness 上仍等待已删除的 `webRuntime`，普通 npm 同装也有 peer 冲突。因此已验证客户端 Tab API 和真实注册服务，完整 provider 联合启动及侧栏浏览器验收仍待上游适配。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [C 实施报告](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)及[残余验证缺口实施报告](docs/RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)。
+截图由真实展示组件与确定性示例数据生成。`dsh-better-sidebar@0.26.1` 是精确固定的 optional peer，仅此版本完成 API/注册服务验证，无须安装即可使用顶栏回退；当前 0.26.1 provider 在目标 Harness 上仍等待已删除的 `webRuntime`，普通 npm 同装也有 peer 冲突。因此已验证客户端 Tab API 和真实注册服务，完整 provider 联合启动及侧栏浏览器验收仍待上游适配。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [C 实施报告](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)及[残余验证缺口实施报告](docs/RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)。
 
 ---
 
@@ -108,8 +108,8 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ### 环境要求
 - Node.js >= 24
-- DeepSeek Harness 0.2.1-alpha.2（本分支已验证版本，依赖精确锚定）
-- Cordis 4.0.5-alpha.1（目标 Harness 实际依赖）
+- DeepSeek Harness 0.2.1-alpha.4（本轮仅此版本实测；engines.dsh 为 >=0.2.1-alpha.4 <0.3.0，范围内其他版本未验证；alpha.4 起由它单独判定兼容性）
+- Cordis 4.0.5-alpha.2（目标 Harness 实际依赖）
 
 本轮 A、B、C 客户端改造、统一声明审计及 D 决策已完成并分阶段提交。干净 `npm ci` 后的最终六项命令与额外真实 Web 观察 smoke 全通过，551 项 runtime/集成 + 14 项 UI，零失败/跳过。C 的完整外部 provider 激活仍有限制，见上文。阶段报告：[A](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)；[审计表](docs/DECLARATION_AUDIT.md)、[D 决策](docs/NEXT_SCOPE_DECISION_RECORD.md)、[最终验收](docs/FINAL_EXECUTION_VALIDATION.md)。
 
@@ -246,7 +246,7 @@ node --import tsx/esm examples/information-boundary.ts
 npm install              # 安装依赖
 npm run typecheck        # 严格 TypeScript 类型检查
 npm test                 # 执行全量 550+ 项测试（零真实 API 消耗，毫秒级自愈验证）
-npm run verify:sidebar   # 需 SIDEBAR_PACKAGE_DIR 指向独立安装的 dsh-better-sidebar@0.26.0
+npm run verify:sidebar   # 需 SIDEBAR_PACKAGE_DIR 指向独立安装的 dsh-better-sidebar@0.26.1
 npm run build            # 构建生产分发产物
 npm run pack:tarball     # 打包 tgz 安装包
 npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
@@ -269,3 +269,5 @@ npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
 ## 📄 开源协议
 
 本项目采用 [Apache-2.0](LICENSE) 许可证开源。遵循相关第三方开源声明与规范，详见 [NOTICE](NOTICE)。
+
+当前上游适配依据与验证边界见 [alpha.4 实施报告](docs/UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)。旧 A/B/C 报告保留历史版本与测试数；本轮开工基线为 569 项 runtime/集成 + 14 项 UI。

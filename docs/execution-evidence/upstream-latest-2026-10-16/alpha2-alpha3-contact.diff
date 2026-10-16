@@ -1,0 +1,3656 @@
+diff --git a/packages/client/connection/src/browser-auth.ts b/packages/client/connection/src/browser-auth.ts
+index 6b01531da6..5c8594df6f 100644
+--- a/packages/client/connection/src/browser-auth.ts
++++ b/packages/client/connection/src/browser-auth.ts
+@@ -1,6 +1,8 @@
+ /** Browser-session authentication for the Host Connection carrier. */
+ 
+ import { createHash, createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
++import type { PeerId } from '@deepseek-ai/dsh-typert-protocol'
++import { CONNECT_PATH, type ConnectionInteractions } from './connect-protocol.ts'
+ import { credentialKey } from '@deepseek-ai/dsh-credentials'
+ import type { CredentialProvider, CredentialRecord } from '@deepseek-ai/dsh-credentials'
+ import type {
+@@ -31,6 +33,13 @@ interface BrowserCookiePayload {
+   readonly expiresAt: number
+ }
+ 
++interface ApiCookiePayload extends Omit<BrowserCookiePayload, 'version'> {
++  readonly version: 2
++  readonly id: PeerId
++}
++
++type CookiePayload = BrowserCookiePayload | ApiCookiePayload
++
+ function isRecord(value: unknown): value is Record<string, unknown> {
+   return typeof value === 'object' && value !== null && !Array.isArray(value)
+ }
+@@ -134,15 +143,15 @@ function signature(secret: Buffer, body: string): Buffer {
+   return createHmac('sha256', secret).update(body).digest()
+ }
+ 
+-function encodeCookie(payload: BrowserCookiePayload, secret: Buffer): string {
++function encodeCookie(payload: CookiePayload, secret: Buffer): string {
+   const body = encodeBase64Url(Buffer.from(JSON.stringify(payload), 'utf8'))
+-  return `v1.${body}.${encodeBase64Url(signature(secret, body))}`
++  return `v${payload.version}.${body}.${encodeBase64Url(signature(secret, body))}`
+ }
+ 
+-function decodeCookie(value: string, secret: Buffer): BrowserCookiePayload | undefined {
++function decodeCookie(value: string, secret: Buffer): CookiePayload | undefined {
+   const parts = value.split('.')
+   const [version, body, encodedSignature] = parts
+-  if (parts.length !== 3 || version !== 'v1' || body === undefined || encodedSignature === undefined) {
++  if (parts.length !== 3 || (version !== 'v1' && version !== 'v2') || body === undefined || encodedSignature === undefined) {
+     return undefined
+   }
+   const actualSignature = decodeBase64Url(encodedSignature)
+@@ -159,11 +168,15 @@ function decodeCookie(value: string, secret: Buffer): BrowserCookiePayload | und
+     return undefined
+   }
+   if (!isRecord(decoded)
+-    || decoded.version !== COOKIE_PAYLOAD_VERSION
++    || (decoded.version !== COOKIE_PAYLOAD_VERSION && decoded.version !== 2)
++    || version !== `v${decoded.version}`
+     || typeof decoded.authority !== 'string'
+-    || !Number.isSafeInteger(decoded.issuedAt)
+-    || !Number.isSafeInteger(decoded.expiresAt)) return undefined
+-  return decoded as unknown as BrowserCookiePayload
++    || typeof decoded.issuedAt !== 'number' || !Number.isSafeInteger(decoded.issuedAt)
++    || typeof decoded.expiresAt !== 'number' || !Number.isSafeInteger(decoded.expiresAt)) return undefined
++  const payload = { authority: decoded.authority, issuedAt: decoded.issuedAt, expiresAt: decoded.expiresAt }
++  if (decoded.version === COOKIE_PAYLOAD_VERSION) return { version: COOKIE_PAYLOAD_VERSION, ...payload }
++  if (typeof decoded.id !== 'string' || decoded.id.length === 0) return undefined
++  return { version: 2, ...payload, id: decoded.id as PeerId }
+ }
+ 
+ async function initializeSecret(credentials: CredentialProvider): Promise<Buffer> {
+@@ -291,6 +304,49 @@ export class BrowserAuth {
+     return false
+   }
+ 
++  /**
++   * Exchange the launch token for an independent API operator; omitted interactions default to none.
++   * @param req - trusted GET request on /connect with at most one interactions declaration.
++   * @param res - response owned to completion, redirecting to the API mux on success.
++   * @param secure - whether the receiving listener serves TLS.
++   * @param publish - synchronously create the operator before exposing its signed credential.
++   */
++  authorizeConnect(
++    req: ConnectionIndexRequest,
++    res: ConnectionIndexResponse,
++    secure: boolean,
++    publish: (interactions: ConnectionInteractions) => PeerId,
++  ): void {
++    const url = new URL(req.url ?? '/', 'http://dsh.invalid')
++    const declarations = url.searchParams.getAll('interactions')
++    const interactions = declarations[0] ?? 'none'
++    if (declarations.length > 1 || (interactions !== 'answer' && interactions !== 'none')) {
++      res.writeHead(400, { 'cache-control': 'no-store', 'content-type': 'text/plain; charset=utf-8' })
++      res.end('interactions must be declared once as answer or none\n')
++      return
++    }
++    const tokens = url.searchParams.getAll(TOKEN_QUERY)
++    const authority = requestAudience(req.headers, secure)
++    if (req.method !== 'GET' || url.pathname !== CONNECT_PATH || tokens.length !== 1
++      || authority === undefined || !tokenMatches(tokens.join(''), this.launchToken)) {
++      this.writeUnauthorized(req, res)
++      return
++    }
++    const issuedAt = Date.now()
++    const expiresAt = issuedAt + this.maxAgeMilliseconds
++    const id = publish(interactions)
++    const value = encodeCookie({ version: 2, authority, id, issuedAt, expiresAt }, this.secret)
++    res.writeHead(302, {
++      'cache-control': 'no-store',
++      'location': './api/remote.mux',
++      'referrer-policy': 'no-referrer',
++      'set-cookie': sessionCookie(
++        cookieName(authority), value, expiresAt, Math.floor(this.maxAgeMilliseconds / 1000), secure,
++      ),
++    })
++    res.end()
++  }
++
+   /**
+    * Verify the authority-bound browser cookie on a Host request.
+    * @param request - request headers carrying Host and Cookie.
+@@ -298,18 +354,32 @@ export class BrowserAuth {
+    * @returns true only for an unexpired cookie signed by this activation's loaded secret.
+    */
+   isAuthenticated(request: ConnectionTrustRequest, secure = false): boolean {
++    return this.authenticate(request, secure)?.version === COOKIE_PAYLOAD_VERSION
++  }
++
++  /**
++   * Verify an API credential without creating or reviving its operator.
++   * @param request - request headers carrying Host and Cookie.
++   * @param secure - whether the receiving listener uses TLS.
++   * @returns the signed operator id, or undefined for invalid, expired, or browser cookies.
++   */
++  authenticateApi(request: ConnectionTrustRequest, secure = false): PeerId | undefined {
++    const payload = this.authenticate(request, secure)
++    return payload?.version === 2 ? payload.id : undefined
++  }
++
++  private authenticate(request: ConnectionTrustRequest, secure: boolean): CookiePayload | undefined {
+     const authority = requestAudience(request.headers, secure)
+     const rawCookie = header(request.headers, 'cookie')
+-    if (authority === undefined || rawCookie === undefined) return false
++    if (authority === undefined || rawCookie === undefined) return undefined
+     const value = cookieValue(rawCookie, cookieName(authority))
+-    if (value === undefined) return false
++    if (value === undefined) return undefined
+     const payload = decodeCookie(value, this.secret)
+-    if (payload === undefined || payload.authority !== authority) return false
++    if (payload === undefined || payload.authority !== authority) return undefined
+     const now = Date.now()
+-    return payload.issuedAt <= now
+-      && payload.expiresAt > now
+-      && payload.expiresAt > payload.issuedAt
+-      && payload.expiresAt - payload.issuedAt <= this.maxAgeMilliseconds
++    if (payload.issuedAt > now || payload.expiresAt <= now || payload.expiresAt <= payload.issuedAt
++      || payload.expiresAt - payload.issuedAt > this.maxAgeMilliseconds) return undefined
++    return payload
+   }
+ 
+   private writeUnauthorized(req: ConnectionIndexRequest, res: ConnectionIndexResponse): void {
+diff --git a/packages/client/connection/src/client/index.ts b/packages/client/connection/src/client/index.ts
+index e9d80a64f4..95d83f59fe 100644
+--- a/packages/client/connection/src/client/index.ts
++++ b/packages/client/connection/src/client/index.ts
+@@ -12,6 +12,11 @@ import { createWebConnectionRpc, type RpcFetch, type RpcStreamOpen } from './rpc
+ import { isLoopbackHostname } from '../loopback-hostname.ts'
+ import type { ClientConnectionRpc } from '../rpc.ts'
+ import { resolveConnectionConfig } from '../recovery-config.ts'
++import type { ConnectionInteractions } from '../connect-protocol.ts'
++import { openConnectionWebSocket, type ConnectionWebSocket, type ConnectionWebSocketFactory } from './socket.ts'
++
++export type { ConnectionInteractions } from '../connect-protocol.ts'
++export type { ConnectionWebSocket, ConnectionWebSocketFactory } from './socket.ts'
+ 
+ declare module '@deepseek-ai/cordis' {
+   interface Events {
+@@ -96,13 +101,15 @@ export interface ClientTransportHooks {
+   /**
+    * The transport owner declares the page owns the Host outright: the Host
+    * runs inside a worker this page spawned, so no other party can reach it and
+-   * the loopback stand-in for "the operator's own machine" is vacuous.
++   * the loopback stand-in for "the owner's own machine" is vacuous.
+    * `ctx.connection.isLoopback` then reports the privileged surface reachable
+    * regardless of the page authority. Only a shell that assembles its own
+    * transport can set this; served pages never carry the global at all.
+    */
+   ownsHost?: boolean
+-  /** HTTP origin of a shell-owned Host when its WebSocket uses a different page origin. */
++  /** Authenticated WebSocket factory; omission uses the browser API and its cookie jar. */
++  createWebSocket?: ConnectionWebSocketFactory
++  /** Host base URL for desktop or Node sockets; omission uses the document base. */
+   streamBaseUrl?: string
+ }
+ 
+@@ -119,6 +126,8 @@ export interface ConnectionLocation {
+ 
+ /** Instance-local inputs for installing a Connection service. */
+ export interface ConnectionInstallOptions {
++  /** Forwarded-event participation; omission selects answer for a page and none otherwise. */
++  readonly interactions?: ConnectionInteractions
+   /** Explicit physical carrier; omit for the browser HTTP + WebSocket carrier. */
+   readonly transport?: ClientTransportHooks
+   /** Reconnect timing overrides; omitted fields use controller defaults. */
+@@ -132,6 +141,8 @@ export interface ConnectionInstallOptions {
+  * and reset callbacks; Connection stays independent of downstream domain state.
+  */
+ export interface ConnectionHandle {
++  /** Forwarded-event participation selected at installation. */
++  readonly interactions: ConnectionInteractions
+   /**
+    * Whether the privileged surface is reachable: the page authority is
+    * loopback, the transport declares the page owns the Host
+@@ -144,6 +155,12 @@ export interface ConnectionHandle {
+   readonly state: ConnectionStateSource
+   /** Generic logical RPC channels over the same Connection transport. */
+   readonly rpc: ClientConnectionRpc
++  /**
++   * Create a socket on the selected carrier; the channel owns framing and closing.
++   * @param path - absolute logical channel path, resolved beneath the Host mount.
++   * @returns a newly connecting socket using the installed authentication factory.
++   */
++  openWebSocket(path: string): ConnectionWebSocket
+   /** Reset retry progression and replace the current attempt immediately. */
+   reconnect(): void
+   /**
+@@ -200,12 +217,13 @@ function watchBrowserNetwork(controller: ConnectionController): () => void {
+ /**
+  * Install one Context-owned Connection service from explicit composition inputs.
+  * @param ctx - client Cordis context.
+- * @param options - physical carrier, reconnect timing, and page location.
++ * @param options - interaction participation, physical carrier, reconnect timing, and page location.
+  */
+ export function installConnection(ctx: Context, options: ConnectionInstallOptions = {}): void {
+   const pageLocation = options.location
+   const transport = options.transport
+   const recovery = options.recovery ?? {}
++  const interactions = options.interactions ?? (pageLocation === undefined ? 'none' : 'answer')
+   const rpc = transport?.rpc ?? createWebConnectionRpc(transport?.fetch, transport?.openStream)
+   let generationSource: ConnectionGenerationSource | undefined
+   let owner: ConnectionOwner | undefined
+@@ -245,6 +263,8 @@ export function installConnection(ctx: Context, options: ConnectionInstallOption
+     publishState(undefined)
+   }
+   const handle: ConnectionHandle = {
++    interactions,
++    openWebSocket: path => openConnectionWebSocket(path, transport?.createWebSocket, transport?.streamBaseUrl),
+     isLoopback: transport?.ownsHost === true || pageLocation === undefined || isLoopbackHostname(pageLocation.hostname),
+     generation: {
+       getSnapshot: () => generation,
+diff --git a/packages/client/connection/src/client/socket.ts b/packages/client/connection/src/client/socket.ts
+new file mode 100644
+index 0000000000..a872f2c738
+--- /dev/null
++++ b/packages/client/connection/src/client/socket.ts
+@@ -0,0 +1,66 @@
++/** Physical socket selection for browser, desktop, and authenticated Node connections. */
++
++/** Socket events consumed by the Gateway on browser and Node carriers. */
++export interface ConnectionWebSocketEventMap {
++  readonly open: object
++  readonly error: object
++  readonly close: object
++  readonly message: { readonly data: unknown }
++}
++
++/** Text WebSocket operations shared by the browser API and Node carriers. */
++export interface ConnectionWebSocket {
++  /** Standard WebSocket state, from CONNECTING (0) through CLOSED (3). */
++  readonly readyState: number
++  /** @param data - complete text frame to send. */
++  send(data: string): void
++  /**
++   * @param code - protocol close code.
++   * @param reason - peer-facing close explanation.
++   */
++  close(code?: number, reason?: string): void
++  /**
++   * @param event - physical socket event.
++   * @param listener - callback for that event.
++   * @param options - whether the callback is removed after its first delivery.
++   */
++  addEventListener<Event extends keyof ConnectionWebSocketEventMap>(
++    event: Event,
++    listener: (event: ConnectionWebSocketEventMap[Event]) => void,
++    options?: { readonly once?: boolean },
++  ): void
++  /**
++   * @param event - physical socket event.
++   * @param listener - previously registered callback.
++   */
++  removeEventListener<Event extends keyof ConnectionWebSocketEventMap>(
++    event: Event,
++    listener: (event: ConnectionWebSocketEventMap[Event]) => void,
++  ): void
++}
++
++/**
++ * Create an authenticated socket; its consumer owns framing and closing.
++ * @param url - absolute WebSocket URL beneath the selected Host mount.
++ * @returns a newly connecting socket, before it emits open or failure.
++ */
++export type ConnectionWebSocketFactory = (url: string) => ConnectionWebSocket
++
++/**
++ * Resolve a logical channel against the explicit Host or the page's document base.
++ * @param path - absolute logical channel path.
++ * @param factory - authenticated socket factory; omission uses the browser API.
++ * @param baseUrl - Host base URL, required outside a document.
++ * @returns a socket owned by the calling channel.
++ */
++export function openConnectionWebSocket(
++  path: string,
++  factory: ConnectionWebSocketFactory = url => new WebSocket(url),
++  baseUrl?: string,
++): ConnectionWebSocket {
++  const base = baseUrl ?? (typeof document === 'undefined' ? undefined : document.baseURI)
++  if (base === undefined) throw new Error('connection: WebSocket carrier requires streamBaseUrl outside a document')
++  const url = new URL(path.slice(1), base)
++  url.protocol = url.protocol === 'https:' ? 'wss:' : 'ws:'
++  return factory(url.href)
++}
+diff --git a/packages/client/connection/src/connect-protocol.ts b/packages/client/connection/src/connect-protocol.ts
+new file mode 100644
+index 0000000000..4c0efe8cab
+--- /dev/null
++++ b/packages/client/connection/src/connect-protocol.ts
+@@ -0,0 +1,7 @@
++/** API connection inputs shared by the Host and its clients. */
++
++/** Whether a Peer participates in forwarded human interactions. */
++export type ConnectionInteractions = 'answer' | 'none'
++
++/** Launch-token exchange route for API clients. */
++export const CONNECT_PATH = '/connect'
+diff --git a/packages/client/connection/src/http-bridge.ts b/packages/client/connection/src/http-bridge.ts
+index 713f53dcea..61d89c0127 100644
+--- a/packages/client/connection/src/http-bridge.ts
++++ b/packages/client/connection/src/http-bridge.ts
+@@ -4,6 +4,7 @@
+  */
+ 
+ import type { IncomingMessage } from 'node:http'
++import type { PeerScope } from '@deepseek-ai/dsh-typert-protocol'
+ import { Readable } from 'node:stream'
+ import type { ConnectionFetchHandler } from './rpc.ts'
+ 
+@@ -30,12 +31,14 @@ interface BridgeServerResponse {
+  * @param req - incoming node:http request.
+  * @param res - node:http response the bridge writes and owns to completion.
+  * @param apiHandler - fetch-shaped API carrier the request is dispatched to.
++ * @param peer - Peer the carrier admitted the request as.
+  * @param maxRequestBodyBytes - maximum bytes buffered for a buffered route.
+  */
+ export async function bridge(
+   req: IncomingMessage,
+   res: BridgeServerResponse,
+   apiHandler: ConnectionFetchHandler,
++  peer: PeerScope,
+   maxRequestBodyBytes = DEFAULT_MAX_REQUEST_BODY_BYTES,
+ ): Promise<void> {
+   const abort = new AbortController()
+@@ -91,7 +94,7 @@ export async function bridge(
+       duplex: 'half',
+     } as RequestInit & { duplex: 'half' })
+   }
+-  const response = await apiHandler.fetch(request)
++  const response = await apiHandler.fetch(request, peer)
+   const requestUnread = bodyMode === 'streaming' && !req.readableEnded
+   const responseHeaders = Object.fromEntries(response.headers.entries())
+   res.writeHead(response.status, requestUnread ? { ...responseHeaders, connection: 'close' } : responseHeaders)
+diff --git a/packages/client/connection/src/index.ts b/packages/client/connection/src/index.ts
+index 34e15f90a6..d563cd40e8 100644
+--- a/packages/client/connection/src/index.ts
++++ b/packages/client/connection/src/index.ts
+@@ -7,6 +7,7 @@ import type {} from '@deepseek-ai/dsh-credentials'
+ // Activates the webServer Context merge used below.
+ import type { WebRoute } from '@deepseek-ai/dsh-host-webserver'
+ import { API_PATH } from './api-path.ts'
++import { CONNECT_PATH } from './connect-protocol.ts'
+ import { bridge, DEFAULT_MAX_REQUEST_BODY_BYTES } from './http-bridge.ts'
+ import { assertTrustedAuthority } from './api-request-trust.ts'
+ import { BrowserAuth } from './browser-auth.ts'
+@@ -15,6 +16,7 @@ import { ConnectionRecoveryConfigSchema, resolveConnectionConfig, type Connectio
+ 
+ export type {
+   PeerAdmission,
++  ConnectionAdmission,
+   ConnectionFetchMethod,
+   ConnectionFetchHandler,
+   ConnectionFetchRoute,
+@@ -36,9 +38,11 @@ export type {
+   RpcMessage,
+   ServerResponse,
+ } from './rpc.ts'
+-export type { PeerId, PeerScope, RemoteInvocation } from '@deepseek-ai/dsh-typert-protocol'
++export type { PeerId, PeerScope, Principal, RemoteInvocation } from '@deepseek-ai/dsh-typert-protocol'
+ export { RpcId, transportError } from './rpc.ts'
+-export { OperatorPeer } from './operator-peer.ts'
++export { Peer } from './peer.ts'
++export type { PeerOptions } from './peer.ts'
++export { CONNECT_PATH, type ConnectionInteractions } from './connect-protocol.ts'
+ export {
+   clientRequestSchema,
+   rpcErrorSchema,
+@@ -99,7 +103,7 @@ export interface ConnectionConfig {
+    * an entry here. A non-canonical or non-bare authority fails plugin load.
+    */
+   trustedHosts?: string[]
+-  /** Absolute browser-session lifetime in days. Default: 30. */
++  /** Absolute browser and API cookie lifetime in days. Default: 30. */
+   cookieMaxAgeDays?: number
+   /** Maximum buffered JSON body for every `/api` request. Default: 300 MiB. */
+   maxRequestBodyBytes?: number
+@@ -150,10 +154,14 @@ export async function apply(ctx: Context, config?: ConnectionConfig): Promise<vo
+           res.end(admission.rejection === 401 ? 'unauthorized' : 'forbidden')
+           return
+         }
+-        await webCtx.waterfall('connection/request', req, res, () => bridge(req, res, fetchHandler, maxRequestBodyBytes))
++        await webCtx.waterfall('connection/request', req, res, () => bridge(req, res, fetchHandler, admission.peer, maxRequestBodyBytes))
+       },
+     }
+     webCtx.effect(() => webCtx.webServer.register(route), 'client-connection: /api route')
++    webCtx.effect(() => webCtx.webServer.register({
++      kind: 'exact', path: CONNECT_PATH,
++      handler: (req, res) => { connection.authorizeConnect(req, res) },
++    }), 'client-connection: /connect route')
+   })
+   ctx.inject(['attachments'], (attachmentCtx) => {
+     assertImageBodyCapacity(attachmentCtx, maxRequestBodyBytes)
+diff --git a/packages/client/connection/src/operator-peer.ts b/packages/client/connection/src/operator-peer.ts
+deleted file mode 100644
+index 83325f78e7..0000000000
+--- a/packages/client/connection/src/operator-peer.ts
++++ /dev/null
+@@ -1,33 +0,0 @@
+-/**
+- * The operator Peer: the one party this Host answers to. Connection owns it
+- * for its own lifetime, admits every request as it, and hands it to each
+- * Remote call as `invocation.peer`.
+- * @module @deepseek-ai/dsh-client-connection/src/operator-peer
+- */
+-
+-import { randomUUID } from 'node:crypto'
+-import type { Context } from '@deepseek-ai/cordis'
+-import { createScope, type Scope } from '@deepseek-ai/dsh-scope'
+-import type { PeerId, PeerScope } from '@deepseek-ai/dsh-typert-protocol'
+-
+-/**
+- * The operator's scope. The instance is its own scope key, so `scopeOf(peer.ctx)`
+- * returns it and events dispatched with `scopeTarget(subject, peer)` reach
+- * listeners registered through `peer.ctx` and nobody else.
+- */
+-export class OperatorPeer implements PeerScope {
+-  readonly id: PeerId = randomUUID() as PeerId
+-  readonly ctx: Context
+-  private readonly scope: Scope
+-
+-  /** @param owner - Connection plugin context the scope fiber hangs under. */
+-  constructor(owner: Context) {
+-    this.scope = createScope(owner, this)
+-    this.ctx = this.scope.ctx
+-  }
+-
+-  /** Tear down every connection-lifetime registration; racing calls share one completion. */
+-  dispose(): Promise<void> {
+-    return this.scope.dispose()
+-  }
+-}
+diff --git a/packages/client/connection/src/peer.ts b/packages/client/connection/src/peer.ts
+new file mode 100644
+index 0000000000..397839980e
+--- /dev/null
++++ b/packages/client/connection/src/peer.ts
+@@ -0,0 +1,53 @@
++/**
++ * The Peer: one party admitted to this Host. Its creator fixes the principal
++ * it speaks for and owns its lifetime; Gateway hands it to each Remote call as
++ * `invocation.peer`.
++ * @module @deepseek-ai/dsh-client-connection/src/peer
++ */
++
++import { randomUUID } from 'node:crypto'
++import type { Context } from '@deepseek-ai/cordis'
++import { createScope, type Scope } from '@deepseek-ai/dsh-scope'
++import type { PeerId, PeerScope, Principal } from '@deepseek-ai/dsh-typert-protocol'
++
++/** Construction options for one {@link Peer}. */
++export interface PeerOptions {
++  /** Caller identity every call through this Peer speaks for. */
++  readonly principal: Principal
++  /** Omission permits an event stream; non-owner Peers still cannot answer waterfalls. */
++  readonly interactions?: 'answer' | 'none'
++}
++
++/**
++ * One Peer's scope. The instance is its own scope key, so `scopeOf(peer.ctx)`
++ * returns it and events dispatched with `scopeTarget(subject, peer)` reach
++ * listeners registered through `peer.ctx` and nobody else.
++ */
++export class Peer implements PeerScope {
++  readonly id: PeerId = randomUUID() as PeerId
++  readonly ctx: Context
++  readonly principal: Principal
++  readonly interactions: 'answer' | 'none'
++  readonly signal: AbortSignal
++  private readonly scope: Scope
++
++  /**
++   * @param owner - Context the scope fiber hangs under; disposing it disposes the Peer.
++   * @param options - the principal fixed for this Peer's lifetime.
++   */
++  constructor(owner: Context, options: PeerOptions) {
++    this.principal = options.principal
++    this.interactions = options.interactions ?? 'answer'
++    this.scope = createScope(owner, this)
++    this.ctx = this.scope.ctx
++    const lifetime = new AbortController()
++    this.signal = lifetime.signal
++    // Runs however the scope ends: dispose() or the owner Context unloading.
++    this.ctx.effect(() => () => { lifetime.abort(new Error(`Peer ${this.id} was disposed`)) }, 'client-connection: Peer lifetime')
++  }
++
++  /** Tear down every connection-lifetime registration; racing calls share one completion. */
++  dispose(): Promise<void> {
++    return this.scope.dispose()
++  }
++}
+diff --git a/packages/client/connection/src/rpc-host.ts b/packages/client/connection/src/rpc-host.ts
+index 44862c770a..88e7b48baa 100644
+--- a/packages/client/connection/src/rpc-host.ts
++++ b/packages/client/connection/src/rpc-host.ts
+@@ -2,7 +2,8 @@
+ 
+ import { Context, Service } from '@deepseek-ai/cordis'
+ import type { WebRoute } from '@deepseek-ai/dsh-host-webserver'
+-import type { PeerScope } from '@deepseek-ai/dsh-typert-protocol'
++import type { PeerId, PeerScope, Principal } from '@deepseek-ai/dsh-typert-protocol'
++import type { ConnectionInteractions } from './connect-protocol.ts'
+ import {
+   RpcId,
+   type ClientRequest,
+@@ -13,9 +14,10 @@ import { bridge } from './http-bridge.ts'
+ import { isRemoteAuthority, isTrustedApiRequest } from './api-request-trust.ts'
+ import { API_PATH } from './api-path.ts'
+ import type { BrowserAuth } from './browser-auth.ts'
+-import { OperatorPeer } from './operator-peer.ts'
++import { Peer } from './peer.ts'
+ import type {
+   PeerAdmission,
++  ConnectionAdmission,
+   ConnectionIndexRequest,
+   ConnectionIndexResponse,
+   ConnectionFetchRoute,
+@@ -35,6 +37,11 @@ const INVALID_REQUEST_RPC_ID = RpcId('invalid-request')
+ const CHANNEL_PATTERN = /^\/[A-Za-z0-9._~-]+$/
+ const ENDPOINT_SEGMENT_PATTERN = /^[A-Za-z0-9_$.-]+$/
+ 
++interface PeerRecord {
++  readonly peer: Peer
++  ownsSocket: boolean
++}
++
+ interface ConnectionRpcInterceptor {
+   readonly matches: ConnectionRpcEndpointMatcher
+   readonly fetchHandler: ConnectionFetchHandler
+@@ -61,8 +68,11 @@ declare module '@deepseek-ai/cordis' {
+ 
+ /** Host Connection service whose channel registrations belong to the caller fiber. */
+ export class HostConnectionService extends Service implements HostConnectionHandle {
+-  /** The operator Peer every admitted request speaks for. */
+-  readonly operator: PeerScope
++  /** The Peer every authenticated browser connection shares. */
++  readonly browserPeer: PeerScope
++  private readonly peers = new Map<PeerId, PeerRecord>()
++  private readonly owner: Context
++  private disposed = false
+   private readonly interceptors = new Map<string, ConnectionRpcInterceptor>()
+   private readonly fetchRoutes = new Map<string, RegisteredFetchRoute>()
+ 
+@@ -80,8 +90,14 @@ export class HostConnectionService extends Service implements HostConnectionHand
+     private readonly browserAuth: BrowserAuth,
+   ) {
+     super(ctx, 'connection')
+-    this.operator = new OperatorPeer(ctx)
+-    ctx.effect(() => () => this.operator.dispose(), 'client-connection: operator Peer')
++    this.owner = ctx
++    this.browserPeer = new Peer(ctx, { principal: { kind: 'owner' } })
++    ctx.effect(() => async () => {
++      this.disposed = true
++      const peers = [this.browserPeer, ...Array.from(this.peers.values(), record => record.peer)]
++      this.peers.clear()
++      await Promise.all(peers.map(peer => peer.dispose()))
++    }, 'client-connection: Peer scopes')
+     this.allowsRemoteAuthorities = trustedHosts.some(isRemoteAuthority)
+   }
+ 
+@@ -103,17 +119,72 @@ export class HostConnectionService extends Service implements HostConnectionHand
+     }
+   }
+ 
+-  /** Apply the Host/Origin fence, then browser authentication. */
++  /** Apply the Host/Origin fence and require an authenticated live Peer. */
+   requestRejection(request: ConnectionTrustRequest): ConnectionRequestRejection {
+-    const carrier = this.ctx.get('webServer')
+-    if (!isTrustedApiRequest(request, this.trustedHosts, carrier?.host, carrier?.protocol ?? 'http:')) return 403
+-    return this.browserAuth.isAuthenticated(request, carrier?.protocol === 'https:') ? undefined : 401
++    const admission = this.admit(request)
++    return 'rejection' in admission ? admission.rejection : undefined
+   }
+ 
+-  /** A request that passes the fence and authentication speaks for the operator. */
++  /** Browser requests share an owner Peer; API HTTP does not depend on an attached socket. */
+   admit(request: ConnectionTrustRequest): PeerAdmission {
+-    const rejection = this.requestRejection(request)
+-    return rejection === undefined ? { peer: this.operator } : { rejection }
++    if (!this.isTrusted(request)) return { rejection: 403 }
++    if (this.disposed) return { rejection: 401 }
++    const secure = this.owner.get('webServer')?.protocol === 'https:'
++    if (this.browserAuth.isAuthenticated(request, secure)) return { peer: this.browserPeer }
++    const id = this.browserAuth.authenticateApi(request, secure)
++    const record = id === undefined ? undefined : this.peers.get(id)
++    return record === undefined ? { rejection: 401 } : { peer: record.peer }
++  }
++
++  /** Create one in-process Peer owned by the Context that read this service. */
++  createPeer(options: { readonly principal: Principal; readonly interactions?: ConnectionInteractions }): PeerScope {
++    return new Peer(this.ctx, options)
++  }
++
++  /** Claim API socket ownership synchronously; callers release on termination or failed upgrade. */
++  admitConnection(request: ConnectionTrustRequest): ConnectionAdmission {
++    const admission = this.admit(request)
++    if ('rejection' in admission) return admission
++    const record = this.peers.get(admission.peer.id)
++    if (record === undefined) return { ...admission, release: () => Promise.resolve() }
++    if (record.ownsSocket) return { rejection: 409 }
++    record.ownsSocket = true
++    let released: Promise<void> | undefined
++    return {
++      peer: record.peer,
++      release: () => {
++        if (released !== undefined) return released
++        this.peers.delete(record.peer.id)
++        released = record.peer.dispose()
++        return released
++      },
++    }
++  }
++
++  private isTrusted(request: ConnectionTrustRequest): boolean {
++    const carrier = this.owner.get('webServer')
++    return isTrustedApiRequest(request, this.trustedHosts, carrier?.host, carrier?.protocol ?? 'http:')
++  }
++
++  private publishPeer(interactions: ConnectionInteractions): PeerId {
++    const peer = new Peer(this.owner, { principal: { kind: 'owner' }, interactions })
++    this.peers.set(peer.id, { peer, ownsSocket: false })
++    return peer.id
++  }
++
++  /**
++   * Authenticate and publish a credential before sending the connect redirect.
++   * @param request - launch-token request on /connect.
++   * @param response - response owned to completion.
++   */
++  authorizeConnect(request: ConnectionIndexRequest, response: ConnectionIndexResponse): void {
++    if (!this.isTrusted(request) || this.disposed) {
++      response.writeHead(this.disposed ? 401 : 403)
++      response.end(this.disposed ? 'unauthorized' : 'forbidden')
++      return
++    }
++    this.browserAuth.authorizeConnect(request, response,
++      this.owner.get('webServer')?.protocol === 'https:', interactions => this.publishPeer(interactions))
+   }
+ 
+   /**
+@@ -141,16 +212,21 @@ export class HostConnectionService extends Service implements HostConnectionHand
+         const route = this.fetchRoutes.get(url.pathname)
+         return route?.methods.has(method) === true ? route.requestBody : 'buffered'
+       },
+-      fetch: (request) => {
++      fetch: (request, peer) => {
+         const pathname = new URL(request.url).pathname
+         const route = this.fetchRoutes.get(pathname)
+-        if (route?.methods.has(request.method) === true) return route.fetch(request)
++        if (route?.methods.has(request.method) === true) {
++          // Exact routes bypass Gateway access checks, so only the owner reaches them.
++          // oxlint-disable-next-line typescript/no-unnecessary-condition -- other packages merge non-owner kinds into PrincipalMap.
++          if (peer.principal.kind !== 'owner') return Promise.resolve(new Response('forbidden', { status: 403 }))
++          return route.fetch(request)
++        }
+         const endpoint = endpointFromPath(channel, pathname)
+         const interceptor = this.interceptors.get(channel)
+         if (endpoint === undefined || interceptor === undefined || !interceptor.matches(endpoint)) {
+           return Promise.resolve(new Response('not found', { status: 404 }))
+         }
+-        return interceptor.fetchHandler.fetch(request)
++        return interceptor.fetchHandler.fetch(request, peer)
+       },
+     }
+   }
+@@ -180,7 +256,7 @@ export class HostConnectionService extends Service implements HostConnectionHand
+     handler: ConnectionRpcHandler,
+   ): () => Promise<void> {
+     assertChannel(channel)
+-    const fetchHandler = rpcFetchHandler(channel, handler, this.operator)
++    const fetchHandler = rpcFetchHandler(channel, handler)
+     const route: WebRoute = {
+       kind: 'prefix',
+       path: channel,
+@@ -191,7 +267,7 @@ export class HostConnectionService extends Service implements HostConnectionHand
+           res.end(admission.rejection === 401 ? 'unauthorized' : 'forbidden')
+           return
+         }
+-        await bridge(req, res, fetchHandler)
++        await bridge(req, res, fetchHandler, admission.peer)
+       },
+     }
+     return owner.effect(
+@@ -211,7 +287,7 @@ export class HostConnectionService extends Service implements HostConnectionHand
+     }
+     const interceptor: ConnectionRpcInterceptor = {
+       matches,
+-      fetchHandler: rpcFetchHandler(channel, handler, this.operator),
++      fetchHandler: rpcFetchHandler(channel, handler),
+     }
+     return owner.effect(() => {
+       if (this.interceptors.has(channel)) {
+@@ -228,11 +304,10 @@ export class HostConnectionService extends Service implements HostConnectionHand
+ function rpcFetchHandler(
+   channel: string,
+   handler: ConnectionRpcHandler,
+-  peer: PeerScope,
+ ): ConnectionFetchHandler {
+   return {
+     requestBodyMode: () => 'buffered',
+-    async fetch(request: Request): Promise<Response> {
++    async fetch(request: Request, peer: PeerScope): Promise<Response> {
+       const endpoint = endpointFromPath(channel, new URL(request.url).pathname)
+       if (request.method !== 'POST' || endpoint === undefined) {
+         return new Response('not found', { status: 404 })
+diff --git a/packages/client/connection/src/rpc.ts b/packages/client/connection/src/rpc.ts
+index cf30df6204..aec79d0728 100644
+--- a/packages/client/connection/src/rpc.ts
++++ b/packages/client/connection/src/rpc.ts
+@@ -1,7 +1,7 @@
+ /** Generic unary RPC contracts shared by the Host and Client Connection halves. */
+ 
+ import type { Branded } from '@deepseek-ai/dsh-brand'
+-import type { PeerScope } from '@deepseek-ai/dsh-typert-protocol'
++import type { PeerScope, Principal } from '@deepseek-ai/dsh-typert-protocol'
+ 
+ /** Correlation id minted by a caller and echoed by the Connection response. */
+ export type RpcId = Branded<'rpc-id'>
+@@ -115,14 +115,23 @@ export interface ConnectionIndexResponse {
+   end(body?: string): unknown
+ }
+ 
+-/** Outcome of admitting one request: the operator Peer it speaks for, or the status refusing it. */
++/** Outcome of admitting one request: the Peer it speaks for, or the status refusing it. */
+ export type PeerAdmission =
+   | { readonly peer: PeerScope }
+   | { readonly rejection: 401 | 403 }
+ 
++/** Socket admission claims API ownership until its carrier calls release, including failed upgrades. */
++export type ConnectionAdmission =
++  | {
++    readonly peer: PeerScope
++    /** Remove and dispose an API Peer; browser releases leave the shared browser Peer intact. */
++    readonly release: () => Promise<void>
++  }
++  | { readonly rejection: 401 | 403 | 409 }
++
+ /**
+  * Handler invoked after Connection has decoded the transport envelope.
+- * `peer` is the Peer the request was admitted as: the operator.
++ * `peer` is the Peer the carrier admitted or the in-process caller supplied.
+  */
+ export type ConnectionRpcHandler = (
+   endpoint: string,
+@@ -148,7 +157,11 @@ export interface ConnectionFetchRoute {
+   readonly methods: readonly ConnectionFetchMethod[]
+   /** Buffered requests obey the configured JSON cap; streaming requests arrive with backpressure and no aggregate cap. */
+   readonly requestBody: ConnectionRequestBodyMode
+-  /** Handle one request after the physical carrier has applied its trust and authentication policy. */
++  /**
++   * Handle one request after the physical carrier has applied its trust and
++   * authentication policy. Only owner Peers reach an exact route; the shared
++   * handler answers 403 for every other principal.
++   */
+   readonly fetch: (request: Request) => Promise<Response>
+ }
+ 
+@@ -195,8 +208,8 @@ export interface HostConnectionHandle {
+   readonly rpc: HostConnectionRpc
+   /** Exact Fetch routes for streaming or browser-native responses. */
+   readonly fetch: HostConnectionFetch
+-  /** The operator Peer every admitted request speaks for; its scope lives as long as Connection. */
+-  readonly operator: PeerScope
++  /** The owner Peer every authenticated browser connection shares. */
++  readonly browserPeer: PeerScope
+ 
+   /**
+    * Whether this deployment accepts authorities beyond loopback: true only
+@@ -220,13 +233,28 @@ export interface HostConnectionHandle {
+   requestRejection(request: ConnectionTrustRequest): ConnectionRequestRejection
+ 
+   /**
+-   * Admit one request: it passes {@link requestRejection} and speaks for the
+-   * operator, or it is refused with that status.
++   * Admit an HTTP request against its signed browser or API credential and live Peer.
+    * @param request - request headers from the HTTP or upgrade request.
+-   * @returns the operator Peer, or the rejection status.
++   * @returns the credential's Peer, or the rejection status.
+    */
+   admit(request: ConnectionTrustRequest): PeerAdmission
+ 
++  /**
++   * Create an independent in-process Peer, disposed with the Context that read `ctx.connection`.
++   * @param options - fixed principal and optional interaction participation (default `answer`).
++   * @returns a new Peer distinct from every other Peer.
++   */
++  createPeer(options: { readonly principal: Principal; readonly interactions?: 'answer' | 'none' }): PeerScope
++
++  /**
++   * Claim a physical socket for an API Peer; browser sockets share their owner Peer.
++   * @param request - authenticated upgrade request headers.
++   * @returns the Peer and idempotent release, or 409 for duplicate API ownership.
++   * The carrier releases on socket termination or failed upgrade; release removes
++   * API admission synchronously without cancelling independent HTTP calls.
++   */
++  admitConnection(request: ConnectionTrustRequest): ConnectionAdmission
++
+   /**
+    * Authenticate one frontend index request, owning a token redirect or 401.
+    * The cookie this mints is `Secure` when the mounted Web carrier serves TLS,
+@@ -257,9 +285,10 @@ export interface ConnectionFetchHandler {
+   /**
+    * Dispatch one already-authenticated request.
+    * @param request - Fetch request below the shared channel.
+-   * @returns the registered response or a 404 response.
++   * @param peer - Peer to dispatch as; required, never defaulted.
++   * @returns the registered response, a 403 response for an exact route and a non-owner Peer, or a 404 response.
+    */
+-  fetch(request: Request): Promise<Response>
++  fetch(request: Request, peer: PeerScope): Promise<Response>
+ }
+ 
+ /** Client caller for logical RPC channels carried by the current transport. */
+diff --git a/packages/core/agent/src/index.ts b/packages/core/agent/src/index.ts
+index 54dd8a805d..dd8d09e6b7 100644
+--- a/packages/core/agent/src/index.ts
++++ b/packages/core/agent/src/index.ts
+@@ -258,6 +258,7 @@ export class AgentRegistry extends Service {
+       typeCtx.typert.lookups.register('agent', {
+         parameter: 'agent',
+         wire: 'agentId',
++        resource: 'session',
+         hostTypeSymbol: '@deepseek-ai/dsh-agent#Agent',
+         wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
+         resolve: sessionId => this.get(sessionId),
+@@ -265,6 +266,7 @@ export class AgentRegistry extends Service {
+       typeCtx.typert.contexts.registerHost('agent', {
+         wire: 'agentId',
+         wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
++        resource: 'session',
+         resolve: sessionId => this.get(sessionId)?.ctx,
+       })
+     })
+diff --git a/packages/core/session/src/index.ts b/packages/core/session/src/index.ts
+index e97585e463..e1ecb920bd 100644
+--- a/packages/core/session/src/index.ts
++++ b/packages/core/session/src/index.ts
+@@ -1079,6 +1079,7 @@ export class SessionStore extends Service {
+       typeCtx.typert.lookups.register('session', {
+         parameter: 'session',
+         wire: 'sessionId',
++        resource: 'session',
+         hostTypeSymbol: '@deepseek-ai/dsh-session#Session',
+         wireTypeSymbol: '@deepseek-ai/dsh-session/types#SessionId',
+         resolve: sessionId => this.get(sessionId),
+diff --git a/packages/core/session/src/known-event-types.ts b/packages/core/session/src/known-event-types.ts
+index 9801de9222..a0f5c17795 100644
+--- a/packages/core/session/src/known-event-types.ts
++++ b/packages/core/session/src/known-event-types.ts
+@@ -42,6 +42,8 @@ export const KNOWN_SESSION_EVENT_TYPES: ReadonlySet<string> = new Set([
+   'hook/invoked',
+   'hook/result',
+   'image/offload',
++  'job/registered',
++  'job/settled',
+   'llm/retry',
+   'llm/retry-started',
+   'model/selection',
+diff --git a/packages/core/session/src/types.ts b/packages/core/session/src/types.ts
+index fbc9a9cccb..e0931f2240 100644
+--- a/packages/core/session/src/types.ts
++++ b/packages/core/session/src/types.ts
+@@ -14,6 +14,7 @@ import type {
+   ToolSchema,
+   UserMessage,
+ } from '@deepseek-ai/dsh-llm'
++import type { TypertResource } from '@deepseek-ai/dsh-typert-protocol'
+ import type { JsonValue } from '@deepseek-ai/dsh-util-values'
+ 
+ /** Identifies one session in the store (and its persistence artifacts). */
+@@ -549,6 +550,11 @@ export interface PluginRecord {
+ }
+ 
+ declare module '@deepseek-ai/dsh-typert-protocol' {
++  interface TypertResourceMap {
++    /** One Session; the Session Controller registers its default `sessionId` wire field. */
++    session: TypertResource<SessionId>
++  }
++
+   interface RemoteErrorDetailsMap {
+     /** The named Session does not exist; produced by every layer that resolves a SessionId. */
+     'session/not-found': { readonly sessionId: SessionId }
+diff --git a/packages/core/system-prompt/src/index.ts b/packages/core/system-prompt/src/index.ts
+index 2f027dfaf9..519afe060d 100644
+--- a/packages/core/system-prompt/src/index.ts
++++ b/packages/core/system-prompt/src/index.ts
+@@ -172,6 +172,10 @@ const CONTEXT_ORDERS = {
+   SANDBOX_POLICY: 110,
+   APPROVAL_POLICY: 115,
+   SUBAGENT_DELEGATION: 120,
++  TEAM_IDENTITY: 125,
++  // Process-specific paths and endpoints stay out of the cached system prompt.
++  HARNESS_SOURCE: 200,
++  WEB_SURFACE: 210,
+ } as const
+ 
+ /** Name of a centrally allocated runtime-context position. */
+diff --git a/packages/core/tools/src/index.ts b/packages/core/tools/src/index.ts
+index e506d99da0..0970c7e2b0 100644
+--- a/packages/core/tools/src/index.ts
++++ b/packages/core/tools/src/index.ts
+@@ -842,12 +842,14 @@ export class ToolRuntime extends Service {
+    * Reserved presentation transport, kept outside the filterable registration
+    * layers. Built on first need rather than at construction: which agents run
+    * a PTC mode is no longer known when the service is constructed, and the
+-   * transport is stateless beyond its closures over `this`.
++   * transport owns its PTC call tracking and state-owner registrations.
+    */
+   private ptcTransport: ToolDefinition | undefined
++  private readonly ptcContext: Context
+ 
+   constructor(ctx: Context, config: Config = {}) {
+     super(ctx, 'tools')
++    this.ptcContext = ctx
+     // The schema already defaulted an omitted mode; the ?? narrows the
+     // optional-input type for direct (non-Loader) construction in tests.
+     this.defaultMode = config.mode ?? 'native'
+@@ -965,7 +967,7 @@ export class ToolRuntime extends Service {
+       peekRuntime: () => this.ctx.get('ptcRuntime'),
+       maxParallel: this.maxParallelSubCalls,
+       shapeDispatchLog: dispatch => this.shapeDispatchLog(dispatch),
+-    })
++    }, this.ptcContext)
+     return this.ptcTransport
+   }
+ 
+diff --git a/packages/core/tools/src/ptc-calls.ts b/packages/core/tools/src/ptc-calls.ts
+new file mode 100644
+index 0000000000..16de96380c
+--- /dev/null
++++ b/packages/core/tools/src/ptc-calls.ts
+@@ -0,0 +1,64 @@
++/** Cancellation and settlement of complete PTC calls, including nested tools. */
++import type { Context } from '@deepseek-ai/cordis'
++import type { SessionId } from '@deepseek-ai/dsh-session'
++import type { SandboxMode } from '@deepseek-ai/dsh-sandbox'
++
++interface Call {
++  mode: SandboxMode
++  controller: AbortController
++  done: Promise<void>
++}
++
++/** Keeps calls under a changed policy from overlapping their canceled predecessors. */
++export class PtcCalls {
++  private readonly calls = new Map<SessionId, Set<Call>>()
++  private disposed = false
++
++  /**
++   * Observe policy changes for the owning tool registry.
++   * @param ctx - Registry lifecycle and Session events.
++   */
++  constructor(ctx: Context) {
++    ctx.on('session/event', (session, event) => {
++      if (event.type !== 'sandbox/mode') return
++      for (const call of this.calls.get(session.id) ?? []) {
++        if (call.mode !== event.data.mode) call.controller.abort(new Error('sandbox mode changed'))
++      }
++    }, { global: true })
++    ctx.effect(() => async () => {
++      this.disposed = true
++      const calls = [...this.calls.values()].flatMap(calls => [...calls])
++      for (const call of calls) call.controller.abort(new Error('PTC tool registry disposed'))
++      await Promise.all(calls.map(call => call.done))
++    }, 'PTC calls')
++  }
++
++  /**
++   * Await canceled predecessors before resolving authority and admitting a call.
++   * @param sessionId - Calling Session.
++   * @param signal - Caller cancellation.
++   * @param mode - Current standing mode, read after preceding cleanup.
++   * @param run - Complete call, including nested-tool cleanup.
++   * @returns The call result.
++   */
++  async run<T>(sessionId: SessionId, signal: AbortSignal, mode: () => SandboxMode, run: (signal: AbortSignal) => Promise<T>): Promise<T> {
++    for (;;) {
++      const pending = [...this.calls.get(sessionId) ?? []].filter(call => call.controller.signal.aborted)
++      if (pending.length === 0) break
++      await Promise.all(pending.map(call => call.done))
++    }
++    signal.throwIfAborted()
++    if (this.disposed) throw new Error('PTC tool registry disposed')
++    const controller = new AbortController()
++    const done = Promise.withResolvers<undefined>()
++    const call = { mode: mode(), controller, done: done.promise }
++    let calls = this.calls.get(sessionId)
++    if (calls === undefined) this.calls.set(sessionId, calls = new Set())
++    calls.add(call)
++    try { return await run(AbortSignal.any([signal, controller.signal])) } finally {
++      calls.delete(call)
++      if (calls.size === 0) this.calls.delete(sessionId)
++      done.resolve(undefined)
++    }
++  }
++}
+diff --git a/packages/core/tools/src/ptc.ts b/packages/core/tools/src/ptc.ts
+index 9d3bea545b..d2ec751c10 100644
+--- a/packages/core/tools/src/ptc.ts
++++ b/packages/core/tools/src/ptc.ts
+@@ -6,6 +6,7 @@
+  * @module @deepseek-ai/dsh-tools/src/ptc
+  */
+ 
++import { symbols, type Context } from '@deepseek-ai/cordis'
+ import { brandString } from '@deepseek-ai/dsh-brand'
+ import { createUserMessage, HarnessError } from '@deepseek-ai/dsh-llm'
+ declare module '@deepseek-ai/dsh-llm' {
+@@ -22,6 +23,7 @@ import type { SandboxExecutionPolicy } from '@deepseek-ai/dsh-sandbox'
+ import type { ApprovalService } from '@deepseek-ai/dsh-user-approval'
+ import { deepFreeze, snapshotJsonValue, type JsonValue } from '@deepseek-ai/dsh-util-values'
+ import { defineTool, parameterSchemaSpecToJsonSchema } from './schema.ts'
++import { PtcCalls } from './ptc-calls.ts'
+ import { TOOL_RUNTIME_SCHEDULER } from './index.ts'
+ import type { PtcDispatchLog, ToolDefinition, ToolExecutionResult, ToolRuntime, ToolRunContext } from './index.ts'
+ import type {} from './types.ts'
+@@ -44,38 +46,19 @@ interface RunCodeFlavor {
+   readonly codeDescription: string
+ }
+ 
+-/**
+- * The TypeScript flavor: the fallback for a schema read with no runtime
+- * mounted ({@link resolveFlavor} owns which readers reach that). A real
+- * assembly always resolves a runtime first, so the model never sees this
+- * fallback outside its own language.
+- */
+-const TYPESCRIPT_FLAVOR: RunCodeFlavor = {
+-  description:
+-    'Execute a TypeScript program against the available tools. Takes two required '
+-    + 'arguments: `description`, a short summary of what the program does, and `code`, '
+-    + 'the BODY of an async function (erasable syntax only; top-level `await` and '
+-    + '`return` work). Call tools as `await tools.name(args)` per the declarations in the system '
+-    + 'prompt. Only what you print or return is program output — curate it. Image-bearing '
+-    + 'subtool results are attached after the run.',
+-  codeDescription: 'The program: the body of an async TypeScript function.',
++/** Keep tool-call rules here; the runtime owns evaluation syntax and state retention. */
++function runCodeFlavor(language: string): RunCodeFlavor {
++  return {
++    description: `Execute a ${language} program against the available tools. Takes two required arguments: `
++      + '`description`, a short summary of what the program does, and `code`, the program to execute. '
++      + 'Call tools as `await tools.name(args)` per the declarations in the system prompt. '
++      + 'Curate the program output. Image-bearing subtool results are attached after the run.',
++    codeDescription: `The ${language} program to execute, following this tool's execution instructions.`,
++  }
+ }
+ 
+-/**
+- * The Python flavor: the body of an async function, top-level `await` and
+- * `return`, answer via `print` and/or the returned value, matching
+- * {@link ./py-types.ts}'s SDK instructions.
+- */
+-const PYTHON_FLAVOR: RunCodeFlavor = {
+-  description:
+-    'Execute a Python program against the available tools. Takes two required '
+-    + 'arguments: `description`, a short summary of what the program does, and `code`, '
+-    + 'the BODY of an async function (top-level `await` and `return` work). Call tools as '
+-    + '`await tools.name(args)` per the declarations in the system prompt. Use '
+-    + '`print(...)` and/or `return <value>` for program output — curate it. Image-bearing '
+-    + 'subtool results are attached after the run.',
+-  codeDescription: 'The program: the body of an async Python function.',
+-}
++const TYPESCRIPT_FLAVOR = runCodeFlavor('TypeScript')
++const PYTHON_FLAVOR = runCodeFlavor('Python')
+ 
+ /**
+  * The languages PTC mode ships a presentation for. Both per-language tables —
+@@ -331,10 +314,13 @@ export interface RunCodeBridgeOptions {
+  * @param registry - the owning registry (sub-calls go through its `execute`,
+  *   bindings cover its registered tools).
+  * @param options - the registry-private capabilities described above.
++ * @param ctx - Owning registry context, independent of the calling Agent.
+  * @returns the registry-ready definition.
+  */
+-export function createRunCodeTool(registry: ToolRuntime, options: RunCodeBridgeOptions): ToolDefinition {
++export function createRunCodeTool(registry: ToolRuntime, options: RunCodeBridgeOptions, ctx: Context): ToolDefinition {
+   const { requireRuntime, peekRuntime, maxParallel, shapeDispatchLog } = options
++  const stateOwners = new WeakMap<object, WeakSet<PtcRuntime>>()
++  const calls = new PtcCalls(ctx)
+   const definition = defineTool({
+     name: RUN_CODE_NAME,
+     // The description and `code` parameter description are placeholders here:
+@@ -384,355 +370,376 @@ export function createRunCodeTool(registry: ToolRuntime, options: RunCodeBridgeO
+         throw new Error('invalid description: expected a non-empty string')
+       }
+       const runtime = requireRuntime()
+-      validateEscalationArgs(args.sandbox_permissions, args.justification)
+-      if (args.timeoutMs !== undefined && runtime.timeout === undefined) {
+-        throw new Error('timeoutMs is not available for this PTC runtime')
+-      }
+-      if (args.timeoutMs !== undefined && (!Number.isFinite(args.timeoutMs) || args.timeoutMs <= 0)) {
+-        throw new Error('invalid timeoutMs: expected a positive finite number')
+-      }
+-      const standingPolicy = runtime.sandboxMode === undefined ? undefined : options.resolveSandboxPolicy(exec)
+-      let policy = standingPolicy
+-      if (args.sandbox_permissions !== undefined && args.justification !== undefined) {
+-        if (standingPolicy === undefined) throw new Error('sandbox_permissions is not available for this PTC runtime')
+-        const approvedMode = await approveEscalation({
+-          requestedMode: args.sandbox_permissions,
+-          justification: args.justification,
+-          effectiveMode: standingPolicy.mode,
+-          subject: 'program',
+-        }, {
+-          approver: options.peekApprover(), agent: exec.agent, callId: exec.callId,
+-          toolName: RUN_CODE_NAME, signal: exec.signal,
+-        })
+-        policy = { ...standingPolicy, mode: approvedMode }
+-      }
+-      const cwd = await options.resolveWorkingDirectory(exec)
+-      exec.signal.throwIfAborted()
+-
+-      // The run-scoped abort: follows the outer signal in, and fires when the
+-      // run settles for ANY reason, so an in-flight sub-dispatch is aborted
+-      // (its executor kills on this signal) instead of orphaned, and
+-      // queued-unstarted dispatches are abandoned.
+-      const runController = new AbortController()
+-      const onOuterAbort = (): void => { runController.abort(exec.signal.reason) }
+-      exec.signal.addEventListener('abort', onOuterAbort, { once: true })
+-
+-      let dispatches = 0
+-      // The per-run scheduler uses the registry's staged interface and follows
+-      // the same concurrency rules as the native loop. It also follows the
+-      // native loop's SEQUENCING: every ordered stage (the dispatch-start
+-      // append, prepare = pre-execute/guards, finalize/finish = post-execute,
+-      // context deferral, the settle append) runs inside ONE driver lane, so
+-      // ordered policy stages never overlap each other and only the
+-      // around-dispatch/body stage runs concurrently. Starts are strictly
+-      // submission-ordered; results commit in submission order through the
+-      // head-of-line cursor. Consecutive parallel-classified calls overlap up
+-      // to maxParallel; an exclusive call waits for the pool to drain, runs
+-      // alone, and holds its barrier until its COMMIT (post-execute included)
+-      // completes, exactly like a native exclusive group. Classification is
+-      // re-read via executionMode() immediately before each start (a registry
+-      // mutation while queued can flip a call exclusive), matching the native
+-      // scheduler's lazy reclassification.
+-      interface PendingDispatch {
+-        /** Ordered stage: append the start event, await prepare (pre-execute/guards), launch the body into `flight`. */
+-        start(): Promise<void>
+-        classify(): 'parallel' | 'exclusive'
+-        abandon(): void
+-        /** Ordered stage: post-execute + context deferral + settle event, in submission order. */
+-        commit(): Promise<void>
+-        /** The launched around-dispatch/body stage; resolved until start() replaces it. */
+-        flight: Promise<void>
+-        /** True once the dispatch stage parked its outcome; the commit cursor waits on it. */
+-        settled: boolean
+-        /** The classification this entry started under; an exclusive holds its barrier through commit(). */
+-        mode?: 'parallel' | 'exclusive'
+-      }
+-      const pendingQueue: PendingDispatch[] = []
+-      const inFlight = new Set<Promise<void>>()
+-      /** Tracked settle-event side work (log-content listener + append), drained at run settlement. */
+-      const logWork = new Set<Promise<void>>()
+-      const commitQueue: PendingDispatch[] = []
+-      let exclusiveActive = false
+-      let driving = false
+-      let driverRun: Promise<void> = Promise.resolve()
+-      let wake: (() => void) | undefined
+-      const wakeup = (): void => {
+-        const release = wake
+-        wake = undefined
+-        release?.()
+-      }
+-      /**
+-       * The single ordered lane. Each pass commits the head-of-line settled
+-       * dispatch (ordered post-execute), then starts the next queued entry if
+-       * its slot is free (ordered pre-execute), and otherwise sleeps until a
+-       * body settles or a new submission arrives. One run reaching the
+-       * empty-queues/empty-pool state is quiescence.
+-       */
+-      const drive = (): Promise<void> => {
+-        if (driving) return driverRun
+-        driving = true
+-        driverRun = (async () => {
+-          try {
+-            for (;;) {
+-              // Create the wakeup promise before inspecting state so a settle or submission arriving
+-              // between the checks and the await below cannot be lost.
+-              const signal = new Promise<void>((resolve) => { wake = resolve })
+-              const commitHead = commitQueue[0]
+-              if (commitHead !== undefined && commitHead.settled) {
+-                commitQueue.shift()
+-                await commitHead.commit()
+-                // The barrier covers post-execute: later starts wait for the
+-                // exclusive call's full pipeline, as under the native loop.
+-                if (commitHead.mode === 'exclusive') exclusiveActive = false
+-                continue
+-              }
+-              const head = pendingQueue[0]
+-              if (head !== undefined) {
+-                if (runController.signal.aborted) {
+-                  pendingQueue.shift()
+-                  head.abandon()
++      const run = async (callSignal: AbortSignal): Promise<RunCodeOutput> => {
++        validateEscalationArgs(args.sandbox_permissions, args.justification)
++        if (args.timeoutMs !== undefined && runtime.timeout === undefined) {
++          throw new Error('timeoutMs is not available for this PTC runtime')
++        }
++        if (args.timeoutMs !== undefined && (!Number.isFinite(args.timeoutMs) || args.timeoutMs <= 0)) {
++          throw new Error('invalid timeoutMs: expected a positive finite number')
++        }
++        const standingPolicy = runtime.sandboxMode === undefined ? undefined : options.resolveSandboxPolicy(exec)
++        let policy = standingPolicy
++        if (args.sandbox_permissions !== undefined && args.justification !== undefined) {
++          if (standingPolicy === undefined) throw new Error('sandbox_permissions is not available for this PTC runtime')
++          const approvedMode = await approveEscalation({
++            requestedMode: args.sandbox_permissions,
++            justification: args.justification,
++            effectiveMode: standingPolicy.mode,
++            subject: 'program',
++          }, {
++            approver: options.peekApprover(), agent: exec.agent, callId: exec.callId,
++            toolName: RUN_CODE_NAME, signal: callSignal,
++          })
++          policy = { ...standingPolicy, mode: approvedMode }
++        }
++        const cwd = await options.resolveWorkingDirectory({ ...exec, signal: callSignal })
++        callSignal.throwIfAborted()
++
++        // The run-scoped abort: follows the outer signal in, and fires when the
++        // run settles for ANY reason, so an in-flight sub-dispatch is aborted
++        // (its executor kills on this signal) instead of orphaned, and
++        // queued-unstarted dispatches are abandoned.
++        const runController = new AbortController()
++        const onOuterAbort = (): void => { runController.abort(callSignal.reason) }
++        callSignal.addEventListener('abort', onOuterAbort, { once: true })
++
++        let dispatches = 0
++        // The per-run scheduler uses the registry's staged interface and follows
++        // the same concurrency rules as the native loop. It also follows the
++        // native loop's SEQUENCING: every ordered stage (the dispatch-start
++        // append, prepare = pre-execute/guards, finalize/finish = post-execute,
++        // context deferral, the settle append) runs inside ONE driver lane, so
++        // ordered policy stages never overlap each other and only the
++        // around-dispatch/body stage runs concurrently. Starts are strictly
++        // submission-ordered; results commit in submission order through the
++        // head-of-line cursor. Consecutive parallel-classified calls overlap up
++        // to maxParallel; an exclusive call waits for the pool to drain, runs
++        // alone, and holds its barrier until its COMMIT (post-execute included)
++        // completes, exactly like a native exclusive group. Classification is
++        // re-read via executionMode() immediately before each start (a registry
++        // mutation while queued can flip a call exclusive), matching the native
++        // scheduler's lazy reclassification.
++        interface PendingDispatch {
++          /** Ordered stage: append the start event, await prepare (pre-execute/guards), launch the body into `flight`. */
++          start(): Promise<void>
++          classify(): 'parallel' | 'exclusive'
++          abandon(): void
++          /** Ordered stage: post-execute + context deferral + settle event, in submission order. */
++          commit(): Promise<void>
++          /** The launched around-dispatch/body stage; resolved until start() replaces it. */
++          flight: Promise<void>
++          /** True once the dispatch stage parked its outcome; the commit cursor waits on it. */
++          settled: boolean
++          /** The classification this entry started under; an exclusive holds its barrier through commit(). */
++          mode?: 'parallel' | 'exclusive'
++        }
++        const pendingQueue: PendingDispatch[] = []
++        const inFlight = new Set<Promise<void>>()
++        /** Tracked settle-event side work (log-content listener + append), drained at run settlement. */
++        const logWork = new Set<Promise<void>>()
++        const commitQueue: PendingDispatch[] = []
++        let exclusiveActive = false
++        let driving = false
++        let driverRun: Promise<void> = Promise.resolve()
++        let wake: (() => void) | undefined
++        const wakeup = (): void => {
++          const release = wake
++          wake = undefined
++          release?.()
++        }
++        /**
++         * The single ordered lane. Each pass commits the head-of-line settled
++         * dispatch (ordered post-execute), then starts the next queued entry if
++         * its slot is free (ordered pre-execute), and otherwise sleeps until a
++         * body settles or a new submission arrives. One run reaching the
++         * empty-queues/empty-pool state is quiescence.
++         */
++        const drive = (): Promise<void> => {
++          if (driving) return driverRun
++          driving = true
++          driverRun = (async () => {
++            try {
++              for (;;) {
++                // Create the wakeup promise before inspecting state so a settle or submission arriving
++                // between the checks and the await below cannot be lost.
++                const signal = new Promise<void>((resolve) => { wake = resolve })
++                const commitHead = commitQueue[0]
++                if (commitHead !== undefined && commitHead.settled) {
++                  commitQueue.shift()
++                  await commitHead.commit()
++                  // The barrier covers post-execute: later starts wait for the
++                  // exclusive call's full pipeline, as under the native loop.
++                  if (commitHead.mode === 'exclusive') exclusiveActive = false
+                   continue
+                 }
+-                // Reclassify at start time (fail-closed on registry changes).
+-                const mode = head.classify()
+-                const capacity = !exclusiveActive
+-                  && (mode === 'exclusive' ? inFlight.size === 0 : inFlight.size < maxParallel)
+-                if (capacity) {
+-                  if (mode === 'exclusive') exclusiveActive = true
+-                  head.mode = mode
+-                  pendingQueue.shift()
+-                  // Joined before start() so the commit cursor sees submission
+-                  // order; nothing commits it until `settled` flips.
+-                  commitQueue.push(head)
+-                  await head.start()
+-                  const flight: Promise<void> = head.flight.finally(() => {
+-                    inFlight.delete(flight)
+-                    wakeup()
+-                  })
+-                  inFlight.add(flight)
+-                  continue
++                const head = pendingQueue[0]
++                if (head !== undefined) {
++                  if (runController.signal.aborted) {
++                    pendingQueue.shift()
++                    head.abandon()
++                    continue
++                  }
++                  // Reclassify at start time (fail-closed on registry changes).
++                  const mode = head.classify()
++                  const capacity = !exclusiveActive
++                    && (mode === 'exclusive' ? inFlight.size === 0 : inFlight.size < maxParallel)
++                  if (capacity) {
++                    if (mode === 'exclusive') exclusiveActive = true
++                    head.mode = mode
++                    pendingQueue.shift()
++                    // Joined before start() so the commit cursor sees submission
++                    // order; nothing commits it until `settled` flips.
++                    commitQueue.push(head)
++                    await head.start()
++                    const flight: Promise<void> = head.flight.finally(() => {
++                      inFlight.delete(flight)
++                      wakeup()
++                    })
++                    inFlight.add(flight)
++                    continue
++                  }
+                 }
++                if (pendingQueue.length === 0 && commitQueue.length === 0 && inFlight.size === 0) return
++                await signal
+               }
+-              if (pendingQueue.length === 0 && commitQueue.length === 0 && inFlight.size === 0) return
+-              await signal
++            } finally {
++              driving = false
++              wake = undefined
+             }
+-          } finally {
+-            driving = false
+-            wake = undefined
+-          }
+-        })()
+-        return driverRun
+-      }
+-      /** Every dispatch settled AND committed; nothing can start (the run is aborted at call time). */
+-      const drainDispatches = async (): Promise<void> => {
+-        // The abort already fired: the driver abandons queued-unstarted
+-        // entries, awaits the live pool, and drains the ordered commit lane —
+-        // including a commit already in progress when the program returned.
+-        await drive()
+-        // Every settle event is appended inside the open run_code turn
+-        // (tasks self-remove on settlement).
+-        while (logWork.size > 0) await Promise.allSettled([...logWork])
+-      }
+-
+-      // Read through a call, not a bare property: the abort state genuinely
+-      // changes across awaits, and a direct `.aborted` re-check after one
+-      // would be narrowed away by control flow analysis.
+-      const runOver = (): boolean => runController.signal.aborted
+-
+-      const binding = (schema: ToolSchema): PtcBindingFunction => async (rawArgs: unknown): Promise<JsonValue> => {
+-        const { name } = schema
+-        if (runOver()) {
+-          throw new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} not dispatched`)
++          })()
++          return driverRun
+         }
+-        const normalized = jsonNormalizeArgs(rawArgs)
+-        const n = ++dispatches
+-        const subCallId = brandString<ToolCallId>(`${String(exec.callId)}:ptc:${n}`)
+-        const input = {
+-          callId: subCallId,
+-          rootCallId: exec.rootCallId,
+-          name,
+-          schema,
+-          arguments: normalized.dispatched,
+-          ...exec.agent ? { agent: exec.agent } : {},
+-          parent: exec.token,
+-          signal: runController.signal,
++        /** Every dispatch settled AND committed; nothing can start (the run is aborted at call time). */
++        const drainDispatches = async (): Promise<void> => {
++          // The abort already fired: the driver abandons queued-unstarted
++          // entries, awaits the live pool, and drains the ordered commit lane —
++          // including a commit already in progress when the program returned.
++          await drive()
++          // Every settle event is appended inside the open run_code turn
++          // (tasks self-remove on settlement).
++          while (logWork.size > 0) await Promise.allSettled([...logWork])
+         }
+-        type DispatchOutcome = { isError: true; message: string } | { isError: false; value: JsonValue }
+-        const scheduler = registry[TOOL_RUNTIME_SCHEDULER]
+-        const outcome = await new Promise<DispatchOutcome>((resolve, reject) => {
+-          // Set by the dispatch stage (or start() for a pre-settled result): what commit() finalizes in submission order.
+-          let parked:
+-            | { kind: 'post-result' | 'final-result'; exec: ToolRunContext; result: ToolExecutionResult }
+-            | undefined
+-          const settle = (result: ToolExecutionResult): void => {
+-            // The program gets its value NOW: the log-content listener (for
+-            // example, a spill backend) must never delay the binding or occupy
+-            // a dispatch slot. The event append is tracked side work; the run's
+-            // settlement drains logWork so every settle event is still appended
+-            // inside the open turn (shapeDispatchLog is contained, so this
+-            // chain cannot reject).
+-            resolve(result.isError
+-              ? { isError: true, message: result.error.message }
+-              : { isError: false, value: result.value })
+-            const agent = exec.agent
+-            if (agent === undefined) return
+-            const task: Promise<void> = (async () => {
+-              // The listener may replace the durable copy with a preview and
+-              // locator; the program's value and model-visible result are
+-              // untouched.
+-              const logged = await shapeDispatchLog({
+-                exec, agent, subCallId, name, isError: result.isError,
+-                // The registry deep-froze this projection at result
+-                // finalization; append snapshots the final copy again, so
+-                // the log stays detached.
+-                content: result.content,
+-              })
+-              agent.session.append('tool/ptc-dispatch', {
+-                rootCallId: exec.rootCallId,
+-                parentCallId: exec.callId,
+-                subCallId,
+-                name,
+-                // The SIBLING parse of the dispatched value: byte-identical JSON,
+-                // but a separate object — a tool mutating its args cannot desync
+-                // this record from what it actually received.
+-                arguments: normalized.logged,
+-                isError: result.isError,
+-                ...result.error?.info === undefined ? {} : { error: result.error.info },
+-                content: logged,
+-                ...result.meta === undefined ? {} : { meta: result.meta },
+-              })
+-            })().finally(() => { logWork.delete(task) })
+-            logWork.add(task)
++
++        // Read through a call, not a bare property: the abort state genuinely
++        // changes across awaits, and a direct `.aborted` re-check after one
++        // would be narrowed away by control flow analysis.
++        const runOver = (): boolean => runController.signal.aborted
++
++        const binding = (schema: ToolSchema): PtcBindingFunction => async (rawArgs: unknown): Promise<JsonValue> => {
++          const { name } = schema
++          if (runOver()) {
++            throw new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} not dispatched`)
+           }
+-          pendingQueue.push({
+-            flight: Promise.resolve(),
+-            settled: false,
+-            // Re-read per driver pass against the same agent view the SDK
+-            // declared; fail-closed exclusive when undeclared/invalid.
+-            classify: () => registry.executionMode(input).kind,
+-            abandon: () => {
+-              reject(new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} tool call abandoned`))
+-            },
+-            async start(): Promise<void> {
+-              exec.agent?.session.append('tool/ptc-dispatch-start', {
+-                rootCallId: exec.rootCallId,
+-                parentCallId: exec.callId,
+-                subCallId,
+-                name,
+-                arguments: normalized.logged,
+-              })
+-              // Ordered prepare runs INSIDE the driver lane: the next entry's
+-              // pre-execute waits for this resolution, as under the native
+-              // scheduler. Only the launched body below overlaps.
+-              const prepared = await scheduler.prepare(input)
+-              if (prepared.kind === 'dispatch') {
+-                this.flight = scheduler.dispatch(prepared.exec).then((dispatchOutcome) => {
+-                  parked = { kind: dispatchOutcome.kind, exec: prepared.exec, result: dispatchOutcome.result }
+-                  this.settled = true
+-                })
+-                return
+-              }
+-              parked = { kind: prepared.kind, exec: prepared.exec, result: prepared.result }
+-              this.settled = true
+-            },
+-            async commit(): Promise<void> {
+-              /* v8 ignore next -- commit() runs only after `settled` flipped, which set parked. */
+-              if (parked === undefined) return
+-              const result = parked.kind === 'post-result'
+-                ? await scheduler.finalize(parked.exec, parked.result)
+-                : scheduler.finish(parked.exec, parked.result)
+-              if (!result.isError && result.content.some(block => block.type === 'image')) {
+-                exec.deferContext(createUserMessage({
++          const normalized = jsonNormalizeArgs(rawArgs)
++          const n = ++dispatches
++          const subCallId = brandString<ToolCallId>(`${String(exec.callId)}:ptc:${n}`)
++          const input = {
++            callId: subCallId,
++            rootCallId: exec.rootCallId,
++            name,
++            schema,
++            arguments: normalized.dispatched,
++            ...exec.agent ? { agent: exec.agent } : {},
++            parent: exec.token,
++            signal: runController.signal,
++          }
++          type DispatchOutcome = { isError: true; message: string } | { isError: false; value: JsonValue }
++          const scheduler = registry[TOOL_RUNTIME_SCHEDULER]
++          const outcome = await new Promise<DispatchOutcome>((resolve, reject) => {
++            // Set by the dispatch stage (or start() for a pre-settled result): what commit() finalizes in submission order.
++            let parked:
++              | { kind: 'post-result' | 'final-result'; exec: ToolRunContext; result: ToolExecutionResult }
++              | undefined
++            const settle = (result: ToolExecutionResult): void => {
++              // The program gets its value NOW: the log-content listener (for
++              // example, a spill backend) must never delay the binding or occupy
++              // a dispatch slot. The event append is tracked side work; the run's
++              // settlement drains logWork so every settle event is still appended
++              // inside the open turn (shapeDispatchLog is contained, so this
++              // chain cannot reject).
++              resolve(result.isError
++                ? { isError: true, message: result.error.message }
++                : { isError: false, value: result.value })
++              const agent = exec.agent
++              if (agent === undefined) return
++              const task: Promise<void> = (async () => {
++                // The listener may replace the durable copy with a preview and
++                // locator; the program's value and model-visible result are
++                // untouched.
++                const logged = await shapeDispatchLog({
++                  exec, agent, subCallId, name, isError: result.isError,
++                  // The registry deep-froze this projection at result
++                  // finalization; append snapshots the final copy again, so
++                  // the log stays detached.
+                   content: result.content,
+-                  source: { kind: 'ptc-mode' },
+-                }))
+-              }
+-              for (const context of result.additionalContexts ?? []) {
+-                exec.deferContext(context)
+-              }
+-              // The composite forwards `additionalContexts` above and
+-              // `concludesTurn` here from the nested result. Only a successful
+-              // nested result can carry the terminal marker
+-              // (ToolExecutionFailure types it never), so a policy-converted
+-              // failure cannot stop the turn through a recovering program.
+-              if (result.concludesTurn) exec.concludeTurn()
+-              settle(result)
+-              // Backpressure on pending event-append tasks: each task retains
+-              // a full result while a slow backend stores it, so the pool cap
+-              // bounds their count. Beyond the cap, the
+-              // ordered lane waits, so later sub-calls cannot start and
+-              // pending I/O/memory cannot grow without bound.
+-              while (logWork.size > maxParallel) await Promise.race(logWork)
+-            },
++                })
++                agent.session.append('tool/ptc-dispatch', {
++                  rootCallId: exec.rootCallId,
++                  parentCallId: exec.callId,
++                  subCallId,
++                  name,
++                  // The SIBLING parse of the dispatched value: byte-identical JSON,
++                  // but a separate object — a tool mutating its args cannot desync
++                  // this record from what it actually received.
++                  arguments: normalized.logged,
++                  isError: result.isError,
++                  ...result.error?.info === undefined ? {} : { error: result.error.info },
++                  content: logged,
++                  ...result.meta === undefined ? {} : { meta: result.meta },
++                })
++              })().finally(() => { logWork.delete(task) })
++              logWork.add(task)
++            }
++            pendingQueue.push({
++              flight: Promise.resolve(),
++              settled: false,
++              // Re-read per driver pass against the same agent view the SDK
++              // declared; fail-closed exclusive when undeclared/invalid.
++              classify: () => registry.executionMode(input).kind,
++              abandon: () => {
++                reject(new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} tool call abandoned`))
++              },
++              async start(): Promise<void> {
++                exec.agent?.session.append('tool/ptc-dispatch-start', {
++                  rootCallId: exec.rootCallId,
++                  parentCallId: exec.callId,
++                  subCallId,
++                  name,
++                  arguments: normalized.logged,
++                })
++                // Ordered prepare runs INSIDE the driver lane: the next entry's
++                // pre-execute waits for this resolution, as under the native
++                // scheduler. Only the launched body below overlaps.
++                const prepared = await scheduler.prepare(input)
++                if (prepared.kind === 'dispatch') {
++                  this.flight = scheduler.dispatch(prepared.exec).then((dispatchOutcome) => {
++                    parked = { kind: dispatchOutcome.kind, exec: prepared.exec, result: dispatchOutcome.result }
++                    this.settled = true
++                  })
++                  return
++                }
++                parked = { kind: prepared.kind, exec: prepared.exec, result: prepared.result }
++                this.settled = true
++              },
++              async commit(): Promise<void> {
++                /* v8 ignore next -- commit() runs only after `settled` flipped, which set parked. */
++                if (parked === undefined) return
++                const result = parked.kind === 'post-result'
++                  ? await scheduler.finalize(parked.exec, parked.result)
++                  : scheduler.finish(parked.exec, parked.result)
++                if (!result.isError && result.content.some(block => block.type === 'image')) {
++                  exec.deferContext(createUserMessage({
++                    content: result.content,
++                    source: { kind: 'ptc-mode' },
++                  }))
++                }
++                for (const context of result.additionalContexts ?? []) {
++                  exec.deferContext(context)
++                }
++                // The composite forwards `additionalContexts` above and
++                // `concludesTurn` here from the nested result. Only a successful
++                // nested result can carry the terminal marker
++                // (ToolExecutionFailure types it never), so a policy-converted
++                // failure cannot stop the turn through a recovering program.
++                if (result.concludesTurn) exec.concludeTurn()
++                settle(result)
++                // Backpressure on pending event-append tasks: each task retains
++                // a full result while a slow backend stores it, so the pool cap
++                // bounds their count. Beyond the cap, the
++                // ordered lane waits, so later sub-calls cannot start and
++                // pending I/O/memory cannot grow without bound.
++                while (logWork.size > maxParallel) await Promise.race(logWork)
++              },
++            })
++            wakeup()
++            void drive()
+           })
+-          wakeup()
+-          void drive()
+-        })
+-        // A budget expiry or outer cancel that occurs while this call was in
+-        // flight already aborted the dispatch; stop the program now rather
+-        // than hand it a result from a run that is over.
+-        if (runOver()) {
+-          throw new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} result discarded`)
++          // A budget expiry or outer cancel that occurs while this call was in
++          // flight already aborted the dispatch; stop the program now rather
++          // than hand it a result from a run that is over.
++          if (runOver()) {
++            throw new Error(`run_code run is over (${String(runController.signal.reason)}); ${name} result discarded`)
++          }
++          // The worker turns a binding rejection into ToolCallError and adds
++          // only the binding name. Native content and internal error metadata
++          // stay outside the program-facing failure contract.
++          if (outcome.isError) throw new Error(outcome.message)
++          return outcome.value
+         }
+-        // The worker turns a binding rejection into ToolCallError and adds
+-        // only the binding name. Native content and internal error metadata
+-        // stay outside the program-facing failure contract.
+-        if (outcome.isError) throw new Error(outcome.message)
+-        return outcome.value
+-      }
+ 
+-      // Null-prototype + defineProperty, mirroring the worker-side namespace
+-      // build: a registered tool named `__proto__` must become an ordinary
+-      // own key (a plain-object assignment would hit the prototype setter,
+-      // silently dropping the binding), and the runtime host resolves
+-      // binding names as own properties only.
+-      const functions: Record<string, PtcBindingFunction> = Object.create(null) as Record<string, PtcBindingFunction>
+-      // Enumerate the CALLING AGENT's visible set (scoped tools join,
+-      // restricted globals vanish) — the same view the SDK section declared,
+-      // so a program can bind exactly what its prompt promised; sub-dispatch
+-      // re-resolves per call through the same view (exec.agent threads down).
+-      for (const schema of registry.schemas(exec.agent)) {
+-        if (schema.name === RUN_CODE_NAME) continue
+-        Object.defineProperty(functions, schema.name, { enumerable: true, value: binding(deepFreeze(schema)) })
+-      }
++        // Null-prototype + defineProperty, mirroring the worker-side namespace
++        // build: a registered tool named `__proto__` must become an ordinary
++        // own key (a plain-object assignment would hit the prototype setter,
++        // silently dropping the binding), and the runtime host resolves
++        // binding names as own properties only.
++        const functions: Record<string, PtcBindingFunction> = Object.create(null) as Record<string, PtcBindingFunction>
++        // Enumerate the CALLING AGENT's visible set (scoped tools join,
++        // restricted globals vanish) — the same view the SDK section declared,
++        // so a program can bind exactly what its prompt promised; sub-dispatch
++        // re-resolves per call through the same view (exec.agent threads down).
++        for (const schema of registry.schemas(exec.agent)) {
++          if (schema.name === RUN_CODE_NAME) continue
++          Object.defineProperty(functions, schema.name, { enumerable: true, value: binding(deepFreeze(schema)) })
++        }
+ 
+-      try {
+-        let result: PtcRunResult
+         try {
+-          result = await runtime.run(runtime.resolve({
+-            program: args.code,
+-            bindings: [{
+-              global: 'tools',
+-              functions,
+-              errorClass: { name: 'ToolCallError', memberNameProperty: 'toolName' },
+-            }],
+-            signal: runController.signal,
+-            ...cwd !== undefined ? { cwd } : {},
+-            ...policy !== undefined ? { sandboxPolicy: policy } : {},
+-            ...args.timeoutMs !== undefined ? { timeoutMs: args.timeoutMs } : {},
+-          }))
+-        } finally {
+-          // Abort sub-dispatches and drain every in-flight dispatch before
+-          // closing the turn (queued-unstarted ones are abandoned unlogged).
+-          // Binding failures remain observable through their individual promises.
+-          runController.abort('run_code settled')
+-          await drainDispatches()
+-        }
++          let result: PtcRunResult
++          try {
++            if (exec.agent !== undefined) {
++              const agent = exec.agent
++              let runtimes = stateOwners.get(agent)
++              if (runtimes === undefined) stateOwners.set(agent, runtimes = new WeakSet())
++              // Cordis can wrap service returns repeatedly; cleanup belongs to the original provider.
++              let provider = runtime
++              for (;;) {
++                const original = (provider as PtcRuntime & { [symbols.original]?: PtcRuntime })[symbols.original]
++                if (original === undefined) break
++                provider = original
++              }
++              if (!runtimes.has(provider)) {
++                agent.ctx.effect(() => () => runtime.release(agent), 'PTC retained environment')
++                runtimes.add(provider)
++              }
++            }
++            result = await runtime.run(runtime.resolve({
++              program: args.code,
++              ...exec.agent === undefined || policy?.mode !== standingPolicy?.mode ? {} : { stateOwner: exec.agent },
++              bindings: [{
++                global: 'tools',
++                functions,
++                errorClass: { name: 'ToolCallError', memberNameProperty: 'toolName' },
++              }],
++              signal: runController.signal,
++              ...cwd !== undefined ? { cwd } : {},
++              ...policy !== undefined ? { sandboxPolicy: policy } : {},
++              ...args.timeoutMs !== undefined ? { timeoutMs: args.timeoutMs } : {},
++            }))
++          } finally {
++            // Abort sub-dispatches and drain every in-flight dispatch before
++            // closing the turn (queued-unstarted ones are abandoned unlogged).
++            // Binding failures remain observable through their individual promises.
++            runController.abort('run_code settled')
++            await drainDispatches()
++          }
+ 
+-        if (result.error) {
+-          const logsText = result.logs.length > 0 ? `\nCaptured output:\n${result.logs.join('\n')}` : ''
+-          const sandboxText = result.sandbox === undefined ? ''
+-            : `\nFile sandbox: ${result.sandbox.mode}${result.sandbox.enforcement === undefined ? '' : `; enforcement: ${result.sandbox.enforcement}`}${result.sandbox.denied ? '; operation denied' : ''}.`
+-          throw new CodeRunFailedError(`code run failed (${result.error.kind}): ${result.error.message}${logsText}${sandboxText}${result.sandbox?.denied ? escalationGuidance(runtime) : ''}`)
+-        }
+-        return {
+-          logs: result.logs,
+-          ...result.sandbox === undefined ? {} : { sandbox: result.sandbox },
+-          ...result.value !== undefined ? { result: result.value } : {},
++          if (result.error) {
++            const logsText = result.logs.length > 0 ? `\nCaptured output:\n${result.logs.join('\n')}` : ''
++            const sandboxText = result.sandbox === undefined ? ''
++              : `\nFile sandbox: ${result.sandbox.mode}${result.sandbox.enforcement === undefined ? '' : `; enforcement: ${result.sandbox.enforcement}`}${result.sandbox.denied ? '; operation denied' : ''}.`
++            throw new CodeRunFailedError(`code run failed (${result.error.kind}): ${result.error.message}${logsText}${sandboxText}${result.sandbox?.denied ? escalationGuidance(runtime) : ''}`)
++          }
++          return {
++            logs: result.logs,
++            ...result.sandbox === undefined ? {} : { sandbox: result.sandbox },
++            ...result.value !== undefined ? { result: result.value } : {},
++          }
++        } finally {
++          callSignal.removeEventListener('abort', onOuterAbort)
+         }
+-      } finally {
+-        exec.signal.removeEventListener('abort', onOuterAbort)
+       }
++      return runtime.sandboxMode === undefined || exec.agent === undefined ? run(exec.signal)
++        : calls.run(exec.agent.session.id, exec.signal, () => options.resolveSandboxPolicy(exec).mode, run)
+     },
+     // The model-authored description is the call's always-visible UI label
+     // (the bash `description` precedent); the program itself rides rawInput.
+diff --git a/packages/core/tools/src/py-types.ts b/packages/core/tools/src/py-types.ts
+index 531ff13113..1f0f6e1067 100644
+--- a/packages/core/tools/src/py-types.ts
++++ b/packages/core/tools/src/py-types.ts
+@@ -732,12 +732,12 @@ export function jsonSchemaToPy(schema: unknown): string {
+ /** The fixed model-facing usage contract rendered above the declarations. */
+ const SDK_INSTRUCTIONS = `## Writing code for run_code
+ 
+-\`run_code\` takes two required arguments: \`description\`, a short summary of what the program does, and \`code\` — the body of an async Python function (top-level \`await\` and \`return\` both work). At run time exactly two of the names declared below are bound: \`tools\` and \`ToolCallError\`. Everything else is a STATIC STUB describing argument and return types — in particular the \`TypedDict\` classes do NOT exist at run time, so build arguments as plain \`dict\`/\`list\` JSON values: \`await tools.name({"field": 1})\`, never \`FooArgs(field=1)\`, which raises \`NameError\`. Inside the program:
++\`run_code\` takes two required arguments: \`description\`, a short summary of what the program does, and \`code\`, the program to execute. At run time exactly two of the names declared below are bound: \`tools\` and \`ToolCallError\`. Everything else is a STATIC STUB describing argument and return types — in particular the \`TypedDict\` classes do NOT exist at run time, so build arguments as plain \`dict\`/\`list\` JSON values: \`await tools.name({"field": 1})\`, never \`FooArgs(field=1)\`, which raises \`NameError\`. Inside the program:
+ 
+ - Call tools as \`await tools.name(args)\` — subscript access for exotic, reserved, or underscore-leading names: \`await tools["my-tool"](args)\`. Every call resolves to the tool's typed canonical JSON value (each method's return type below). Tool arguments must be lossless JSON.
+ - A FAILED tool call raises \`ToolCallError\`, whose \`toolName\` identifies the failed tool and whose message is human-readable — wrap in \`try/except\` to handle and continue.
+ - Independent read-only calls MAY overlap under \`asyncio.gather\` (safe calls run concurrently; mutating calls run alone, in submission order). Sequence dependent work with \`await\`.
+-- Emit the run's answer with \`print(...)\` and/or a top-level \`return <value>\`; the returned value must be lossless JSON. Only what you print and return is program output. A successful tool result containing an image is attached after the run so you can inspect it on the next step; every other intermediate result stays out of the conversation, so extract just what you need.
++- Only values emitted as program output enter the conversation. A successful tool result containing an image is attached after the run so you can inspect it on the next step; every other intermediate result stays out of the conversation, so extract just what you need.
+ 
+ The available tools:`
+ 
+diff --git a/packages/core/tools/src/ts-types.ts b/packages/core/tools/src/ts-types.ts
+index 1c4c71c38a..91abe9945d 100644
+--- a/packages/core/tools/src/ts-types.ts
++++ b/packages/core/tools/src/ts-types.ts
+@@ -249,14 +249,14 @@ export function jsonSchemaToTs(schema: unknown, indent = 0): string {
+ /** The fixed model-facing usage contract rendered above the declarations (see the PTC mode Agent Note's "What the model sees"). */
+ const SDK_INSTRUCTIONS = `## Writing code for run_code
+ 
+-\`run_code\` takes two required arguments: \`description\`, a short summary of what the program does, and \`code\` — the body of an async TypeScript function (erasable syntax only — no \`enum\` or namespaces; type annotations are advisory, the code runs type-stripped). The declarations below are SDK bindings for this program. A declaration does not make its name a directly callable tool; only names supplied as separate tool schemas may be called directly.`
++\`run_code\` takes two required arguments: \`description\`, a short summary of what the program does, and \`code\`, the program to execute. The declarations below are SDK bindings for this program. A declaration does not make its name a directly callable tool; only names supplied as separate tool schemas may be called directly.`
+ 
+ const SDK_PROGRAM_INSTRUCTIONS = `Inside the program:
+ 
+ - Call tools as \`await tools.name(args)\` — quoted access for exotic names: \`tools["my-tool"](args)\`. Every call resolves to the tool's typed canonical JSON value. Tool arguments must be lossless JSON.
+ - A FAILED tool call rejects with \`ToolCallError\`, whose \`toolName\` identifies the failed tool and whose \`message\` is human-readable — \`try/catch\` it to handle and continue.
+ - Independent read-only calls MAY overlap under \`Promise.all\` (safe calls run concurrently; mutating calls run alone, in submission order). Sequence dependent work with \`await\`.
+-- Emit results with \`return\` and/or \`console.log(...)\`. Only what you print or return is program output. A successful tool result containing an image is attached after the run so you can inspect it on the next step; every other intermediate result stays out of the conversation, so extract just what you need.
++- Only values emitted as program output enter the conversation. A successful tool result containing an image is attached after the run so you can inspect it on the next step; every other intermediate result stays out of the conversation, so extract just what you need.
+ 
+ Program-only SDK bindings:`
+ 
+@@ -279,7 +279,7 @@ function renderBashExample(schemas: ToolSdkSchema[]): string {
+   const needsDescription = required.includes('description')
+   if (needsDescription && !acceptsExampleString(parameters.properties?.description, 'Show current directory')) return ''
+   const description = needsDescription ? "description: 'Show current directory', " : ''
+-  return ` When no separate \`bash\` schema is supplied, invoke a declared \`bash\` binding inside \`run_code\`:\n\n\`run_code({ description: "Show current directory", code: "return await tools.bash({ ${description}command: 'pwd' })" })\``
++  return ` When no separate \`bash\` schema is supplied, invoke a declared \`bash\` binding inside \`run_code\`:\n\n\`run_code({ description: "Show current directory", code: "console.log(await tools.bash({ ${description}command: 'pwd' }))" })\``
+ }
+ 
+ /**
+diff --git a/packages/host/webserver/src/index.ts b/packages/host/webserver/src/index.ts
+index e023d5519a..73139550d3 100644
+--- a/packages/host/webserver/src/index.ts
++++ b/packages/host/webserver/src/index.ts
+@@ -198,6 +198,23 @@ export function normalizeBindAddress(host: string): string {
+   return parsed.toString()
+ }
+ 
++/**
++ * The URL host form of a bind address. Loopback addresses use their canonical
++ * text, so browsers treat them as local, trustworthy origins: a mapped literal
++ * such as `::ffff:127.0.0.1` reads as `127.0.0.1`, and `::0.0.0.1` reads as
++ * `::1`. A redundant loopback zone is dropped; other addresses keep their text,
++ * and IPv6 text is bracketed.
++ * @param host - concrete IPv4 or IPv6 bind literal.
++ * @returns the URL host, or `undefined` when a non-loopback interface zone id makes the address inexpressible in a URL.
++ */
++export function bindUrlHost(host: string): string | undefined {
++  const zoneAt = host.indexOf('%')
++  const bare = zoneAt === -1 ? host : host.slice(0, zoneAt)
++  if (!isLoopbackHost(bare) && zoneAt !== -1) return undefined
++  const text = isLoopbackHost(bare) ? normalizeBindAddress(bare) : host
++  return isIP(text) === 6 ? `[${text}]` : text
++}
++
+ function createGzipMiddleware(config: ResolvedConfig): NodeMiddleware {
+   // `compression` is typed for Express, but its runtime uses only the
+   // node:http request and response members supplied here.
+@@ -294,7 +311,7 @@ export class WebServer extends Service {
+   private readonly indexTaps: ((html: string) => string)[] = []
+   private fallback: WebRoute['handler'] | undefined
+   private server!: Server
+-  private listenedPort!: number
++  private listenedPort: number | undefined
+   private readonly gzip: NodeMiddleware | undefined
+   private readonly tlsConfig: TlsConfig | undefined
+ 
+@@ -306,8 +323,8 @@ export class WebServer extends Service {
+     this.gzip = resolved.compression === 'gzip' ? createGzipMiddleware(resolved) : undefined
+   }
+ 
+-  /** The listening port (the OS-assigned value when config.port is 0). */
+-  get port(): number {
++  /** The listening port (the OS-assigned value when config.port is 0), or `undefined` before `listen` binds. */
++  get port(): number | undefined {
+     return this.listenedPort
+   }
+ 
+@@ -325,6 +342,21 @@ export class WebServer extends Service {
+     return this.tlsConfig === undefined ? 'http:' : 'https:'
+   }
+ 
++  /**
++   * The root URL local clients use to reach the bound listener: the protocol,
++   * the {@link bindUrlHost} form of the bind address, and the listening port.
++   * @returns the origin, for example `http://127.0.0.1:3080`.
++   * @throws before `listen` binds a port, or when the bind address has no URL form.
++   */
++  getOrigin(): string {
++    const host = bindUrlHost(this.config.host)
++    if (host === undefined) {
++      throw new Error(`webserver: bind address ${JSON.stringify(this.config.host)} carries an interface zone id, which no URL can express`)
++    }
++    if (this.listenedPort === undefined) throw new Error('webserver: origin read before the listener bound a port')
++    return `${this.protocol}//${host}:${String(this.listenedPort)}`
++  }
++
+   /**
+    * Register a named route. Duplicate (kind, path) throws — route patterns are
+    * a composition-level contract, so a collision is a misconfiguration.
+diff --git a/packages/llm/llm/src/index.ts b/packages/llm/llm/src/index.ts
+index 10dde1a626..b4a5f82ad3 100644
+--- a/packages/llm/llm/src/index.ts
++++ b/packages/llm/llm/src/index.ts
+@@ -39,7 +39,7 @@ import { normalizeApiKey } from './api-key.ts'
+ import {
+   contentHasFile, contentHasImage, fileHandleText, projectFilesToText, projectImagesForTextModel, projectToolUpdates,
+ } from './content.ts'
+-import type { FileAttachmentRef } from '@deepseek-ai/dsh-attachment'
++import type { FileAttachmentRef, ImageAttachmentRef, ImageRequestTarget } from '@deepseek-ai/dsh-attachment'
+ 
+ export * from './attribution.ts'
+ export * from './brand.ts'
+@@ -237,6 +237,18 @@ export abstract class LlmAdapter {
+     return undefined
+   }
+ 
++  /**
++   * Resolve the image dimensions and byte target this adapter sends to the model.
++   * The default preserves normalized images; adapters that resize must override it.
++   * @param _provider - registered provider route.
++   * @param _model - exact model id.
++   * @param image - normalized image whose request projection is being resolved.
++   * @returns the same target used by request serialization, before provider-internal processing.
++   */
++  imageRequestTarget(_provider: string, _model: string, image: ImageAttachmentRef): ImageRequestTarget {
++    return { width: image.width, height: image.height, maxBytes: image.bytes }
++  }
++
+   /**
+    * List models this adapter can currently advertise for one owned provider.
+    * Core routing accepts unlisted model ids; catalog-driven entry points such
+@@ -504,7 +516,7 @@ export class LlmRuntime extends TypertRemoteService {
+           || detached.some(seen => seen.provider === entry.provider)) {
+           throw new LlmError(`configurable provider "${entry.provider}" is already declared`, 'DUPLICATE_DIRECTORY')
+         }
+-        detached.push({ ...entry, settingsPath: [...entry.settingsPath] })
++        detached.push(detachDirectoryEntry(entry))
+       }
+       for (const entry of held) this.directory.delete(entry.provider)
+       for (const entry of detached) this.directory.set(entry.provider, entry)
+@@ -541,7 +553,7 @@ export class LlmRuntime extends TypertRemoteService {
+    */
+   @Remote
+   listConfigurableProviders(): LlmConfigurableProvider[] {
+-    return [...this.directory.values()].map(entry => ({ ...entry, settingsPath: [...entry.settingsPath] }))
++    return [...this.directory.values()].map(detachDirectoryEntry)
+   }
+ 
+   /**
+@@ -670,6 +682,17 @@ export class LlmRuntime extends TypertRemoteService {
+     return this.adapters.get(provider)?.adapter.imageRequestPricing(provider, model)
+   }
+ 
++  /**
++   * Resolve the image projection for an exact registered model route.
++   * @param provider - registered provider route.
++   * @param model - exact model id.
++   * @param image - normalized image reference.
++   * @returns dimensions and byte target used by the adapter's request serializer.
++   */
++  imageRequestTarget(provider: string, model: string, image: ImageAttachmentRef): ImageRequestTarget {
++    return this.registration(provider).adapter.imageRequestTarget(provider, model, image)
++  }
++
+   /**
+    * Resolve the exact text one durable file occurrence contributes to every
+    * provider request in the current execution environment.
+@@ -1168,6 +1191,17 @@ function adapterFailureChunk(error: unknown, signal?: AbortSignal): StreamChunk
+   }
+ }
+ 
++/** Copy a directory entry, including its arrays, so neither side can mutate the other's copy. */
++function detachDirectoryEntry(entry: LlmConfigurableProvider): LlmConfigurableProvider {
++  const { nativeAuth } = entry
++  return {
++    ...entry,
++    settingsPath: [...entry.settingsPath],
++    ...entry.baseURLEnv === undefined ? {} : { baseURLEnv: [...entry.baseURLEnv] },
++    ...(nativeAuth === undefined ? {} : { nativeAuth: { ...nativeAuth, env: [...nativeAuth.env] } }),
++  }
++}
++
+ interface AdapterRegistration {
+   readonly adapter: LlmAdapter
+   readonly provider: LlmProviderInfo
+diff --git a/packages/llm/llm/src/types.ts b/packages/llm/llm/src/types.ts
+index 794352dc83..8001ab81d8 100644
+--- a/packages/llm/llm/src/types.ts
++++ b/packages/llm/llm/src/types.ts
+@@ -263,10 +263,28 @@ export interface LlmConfigurableProvider {
+    * from outside.
+    */
+   declared?: boolean
++  /**
++   * Route endpoint the adapter uses when the profile sets no `baseURL`; the
++   * adapter may still send an individual model to that model's own endpoint.
++   * Absent when the route has no fixed endpoint.
++   */
++  defaultBaseURL?: string
++  /** Environment variables used to construct a provider endpoint; absent when none are reported. */
++  baseURLEnv?: readonly string[]
++  /** Authentication the adapter performs when the profile names no credential reference; absent when it reports none. */
++  nativeAuth?: LlmNativeAuth
+   /** Configuration diagnostic for repair; unaffected models may remain serviceable. */
+   error?: string
+ }
+ 
++/** Authentication a provider route performs without a credential reference in its profile. */
++export interface LlmNativeAuth {
++  /** Environment variables the route's authentication reads, in lookup order; empty when it reads none. */
++  env: readonly string[]
++  /** Whether a stored OAuth sign-in can authenticate the route. */
++  oauth: boolean
++}
++
+ /**
+  * One interrogation of a provider endpoint that configuration has not stored
+  * yet. Configuration surfaces send the draft a user is still editing, so the
+diff --git a/packages/preset/agent-preset-registry/src/index.ts b/packages/preset/agent-preset-registry/src/index.ts
+index 0500922904..c76d7bba06 100644
+--- a/packages/preset/agent-preset-registry/src/index.ts
++++ b/packages/preset/agent-preset-registry/src/index.ts
+@@ -338,7 +338,9 @@ export class AgentPresetRegistry extends TypertRemoteService {
+     return preset
+   }
+ 
+-  /** Select a preset before a session starts its first turn.
++  /** Select a preset before a session starts its first turn. A Session whose
++   * log records the preset and whose Agent runs its current revision keeps its
++   * composition; nothing is logged or announced.
+    * @param agent Target Agent.
+    * @param agentPreset Requested identity.
+    * @returns Committed preset identity.
+@@ -350,6 +352,9 @@ export class AgentPresetRegistry extends TypertRemoteService {
+       if (boundary !== undefined && (boundary.openTurnStartSeq !== null || boundary.lastTurn > 0)) {
+         throw new RemoteError('agent-preset/locked', 'This session has already started', { sessionId: agent.id, agentPreset })
+       }
++      const current = this.definitions.get(agentPreset)?.generation
++      if (current !== undefined && this.generationFor(agent.ctx) === current
++        && this.owner.sessionProjections.stateOf(agent.session, 'agentPreset') === agentPreset) return agentPreset
+       const preset = await this.recompose(agent.ctx, agentPreset)
+       agent.session.append('agent-preset/selected', { agentPreset: preset.id })
+       return preset.id
+diff --git a/packages/preset/agent-preset-registry/src/session.ts b/packages/preset/agent-preset-registry/src/session.ts
+index 9a6e779cc1..3d26773052 100644
+--- a/packages/preset/agent-preset-registry/src/session.ts
++++ b/packages/preset/agent-preset-registry/src/session.ts
+@@ -23,7 +23,10 @@ declare module '@deepseek-ai/dsh-session/types' {
+      * The session's agent preset was chosen after creation, while the session
+      * was still blank. Log-only: it records the composition later turns ran
+      * under, so a resumed or forked session rebuilds the same one instead of
+-     * the header's creation-time value.
++     * the header's creation-time value. In a child Session, an occurrence
++     * before its first own `subagent/descriptor` marks an independent spawn
++     * selection that cold resume restores instead of joining the parent's
++     * composition (`dsh-subagent` README, "Restoring child composition").
+      */
+     'agent-preset/selected': { agentPreset: string }
+   }
+diff --git a/packages/session/session-persistence-jsonl/src/index.ts b/packages/session/session-persistence-jsonl/src/index.ts
+index 3390100174..3c3c13589f 100644
+--- a/packages/session/session-persistence-jsonl/src/index.ts
++++ b/packages/session/session-persistence-jsonl/src/index.ts
+@@ -6,7 +6,7 @@
+  * @module @deepseek-ai/dsh-session-persistence-jsonl
+  */
+ 
+-import { Context } from '@deepseek-ai/cordis'
++import { Context, type Fiber } from '@deepseek-ai/cordis'
+ import z from '@deepseek-ai/schemastery'
+ import {
+   createSessionFormatCatalogWithChildren,
+@@ -19,6 +19,7 @@ import { dirname, join, resolve } from 'node:path'
+ import { performance } from 'node:perf_hooks'
+ import { scheduler } from 'node:timers/promises'
+ import { createHash, randomBytes } from 'node:crypto'
++import pLimit, { type LimitFunction } from 'p-limit'
+ import {
+   SessionPersistence, SessionPersistenceRevision, SessionFormatUnsupportedError,
+   SessionPersistenceCorruptionError,
+@@ -86,7 +87,10 @@ export const JsonlCompressionSchema: z<JsonlCompression> = z.union([
+   z.const('none'),
+ ]).default(DEFAULT_COMPRESSION)
+ 
+-/** Plugin config for the JSONL backend's root and physical encoding. */
++/** Default maximum listing filesystem operations in flight per backend. */
++const DEFAULT_LIST_CONCURRENCY = 3
++
++/** Plugin config for the JSONL backend's root, physical encoding, and listing concurrency. */
+ export interface Config {
+   /**
+    * Root directory for all session files. Required (no default): a default of
+@@ -98,6 +102,12 @@ export interface Config {
+   root: string
+   /** Physical encoding; defaults to checksummed Zstandard frames. */
+   compression?: JsonlCompression
++  /**
++   * Maximum directory, header, and stat reads in flight across all concurrent
++   * listings of this backend (`list()`, the root encoding check, and historical
++   * fingerprints). Defaults to 3.
++   */
++  listConcurrency?: number
+ }
+ 
+ /** Logical header paired with the catalog's selected physical-generation classification. */
+@@ -202,6 +212,36 @@ function isENOENT(error: unknown): boolean {
+   return (error as NodeJS.ErrnoException | null)?.code === 'ENOENT'
+ }
+ 
++/**
++ * Run `task` over `items` through the backend's shared listing limiter and
++ * settle every call. Callers consume the outcomes in input order, so the first
++ * failure they report matches a sequential loop whatever the completion order.
++ * A limited task must never wait on the same limiter.
++ * @param limit - the backend's shared listing limiter.
++ * @param items - inputs in their sequential order.
++ * @param task - per-item operation.
++ * @returns one outcome per item, in input order.
++ */
++function settleLimited<T, R>(
++  limit: LimitFunction,
++  items: readonly T[],
++  task: (item: T) => Promise<R>,
++): Promise<PromiseSettledResult<R>[]> {
++  return Promise.allSettled(items.map(item => limit(() => task(item))))
++}
++
++/**
++ * Unwrap outcomes from {@link settleLimited}, rethrowing the first rejection in input order.
++ * @param outcomes - outcomes in input order.
++ * @returns the fulfilled values in input order.
++ */
++function settledValues<R>(outcomes: readonly PromiseSettledResult<R>[]): R[] {
++  return outcomes.map((outcome) => {
++    if (outcome.status === 'rejected') throw outcome.reason
++    return outcome.value
++  })
++}
++
+ /** Whether a filesystem-owned failure should retain its original errno and path. */
+ function isErrnoException(error: unknown): error is NodeJS.ErrnoException {
+   return typeof (error as NodeJS.ErrnoException | null)?.code === 'string'
+@@ -243,24 +283,24 @@ function waitWithAbort<T>(operation: Promise<T>, signal?: AbortSignal): Promise<
+ }
+ 
+ /**
+- * The JSONL persistence backend. Load as a plugin; it registers as
+- * `ctx.sessionPersistence`. Sessions materialize lazily: a created session is
++ * The JSONL backend registered as `ctx.sessionPersistence` by the plugin.
++ * Sessions materialize lazily: a created session is
+  * visible to this process immediately, reaches disk on its first append or
+  * flush, and never existed if the process crashes before that.
+  */
+ class JsonlSessionPersistence extends SessionPersistence {
+-  static Config: z<Config> = z.object({
+-    root: z.string().required(),
+-    compression: JsonlCompressionSchema,
+-  })
+-
+   /** Backend label for diagnostics and effects; shadows `Service.name` without changing the service key. */
+   override readonly name = 'session-persistence-jsonl'
+ 
+   private root: string
+   private compression: JsonlCompression
++  /**
++   * Bounds directory, header, and stat I/O across every concurrent listing of
++   * this backend (`list()`, the root encoding check, historical fingerprints).
++   * Queued tasks of a cancelled listing run and reject at their signal check.
++   */
++  private readonly listLimit: LimitFunction
+   private rootEncodingCheck: Promise<void> | undefined
+-  private readonly tracker = new JsonlBackendTracker(this.name)
+   private readonly generationFormat: Omit<JsonlGenerationFormatAdapter, 'createRestore'>
+   /**
+    * Bounded LRU of parsed, validated stored logs keyed by session id and
+@@ -273,7 +313,7 @@ class JsonlSessionPersistence extends SessionPersistence {
+   /** One joinable decode/migration operation per selected historical Session file revision. */
+   private readonly migrationPreparations = new Map<SessionId, MigrationPreparation>()
+ 
+-  constructor(ctx: Context, public config: Config) {
++  constructor(ctx: Context, public config: Config, private readonly tracker: JsonlBackendTracker) {
+     super(ctx)
+     /* v8 ignore next 5 -- generated catalog and Session source share one build-time version owner. */
+     if (sessionFormatCatalog.currentVersion !== SESSION_FORMAT_VERSION) {
+@@ -285,6 +325,7 @@ class JsonlSessionPersistence extends SessionPersistence {
+     // Resolve once so later process.cwd() changes cannot split one backend across roots.
+     this.root = resolve(config.root)
+     this.compression = config.compression ?? DEFAULT_COMPRESSION
++    this.listLimit = pLimit(config.listConcurrency ?? DEFAULT_LIST_CONCURRENCY)
+     this.generationFormat = {
+       currentVersion: sessionFormatCatalog.currentVersion,
+       encodeHeader: (header, inheritedEventCount) =>
+@@ -294,7 +335,6 @@ class JsonlSessionPersistence extends SessionPersistence {
+         error instanceof SessionFormatUnsupportedMigrationError,
+     }
+     this.assertUsableRoot()
+-    this.tracker.install(ctx)
+   }
+ 
+   /**
+@@ -489,24 +529,30 @@ class JsonlSessionPersistence extends SessionPersistence {
+     const artifacts = await this.listArtifacts(signal)
+     const corpusRevision = artifacts.some(artifact => artifact.sourceVersion < SESSION_FORMAT_VERSION)
+       ? await this.historicalCorpusRevision(signal) : undefined
+-    for (const artifact of artifacts) {
++    const statted = settledValues(await settleLimited(this.listLimit, artifacts, async (artifact) => {
+       signal?.throwIfAborted()
+       try {
+         const identity = await stat(artifact.path, { bigint: true })
+         signal?.throwIfAborted()
+-        listed.add(artifact.header.id)
+-        snapshots.push({
+-          header: artifact.header,
+-          formatStatus: artifact.formatStatus,
+-          revision: artifact.sourceVersion < SESSION_FORMAT_VERSION
+-            ? SessionPersistenceRevision(`${fileRevision(identity)}:${corpusRevision}`)
+-            : fileRevision(identity),
+-          sizeBytes: Number(identity.size),
+-        })
++        return { artifact, identity }
+       } catch (error: unknown) {
+         signal?.throwIfAborted()
+         if (!isENOENT(error)) throw error
++        return undefined
+       }
++    }))
++    for (const entry of statted) {
++      if (entry === undefined) continue
++      const { artifact, identity } = entry
++      listed.add(artifact.header.id)
++      snapshots.push({
++        header: artifact.header,
++        formatStatus: artifact.formatStatus,
++        revision: artifact.sourceVersion < SESSION_FORMAT_VERSION
++          ? SessionPersistenceRevision(`${fileRevision(identity)}:${corpusRevision}`)
++          : fileRevision(identity),
++        sizeBytes: Number(identity.size),
++      })
+     }
+     for (const [id, entry] of pending) {
+       if (!listed.has(id)) snapshots.push({ header: entry.header, revision: entry.revision })
+@@ -1030,32 +1076,59 @@ class JsonlSessionPersistence extends SessionPersistence {
+ 
+   /** Enumerate selected physical generations without interpreting their headers or bodies. */
+   private async listGenerations(signal?: AbortSignal): Promise<ResolvedJsonlGeneration[]> {
+-    const sources: ResolvedJsonlGeneration[] = []
+-    for (const project of await this.listProjectDirs(signal)) {
+-      for (const dir of await this.listSessionDirs(project, signal)) {
+-        signal?.throwIfAborted()
+-        const selected = await this.resolveGenerationInDirectory(dir, signal)
+-        if (selected !== undefined) sources.push(selected)
++    const selected = await this.mapSessionDirectories((dir) => {
++      signal?.throwIfAborted()
++      return this.resolveGenerationInDirectory(dir, signal)
++    }, signal)
++    return selected.filter(source => source !== undefined)
++  }
++
++  /**
++   * Apply `task` to every Session directory through the shared listing
++   * limiter. Results and the first failure follow the sequential
++   * project-then-directory order; a project whose listing fails ends the
++   * traversal after the directories of the projects before it.
++   * @param task - per-directory operation; must not wait on the listing limiter.
++   * @param signal - optional cancellation for directory listings.
++   * @returns per-directory results in traversal order.
++   */
++  private async mapSessionDirectories<R>(
++    task: (dir: string) => Promise<R>,
++    signal?: AbortSignal,
++  ): Promise<R[]> {
++    const limit = this.listLimit
++    // The root read counts against the same bound as every other listing read.
++    const projectDirs = await limit(() => this.listProjectDirs(signal))
++    const projects = await settleLimited(limit, projectDirs, project => this.listSessionDirs(project, signal))
++    const dirs: string[] = []
++    let projectFailure: PromiseRejectedResult | undefined
++    for (const outcome of projects) {
++      if (outcome.status === 'rejected') {
++        projectFailure = outcome
++        break
+       }
++      // Appended one by one: spreading a large project as call arguments exceeds the engine's argument limit.
++      for (const dir of outcome.value) dirs.push(dir)
+     }
+-    return sources
++    const results = settledValues(await settleLimited(limit, dirs, task))
++    if (projectFailure !== undefined) throw projectFailure.reason
++    return results
+   }
+ 
+   /** Historical logical events depend on the corpus, including members with unreadable headers. */
+   private async historicalCorpusRevision(signal?: AbortSignal): Promise<string> {
+     const paths = (await this.listGenerations(signal)).map(source => source.sourcePath).sort()
+-    const hash = createHash('sha256')
+-    for (const path of paths) {
++    const entries = settledValues(await settleLimited(this.listLimit, paths, async (path) => {
+       signal?.throwIfAborted()
+-      let revision: string
+       try {
+-        revision = fileRevision(await stat(path, { bigint: true }))
++        return { path, revision: fileRevision(await stat(path, { bigint: true })) }
+       } catch (error: unknown) {
+         if (!isENOENT(error)) throw error
+-        revision = 'missing'
++        return { path, revision: 'missing' }
+       }
+-      hash.update(JSON.stringify([path, revision]))
+-    }
++    }))
++    const hash = createHash('sha256')
++    for (const { path, revision } of entries) hash.update(JSON.stringify([path, revision]))
+     signal?.throwIfAborted()
+     return hash.digest('hex')
+   }
+@@ -1066,20 +1139,24 @@ class JsonlSessionPersistence extends SessionPersistence {
+     signal?.throwIfAborted()
+     await this.ensureRootEncoding()
+     signal?.throwIfAborted()
+-    const artifacts: Array<GenerationHeader & { path: string; sourceVersion: number }> = []
+-    const ids = new Set<SessionId>()
+-    for (const selected of await this.listGenerations(signal)) {
++    const generations = await this.listGenerations(signal)
++    const headers = await settleLimited(this.listLimit, generations, async (selected) => {
+       signal?.throwIfAborted()
+-      let metadata: GenerationHeader | undefined
+       try {
+-        metadata = await this.readGenerationHeader(selected, undefined, signal)
++        return { selected, metadata: await this.readGenerationHeader(selected, undefined, signal) }
+       } catch (error: unknown) {
+-        if (error instanceof SessionFormatUnsupportedError || error instanceof SessionPersistenceCorruptionError) continue
++        if (error instanceof SessionFormatUnsupportedError || error instanceof SessionPersistenceCorruptionError) {
++          return { selected, metadata: undefined }
++        }
+         throw error
+       }
+-      if (metadata === undefined) {
+-        continue
+-      }
++    })
++    const artifacts: Array<GenerationHeader & { path: string; sourceVersion: number }> = []
++    const ids = new Set<SessionId>()
++    for (const outcome of headers) {
++      if (outcome.status === 'rejected') throw outcome.reason
++      const { selected, metadata } = outcome.value
++      if (metadata === undefined) continue
+       if (ids.has(metadata.header.id)) {
+         throw new Error(`duplicate JSONL session id "${metadata.header.id}" appears in multiple project directories`)
+       }
+@@ -1620,12 +1697,10 @@ class JsonlSessionPersistence extends SessionPersistence {
+   }
+ 
+   private async checkRootEncoding(): Promise<void> {
+-    for (const project of await this.listProjectDirs()) {
+-      for (const dir of await this.listSessionDirs(project)) {
+-        const incompatible = await this.findOppositeGenerationInDirectory(dir)
+-        if (incompatible !== undefined) throw this.encodingMismatch(incompatible)
+-      }
+-    }
++    await this.mapSessionDirectories(async (dir) => {
++      const incompatible = await this.findOppositeGenerationInDirectory(dir)
++      if (incompatible !== undefined) throw this.encodingMismatch(incompatible)
++    })
+   }
+ 
+   private async rejectLegacyFlatArtifact(
+@@ -1726,10 +1801,37 @@ class JsonlSessionPersistence extends SessionPersistence {
+   /* v8 ignore stop */
+ }
+ 
++/** JSONL persistence plugin label. */
++export const name = 'session-persistence-jsonl'
++
++/** Loader schema for the backend's root, physical encoding, and listing concurrency. */
++export const Config: z<Config> = z.object({
++  root: z.string().required(),
++  compression: JsonlCompressionSchema,
++  listConcurrency: z.natural().min(1).default(DEFAULT_LIST_CONCURRENCY),
++})
++
+ /**
+- * One open channel onto a JSONL-stored session: the shared storage-handle
+- * scaffolding over this backend's file primitives. Reads re-scan the artifact
+- * under the stable-read loop.
++ * Mount persistence with live routing and handles retained through the
++ * consumer unloads triggered by removing this provider. Consumers must own
++ * cleanup in their injecting scope; concurrent root disposal is not ordered.
++ * @param ctx - the owning plugin context.
++ * @param config - the storage root, physical encoding, and listing concurrency.
++ * @returns resolves when the service is ready.
+  */
+-
+-export default JsonlSessionPersistence
++export async function apply(ctx: Context, config: Config): Promise<void> {
++  let service!: Fiber
++  // Keep this generator synchronous so thenable disposers are registered as functions, not awaited.
++  ctx.effect(function* () {
++    const tracker = new JsonlBackendTracker(name)
++    yield tracker.install(ctx)
++    service = ctx.plugin({
++      name: 'session-persistence-jsonl-service',
++      apply(serviceCtx: Context) {
++        new JsonlSessionPersistence(serviceCtx, config, tracker)
++      },
++    })
++    yield service.dispose
++  }, 'session-persistence-jsonl resources')
++  await service.await()
++}
+diff --git a/packages/session/session-persistence-jsonl/src/storage.ts b/packages/session/session-persistence-jsonl/src/storage.ts
+index 029bb4839d..197dcbc270 100644
+--- a/packages/session/session-persistence-jsonl/src/storage.ts
++++ b/packages/session/session-persistence-jsonl/src/storage.ts
+@@ -528,40 +528,44 @@ export class JsonlBackendTracker {
+    * sessions' events by id; the teardown effect closes every open handle —
+    * close drains the routed buffer — and aggregates failures. This provider
+    * owns no separate storage connection, so closing handles is the complete
+-   * teardown. Registrations are effects of the current fiber.
+-   * @param ctx - the backend's context.
++   * teardown. The returned effect removes listeners before closing handles.
++   * @param ctx - the backend's resource-owning context.
++   * @returns the disposer to run after persistence consumers finish unloading.
+    */
+-  install(ctx: Context): void {
+-    ctx.on('session/event', (session: Session, event) => {
+-      this.writers.get(session.id)?.enqueueLive(event, (error) => {
+-        ctx.logger.warn(`session-persistence: background write for session "${session.id}" failed (buffered events retained): ${String(error)}`)
+-      })
+-    })
+-    ctx.on('session/flush', (session: Session) => {
+-      const writer = this.writers.get(session.id)
+-      if (writer === null || writer === undefined) return undefined
+-      return (async () => {
+-        await writer.drainLive()
+-        await writer.flush()
+-      })()
+-    })
+-    ctx.on('session/disposed', (session: Session) => {
+-      const writer = this.writers.get(session.id)
+-      if (writer === null || writer === undefined) return
+-      writer.close().catch((error: unknown) => {
+-        ctx.logger.warn(`session-persistence: final drain for session "${session.id}" failed: ${String(error)}`)
+-      })
+-    })
+-    ctx.effect(() => async () => {
+-      const errors: unknown[] = []
+-      for (const handle of [...this.openHandles]) {
+-        try {
+-          await handle.close()
+-        } catch (error: unknown) {
+-          errors.push(error)
++  install(ctx: Context): () => Promise<void> {
++    const { writers, openHandles, name } = this
++    return ctx.effect(function* () {
++      yield async () => {
++        const errors: unknown[] = []
++        for (const handle of [...openHandles]) {
++          try {
++            await handle.close()
++          } catch (error: unknown) {
++            errors.push(error)
++          }
+         }
++        if (errors.length > 0) throw new AggregateError(errors, `${name} dispose failed`)
+       }
+-      if (errors.length > 0) throw new AggregateError(errors, `${this.name} dispose failed`)
+-    }, `${this.name} open handles`)
++      yield ctx.on('session/event', (session: Session, event) => {
++        writers.get(session.id)?.enqueueLive(event, (error) => {
++          ctx.logger.warn(`session-persistence: background write for session "${session.id}" failed (buffered events retained): ${String(error)}`)
++        })
++      })
++      yield ctx.on('session/flush', (session: Session) => {
++        const writer = writers.get(session.id)
++        if (writer === null || writer === undefined) return undefined
++        return (async () => {
++          await writer.drainLive()
++          await writer.flush()
++        })()
++      })
++      yield ctx.on('session/disposed', (session: Session) => {
++        const writer = writers.get(session.id)
++        if (writer === null || writer === undefined) return
++        writer.close().catch((error: unknown) => {
++          ctx.logger.warn(`session-persistence: final drain for session "${session.id}" failed: ${String(error)}`)
++        })
++      })
++    }, `${this.name} live routing and open handles`)
+   }
+ }
+diff --git a/packages/typert/protocol/src/index.ts b/packages/typert/protocol/src/index.ts
+index f94096beb3..e2af8932b6 100644
+--- a/packages/typert/protocol/src/index.ts
++++ b/packages/typert/protocol/src/index.ts
+@@ -6,12 +6,20 @@
+  */
+ 
+ import { Context, Service } from '@deepseek-ai/cordis'
+-import type { TypertContextMap } from './types.ts'
++import type {
++  RemoteWireArgs,
++  TypertContextMap,
++  TypertResourceReader,
++  TypertResourceReaders,
++} from './types.ts'
+ 
+ export { RemoteError, remoteErrorOf } from './remote-error.ts'
+ export { TYPERT_OWNED_VALUE, isTypertOwnedValue, typertOwnedValue } from './owned-value.ts'
+ export type { TypertOwnedValue } from './owned-value.ts'
+ export { isRemoteJsonValue, isRemoteUplinkItem } from './json-value.ts'
++export { createTypertRemoteInfo, isTypertRemoteMethod } from './remote-info.ts'
++export { principalOf } from './principal.ts'
++export type { RemoteAccessResource, RemoteAccessResourceKind, RemoteAccessResourceOf } from './remote-access.ts'
+ 
+ const TYPERT_REMOTE_SEGMENT_PATTERN = /^[A-Za-z0-9_$.-]+$/
+ 
+@@ -30,6 +38,9 @@ export type {
+   InvocationSourceLocation,
+   PeerId,
+   PeerScope,
++  Principal,
++  PrincipalMap,
++  RemoteDecoded,
+   RemoteErrorCode,
+   RemoteErrorDetailsMap,
+   RemoteFailure,
+@@ -37,6 +48,9 @@ export type {
+   RemoteResult,
+   RemoteStream,
+   RemoteStreamHandle,
++  RemoteUplinkWindow,
++  RemoteWireArgs,
++  RemoteWireValue,
+   TypertClientEventListener,
+   TypertClientRemote,
+   TypertClientContextAdapter,
+@@ -50,6 +64,15 @@ export type {
+   TypertForwardableEventEntry,
+   TypertHostContextAdapter,
+   TypertHostContextResolver,
++  TypertResource,
++  TypertResourceDeclaration,
++  TypertResourceEntry,
++  TypertResourceId,
++  TypertResourceKind,
++  TypertResourceMap,
++  TypertResourceReader,
++  TypertResourceReaders,
++  TypertResourceRegistry,
+   TypertLocalRegistry,
+   TypertLookup,
+   TypertLookupDefinition,
+@@ -63,6 +86,14 @@ export type {
+   TypertRemoteScopeMap,
+   TypertRemoteScopeNamespace,
+   TypertRemoteContribution,
++  TypertRemoteInfo,
++  TypertRemoteInputOptions,
++  TypertRemoteMethod,
++  TypertRemoteValue,
++  TypertRemoteCodecSpec,
++  TypertRemoteParameterSpec,
++  TypertRemoteMethodSpec,
++  TypertRemoteSpec,
+   TypertRemoteEvent,
+   TypertRemoteEventSelection,
+   TypertRemoteMap,
+@@ -102,14 +133,55 @@ export interface RemoteMethodMarker {
+   /** Stream methods yield many independently validated result items. */
+   readonly mode?: 'stream'
+   readonly invocation: RemoteInvocationMarker
++  /**
++   * Declared `resources` readers keyed by resource kind. Callers spread the
++   * method's wire arguments into each one and validate its result.
++   */
++  readonly resources?: Readonly<Record<string, TypertResourceReader>>
++}
++
++/**
++ * Explicit endpoint and resource choices for one Remote Scope method.
++ * @template WireArgs - the decorated method's positional parameters as the
++ *   wire carries them; the default `never` admits readers of any tuple.
++ */
++export interface RemoteScopeOptions<WireArgs extends readonly unknown[] = never> {
++  /** Exported endpoint method; omission retains the implementation member name. */
++  readonly name?: string
++  /**
++   * Per-kind readers of the resources one call touches. Each receives the
++   * method's arguments as its own parameters, JSON arguments as their Typert
++   * codecs validated them, a lookup parameter as its wire identity and a
++   * cancellation parameter as the call's signal, so it performs plain reads
++   * only, and returns one identity, several, or `undefined` for none. A
++   * throw, an empty list, or an identity other than a non-empty string
++   * refuses the call. For a kind without a reader, the Gateway reads the
++   * identity of a scoped Context whose Host adapter declares that `resource`
++   * and of lookup parameters declaring it, else the field registered in
++   * `typert.resources`: a top-level argument or, failing that, the first
++   * object argument. A call that carries no identity touches `global`. The
++   * readers and these defaults together must name every resource the method
++   * accesses: access control never checks a resource they omit.
++   */
++  readonly resources?: TypertResourceReaders<WireArgs>
+ }
+ 
+-/** Options for a non-unary Remote method. */
+-export interface RemoteMethodOptions {
++/**
++ * Explicit endpoint, stream, and resource choices for one direct Remote method.
++ * @template WireArgs - the decorated method's positional parameters as the
++ *   wire carries them; the default `never` admits readers of any tuple.
++ */
++export interface RemoteMethodOptions<WireArgs extends readonly unknown[] = never> extends RemoteScopeOptions<WireArgs> {
+   /** `stream`: deliver each Iterable item over the shared logical-stream carrier. */
+-  readonly mode: 'stream'
++  readonly mode?: 'stream'
+ }
+ 
++/** A decorator whose `resources` readers were checked against the decorated method's parameters. */
++type RemoteTypedMethodDecorator<This extends object, Args extends unknown[], Result> = (
++  method: (this: This, ...args: Args) => Result,
++  context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Result>,
++) => void
++
+ type RemoteMethodDecorator = <This extends object, Args extends unknown[], Result>(
+   method: (this: This, ...args: Args) => Result,
+   context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Result>,
+@@ -126,6 +198,14 @@ interface StoredRemoteMethodMarker {
+   readonly exportName?: string
+   readonly mode?: 'stream'
+   readonly invocation: RemoteInvocationMarker
++  readonly resources?: Readonly<Record<string, TypertResourceReader>>
++}
++
++/** Marker fields selected by decorator arguments. */
++interface RemoteMarkerOptions {
++  readonly mode?: 'stream'
++  readonly exportName?: string
++  readonly resources?: Readonly<Record<string, TypertResourceReader>>
+ }
+ 
+ interface StoredRemoteMethod extends StoredRemoteMethodMarker {
+@@ -146,7 +226,7 @@ const REMOTE_METHOD_DESCRIPTOR = '@deepseek-ai/dsh-typert-protocol/remote-method
+  * a Host composition to read it.
+  * @param service - owning Service instance, normally `this`.
+  * @param serviceKey - exact Cordis service key.
+- * @param options - optional distinct wire namespace.
++ * @param options - optional wire namespace.
+  * @returns a frozen, inspectable binding with no compiler-injected metadata.
+  */
+ export function bindTypertRemote<Service extends object>(
+@@ -158,7 +238,7 @@ export function bindTypertRemote<Service extends object>(
+   const namespace = options.namespace ?? serviceKey
+   validateName('namespace', namespace)
+   const ctx: unknown = Reflect.get(service, 'ctx')
+-  if (ctx instanceof Context) provideInvocationAccessor(ctx)
++  if (Context.is(ctx)) provideInvocationAccessor(ctx)
+   return Object.freeze({ service, serviceKey, namespace })
+ }
+ 
+@@ -171,7 +251,7 @@ export abstract class TypertRemoteService<out T = never> extends Service<T> {
+    * Register the Service and bind the same key to Typert Gateway.
+    * @param ctx - owning Cordis Context.
+    * @param serviceKey - exact Cordis service key and default wire namespace.
+-   * @param options - optional distinct wire namespace.
++   * @param options - optional wire namespace.
+    */
+   protected constructor(ctx: Context, serviceKey: string, options: TypertGatewayBindingOptions = {}) {
+     super(ctx, serviceKey)
+@@ -200,60 +280,115 @@ export function Remote<This extends object, Args extends unknown[], Result>(
+   context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Result>,
+ ): void
+ /**
+- * Mark one public instance method under an exported name or as a logical stream.
+- * @param option - endpoint method name or stream delivery mode.
++ * Mark one public instance method with an endpoint name.
++ * @param name - exported endpoint method.
+  * @returns a standard method decorator.
+  */
+-export function Remote(option: string | RemoteMethodOptions): RemoteMethodDecorator
++export function Remote(name: string): RemoteMethodDecorator
++/**
++ * Mark one public instance method with endpoint, stream, or resource options.
++ * @param options - Remote options; each reader's parameters are inferred from the decorated method.
++ * @returns a standard method decorator.
++ */
++export function Remote<This extends object, Args extends unknown[], Result>(
++  options: NoInfer<RemoteMethodOptions<RemoteWireArgs<Args>>>,
++): RemoteTypedMethodDecorator<This, Args, Result>
+ export function Remote<This extends object, Args extends unknown[], Result>(
+   methodExportOrOptions: string | RemoteMethodOptions | ((this: This, ...args: Args) => Result),
+   context?: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Result>,
+ ): void | RemoteMethodDecorator {
+   if (typeof methodExportOrOptions === 'string') {
+     validateName('Remote export name', methodExportOrOptions)
+-    return remoteDecorator({ kind: 'direct' }, undefined, methodExportOrOptions)
++    return remoteDecorator({ kind: 'direct' }, { exportName: methodExportOrOptions })
+   }
+   if (typeof methodExportOrOptions === 'object') {
+-    if (remoteOptionMode(methodExportOrOptions) !== 'stream'
+-      || Reflect.ownKeys(methodExportOrOptions).length !== 1) {
+-      throw new TypeError('typert-protocol: Remote options must contain exactly mode: "stream"')
+-    }
+-    return remoteDecorator({ kind: 'direct' }, 'stream')
++    return remoteDecorator({ kind: 'direct' }, markerOptions(
++      methodExportOrOptions,
++      REMOTE_OPTION_KEYS,
++      'Remote options require name, mode: "stream", or resources',
++    ))
+   }
+   if (context === undefined) throw new TypeError('typert-protocol: Remote decorator context is missing')
+   addMarkerInitializer(context, { kind: 'direct' })
+ }
+ 
+-function remoteOptionMode(options: object): unknown {
+-  return Reflect.get(options, 'mode') as unknown
++const REMOTE_OPTION_KEYS: ReadonlySet<string> = new Set(['name', 'mode', 'resources'])
++const REMOTE_SCOPE_OPTION_KEYS: ReadonlySet<string> = new Set(['name', 'resources'])
++
++/** Validate one decorator options object against its accepted keys and select the marker fields. */
++function markerOptions(options: RemoteMethodOptions, accepted: ReadonlySet<string>, requirement: string): RemoteMarkerOptions {
++  const keys = Reflect.ownKeys(options)
++  if (keys.length === 0 || keys.some(key => typeof key !== 'string' || !accepted.has(key))
++    || (Object.hasOwn(options, 'mode') && options.mode !== 'stream')) {
++    throw new TypeError(`typert-protocol: ${requirement}`)
++  }
++  const { mode, name, resources } = options
++  if (name !== undefined) validateName('Remote export name', name)
++  return {
++    ...(mode === undefined ? {} : { mode }),
++    ...(name === undefined ? {} : { exportName: name }),
++    ...(resources === undefined ? {} : { resources: resourceReaders(resources) }),
++  }
++}
++
++/** Freeze declared readers into the marker record; a misdeclared reader fails at decoration. */
++function resourceReaders(resources: object): Readonly<Record<string, TypertResourceReader>> {
++  const readers: Record<string, TypertResourceReader> = {}
++  for (const [kind, reader] of Object.entries(resources as Readonly<Record<string, unknown>>)) {
++    if (typeof reader !== 'function') {
++      throw new TypeError(`typert-protocol: Remote resource reader "${kind}" must be a function`)
++    }
++    readers[kind] = reader as TypertResourceReader
++  }
++  if (Object.keys(readers).length === 0) throw new TypeError('typert-protocol: Remote resources require at least one reader')
++  return Object.freeze(readers)
+ }
+ 
+ function remoteDecorator(
+   invocation: RemoteInvocationMarker,
+-  mode?: 'stream',
+-  exportName?: string,
++  options: RemoteMarkerOptions = {},
+ ): RemoteMethodDecorator {
+   return function <This extends object, Args extends unknown[], Result>(
+     _method: (this: This, ...args: Args) => Result,
+     context: ClassMethodDecoratorContext<This, (this: This, ...args: Args) => Result>,
+   ): void {
+-    addMarkerInitializer(context, invocation, mode, exportName)
++    addMarkerInitializer(context, invocation, options)
+   }
+ }
+ 
+ /**
+  * Create a decorator for a method resolved from one Remote Scope.
+  * @param key - scope key declared through the Context map.
+- * @param exportName - optional Remote export name; defaults to the method name.
++ * @param name - optional Remote export name; defaults to the method name.
++ * @returns a standard method decorator that records a versioned prototype descriptor.
++ */
++export function RemoteScope(key: Extract<keyof TypertContextMap, string>, name?: string): RemoteMethodDecorator
++/**
++ * Create a decorator for a Remote Scope method with endpoint or resource options.
++ * @param key - scope key declared through the Context map.
++ * @param options - Remote Scope options; each reader's parameters are inferred from the decorated method.
+  * @returns a standard method decorator that records a versioned prototype descriptor.
+  */
++export function RemoteScope<This extends object, Args extends unknown[], Result>(
++  key: Extract<keyof TypertContextMap, string>,
++  options: NoInfer<RemoteScopeOptions<RemoteWireArgs<Args>>>,
++): RemoteTypedMethodDecorator<This, Args, Result>
+ export function RemoteScope(
+   key: Extract<keyof TypertContextMap, string>,
+-  exportName?: string,
++  option?: string | RemoteScopeOptions,
+ ): RemoteMethodDecorator {
+   validateName('Scope key', key)
+-  if (exportName !== undefined) validateName('Remote export name', exportName)
+-  return remoteDecorator({ kind: 'context', context: key }, undefined, exportName)
++  const invocation: RemoteInvocationMarker = { kind: 'context', context: key }
++  if (option === undefined) return remoteDecorator(invocation)
++  if (typeof option === 'string') {
++    validateName('Remote export name', option)
++    return remoteDecorator(invocation, { exportName: option })
++  }
++  return remoteDecorator(invocation, markerOptions(
++    option,
++    REMOTE_SCOPE_OPTION_KEYS,
++    'RemoteScope options require name or resources',
++  ))
+ }
+ 
+ /**
+@@ -289,8 +424,7 @@ function readRemoteMethodDescriptor(prototype: object): RemoteMethodDescriptorV1
+ function addMarkerInitializer<This extends object>(
+   context: RemoteInitializerContext<This>,
+   invocation: RemoteInvocationMarker,
+-  mode?: 'stream',
+-  exportName?: string,
++  options: RemoteMarkerOptions = {},
+ ): void {
+   if (context.private || context.static || typeof context.name !== 'string') {
+     throw new TypeError('typert-protocol: Remote decorators require a public instance method with a string name')
+@@ -301,7 +435,7 @@ function addMarkerInitializer<This extends object>(
+     if (prototype === null) {
+       throw new TypeError(`typert-protocol: cannot mark Remote method "${method}" on an object without a prototype`)
+     }
+-    mark(prototype, method, invocation, mode, exportName)
++    mark(prototype, method, invocation, options)
+   })
+ }
+ 
+@@ -309,8 +443,7 @@ function mark(
+   prototype: object,
+   method: string,
+   invocation: RemoteInvocationMarker,
+-  mode?: 'stream',
+-  exportName?: string,
++  { mode, exportName, resources }: RemoteMarkerOptions,
+ ): void {
+   const descriptor = readRemoteMethodDescriptor(prototype)
+   const marker: StoredRemoteMethod = Object.freeze({
+@@ -318,11 +451,14 @@ function mark(
+     ...(exportName === undefined || exportName === method ? {} : { exportName }),
+     ...(mode === undefined ? {} : { mode }),
+     invocation: Object.freeze(invocation),
++    ...(resources === undefined ? {} : { resources }),
+   })
+   const current = descriptor?.methods.find(candidate => candidate.method === method)
+   if (current !== undefined) {
++    // One decorator application owns one frozen reader record, so identity marks the same declaration.
+     if (current.exportName === marker.exportName
+       && current.mode === marker.mode
++      && current.resources === marker.resources
+       && sameInvocation(current.invocation, invocation)) return
+     throw new Error(`typert-protocol: Remote method "${method}" has conflicting invocation markers`)
+   }
+diff --git a/packages/typert/protocol/src/principal.ts b/packages/typert/protocol/src/principal.ts
+new file mode 100644
+index 0000000000..0c3abf1688
+--- /dev/null
++++ b/packages/typert/protocol/src/principal.ts
+@@ -0,0 +1,17 @@
++/**
++ * Reads the non-owner caller of the current Remote call.
++ * @module @deepseek-ai/dsh-typert-protocol/principal
++ */
++
++import type { Principal, RemoteInvocation } from './types.ts'
++
++/**
++ * The identity a Remote-call producer records on durable output.
++ * @param invocation - `ctx.invocation`; `undefined` outside a Remote call.
++ * @returns the caller's principal when it is not the owner; `undefined` for the
++ *   owner and for trusted in-process code outside a Remote call.
++ */
++export function principalOf(invocation: RemoteInvocation | undefined): Principal | undefined {
++  const principal = invocation?.peer.principal
++  return principal?.kind === 'owner' ? undefined : principal
++}
+diff --git a/packages/typert/protocol/src/remote-access.ts b/packages/typert/protocol/src/remote-access.ts
+new file mode 100644
+index 0000000000..0e9d785bab
+--- /dev/null
++++ b/packages/typert/protocol/src/remote-access.ts
+@@ -0,0 +1,38 @@
++/**
++ * Resources of Remote access control: the built-in identity-less `global`
++ * resource and one resource per identity of a kind declared in
++ * `TypertResourceMap`. Resources are independent: access to one resource
++ * implies no access to any other.
++ * @module @deepseek-ai/dsh-typert-protocol/remote-access
++ */
++
++/* oxlint-disable typescript/no-redundant-type-constituents --
++ * `TypertResourceKind` is the declare-merge key pattern: the resource map is
++ * empty in this compilation unit, so the rule sees `never`, while every
++ * domain that declares a kind merges its key in. */
++import type {
++  TypertResourceId,
++  TypertResourceKind,
++  TypertResourceMap,
++} from './types.ts'
++
++/** One resource kind: the built-in `global` kind or a declared kind. */
++export type RemoteAccessResourceKind = 'global' | TypertResourceKind
++
++/**
++ * One resource a call or forwarded event touches: `global`, or one identity
++ * of a declared kind. Identities are wire values, read before any lookup
++ * resolves or validates them.
++ */
++export type RemoteAccessResource =
++  | { readonly kind: 'global' }
++  | {
++    [Kind in TypertResourceKind]: { readonly kind: Kind; readonly id: TypertResourceId<TypertResourceMap[Kind]> }
++  }[TypertResourceKind]
++
++/**
++ * The resource variant of one kind: `{ kind: 'global' }` for `global`, else
++ * that kind with its identity.
++ * @template K - the resource kind to select.
++ */
++export type RemoteAccessResourceOf<K extends RemoteAccessResourceKind> = Extract<RemoteAccessResource, { readonly kind: K }>
+diff --git a/packages/typert/protocol/src/remote-info.ts b/packages/typert/protocol/src/remote-info.ts
+new file mode 100644
+index 0000000000..f646c263d6
+--- /dev/null
++++ b/packages/typert/protocol/src/remote-info.ts
+@@ -0,0 +1,161 @@
++/** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
++
++import type { z } from 'zod'
++import type {
++  InvocationDescriptor,
++  TypertClientRemote,
++  TypertRemoteCodecSpec,
++  TypertRemoteInfo,
++  TypertRemoteInputOptions,
++  TypertRemoteMethod,
++  TypertRemoteParameterSpec,
++  TypertRemoteSpec,
++  TypertRemoteValue,
++} from './types.ts'
++
++type Method = TypertRemoteMethod<object, unknown> | TypertRemoteMethod<object, unknown, 'stream', unknown>
++type Parameter = TypertRemoteParameterSpec & { readonly wire: string }
++type Index = Pick<TypertRemoteInfo, 'descriptors' | 'methods'>
++
++/**
++ * Retain one generated definition per endpoint without constructing parsers or projections.
++ * The class instance builds its shared descriptor/method index on first access;
++ * input schemas and JSON Schema projections are cached only when requested.
++ * @param spec - compiler-produced method facts and Zod factories.
++ * @param zod - the generated artifact's Zod runtime for named-input parsers.
++ * @returns a lazy, mountable info instance with no registration or transport effects.
++ */
++export function createTypertRemoteInfo(spec: TypertRemoteSpec, zod: typeof z): TypertRemoteInfo {
++  return new RemoteInfo(spec, zod)
++}
++
++class RemoteInfo implements TypertRemoteInfo {
++  private index?: Index
++
++  constructor(private readonly spec: TypertRemoteSpec, private readonly zod: typeof z) {}
++
++  get package(): string { return this.spec.package }
++  get descriptors(): readonly InvocationDescriptor[] { return this.resolve().descriptors }
++  get methods(): TypertRemoteInfo['methods'] { return this.resolve().methods }
++
++  private resolve(): Index {
++    if (this.index !== undefined) return this.index
++    const zod = this.zod
++    const descriptors: InvocationDescriptor[] = []
++    const methods = Object.create(null) as Record<string, Method>
++    for (const [endpoint, definition] of Object.entries(this.spec.methods)) {
++      const separator = endpoint.indexOf('/')
++      const namespace = endpoint.slice(0, separator)
++      const method = endpoint.slice(separator + 1)
++      const parameters = definition.parameters.map(parameter => ({ ...parameter, wire: parameter.wire ?? parameter.name }))
++      const descriptor = {
++        ...definition,
++        id: `${this.spec.package}#${endpoint}`,
++        namespace,
++        method,
++        parameters,
++        result: definition.result.description === undefined ? definition.result : new ResultValue(definition.result),
++      }
++      if (definition.invocation.kind === 'direct') {
++        const inputs: [NamedInput?, NamedInput?] = []
++        const direct = Object.assign(descriptor, {
++          input(options?: TypertRemoteInputOptions) {
++            const strict = options?.strict === true
++            return inputs[strict ? 1 : 0] ??= new NamedInput(parameters, strict, zod)
++          },
++          invoke(remote: TypertClientRemote, input: object, signal?: AbortSignal) {
++            const named = input as Readonly<Record<string, unknown>>
++            const values = parameters.map(parameter => named[parameter.wire])
++            if (definition.cancellation !== undefined) values.push(signal)
++            // Namespace access retains the Gateway's mount checks and scoped receiver policy.
++            const receiver = Reflect.get(remote, namespace) as object
++            const call = Reflect.get(receiver, method) as (...args: unknown[]) => ReturnType<Method['invoke']>
++            return call.apply(receiver, values)
++          },
++        })
++        // The generated namespace return type is selected by this same descriptor's mode.
++        methods[endpoint] = direct as Method
++      }
++      descriptors.push(descriptor)
++    }
++    return this.index = { descriptors, methods }
++  }
++}
++
++/**
++ * Narrow a Registry descriptor to its generated direct-method capabilities.
++ * @param descriptor - a live descriptor, including possible source fallback or Context-only receivers.
++ * @returns whether generated named input and direct invocation are available.
++ */
++export function isTypertRemoteMethod(descriptor: InvocationDescriptor): descriptor is Method {
++  return descriptor.invocation.kind === 'direct' && descriptor.result.mode === 'strict'
++    && 'input' in descriptor && typeof descriptor.input === 'function'
++    && 'invoke' in descriptor && typeof descriptor.invoke === 'function'
++}
++
++function optional(parameter: Parameter): boolean {
++  return parameter.source === 'json' && parameter.acceptsUndefined === true
++}
++
++class NamedInput implements TypertRemoteValue<object> {
++  private schema?: z.ZodType<object>
++  private projection?: Pick<TypertRemoteValue, 'jsonSchema' | 'jsonSchemaError'>
++
++  constructor(
++    private readonly parameters: readonly Parameter[],
++    private readonly strict: boolean,
++    private readonly zod: typeof z,
++  ) {}
++
++  private codec(parameter: Parameter): TypertRemoteCodecSpec {
++    return this.strict ? parameter.strictCodec : parameter.codec
++  }
++
++  readonly create = (): z.ZodType<object> => this.schema ??= this.zod.strictObject(Object.fromEntries(this.parameters.map((parameter) => {
++    const value = this.codec(parameter).create()
++    return [parameter.wire, optional(parameter) ? value.optional() : value.nonoptional()]
++  })))
++
++  get jsonSchema(): TypertRemoteValue['jsonSchema'] { return this.project().jsonSchema }
++  get jsonSchemaError(): string | undefined { return this.project().jsonSchemaError }
++
++  private project(): NonNullable<NamedInput['projection']> {
++    if (this.projection !== undefined) return this.projection
++    const unavailable = this.parameters.find(parameter => this.codec(parameter).jsonSchema === undefined)
++    if (unavailable !== undefined) {
++      return this.projection = { jsonSchemaError: this.codec(unavailable).jsonSchemaError ?? `No JSON Schema for parameter ${unavailable.wire}` }
++    }
++    return this.projection = {
++      jsonSchema: {
++        type: 'object',
++        properties: Object.fromEntries(this.parameters.map(parameter => [parameter.wire, {
++          ...this.codec(parameter).jsonSchema,
++          ...(parameter.description === undefined ? {} : { description: parameter.description }),
++        }])),
++        required: this.parameters.filter(parameter => !optional(parameter)).map(parameter => parameter.wire),
++        additionalProperties: false,
++      },
++    }
++  }
++}
++
++class ResultValue implements TypertRemoteCodecSpec {
++  private projection?: { readonly value: TypertRemoteValue['jsonSchema'] }
++
++  constructor(private readonly spec: TypertRemoteCodecSpec) {}
++
++  get mode(): 'strict' { return this.spec.mode }
++  get typeSymbol(): string { return this.spec.typeSymbol }
++  get create(): TypertRemoteCodecSpec['create'] { return this.spec.create }
++  get decode(): TypertRemoteCodecSpec['decode'] { return this.spec.decode }
++  get encode(): TypertRemoteCodecSpec['encode'] { return this.spec.encode }
++  get description(): string | undefined { return this.spec.description }
++  get jsonSchemaError(): string | undefined { return this.spec.jsonSchemaError }
++  get jsonSchema(): TypertRemoteValue['jsonSchema'] {
++    if (this.projection === undefined) {
++      const schema = this.spec.jsonSchema
++      this.projection = { value: schema === undefined ? undefined : { ...schema, description: this.spec.description } }
++    }
++    return this.projection.value
++  }
++}
+diff --git a/packages/typert/protocol/src/types.ts b/packages/typert/protocol/src/types.ts
+index ec2a88c4f9..650b2b3556 100644
+--- a/packages/typert/protocol/src/types.ts
++++ b/packages/typert/protocol/src/types.ts
+@@ -6,11 +6,13 @@
+ 
+ import type { Context, Events } from '@deepseek-ai/cordis'
+ import type { Branded } from '@deepseek-ai/dsh-brand'
++import type { ZodType } from 'zod'
+ import type { TypertOwnedValue } from './owned-value.ts'
+ 
+ declare const LOOKUP_HOST: unique symbol
+ declare const LOOKUP_WIRE: unique symbol
+ declare const CONTEXT_WIRE: unique symbol
++declare const RESOURCE_ID: unique symbol
+ 
+ /** Type-level association between a Host object and its wire identity. */
+ export interface TypertLookup<Host, Wire> {
+@@ -38,6 +40,58 @@ export interface TypertLookupMap {}
+ /** Merge-extensible scoped Context declarations. */
+ export interface TypertContextMap {}
+ 
++/** Type-level association between a resource kind and its identity type. */
++export interface TypertResource<Id> {
++  readonly [RESOURCE_ID]: Id
++}
++
++/** Extract the identity type associated with one resource declaration. */
++export type TypertResourceId<Resource> = Resource extends TypertResource<infer Id> ? Id : never
++
++/**
++ * Merge-extensible resource kinds whose identities a Remote call or forwarded
++ * event may carry. The package that owns an identity type declares its kind;
++ * the value is that kind's identity type, a string type such as a branded id.
++ * `global` names the built-in identity-less resource and is never a kind here.
++ */
++export interface TypertResourceMap {}
++
++/** One declared resource kind. */
++export type TypertResourceKind = Extract<keyof TypertResourceMap, string>
++
++/**
++ * Per-kind resource readers called with one argument tuple spread
++ * positionally: plain reads returning one identity, several, or `undefined`
++ * for none.
++ * @template Args - the argument tuple the readers receive as parameters.
++ */
++export type TypertResourceReaders<Args extends readonly unknown[]> = {
++  readonly [Kind in TypertResourceKind]?: (...args: Args) =>
++    | TypertResourceId<TypertResourceMap[Kind]>
++    | readonly TypertResourceId<TypertResourceMap[Kind]>[]
++    | undefined
++}
++
++/**
++ * Type-erased resource reader as runtime carriers store it; callers spread
++ * the argument tuple into it and validate its result. Declared through a
++ * method so a reader typed by its own parameters is assignable without a cast.
++ */
++export type TypertResourceReader = { read(...args: readonly unknown[]): unknown }['read']
++
++type TypertLookupEntry = TypertLookupMap[keyof TypertLookupMap]
++type TypertWireForHost<Value, Entry> = Entry extends unknown
++  ? Value extends TypertLookupHost<Entry> ? TypertLookupWire<Entry> : never
++  : never
++
++/** A method parameter as it arrives on the wire: a lookup's Host object becomes its wire identity. */
++export type RemoteWireValue<Value> = Value extends TypertLookupHost<TypertLookupEntry>
++  ? TypertWireForHost<Value, TypertLookupEntry>
++  : Value
++
++/** A method's positional parameters as the wire carries them. */
++export type RemoteWireArgs<Args extends unknown[]> = { [Index in keyof Args]: RemoteWireValue<Args[Index]> }
++
+ /** Merge-extensible direct Remote method signatures generated for consumers. */
+ export interface TypertRemoteMap {}
+ 
+@@ -169,12 +223,24 @@ export type TypertForwardableEvent = {
+   [Event in keyof Events]: TypertForwardingMode<Event> extends never ? never : Event
+ }[keyof Events]
+ 
+-/** Event and dispatch mode accepted by the Remote Event source. */
++/**
++ * Event and dispatch mode accepted by the Remote Event source. An `emit` entry
++ * may declare readers of the resources its payload carries; an
++ * entry without `resources` touches the built-in `global` resource. A
++ * non-owner Peer receives an `emit` notification only after an access
++ * decision and never receives a `waterfall`.
++ */
+ export type TypertForwardableEventEntry = {
+   [Event in keyof Events]: TypertForwardingMode<Event> extends infer Mode
+-    ? Mode extends 'emit' | 'waterfall'
+-      ? { readonly event: Event; readonly mode: Mode }
+-      : never
++    ? Mode extends 'emit'
++      ? {
++        readonly event: Event
++        readonly mode: Mode
++        readonly resources?: TypertResourceReaders<TypertEventParameters<Event>>
++      }
++      : Mode extends 'waterfall'
++        ? { readonly event: Event; readonly mode: Mode }
++        : never
+     : never
+ }[keyof Events]
+ 
+@@ -266,26 +332,29 @@ export interface TypertSchema<Output = unknown> {
+   parse(value: unknown): Output
+ }
+ 
++/** Native byte views reconstructed by a Remote carrier have ordinary ArrayBuffer backing. */
++export type RemoteDecoded<Value> = Value extends Uint8Array ? Uint8Array<ArrayBuffer>
++  : Value extends string | number | boolean | bigint | symbol ? Value
++    : Value extends object ? { [Key in keyof Value]: RemoteDecoded<Value[Key]> } : Value
++
+ /** Codec attached to one invocation parameter or result. */
+-export type TypertCodec =
+-  | {
++export type TypertCodec<Value = unknown> =
++  | TypertRemoteValue<Value> & {
+     readonly mode: 'strict'
+     readonly typeSymbol: string
+-    /** Materialize and return the process-realm schema on first boundary use. */
+-    readonly create: () => TypertSchema
+     /**
+      * Decode a unary result whose fields require type-specific handling.
+      * @param value - result reconstructed by the RPC carrier.
+      * @returns the validated result, retaining native byte views.
+      */
+-    readonly decode?: (value: unknown) => unknown
++    readonly decode?: ((value: unknown) => unknown) | undefined
+     /**
+      * Project typed binary fields into RPC result attachments.
+      * @param value - native unary result.
+      * @param writeBytes - records a byte view at its result-relative path and returns its JSON placeholder.
+      * @returns JSON metadata with untouched JSON subtrees retained.
+      */
+-    readonly encode?: (value: unknown, writeBytes: (bytes: Uint8Array, path: readonly (string | number)[]) => null) => unknown
++    readonly encode?: ((value: unknown, writeBytes: (bytes: Uint8Array, path: readonly (string | number)[]) => null) => unknown) | undefined
+   }
+   | {
+     readonly mode: 'src-json'
+@@ -295,6 +364,8 @@ export type TypertCodec =
+ export interface InvocationParameterDescriptor {
+   /** Source-level parameter name. */
+   readonly name: string
++  /** Source parameter documentation, independent of JSON Schema support. */
++  readonly description?: string
+   /** Required key in the wire `args` object. */
+   readonly wire: string
+   /** Whether the value is JSON or requires a registered Host lookup. */
+@@ -363,6 +434,8 @@ export interface InvocationDescriptor {
+   }
+   /** Codec for the unary result or each yielded stream item. */
+   readonly result: TypertCodec
++  /** Source-owned method documentation; ordinary methods need not have JSDoc. */
++  readonly description?: string
+   /** Source declaration used only for diagnostics. */
+   readonly sourceLocation?: InvocationSourceLocation
+ }
+@@ -375,13 +448,33 @@ export interface InvocationDescriptor {
+ export type PeerId = Branded<'PeerId'>
+ 
+ /**
+- * One Peer's session on this Host. Connection owns it: `ctx` is the Cordis
++ * Merge-extensible caller identities. Each driver declares its own entry.
++ * Every entry is a JSON value with a unique literal `kind`, carries no
++ * credential, and is safe to persist in a Session log.
++ */
++export interface PrincipalMap {
++  /** The local user who owns this Host. */
++  owner: { readonly kind: 'owner' }
++}
++
++/** One caller identity; the authorization layer reads only this. */
++export type Principal = PrincipalMap[keyof PrincipalMap]
++
++/**
++ * One Peer's session on this Host. Its creator owns it: `ctx` is the Cordis
+  * scope that owns connection-lifetime registrations and is disposed with the
+- * Peer. Who the Peer is and what it may do are not recorded here.
++ * Peer, and `principal` is the caller identity fixed when the Peer was created.
+  */
+ export interface PeerScope {
+   readonly id: PeerId
++  /** Connection-lifetime registrations; disposed with the Peer. */
+   readonly ctx: Context
++  /** Caller identity fixed at creation by in-process Host code; no wire field can set it. */
++  readonly principal: Principal
++  /** Aborted once the Peer is disposed; Remote streams that speak for the Peer end with it. */
++  readonly signal: AbortSignal
++  /** Whether the Peer may open a forwarded-event stream; this does not grant business permissions. */
++  readonly interactions: 'answer' | 'none'
+   /**
+    * Tear down every registration made through `ctx`.
+    * @returns settles once the scope has quiesced; racing calls share one completion.
+@@ -389,6 +482,14 @@ export interface PeerScope {
+   dispose(): Promise<void>
+ }
+ 
++/** Carrier capacity for buffered uplink frames of one logical stream. */
++export interface RemoteUplinkWindow {
++  /** Maximum complete encoded frame bytes waiting for the Host consumer. */
++  readonly maxBytes: number
++  /** UTF-8 envelope bytes added to a compact JSON item with a present value field. */
++  readonly frameOverheadBytes: number
++}
++
+ /**
+  * The context of one Remote call, reachable inside the receiving method as
+  * `this.ctx.invocation`. The Gateway derives the receiver from a Context that
+@@ -402,10 +503,12 @@ export interface RemoteInvocation {
+   }
+   /** Cordis service key of the receiving Service. */
+   readonly service: string
+-  /** Peer the call speaks for; an in-process carrier speaks for the operator. */
++  /** Peer the call speaks for; every carrier names it explicitly. */
+   readonly peer: PeerScope
+   /** Carrier cancellation: Client cancel, socket close, or an uplink failure. */
+   readonly signal: AbortSignal
++  /** Carrier frame capacity; absent when the carrier imposes no encoded-frame inbox limit. */
++  readonly uplinkWindow?: RemoteUplinkWindow | undefined
+   /**
+    * The Client's uplink items for this call. Available once; a second call
+    * throws. With an uplink codec on the descriptor every item is decoded to
+@@ -428,6 +531,91 @@ export interface TypertRemoteContribution {
+   readonly descriptors: readonly InvocationDescriptor[]
+ }
+ 
++/** Generated parser and optional lossless tool-schema projection of one Remote value. */
++export interface TypertRemoteValue<Value = unknown> {
++  /** Materialize the generated parser without loading the owning Service. */
++  readonly create: () => TypertSchema<Value>
++  /** Source-owned value documentation, independent of tool projection support. */
++  readonly description?: string | undefined
++  /** Present when the value is representable in the tool-schema subset without losing constraints; may be derived lazily. */
++  readonly jsonSchema?: Readonly<Record<string, unknown>> | undefined
++  /** Projection failure for consumers that require JSON Schema; parsing remains available. */
++  readonly jsonSchemaError?: string | undefined
++}
++
++/** Consumer-owned input validation; never changes Host dispatch or the business method declaration. */
++export interface TypertRemoteInputOptions {
++  /** Reject undeclared fields in input objects; explicit dictionaries and JSON values remain open. */
++  readonly strict?: boolean
++}
++
++/** A direct descriptor; DecodedOutput differs from its parser output only for carrier-reconstructed unary bytes. */
++export type TypertRemoteMethod<Input extends object, Output, Mode extends 'unary' | 'stream' = 'unary', Uplink = never, DecodedOutput = Output> =
++  Omit<InvocationDescriptor, 'mode' | 'invocation' | 'result'>
++  & (Mode extends 'stream' ? { readonly mode: 'stream' } : { readonly mode?: never }) & {
++    /** Named invocation selects a direct Service method, not a Context receiver. */
++    readonly invocation: { readonly kind: 'direct' }
++    /**
++     * Select matching named-input parsing and tool-schema projection without changing dispatch.
++     * @param options - consumer-owned strictness; omission preserves ordinary Remote object handling.
++     * @returns the cached view for this policy; its parser and projection remain lazy.
++     */
++    input(options?: TypertRemoteInputOptions): TypertRemoteValue<Input>
++    /** The descriptor's result or stream-item parser; parsing alone does not normalize native byte backing. */
++    readonly result: Extract<TypertCodec<Output>, { readonly mode: 'strict' }>
++    /**
++     * Invoke the mounted namespace method with named wire arguments.
++     * @param remote - caller-owned, unscoped Client Remote service; its mount owns availability.
++     * @param input - decoded named wire arguments.
++     * @param signal - caller-owned invocation lifetime.
++     * @returns the carrier-decoded unary result or complete stream handle, including uplink and disposal.
++     */
++    invoke(remote: TypertClientRemote, input: Input, signal?: AbortSignal): Mode extends 'stream'
++      ? RemoteStreamHandle<Output, Uplink>
++      : Promise<RemoteResult<DecodedOutput>>
++  }
++
++/** Ordinary contribution whose method index references its direct invocation descriptors. */
++export interface TypertRemoteInfo<Methods extends Readonly<Record<string,
++  TypertRemoteMethod<object, unknown> | TypertRemoteMethod<object, unknown, 'stream', unknown>
++>> = Readonly<Record<string, TypertRemoteMethod<object, unknown> | TypertRemoteMethod<object, unknown, 'stream', unknown>>>>
++  extends TypertRemoteContribution {
++  /** Exact generated keys and types; Context-only receivers are available only through descriptors. */
++  readonly methods: Methods
++}
++
++/** Generated Zod factory and optional tool projection for one invocation value. */
++export interface TypertRemoteCodecSpec extends Omit<Extract<TypertCodec, { readonly mode: 'strict' }>, 'create'> {
++  /** Materialize the generated Zod schema only when a parser is requested. */
++  readonly create: () => ZodType
++}
++
++/** One ordered parameter; omitted wire names resolve to the source parameter name. */
++export interface TypertRemoteParameterSpec extends Omit<InvocationParameterDescriptor, 'wire' | 'codec'> {
++  /** Explicit wire alias, notably for a Host lookup identity. */
++  readonly wire?: string
++  /** Ordinary Remote parser and projection for this parameter. */
++  readonly codec: TypertRemoteCodecSpec
++  /** Consumer-selected counterpart rejecting undeclared fields in explicit input objects. */
++  readonly strictCodec: TypertRemoteCodecSpec
++}
++
++/** Static method facts; endpoint identity and named-call helpers are derived by the runtime factory. */
++export interface TypertRemoteMethodSpec extends Omit<InvocationDescriptor, 'id' | 'namespace' | 'method' | 'parameters' | 'result'> {
++  /** Ordered Host parameters, including their wire representations. */
++  readonly parameters: readonly TypertRemoteParameterSpec[]
++  /** Successful unary result or stream item, with optional native-byte handling. */
++  readonly result: TypertRemoteCodecSpec
++}
++
++/** Compiler-produced method definitions, independent of services, registration, and transport. */
++export interface TypertRemoteSpec {
++  /** Package owning these methods. */
++  readonly package: string
++  /** Public endpoints; each method's invocation facts occur only once. */
++  readonly methods: Readonly<Record<`${string}/${string}`, TypertRemoteMethodSpec>>
++}
++
+ /** Client Remote capability implemented by the Gateway and consumed by Remote assemblies. */
+ export interface TypertClientRemote extends TypertRemoteNamespaceMap {
+   /**
+@@ -457,12 +645,19 @@ export type TypertLookupResolver<Host = unknown, Wire = unknown> = (
+   id: Wire,
+ ) => Host | undefined | Promise<Host | undefined>
+ 
++/** Resource kinds whose identity type is a wire identity; every kind for a type-erased provider. */
++type TypertResourceKindFor<Wire> = unknown extends Wire
++  ? TypertResourceKind
++  : { [Kind in TypertResourceKind]: [Wire] extends [TypertResourceId<TypertResourceMap[Kind]>] ? Kind : never }[TypertResourceKind]
++
+ /** Runtime provider for one declared Host object lookup. */
+ export interface TypertLookupProvider<Host = unknown, Wire = unknown> {
+   /** Source parameter name recognized by the SRC weak parser. */
+   readonly parameter: string
+   /** Wire field replacing the Host object parameter. */
+   readonly wire: string
++  /** Resource kind the wire identity names; a parameter of this lookup carries that resource. */
++  readonly resource?: TypertResourceKindFor<Wire>
+   /** Canonical Host type symbol used by strict generation. */
+   readonly hostTypeSymbol: string
+   /** Canonical wire type symbol used by strict generation. */
+@@ -495,6 +690,8 @@ export interface TypertHostContextAdapter<Wire = unknown> {
+   readonly wire: string
+   /** Canonical wire type symbol used by strict generation. */
+   readonly wireTypeSymbol: string
++  /** Resource kind the wire identity names; a call scoped to this Context carries that resource. */
++  readonly resource?: TypertResourceKindFor<Wire>
+   /**
+    * Resolve a validated wire identity to a live Host Context.
+    * @param id - validated wire identity.
+@@ -526,7 +723,7 @@ export interface TypertClientContextAdapter<Wire = unknown> {
+ 
+ /** Notification emitted after a Typert runtime registry changes. */
+ export interface TypertRegistryChange {
+-  readonly kind: 'local' | 'remote' | 'lookup' | 'host-context' | 'client-context'
++  readonly kind: 'local' | 'remote' | 'lookup' | 'host-context' | 'client-context' | 'resource'
+   readonly key: string
+ }
+ 
+@@ -662,7 +859,7 @@ export interface TypertContextRegistry {
+     adapter: TypertClientContextAdapter<TypertContextWire<TypertContextMap[K]>>,
+   ): TypertDisposer
+   /**
+-   * Look up a Host Context adapter.
++   * Look up a Host Context adapter; a configured resolver keeps the adapter's declaration and `resource`.
+    * @param key - descriptor Context key.
+    * @returns the adapter, or `undefined` when absent.
+    */
+@@ -681,12 +878,52 @@ export interface TypertContextRegistry {
+   subscribe(listener: TypertRegistryListener): TypertDisposer
+ }
+ 
++/** Default wire field of one resource kind. */
++export interface TypertResourceDeclaration {
++  /** Top-level or first-object wire field holding one identity of the kind. */
++  readonly field: string
++}
++
++/** One registered resource kind with its default wire field. */
++export interface TypertResourceEntry extends TypertResourceDeclaration {
++  /** Registered resource kind. */
++  readonly kind: string
++}
++
++/** Runtime registry of resource kinds' default wire fields. */
++export interface TypertResourceRegistry {
++  /**
++   * Register one kind's default wire field for the calling fiber. Only the
++   * domain that owns the kind registers it.
++   * @param kind - merge-declared resource kind.
++   * @param declaration - the kind's default wire field.
++   * @returns disposer withdrawing the exact registration.
++   * @throws Error when the kind is already registered or is `global`, the built-in resource kind.
++   */
++  register(kind: TypertResourceKind, declaration: TypertResourceDeclaration): TypertDisposer
++  /**
++   * Look up one kind's declaration.
++   * @param kind - resource kind.
++   * @returns the live declaration, or `undefined` when unregistered.
++   */
++  get(kind: string): TypertResourceDeclaration | undefined
++  /** @returns a registration-order snapshot of registered kinds with their fields. */
++  entries(): readonly TypertResourceEntry[]
++  /**
++   * Observe later resource-kind changes.
++   * @param listener - synchronous contained observer.
++   * @returns disposer for this subscription.
++   */
++  subscribe(listener: TypertRegistryListener): TypertDisposer
++}
++
+ /** Minimal Typert runtime consumed through dependency inversion. */
+ export interface TypertRegistryContract {
+   readonly local: TypertLocalRegistry
+   readonly remotes: TypertRemoteRegistry
+   readonly lookups: TypertLookupRegistry
+   readonly contexts: TypertContextRegistry
++  readonly resources: TypertResourceRegistry
+ }
+ 
+ declare module '@deepseek-ai/cordis' {
+diff --git a/packages/typert/registry/src/service.ts b/packages/typert/registry/src/service.ts
+index 93a370e34f..c64817c819 100644
+--- a/packages/typert/registry/src/service.ts
++++ b/packages/typert/registry/src/service.ts
+@@ -9,6 +9,7 @@ import { Context, Service } from '@deepseek-ai/cordis'
+ import { z } from 'zod'
+ import type {
+   InvocationDescriptor,
++  RemoteAccessResourceKind,
+   TypertClientContextAdapter,
+   TypertContextMap,
+   TypertContextRegistry,
+@@ -16,6 +17,8 @@ import type {
+   TypertDisposer,
+   TypertHostContextAdapter,
+   TypertHostContextResolver,
++  TypertResourceDeclaration,
++  TypertResourceRegistry,
+   TypertLocalRegistry,
+   TypertLookupHost,
+   TypertLookupDefinition,
+@@ -255,6 +258,8 @@ class LookupStore {
+     return {
+       parameter: provider.parameter,
+       wire: provider.wire,
++      // oxlint-disable-next-line typescript/no-unnecessary-condition -- domain packages merge resource kinds into TypertResourceMap.
++      ...provider.resource === undefined ? {} : { resource: provider.resource },
+       hostTypeSymbol: provider.hostTypeSymbol,
+       wireTypeSymbol: provider.wireTypeSymbol,
+       resolve: id => resolver.resolve(id),
+@@ -372,6 +377,8 @@ class ContextStore {
+     return {
+       wire: adapter.wire,
+       wireTypeSymbol: adapter.wireTypeSymbol,
++      // oxlint-disable-next-line typescript/no-unnecessary-condition -- domain packages merge resource kinds into TypertResourceMap.
++      ...adapter.resource === undefined ? {} : { resource: adapter.resource },
+       resolve: id => resolver.resolve(id),
+     }
+   }
+@@ -439,6 +446,48 @@ interface HostContextResolverEntry {
+   resolve(id: unknown): Promise<Context | undefined>
+ }
+ 
++/** The built-in identity-less resource kind; no declared resource kind may take its name. */
++const GLOBAL_RESOURCE_KIND = 'global' satisfies RemoteAccessResourceKind
++
++class ResourceStore {
++  private readonly declarations = new Map<string, ProviderEntry<TypertResourceDeclaration>>()
++  private readonly changes: ChangeSource
++
++  constructor(report: ReportObserverError) {
++    this.changes = new ChangeSource(report)
++  }
++
++  view(ctx: Context): TypertResourceRegistry {
++    return {
++      register: (kind, declaration) => this.register(ctx, kind, declaration),
++      get: kind => this.declarations.get(kind)?.provider,
++      entries: () => [...this.declarations].map(([kind, entry]) => Object.freeze({ kind, field: entry.provider.field })),
++      subscribe: listener => this.changes.subscribe(ctx, listener),
++    }
++  }
++
++  private register(ctx: Context, kind: string, declaration: TypertResourceDeclaration): TypertDisposer {
++    validateSegment('resource kind', kind)
++    if (kind === GLOBAL_RESOURCE_KIND) {
++      throw new Error(`typert: resource kind "${GLOBAL_RESOURCE_KIND}" is reserved for the built-in global resource`)
++    }
++    validateWireName('resource field', declaration.field)
++    if (this.declarations.has(kind)) throw new Error(`typert: resource kind "${kind}" is already registered`)
++    const entry: ProviderEntry<TypertResourceDeclaration> = { provider: { field: declaration.field }, owner: {} }
++    const { declarations, changes } = this
++    return ctx.effect(function* () {
++      declarations.set(kind, entry)
++      changes.emit({ kind: 'resource', key: kind })
++      yield () => {
++        /* v8 ignore next -- duplicate registration is rejected, so this effect remains the kind's unique owner. */
++        if (declarations.get(kind) !== entry) return
++        declarations.delete(kind)
++        changes.emit({ kind: 'resource', key: kind })
++      }
++    }, `typert.resources.register(${JSON.stringify(kind)})`)
++  }
++}
++
+ /**
+  * Registry of generated schemas, package reflection, invocations, and Remote
+  * dependency providers.
+@@ -451,6 +500,7 @@ export class TypertRegistry extends Service implements TypertRegistryContract {
+   private readonly remoteStore: RemoteStore
+   private readonly lookupStore: LookupStore
+   private readonly contextStore: ContextStore
++  private readonly resourceStore: ResourceStore
+ 
+   constructor(ctx: Context) {
+     super(ctx, 'typert')
+@@ -462,6 +512,7 @@ export class TypertRegistry extends Service implements TypertRegistryContract {
+     this.remoteStore = new RemoteStore(new DescriptorStore('remote', report))
+     this.lookupStore = new LookupStore(report)
+     this.contextStore = new ContextStore(report)
++    this.resourceStore = new ResourceStore(report)
+   }
+ 
+   /** Current-environment invocation definitions. */
+@@ -490,6 +541,11 @@ export class TypertRegistry extends Service implements TypertRegistryContract {
+     return this.contextStore.view(this.ctx)
+   }
+ 
++  /** Default wire fields of resource kinds. */
++  get resources(): TypertResourceRegistry {
++    return this.resourceStore.view(this.ctx)
++  }
++
+   /**
+    * Register one generated contribution atomically for the calling fiber.
+    * Duplicate package-face identities, schemas, invocation ids, or endpoints

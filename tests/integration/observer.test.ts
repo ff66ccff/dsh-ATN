@@ -6,6 +6,8 @@ import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import TypertRegistry from '@deepseek-ai/dsh-typert-registry'
 import TypertGateway from '@deepseek-ai/dsh-api-gateway'
+import RemoteAccess from '@deepseek-ai/dsh-api-remote-access'
+import { Peer } from '@deepseek-ai/dsh-client-connection'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { AtnObserver } from '../../src/observer.ts'
 import { atnObserverSnapshotSchema, OBSERVER_MAX_EVENTS, OBSERVER_MAX_TASKS } from '../../src/observer-schema.ts'
@@ -16,12 +18,16 @@ import { evaluateRewireEvidence } from '../../src/verified-feedback.ts'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import { makeChain, makeTask, testGoal } from '../fixtures/network.ts'
 
+const peers = new WeakMap<Kernel, Peer>()
+
 async function withObserver(run: (kernel: Kernel) => Promise<void>, store?: MemoryNetworkStore): Promise<void> {
   const scratch = await mkdtemp(join(tmpdir(), 'dsh-atn-observer-'))
   const kernel = await bootKernel(scratch, { clock: () => Date.now(), store })
   try {
     await kernel.ctx.plugin(TypertRegistry)
+    await kernel.ctx.plugin(RemoteAccess)
     await kernel.ctx.plugin(TypertGateway)
+    peers.set(kernel, new Peer(kernel.ctx, { principal: { kind: 'owner' } }))
     await kernel.ctx.plugin(AtnObserver)
     await run(kernel)
   } finally {
@@ -32,7 +38,7 @@ async function withObserver(run: (kernel: Kernel) => Promise<void>, store?: Memo
 
 async function snapshot(kernel: Kernel, sessionId: string): Promise<AtnObserverSnapshot> {
   const value = await kernel.ctx.typertGateway.invoke({
-    namespace: 'atnObserver', method: 'snapshot', args: { sessionId }, signal: new AbortController().signal,
+    peer: peers.get(kernel)!, namespace: 'atnObserver', method: 'snapshot', args: { sessionId }, signal: new AbortController().signal,
   })
   return atnObserverSnapshotSchema.parse(value)
 }
@@ -63,10 +69,10 @@ test('OBSERVER-01: strict Gateway scopes observation to the viewed session and n
     assert.equal(JSON.stringify(first).includes('private task context'), false)
     assert.equal(JSON.stringify(first).includes('permissionSeed'), false)
     await assert.rejects(() => kernel.ctx.typertGateway.invoke({
-      namespace: 'atnObserver', method: 'snapshot', args: { sessionId: 42 }, signal: new AbortController().signal,
+      peer: peers.get(kernel)!, namespace: 'atnObserver', method: 'snapshot', args: { sessionId: 42 }, signal: new AbortController().signal,
     }), /boundary validation/i)
     await assert.rejects(() => kernel.ctx.typertGateway.invoke({
-      namespace: 'atnObserver', method: 'snapshot', args: { sessionId: host.id, allNetworks: true }, signal: new AbortController().signal,
+      peer: peers.get(kernel)!, namespace: 'atnObserver', method: 'snapshot', args: { sessionId: host.id, allNetworks: true }, signal: new AbortController().signal,
     }), /unexpected|unknown|argument/i)
     const abort = new AbortController()
     abort.abort()

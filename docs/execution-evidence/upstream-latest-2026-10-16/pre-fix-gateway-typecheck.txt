@@ -1,0 +1,10 @@
+
+> dsh-atn@0.5.0 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client-test.json
+
+tests/integration/observer.test.ts(34,55): error TS2345: Argument of type '{ namespace: string; method: string; args: { sessionId: string; }; signal: AbortSignal; }' is not assignable to parameter of type 'InvokeRemoteRequest'.
+  Property 'peer' is missing in type '{ namespace: string; method: string; args: { sessionId: string; }; signal: AbortSignal; }' but required in type 'InvokeRemoteRequest'.
+tests/integration/observer.test.ts(65,64): error TS2345: Argument of type '{ namespace: string; method: string; args: { sessionId: number; }; signal: AbortSignal; }' is not assignable to parameter of type 'InvokeRemoteRequest'.
+  Property 'peer' is missing in type '{ namespace: string; method: string; args: { sessionId: number; }; signal: AbortSignal; }' but required in type 'InvokeRemoteRequest'.
+tests/integration/observer.test.ts(68,64): error TS2345: Argument of type '{ namespace: string; method: string; args: { sessionId: SessionId; allNetworks: boolean; }; signal: AbortSignal; }' is not assignable to parameter of type 'InvokeRemoteRequest'.
+  Property 'peer' is missing in type '{ namespace: string; method: string; args: { sessionId: SessionId; allNetworks: boolean; }; signal: AbortSignal; }' but required in type 'InvokeRemoteRequest'.

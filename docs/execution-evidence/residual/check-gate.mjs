@@ -5,8 +5,8 @@ import { resolve } from 'node:path'
 import { load } from 'js-yaml'
 import { VERIFIED_SIDEBAR_VERSION } from '../../../scripts/sidebar-compatibility.mjs'
 
-const root = 'docs/execution-evidence/residual'
-const directory = resolve('.scratch/residual-sidebar/node_modules/dsh-better-sidebar')
+const root = 'docs/execution-evidence/upstream-latest-2026-10-16'
+const directory = resolve('.scratch/sidebar-0261/node_modules/dsh-better-sidebar')
 const env = { ...process.env, SIDEBAR_PACKAGE_DIR: directory }
 const summary = []
 async function runNpm(name, expectedCode, expectedText, absentText) {
@@ -58,11 +58,11 @@ const manifestFile = `${directory}/package.json`
 const originalManifest = await readFile(manifestFile)
 try {
   const manifest = JSON.parse(originalManifest)
-  manifest.version = '0.26.1'
+  manifest.version = '0.26.2'
   await writeFile(manifestFile, JSON.stringify(manifest, null, 2))
   for (const script of ['contract', 'registry']) {
-    await run(`synthetic-0.26.1-${script}-rejected`, [`scripts/verify-sidebar-${script}.mjs`], 1,
-      /SIDEBAR_CONTRACT_REJECTED.*"installedVersion":"0.26.1".*该包或版本未被验证/)
+    await run(`synthetic-0.26.2-${script}-rejected`, [`scripts/verify-sidebar-${script}.mjs`], 1,
+      /SIDEBAR_CONTRACT_REJECTED.*"installedVersion":"0.26.2".*该包或版本未被验证/)
   }
 } finally { await writeFile(manifestFile, originalManifest) }
 
@@ -70,7 +70,7 @@ const consumerFile = 'package.json'
 const originalConsumer = await readFile(consumerFile)
 try {
   const consumer = JSON.parse(originalConsumer)
-  consumer.peerDependencies['dsh-better-sidebar'] = '^0.26.0'
+  consumer.peerDependencies['dsh-better-sidebar'] = '^0.26.1'
   await writeFile(consumerFile, JSON.stringify(consumer, null, 2))
   await run('peer-range-drift-rejected', ['scripts/verify-sidebar-contract.mjs'], 1,
     /SIDEBAR_CONTRACT_REJECTED.*声明范围与验证集合不一致/)
@@ -96,6 +96,6 @@ assert.equal(JSON.parse(originalConsumer).scripts['verify:sidebar'],
   'node scripts/verify-sidebar-contract.mjs && node scripts/verify-sidebar-registry.mjs')
 summary.push({ name: 'ci-yaml-and-blocking-wiring', expectationMet: true,
   existingVerifyJobUnchanged: true, providerPinMatchesVerifiedSet: true })
-await runNpm('sidebar-0.26.0', 0, /SIDEBAR_REAL_REGISTRY/)
+await runNpm('sidebar-0.26.1', 0, /SIDEBAR_REAL_REGISTRY/)
 await writeFile(`${root}/gate-checks.json`, JSON.stringify(summary, null, 2) + '\n')
 console.log(JSON.stringify(summary, null, 2))

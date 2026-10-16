@@ -1,0 +1,4 @@
+$ node scripts/verify-sidebar-contract.mjs
+SIDEBAR_CONTRACT_REJECTED {"source":"package.json","verifiedVersions":["0.26.1"],"message":"声明范围与验证集合不一致：dsh-better-sidebar 必须仅为精确版本的可选 peer。"}
+
+EXIT_CODE=1

@@ -9,7 +9,7 @@ test('SIDEBAR-PACKAGE: provider is an optional peer with no installation or runt
   const verifiedVersion = execFileSync(process.execPath, ['--input-type=module', '-e',
     "import { VERIFIED_SIDEBAR_VERSION } from './scripts/sidebar-compatibility.mjs'; console.log(VERIFIED_SIDEBAR_VERSION)"],
   { cwd: new URL('../../', import.meta.url), encoding: 'utf8' }).trim()
-  assert.equal(verifiedVersion, '0.26.0')
+  assert.equal(verifiedVersion, '0.26.1')
   assert.equal(manifest.peerDependencies['dsh-better-sidebar'], verifiedVersion)
   const lock = JSON.parse(readFileSync(new URL('../../package-lock.json', import.meta.url), 'utf8')).packages['']
   assert.equal(lock.peerDependencies['dsh-better-sidebar'], verifiedVersion)

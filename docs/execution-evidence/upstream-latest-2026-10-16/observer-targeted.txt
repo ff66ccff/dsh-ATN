@@ -1,0 +1,14 @@
+✔ OBSERVER-01: strict Gateway scopes observation to the viewed session and never changes network or model input (143.4078ms)
+✔ OBSERVER-02: live tool activity is visible during execution and cleared on settlement without exposing arguments (63.1357ms)
+✔ OBSERVER-03: rapid rewiring and failed results survive between snapshots (136.9049ms)
+✔ OBSERVER-04: cold durable records yield bounded useful history without resuming unloaded agents (17.6598ms)
+✔ OBSERVER-05: proposals, votes and commit history are present on first read (12.4847ms)
+✔ OBSERVER-06: cold history distinguishes submission, independent acceptance, exploration and observed regression (14.5608ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1404.426

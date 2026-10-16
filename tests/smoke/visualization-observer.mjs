@@ -2,6 +2,7 @@
 import { strict as assert } from 'node:assert'
 import { access, writeFile } from 'node:fs/promises'
 import { join } from 'node:path'
+import { Peer } from '@deepseek-ai/dsh-client-connection'
 import { LlmAdapter, createUserMessage } from '@deepseek-ai/dsh-llm'
 
 export const inject = ['appReady', 'appExit', 'agentPresets', 'agents', 'llm', 'atn', 'atnObserver', 'typertGateway', 'connection', 'webServer', 'clientModules']
@@ -127,7 +128,7 @@ async function run(ctx) {
 
     const durableBefore = JSON.stringify(await ctx.atn.network(networkId))
     const requestCountBefore = adapter.requests
-    const direct = await ctx.typertGateway.invoke({ namespace: 'atnObserver', method: 'snapshot', args: { sessionId } })
+    const direct = await ctx.typertGateway.invoke({ peer: new Peer(ctx, { principal: { kind: 'owner' } }), namespace: 'atnObserver', method: 'snapshot', args: { sessionId } })
     await rpc({ sessionId })
     assert.equal(direct.network.id, networkId)
     assert.equal(JSON.stringify(await ctx.atn.network(networkId)), durableBefore, 'observation does not mutate network records')

@@ -52,3 +52,6 @@ guide 展示限制源码确认：Harness `packages/client/ui-sidebar-right/src/c
 十二项不变式：1入口归属不变，lifecycle/stop/retire；2原子网络记录不变，domain/concurrency；3有向边/谱系保留，UI 与 topology；4live 身份不变，agent/preset；5授权与验收不变，information-boundary；6步数不称费用，budget 与 locale；7模型/工具/权限不变，preset/smoke；8观察只读，observer/真实 Web smoke；9domain v1，domain；10五工具/schema 不变，fixed-context；11既有用例无删除/弱化且全通过，改写见上表述；12仅声明实测通过，完整 provider 激活及大网络/付费模型未列入通过。
 
 本阶段客户端验收完成，完整外部插件兼容项保留为明确限制。统一声明审计与 D 分别独立提交，最终整轮矩阵见 [最终验收记录](FINAL_EXECUTION_VALIDATION.md)。
+
+
+2026-10-16 适配补记：当前精确验证锚点提升为 0.26.1，详见 [alpha.4 实施报告](UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)。以下原始 0.26.0 输出为历史证据；完整 provider host 激活仍未验证。

@@ -1,0 +1,286 @@
+[
+  {
+    "directory": "api/remotes",
+    "files": [
+      "packages/api/remotes/src/client/index.ts",
+      "packages/api/remotes/src/remote-events.ts"
+    ],
+    "conclusion": "新增远程事件及插件管理 requirements；ATN 使用自有 atnObserver descriptor，不读取安装拒绝字段。"
+  },
+  {
+    "directory": "boot/app-boot",
+    "files": [
+      "packages/boot/app-boot/src/compatibility-preflight.ts",
+      "packages/boot/app-boot/src/plugin-compatibility.ts",
+      "packages/boot/app-boot/src/profile.ts"
+    ],
+    "conclusion": "影响：engines.dsh 优先兼容预检；清单收窄、真实 CLI 安装验证；profile 源重置只用于临时新目录。"
+  },
+  {
+    "directory": "boot/plugin-manager",
+    "files": [
+      "packages/boot/plugin-manager/src/failure.ts",
+      "packages/boot/plugin-manager/src/operations.ts",
+      "packages/boot/plugin-manager/src/tools.ts",
+      "packages/boot/plugin-manager/src/types.ts"
+    ],
+    "conclusion": "requirements 和已安装包处理；ATN 不调用 installBundle；smoke 使用新 profile CLI add。"
+  },
+  {
+    "directory": "boot/plugin-market",
+    "files": [
+      "packages/boot/plugin-market/src/index-url.ts",
+      "packages/boot/plugin-market/src/index.ts",
+      "packages/boot/plugin-market/src/parse-thread.ts",
+      "packages/boot/plugin-market/src/parse.ts",
+      "packages/boot/plugin-market/src/search.ts",
+      "packages/boot/plugin-market/src/tools.ts",
+      "packages/boot/plugin-market/src/types.ts",
+      "packages/boot/plugin-market/src/worker.ts"
+    ],
+    "conclusion": "市场检索/解析，不在 ATN 调用路径。"
+  },
+  {
+    "directory": "client/hmr",
+    "files": [
+      "packages/client/hmr/src/client/index.ts"
+    ],
+    "conclusion": "发布变化通知；ATN 不注册 HMR 钩子，Web 装载 smoke 覆盖。"
+  },
+  {
+    "directory": "client/modules",
+    "files": [
+      "packages/client/modules/src/client/entries.ts",
+      "packages/client/modules/src/client/index.ts",
+      "packages/client/modules/src/client/manifest.ts",
+      "packages/client/modules/src/client/notify.ts",
+      "packages/client/modules/src/client/release-change.ts",
+      "packages/client/modules/src/index.ts"
+    ],
+    "conclusion": "可选 release 与热更新通知；ATN 不生产 release；保留现有 inject 清单。"
+  },
+  {
+    "directory": "client/product-analytics",
+    "files": [
+      "packages/client/product-analytics/src/environment-query.ts",
+      "packages/client/product-analytics/src/environment.ts",
+      "packages/client/product-analytics/src/index.ts"
+    ],
+    "conclusion": "环境采集；ATN 无此 API。"
+  },
+  {
+    "directory": "client/ui-commands",
+    "files": [
+      "packages/client/ui-commands/src/client/service.ts"
+    ],
+    "conclusion": "命令注册；ATN 仅 header action。"
+  },
+  {
+    "directory": "client/ui-conversation",
+    "files": [
+      "packages/client/ui-conversation/src/client/contract/draft-editor.ts",
+      "packages/client/ui-conversation/src/client/contract/input.ts",
+      "packages/client/ui-conversation/src/client/draft.ts",
+      "packages/client/ui-conversation/src/client/input/editor/CommandChip.tsx",
+      "packages/client/ui-conversation/src/client/input/editor/claim-decor.ts",
+      "packages/client/ui-conversation/src/client/input/editor/command-chip-node.tsx",
+      "packages/client/ui-conversation/src/client/input/editor/command-chip-selection.ts",
+      "packages/client/ui-conversation/src/client/input/editor/composer-editor.module.css",
+      "packages/client/ui-conversation/src/client/input/editor/keymap.ts",
+      "packages/client/ui-conversation/src/client/input/editor/projection.ts",
+      "packages/client/ui-conversation/src/client/input/editor/runtime.ts",
+      "packages/client/ui-conversation/src/client/input/editor/text-ref.ts",
+      "packages/client/ui-conversation/src/client/input/facade.ts",
+      "packages/client/ui-conversation/src/client/input/machine.ts",
+      "packages/client/ui-conversation/src/client/skeleton/InputBar.module.css"
+    ],
+    "conclusion": "draft/input/editor/facade/machine；header actions 槽位未变；客户端与浏览器验证覆盖观察入口。"
+  },
+  {
+    "directory": "client/ui-input-trigger",
+    "files": [
+      "packages/client/ui-input-trigger/src/client/controller.ts",
+      "packages/client/ui-input-trigger/src/types.ts"
+    ],
+    "conclusion": "输入触发器；ATN 无输入扩展。"
+  },
+  {
+    "directory": "client/ui-plugin-manager",
+    "files": [
+      "packages/client/ui-plugin-manager/src/client/PluginManagerPage.module.css",
+      "packages/client/ui-plugin-manager/src/client/PluginManagerPage.tsx",
+      "packages/client/ui-plugin-manager/src/client/assets/voice-input-preview.svg",
+      "packages/client/ui-plugin-manager/src/client/assets/voice-input-preview.zh.svg",
+      "packages/client/ui-plugin-manager/src/client/index.ts",
+      "packages/client/ui-plugin-manager/src/client/locales.ts",
+      "packages/client/ui-plugin-manager/src/client/manager-store.ts",
+      "packages/client/ui-plugin-manager/src/client/navigation-store.ts",
+      "packages/client/ui-plugin-manager/src/client/presentation.ts",
+      "packages/client/ui-plugin-manager/src/client/slot-contract.ts",
+      "packages/client/ui-plugin-manager/src/client/tab-ledger.ts"
+    ],
+    "conclusion": "管理页/导航/资源；ATN 不用这些契约。"
+  },
+  {
+    "directory": "client/ui-plugin-market",
+    "files": [
+      "packages/client/ui-plugin-market/src/client/DiscoverSection.module.css",
+      "packages/client/ui-plugin-market/src/client/DiscoverSection.tsx",
+      "packages/client/ui-plugin-market/src/client/index.ts",
+      "packages/client/ui-plugin-market/src/client/locales.ts",
+      "packages/client/ui-plugin-market/src/client/market-store.ts",
+      "packages/client/ui-plugin-market/src/client/presentation.ts",
+      "packages/client/ui-plugin-market/src/css-modules.d.ts",
+      "packages/client/ui-plugin-market/src/index.ts"
+    ],
+    "conclusion": "市场 UI；ATN 不用这些契约。"
+  },
+  {
+    "directory": "client/ui-settings-general",
+    "files": [
+      "packages/client/ui-settings-general/src/client/HostReleasePrompt.module.css",
+      "packages/client/ui-settings-general/src/client/HostReleasePrompt.tsx",
+      "packages/client/ui-settings-general/src/client/index.ts",
+      "packages/client/ui-settings-general/src/client/locales.ts"
+    ],
+    "conclusion": "版本提示；ATN 不扩展设置页。"
+  },
+  {
+    "directory": "client/ui-settings-models",
+    "files": [
+      "packages/client/ui-settings-models/src/client/CustomProviderCard.tsx",
+      "packages/client/ui-settings-models/src/client/ModelListEditor.tsx",
+      "packages/client/ui-settings-models/src/client/ModelReasoningEfforts.tsx",
+      "packages/client/ui-settings-models/src/client/ModelRow.tsx",
+      "packages/client/ui-settings-models/src/client/ModelsSection.module.css",
+      "packages/client/ui-settings-models/src/client/ModelsSection.tsx",
+      "packages/client/ui-settings-models/src/client/ProviderEditor.tsx",
+      "packages/client/ui-settings-models/src/client/locales.ts",
+      "packages/client/ui-settings-models/src/client/store.ts"
+    ],
+    "conclusion": "提供商/模型编辑；ATN 不实现 Provider 配置页。"
+  },
+  {
+    "directory": "client/ui-tool",
+    "files": [
+      "packages/client/ui-tool/src/client/tool/components/ExitCodeBadge.module.css",
+      "packages/client/ui-tool/src/client/tool/components/ExitCodeBadge.tsx",
+      "packages/client/ui-tool/src/client/tool/components/ToolRow.tsx",
+      "packages/client/ui-tool/src/client/tool/models/terminal-card-model.ts",
+      "packages/client/ui-tool/src/client/tool/toolviews/bash-sample.tsx"
+    ],
+    "conclusion": "终端卡片退出码；ATN 返回文本 JSON，无终端卡片。"
+  },
+  {
+    "directory": "experimental/inspector",
+    "files": [
+      "packages/experimental/inspector/src/host/plugin.ts",
+      "packages/experimental/inspector/src/worker/entry.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "experimental/plugin-market-bundle",
+    "files": [
+      "packages/experimental/plugin-market-bundle/src/index.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "experimental/speech-to-text-sensevoice",
+    "files": [
+      "packages/experimental/speech-to-text-sensevoice/src/worker.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "experimental/tool-agent-team",
+    "files": [
+      "packages/experimental/tool-agent-team/src/index.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "experimental/webworker-packer",
+    "files": [
+      "packages/experimental/webworker-packer/src/bin.ts",
+      "packages/experimental/webworker-packer/src/index.ts",
+      "packages/experimental/webworker-packer/src/pack.ts",
+      "packages/experimental/webworker-packer/src/repository.ts",
+      "packages/experimental/webworker-packer/src/rules.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "experimental/webworker-runtime",
+    "files": [
+      "packages/experimental/webworker-runtime/src/image-layout.ts",
+      "packages/experimental/webworker-runtime/src/image-manifest.ts",
+      "packages/experimental/webworker-runtime/src/index.ts",
+      "packages/experimental/webworker-runtime/src/module-proxies.ts",
+      "packages/experimental/webworker-runtime/src/module-system/module-loader.ts",
+      "packages/experimental/webworker-runtime/src/node/builtin_modules/implemented/fs-watch.ts",
+      "packages/experimental/webworker-runtime/src/node/builtin_modules/implemented/fs.ts",
+      "packages/experimental/webworker-runtime/src/node/builtin_modules/implemented/path.ts",
+      "packages/experimental/webworker-runtime/src/node/builtin_modules/implemented/util.ts",
+      "packages/experimental/webworker-runtime/src/node/builtins.ts",
+      "packages/experimental/webworker-runtime/src/node/external_packages/node-addon-require-builtin.ts",
+      "packages/experimental/webworker-runtime/src/node/external_packages/replaced-externals.ts",
+      "packages/experimental/webworker-runtime/src/node/globals/process.ts",
+      "packages/experimental/webworker-runtime/src/node/internal_modules/esm-loader.ts",
+      "packages/experimental/webworker-runtime/src/node/internal_modules/module-map.ts",
+      "packages/experimental/webworker-runtime/src/node/internal_modules/package-surfaces.ts",
+      "packages/experimental/webworker-runtime/src/node/notImplementedFail.ts",
+      "packages/experimental/webworker-runtime/src/storage/memory.ts",
+      "packages/experimental/webworker-runtime/src/storage/paths.ts",
+      "packages/experimental/webworker-runtime/src/storage/types.ts",
+      "packages/experimental/webworker-runtime/src/worker-host.ts"
+    ],
+    "conclusion": "实验包变更（inspector/worker/speech/PTC team）；ATN 不接入对应新机制；native-team 实验依赖仅类型检查，未重跑实验。"
+  },
+  {
+    "directory": "extensions/cordis-client-runner",
+    "files": [
+      "packages/extensions/cordis-client-runner/src/client/slot-catalog.ts"
+    ],
+    "conclusion": "slot catalog 变更，brief 漏列此目录；ATN 槽位仍为 conversation.session.header.actions，无需修改。"
+  },
+  {
+    "directory": "extensions/tool-cordis",
+    "files": [
+      "packages/extensions/tool-cordis/src/api-catalog.ts"
+    ],
+    "conclusion": "API catalog；ATN 不调用该工具。"
+  },
+  {
+    "directory": "ssh/ssh",
+    "files": [
+      "packages/ssh/ssh/src/helper-entry.ts"
+    ],
+    "conclusion": "SSH helper；ATN 不调用。"
+  },
+  {
+    "directory": "subagent/subagent-codex",
+    "files": [
+      "packages/subagent/subagent-codex/src/wire.ts"
+    ],
+    "conclusion": "Codex wire；ATN 使用 in-process subagent，不用 Codex wire。"
+  },
+  {
+    "directory": "subprocess/subprocess-local",
+    "files": [
+      "packages/subprocess/subprocess-local/src/index.ts",
+      "packages/subprocess/subprocess-local/src/linux-scope-selector.ts",
+      "packages/subprocess/subprocess-local/src/linux-scope.ts"
+    ],
+    "conclusion": "Linux scope 选择；ATN 无 subprocess 控制。"
+  },
+  {
+    "directory": "util/plugin-market-index",
+    "files": [
+      "packages/util/plugin-market-index/src/index.ts",
+      "packages/util/plugin-market-index/src/types.ts"
+    ],
+    "conclusion": "市场索引；ATN 不调用。"
+  }
+]

@@ -2,7 +2,7 @@
 import { readFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-export const VERIFIED_SIDEBAR_VERSION = '0.26.0'
+export const VERIFIED_SIDEBAR_VERSION = '0.26.1'
 
 function reject(details) {
   console.error('SIDEBAR_CONTRACT_REJECTED ' + JSON.stringify(details))
