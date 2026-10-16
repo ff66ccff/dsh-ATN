@@ -6,3 +6,6 @@
 docs/execution-evidence/residual/** -text
 docs/execution-evidence/free-model-20261015/** -text
 docs/execution-evidence/agy-model-20261015/** -text
+
+docs/execution-evidence/live-probe-resumed-20261015/** -text
+docs/PROBE_LIVENESS_EVENT_SEMANTICS_V2.md -text

@@ -1,4 +1,4 @@
-/** Reviewed published versions; the optional peer must describe exactly this set. */
+/** Reviewed provider versions; the optional peer must describe exactly this set. */
 import ts from 'typescript'
 import { access, readFile, mkdir, mkdtemp } from 'node:fs/promises'
 import { resolve } from 'node:path'
