@@ -140,7 +140,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 0.6.0 汇总此前未发版的动态出度、结构化观察、共享 substrate、读取授权、宿主一致性套件及舰队观察，并更新 Harness 与侧栏契约。完整变更见 [CHANGELOG](CHANGELOG.md)，验证范围与已知限制见 [发布记录](docs/RELEASE_0_6_0.md)。历史阶段报告保留当时的版本与测试结果。
 
 ### 1. npm 安装与发布状态
-**发布状态（2026-10-17）**：GitHub 版本为 0.6.0，npm `latest` 仍为 0.5.0，0.6.0 的 npm 发布待完成。以下 npm 命令在发布完成后可用；当前请从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.0) 下载 tarball，或按下节从源码构建。升级前请将 Harness 升至 0.2.1-alpha.5，并同步更新 profile 中的宿主包 overrides。
+安装目标版本为 **0.6.0**，也可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.0) 下载 tarball。升级前请将 Harness 升至 0.2.1-alpha.5，并同步更新 profile 中的宿主包 overrides。
 ```bash
 # 安装已发布版本至 web profile
 dsh plugin --profile web add dsh-atn@0.6.0
