@@ -1,13 +1,14 @@
 /** Real packaged Web-profile integration. ATN_VISUAL_PREVIEW=1 retains the app for browser QA. */
 import { execFile, spawn } from 'node:child_process'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { copyFile, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 
 const CLI = process.env.DSH_CLI ?? 'D:\\DeepSeekDesktop\\resources\\runtime\\cli\\bin\\dsh.cmd'
-const TARBALL = resolve('.artifacts', `dsh-atn-${process.env.npm_package_version ?? '0.3.1'}.tgz`)
+const version = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version
+const TARBALL = resolve('.artifacts', `dsh-atn-${version}.tgz`)
 const preview = process.env.ATN_VISUAL_PREVIEW === '1'
 const redact = (text: string): string => text.replace(/([?&]token=)[^\s&"'<>]+/g, '$1<redacted>')
 

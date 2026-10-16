@@ -1,5 +1,7 @@
 # dsh-ATN 文档库索引指南
 
+当前版本 **0.6.0**：Harness **0.2.1-alpha.5**；Better Sidebar **0.26.1 npm 包 / 0.27.0 上游源码**。安装与能力说明以[主 README](../README.md)、[CHANGELOG](../CHANGELOG.md)和[0.6.0 发布记录](RELEASE_0_6_0.md)为准。以下阶段报告和实验材料保留各自执行时的版本、计数及发布边界，不代表现行安装要求。
+
 - [V2 合并实施计划](MASTER_EXECUTION_PLAN_V2.md)：用户批准的阶段顺序与停止条件。
 - [V2 阶段 0 证据](execution-evidence/round-v2-phase0/README.md)：依赖处置与命令闸门。
 - [V2 阶段 1 证据](execution-evidence/round-v2-phase1/README.md)：分区与授权两张判定表，结构和 live/RPC 两层。
@@ -102,7 +104,7 @@
 - [**Substrate 协作面引入实施说明** (`SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md`)](SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md)
   把 arXiv:2610.16120v1（**ScaleMAS**，substrate-centric coordination）的机制引入本插件：新增 `atn_publish` / `atn_search` / `atn_visit` 三个工具与**第 14 条出站通道**，落地只追加消息、确定性写入准入（引用必须存在／可见／真实持有，理由必须点名每条引用）、整数域 BM25 + 引文权重排序、证据链与跨退休持久性。含对 `STRATEGY_AND_POSITIONING` 两条高压线（"不再加白板公告""不再加声誉算法"）的**逐条对照与有据修订说明**，以及用户已拍板的三项决策：默认同时启用、引文权重可配置关闭、**仅零模型结构验证且不主张任何性能增益**。文中列出三处必须先留红灯的既有闸门测试（固定上下文、边界 inventory、通道枚举）与与论文的七处偏离清单。
 
-实施结果（两阶段已分阶段提交）：[上游适配报告](UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)、[Substrate 实施报告](SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)。该两轮时点为 588 项 runtime/集成 + 15 项 UI；读取边界轮次后为 **593 + 15**（本人独立复跑确认零失败零跳过）。八工具固定上下文 7,956 字节、关闭 substrate 精确回到 5,910；`engines.dsh` 为 `>=0.2.1-alpha.4 <0.3.0`（仅 alpha.4 实测）；完整 provider host 激活仍受 `webRuntime` 缺失阻塞，顶栏回退通过真实浏览器验证。后续范围见 [方向库 V2](ROADMAP_NEXT_DIRECTIONS_V2.md) 与[本轮总纲 V2](MASTER_EXECUTION_PLAN_V2.md)。
+2026-10-16 历史实施结果（两阶段已分阶段提交）：[上游适配报告](UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)、[Substrate 实施报告](SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)。该两轮时点为 588 项 runtime/集成 + 15 项 UI；读取边界轮次后为 **593 + 15**（本人独立复跑确认零失败零跳过）。八工具固定上下文 7,956 字节、关闭 substrate 精确回到 5,910；`engines.dsh` 为 `>=0.2.1-alpha.4 <0.3.0`（仅 alpha.4 实测）；完整 provider host 激活仍受 `webRuntime` 缺失阻塞，顶栏回退通过真实浏览器验证。后续范围见 [方向库 V2](ROADMAP_NEXT_DIRECTIONS_V2.md) 与[本轮总纲 V2](MASTER_EXECUTION_PLAN_V2.md)。
 
 ---
 

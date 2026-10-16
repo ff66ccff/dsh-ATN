@@ -1,4 +1,4 @@
-/** Narrow, type-only projection of dsh-better-sidebar@0.26.1's published Tab API.
+/** Narrow, type-only projection of dsh-better-sidebar 0.26.1 / 0.27.0's Tab API.
  * Consumer-owned to keep an optional provider out of the development dependency graph.
  * Source: src/client/service.ts:149-167 (TabComponentProps), 168-292 (TabDescriptor); no runtime provider or compatibility shim.
  */

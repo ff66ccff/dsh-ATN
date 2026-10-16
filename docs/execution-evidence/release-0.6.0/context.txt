@@ -1,0 +1,17 @@
+{
+  "enabled": {
+    "systemPromptBytes": 1837,
+    "toolSchemaBytes": 6119,
+    "fixedContextBytes": 7956
+  },
+  "disabled": {
+    "systemPromptBytes": 1161,
+    "toolSchemaBytes": 4749,
+    "fixedContextBytes": 5910
+  },
+  "addedToolSchemaBytes": {
+    "atn_publish": 699,
+    "atn_search": 305,
+    "atn_visit": 363
+  }
+}

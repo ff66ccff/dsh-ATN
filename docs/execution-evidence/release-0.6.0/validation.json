@@ -1,0 +1,78 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "version": "0.6.0",
+  "harness": "0.2.1-alpha.5",
+  "harnessCommit": "1517a4dbca0a2789ff1d41ba439600f8547d23fa",
+  "sidebar": {
+    "published": "0.26.1",
+    "source": "0.27.0",
+    "sourceCommit": "9cb0b9c56dfad2fa64b979f3a044e225110a4860",
+    "sourceNpmPublishedAtCheck": false,
+    "fullHostActivation": false,
+    "blocker": "upstream provider still injects removed webRuntime service"
+  },
+  "tests": {
+    "runtime": 607,
+    "client": 17,
+    "failed": 0,
+    "skipped": 0
+  },
+  "checks": [
+    {
+      "command": "npm ci --ignore-scripts",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run typecheck",
+      "exitCode": 0
+    },
+    {
+      "command": "npm test",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run build",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run pack:tarball",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run smoke:profile (alpha.5 CLI)",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run smoke:visualization (alpha.5 CLI)",
+      "exitCode": 0
+    },
+    {
+      "command": "npm run verify:sidebar (0.26.1 published and 0.27.0 source)",
+      "exitCode": 0
+    },
+    {
+      "command": "source contract drift, compiler error, unknown version rejection",
+      "exitCode": 0
+    }
+  ],
+  "context": {
+    "enabled": {
+      "systemPromptBytes": 1837,
+      "toolSchemaBytes": 6119,
+      "fixedContextBytes": 7956
+    },
+    "disabled": {
+      "systemPromptBytes": 1161,
+      "toolSchemaBytes": 4749,
+      "fixedContextBytes": 5910
+    },
+    "addedToolSchemaBytes": {
+      "atn_publish": 699,
+      "atn_search": 305,
+      "atn_visit": 363
+    }
+  },
+  "tarballSha256": "a5cf219023d6167a1669abe46721d78cb95ec5f1c05ebf279fab030158111f70",
+  "remoteModelCalls": 0
+}

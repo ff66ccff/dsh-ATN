@@ -1,12 +1,12 @@
-/** Check the consumer projection against an independently installed published declaration graph. */
+/** Check the consumer projection against the provider's real declaration graph. */
 import ts from 'typescript'
 import { readFile, writeFile, mkdir } from 'node:fs/promises'
 import { createHash } from 'node:crypto'
 import { resolve } from 'node:path'
 import { verifiedSidebarPackage } from './sidebar-compatibility.mjs'
 
-const { directory, manifest } = await verifiedSidebarPackage()
-const declaration = resolve(directory, 'lib/types/client/service.d.ts')
+const { manifest, declarationDirectory, declarationBasis } = await verifiedSidebarPackage()
+const declaration = resolve(declarationDirectory, 'lib/types/client/service.d.ts')
 const projection = resolve('src/client/better-sidebar-contract.d.ts')
 const fixture = resolve('.scratch/sidebar-contract-check.ts')
 await mkdir(resolve('.scratch'), { recursive: true })
@@ -30,7 +30,7 @@ if (diagnostics.length) {
     getCanonicalFileName: value => value, getCurrentDirectory: () => process.cwd(), getNewLine: () => '\n',
   }))
   process.exitCode = 1
-} else console.log(JSON.stringify({ package: manifest.name, version: manifest.version,
-  publishedDeclarationSha256: createHash('sha256').update(await readFile(declaration)).digest('hex'),
+} else console.log(JSON.stringify({ package: manifest.name, version: manifest.version, declarationBasis,
+  declarationSha256: createHash('sha256').update(await readFile(declaration)).digest('hex'),
   consumerDescriptorAssignableToPublished: true, consumerKeysExistInPublished: true,
   scope: 'Public TabDescriptor shape only; not whole-provider activation.' }, null, 2))

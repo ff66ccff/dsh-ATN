@@ -19,9 +19,9 @@ V2 的 [拒绝日志设计稿](docs/REFUSAL_LOG_DESIGN.md)仅为后续存储与�
 
 面向高安全、多租户与严格合规场景打造的智能体间拓扑隔离与可控协作基础设施。
 
-[![Version](https://img.shields.io/badge/version-0.5.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.6.0-blue.svg)](package.json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-550%2B%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-624%20passed-brightgreen.svg)](tests/)
 [![Zero-Paid-Calls](https://img.shields.io/badge/test%20cost-$0.00-success.svg)](tests/)
 [![Empirical Grounding](https://img.shields.io/badge/empirical-11%20rounds%20archived-orange.svg)](docs/)
 
@@ -69,7 +69,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - **杜绝数据洗白**：结果回执、评价反馈、可选传输字段（`messageId`、`dependsOn`、`retryOf`）全方位审计，彻底封堵隐式隧道。
 
 ### 2. 🔍 宿主派生的安全知识发现（Derived Discovery）
-- **告别不可控白板**：0.5.0 删除了自由文本白板；本轮有据地、受限地解除结构化可核验发布禁令，默认工具面为 8 个。发现元数据仍仅由宿主派生。
+- **告别不可控白板**：0.5.0 删除了自由文本白板；0.6.0 有据地、受限地解除结构化可核验发布禁令，默认工具面为 8 个。发现元数据仍仅由宿主派生。
 - **防虚报元数据**：`atn_status(query=...)` 检索候选节点时，其文档与标签（topics）完全由**宿主从真实 Custody 注册表反向派生**。智能体无法自报虚假专长，发现即代表真实持有。
 
 ### 3. 🕸️ 高效局部自适应拓扑（Adaptive Topology）
@@ -109,7 +109,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - **节点状态与配额**：展示当前负载、工具、剩余步数/连接额度。历史统计仅为快照窗口内的提交/结算数，不等于验收率；遗留任务候选是否可认领由 `atn_status` 确认。
 - **只读观察**：复用认证 RPC 与严格 schema，可见时串行读取，隐藏/切会话/切预设/卸载取消；不写网络、不唤醒模型、不产生模型 token，仍有普通 RPC 处理开销。
 
-截图由真实展示组件与确定性示例数据生成。`dsh-better-sidebar@0.26.1` 是精确固定的 optional peer，仅此版本完成 API/注册服务验证，无须安装即可使用顶栏回退；当前 0.26.1 provider 在目标 Harness 上仍等待已删除的 `webRuntime`，普通 npm 同装也有 peer 冲突。因此已验证客户端 Tab API 和真实注册服务，完整 provider 联合启动及侧栏浏览器验收仍待上游适配。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [C 实施报告](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)及[残余验证缺口实施报告](docs/RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)。
+截图由真实展示组件与确定性示例数据生成。可选 peer 范围为 `dsh-better-sidebar@0.26.1 || 0.27.0`：0.26.1 验证 npm 发布包，0.27.0 验证上游提交 `9cb0b9c56dfad2fa64b979f3a044e225110a4860` 的源码（截至 2026-10-17 尚未发布 npm）。两者的客户端 Tab API 与真实注册服务均纳入验证。两个版本的 host 插件仍依赖 Harness alpha.5 已移除的 `webRuntime`，完整 provider 联合启动仍待上游适配；可以直接使用 ATN 顶栏入口。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [0.6.0 适配与发布记录](docs/RELEASE_0_6_0.md)。
 
 ---
 
@@ -121,7 +121,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 |---|---|---|
 | `atn_start` | `objective`, `successCriteria`, `constraints` | 初始化协作网络并确立初始目标，分配入口根节点。 |
 | `atn_spawn` | `task`, `context`, `leaseMs` | 在拓扑中创建同能力工作节点，继承安全预设并建立初始边。 |
-| `atn_send` | `to`, `kind` (`task`\|`note`\|`result`), `body`（`result` 需携带 `taskId`, `summary`, `evidence`） | 点对点加密级安全通信；支持下发子任务、同步进展及带权属证据的交付结算。 |
+| `atn_send` | `to`, `kind` (`task`\|`note`\|`result`), `body`（`result` 需携带 `taskId`, `summary`, `evidence`） | 受宿主保管策略约束的点对点通信；支持下发子任务、同步进展及带权属证据的交付结算。 |
 | `atn_status` | 可选读：`query`, `taskIds`<br>可选写：`claimTaskId`, `review`, `rewire` | **一体化状态中枢**：查询拓扑邻居、原子认领孤儿任务、提交履约评价及自主换边重连。 |
 | `atn_publish` | `sub_task`, `artifact`, `rationale`, `refs` | 只追加结构化中间产物；引用可解析、理由逐条点名、artifact 引用由宿主保管核验。 |
 | `atn_search` | `query` | BM25 与可关闭的消息引文权重，仅对正相关结果排序；默认最多 8 条。 |
@@ -134,31 +134,29 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ### 环境要求
 - Node.js >= 24
-- DeepSeek Harness 0.2.1-alpha.4（本轮仅此版本实测；engines.dsh 为 >=0.2.1-alpha.4 <0.3.0，范围内其他版本未验证；alpha.4 起由它单独判定兼容性）
+- DeepSeek Harness **0.2.1-alpha.5**（`engines.dsh` 精确限定此实测版本）
 - Cordis 4.0.5-alpha.2（目标 Harness 实际依赖）
 
-本轮 A、B、C 客户端改造、统一声明审计及 D 决策已完成并分阶段提交。干净 `npm ci` 后的最终六项命令与额外真实 Web 观察 smoke 全通过，551 项 runtime/集成 + 14 项 UI，零失败/跳过。C 的完整外部 provider 激活仍有限制，见上文。阶段报告：[A](docs/HARNESS_0_2_1_IMPLEMENTATION_REPORT.md)、[B](docs/DYNAMIC_DEGREE_IMPLEMENTATION_REPORT.md)、[C](docs/BETTER_SIDEBAR_IMPLEMENTATION_REPORT.md)；[审计表](docs/DECLARATION_AUDIT.md)、[D 决策](docs/NEXT_SCOPE_DECISION_RECORD.md)、[最终验收](docs/FINAL_EXECUTION_VALIDATION.md)。
-
-残余验证修复将双检查接入独立的 `sidebar-contract` CI job（Ubuntu/Windows），通过 `npm run verify:sidebar` 阻断契约漂移，并拒绝未验证的 provider 版本。本轮六项要求命令全部退出 0，551 项 runtime/集成 + 14 项 UI 零失败/跳过。Windows 本地已实测 npm 安装副本及故意漂移红灯；GitHub 托管矩阵尚未实际运行。冻结实验的注释会改变原始 `sourceHashes`，重放归档实验需使用匹配冻结哈希的源码快照。实际命令结果和限制见[本轮报告](docs/RESIDUAL_VERIFICATION_GAPS_IMPLEMENTATION_REPORT.md)。
+0.6.0 汇总此前未发版的动态出度、结构化观察、共享 substrate、读取授权、宿主一致性套件及舰队观察，并更新 Harness 与侧栏契约。完整变更见 [CHANGELOG](CHANGELOG.md)，验证范围与已知限制见 [发布记录](docs/RELEASE_0_6_0.md)。历史阶段报告保留当时的版本与测试结果。
 
 ### 1. 从 npm 安装已发布版本
-以下命令安装历史发布的 0.5.0；本轮源码依赖和 UI 改动尚未重新发布，验证本轮请使用下节源码 tarball。
+以下命令安装 0.6.0。若从 0.5.0 升级，请先将 Harness 升至 0.2.1-alpha.5，并同步更新 profile 中的宿主包 overrides。
 ```bash
 # 安装已发布版本至 web profile
-dsh plugin --profile web add dsh-atn@0.5.0
+dsh plugin --profile web add dsh-atn@0.6.0
 
 # 检查配置中是否包含 atn 扩展
 dsh --profile web --dump-config
 ```
 
-### 2. 从源码构建安装最新版本 (0.5.0 信息边界)
+### 2. 从源码构建安装最新版本 (0.6.0)
 ```bash
 git clone https://github.com/ff66ccff/dsh-ATN.git
 cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.5.0.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.0.tgz
 ```
 
 ### 3. 配置宿主保管策略（最小接入示例）
@@ -283,7 +281,7 @@ node --import tsx/esm examples/information-boundary.ts
 npm install              # 安装依赖
 npm run typecheck        # 严格 TypeScript 类型检查
 npm test                 # 执行全量 550+ 项测试（零真实 API 消耗，毫秒级自愈验证）
-npm run verify:sidebar   # 需 SIDEBAR_PACKAGE_DIR 指向独立安装的 dsh-better-sidebar@0.26.1
+npm run verify:sidebar   # SIDEBAR_PACKAGE_DIR 指向独立安装的 0.26.1 或 0.27.0 源码目录
 npm run build            # 构建生产分发产物
 npm run pack:tarball     # 打包 tgz 安装包
 npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测

@@ -12,7 +12,7 @@
  */
 import { execFile, spawn } from 'node:child_process'
 import { mkdtemp, readFile, rm, access, copyFile, writeFile } from 'node:fs/promises'
-import { existsSync } from 'node:fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -36,7 +36,7 @@ function cliPath(): string {
 }
 
 function tarballPath(): string {
-  const version = process.env.npm_package_version ?? '0.3.1'
+  const version = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version
   return join(process.cwd(), '.artifacts', `dsh-atn-${version}.tgz`)
 }
 
