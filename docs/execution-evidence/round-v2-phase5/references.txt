@@ -1,0 +1,5 @@
+docs\THREAT_MODEL.md:35:| B-REFUSAL-LOG（设计，未实现） | 新日志能否反推被拒内容/目标存在性？是否只含通道、码、主体、时间、计数，且审计追加不改变业务拒绝原子性、日志授权独立？ | [拒绝日志设计](REFUSAL_LOG_DESIGN.md#b-refusal-log未来实施的可引用判据)；阶段 5 文档审计和 FLEET-COUNTERS 仅验证现状边界，未来必须另加 sink/崩溃/注入/授权红灯 |
+docs\information-boundary\OUTBOUND_CHANNEL_AUDIT.md:13:V2 阶段 5 只交付 [拒绝日志设计稿](../REFUSAL_LOG_DESIGN.md)：最终 14 通道/16 码及读取路径、五字段内容最小化、三种一致性/丢失选项、宿主 ownership 与独立读取授权。B-REFUSAL-LOG 是未来判据；没有 journal 源码或新读取端点，计数不能冒称合规日志。
+docs\information-boundary\OUTBOUND_CHANNEL_AUDIT.md:42:读取面另按[威胁模型](../THREAT_MODEL.md)判定：`atnObserver/snapshot`（网络内容）和 `atnObserver/metadata`（纯计数）在 Gateway 使用独立 action 与 `atn-observation` 会话别名资源授权；别名授予对应整网观察能力。`exportSubstrate` 及其他进程内原始读取仍明确依赖宿主插件可信，没有调用者校验。见[接入契约](../OBSERVER_READ_AUTHORIZATION.md)。这些读取权限不由 custody 或消息权重派生。
+docs\REFUSAL_LOG_DESIGN.md:72:## B-REFUSAL-LOG：未来实施的可引用判据
+docs\REFUSAL_LOG_DESIGN.md:78:本判据在 [威胁模型](THREAT_MODEL.md) 与 [通道审计](information-boundary/OUTBOUND_CHANNEL_AUDIT.md) 双向引用；实际计数口径另见 [舰队契约](FLEET_OBSERVATION_CONTRACT.md)。

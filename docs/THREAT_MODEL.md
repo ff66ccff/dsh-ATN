@@ -32,6 +32,7 @@ flowchart LR
 | B-MODEL-READ | search/visit 仅限实际调用者网络；无策略全网可读，显式安装策略时以 live node 映射 principal，以 atn-substrate/[networkId,address]、atnSubstrate/read 复用 remoteAccess。排序前过滤，引用闭包与权重只用可见消息；隐藏地址同未知地址拒绝。新读取是否扩大网络或引入新发现来源？ | `SUBSTRATE-KERNEL`、`READ-POLICY*`（unit/integration）；[策略契约](OBSERVER_READ_AUTHORIZATION.md#节点-substrate-读侧策略v2-阶段-2) |
 | B-OBSERVE | 非 owner 读取须经 Gateway 的资源/action 判定；内容快照、纯元数据、舰队权限分开。舰队用 atn-fleet/index + 逐网络同 action 绑定，默认不授予；显式拒绝 owner；从自己的 grants 派生网络，未知网络不提供外部指名入口。新增字段是否泄漏未授权网络或把文本/作者放进计数？ | `READ-AUTH-*`、`FLEET-AUTH/COLD`；`OBSERVER-01/04/06`；[舰队契约](FLEET_OBSERVATION_CONTRACT.md) |
 | B-HOST-EXPORT | **明确选择宿主信任假设**：exportSubstrate(networkId) 不校验调用者，可信插件可导出任意网络。新 HTTP/RPC/工具包装是否直接传递用户输入而未授权？若是，越界，须单独授权后才能调用。 | `SUBSTRATE-KERNEL` 的完整 export 断言；`BOUNDARY-INVENTORY` 的宿主读取分类 |
+| B-REFUSAL-LOG（设计，未实现） | 新日志能否反推被拒内容/目标存在性？是否只含通道、码、主体、时间、计数，且审计追加不改变业务拒绝原子性、日志授权独立？ | [拒绝日志设计](REFUSAL_LOG_DESIGN.md#b-refusal-log未来实施的可引用判据)；阶段 5 文档审计和 FLEET-COUNTERS 仅验证现状边界，未来必须另加 sink/崩溃/注入/授权红灯 |
 
 三类读取分别判定：search/visit 校验 ATN 节点身份，读侧策略缺省关闭、宿主显式安装时按主体分区；观察 RPC 由网关校验主体，ATN 负责结果形状；宿主直接调用 observer、network/findBySessionId/exportSubstrate 等原始 API 均不构成沙箱。不得将网关测试扩写成整个宿主的租户隔离证明。
 

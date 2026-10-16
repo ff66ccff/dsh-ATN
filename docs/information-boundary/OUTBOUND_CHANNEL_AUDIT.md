@@ -10,6 +10,8 @@ V2 阶段 3 的 [可携带套件](../../conformance/README.md)逐条覆盖 14 �
 
 V2 阶段 4 新增读取 RPC atnObserver/fleet（atn-fleet/index + 每网络资源），不新增出站通道或模型工具。结构化拒绝仅向观察服务发 networkId/code 事件，16 公开码 + other 固定桶、65535/桶、64 网络、易失；绝不保存被拒载荷/异常文本或写业务记录。见 [舰队口径](../FLEET_OBSERVATION_CONTRACT.md)。
 
+V2 阶段 5 只交付 [拒绝日志设计稿](../REFUSAL_LOG_DESIGN.md)：最终 14 通道/16 码及读取路径、五字段内容最小化、三种一致性/丢失选项、宿主 ownership 与独立读取授权。B-REFUSAL-LOG 是未来判据；没有 journal 源码或新读取端点，计数不能冒称合规日志。
+
 审计对象为 `src/tools.ts` 的全部八个模型工具和 `AtnRuntime` 的全部公开方法；不只审计邮件。宿主策略接收 `{ channel, input }`，`input` 为完整业务输入，包括所有可选字段。身份取自实际调用 Agent，策略同步执行，抛错则不提交该操作。
 
 | 登记通道 | 实际入口 | 被检查的载荷 | 可见/持久化去向与检查位置 |

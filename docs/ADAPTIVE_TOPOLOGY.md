@@ -10,6 +10,8 @@ V2 阶段 3 的 [可携带一致性套件](../conformance/README.md)覆盖最终
 
 V2 阶段 4 在既有 atn-network/顶栏回退内切换舰队分区；独立 atn-fleet 授权，不从节点邻接、owner 或会话别名派生跨网权限。计数易失且有界，不写业务记录；[契约](FLEET_OBSERVATION_CONTRACT.md)列明范围。
 
+V2 阶段 5 的 [拒绝日志设计](REFUSAL_LOG_DESIGN.md)不改变执行路径；业务拒绝原子性不为日志追加放宽，持久 sink 仍待另轮验证。
+
 当前源码通过局部运行时遥测、请求者评价、宿主派生发现、每节点预算和原子认领支持自适应协作。默认模型工具为 `atn_start`、`atn_status`、`atn_spawn`、`atn_send`、`atn_finish`、`atn_publish`、`atn_search`、`atn_visit` 八个；宿主验收是可选的更强质量证据，不决定能否重连。出生谱系保留用于追溯，不决定后续协作。[任务验收与观测说明](VERIFIED_COLLABORATION.md)区分执行结果、验收结果与重连观测。
 
 请求者通过 `atn_status(review=...)` 记录本地判定；知识发现由宿主真实 custody/descriptor 派生，不恢复自由文本白板或自报知识工具；结构化 substrate 发布在独立写侧准入下提供。发现排序参考派生主题、任务、真实评价与负载；重连把 `requesterEvaluation` 与宿主 `evaluation` 分开保存。历史反馈/发布机制及其确定性对照见 [P0/P1 机制实验](FEEDBACK_MILESTONE.md)，其中旧工具面不是现行契约。

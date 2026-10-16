@@ -6,6 +6,8 @@
 - [V2 阶段 2 证据](execution-evidence/round-v2-phase2/README.md)：可选读侧策略、关闭对照与重放。
 - [宿主一致性套件接入](../conformance/README.md)：随 npm 包交付的 CLI/API、46 个结构用例与负例。
 - [舰队观察与计数契约](FLEET_OBSERVATION_CONTRACT.md)：独立授权、计数口径、易失性与 UI 分区。
+- [拒绝日志设计稿](REFUSAL_LOG_DESIGN.md)：仅设计，三种一致性/丢失策略、内容最小化与 B-REFUSAL-LOG。
+- [V2 总实施报告](ROUND_V2_IMPLEMENTATION_REPORT.md)：各阶段结果、证据与明确未验证范围。
 
 欢迎查阅 **dsh-ATN（自适应拓扑网络）** 文档库。本项目在经历十一轮严密的科学基准测试后，已完成从“追求协作涌现”到“宿主强制信息边界与可证明隔离”的战略转型。
 

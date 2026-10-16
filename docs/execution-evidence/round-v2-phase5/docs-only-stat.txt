@@ -1,0 +1,46 @@
+warning: in the working copy of 'README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ADAPTIVE_TOPOLOGY.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/DECLARATION_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/THREAT_MODEL.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/REFUSAL_LOG_DESIGN.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/ROUND_V2_IMPLEMENTATION_REPORT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/README.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/audit-design.mjs.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/gates.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/git-diff-check.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-ci.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-build.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-pack-tarball.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-smoke-profile.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-smoke-visualization.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-typecheck.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-run-verify-sidebar.txt', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'docs/execution-evidence/round-v2-phase5/npm-test.txt', LF will be replaced by CRLF the next time Git touches it
+ README.md                                          |   2 +
+ docs/ADAPTIVE_TOPOLOGY.md                          |   2 +
+ docs/DECLARATION_AUDIT.md                          |   2 +
+ docs/README.md                                     |   2 +
+ docs/REFUSAL_LOG_DESIGN.md                         |  78 +++
+ docs/ROUND_V2_IMPLEMENTATION_REPORT.md             |  51 ++
+ docs/THREAT_MODEL.md                               |   1 +
+ docs/execution-evidence/round-v2-phase5/README.md  |   7 +
+ .../round-v2-phase5/audit-design.mjs.txt           |  11 +
+ .../round-v2-phase5/docs-only-stat.txt             |   0
+ docs/execution-evidence/round-v2-phase5/gates.json |  69 +++
+ .../round-v2-phase5/git-diff-check.txt             |   6 +
+ docs/execution-evidence/round-v2-phase5/green.txt  |   7 +
+ docs/execution-evidence/round-v2-phase5/npm-ci.txt |  29 +
+ .../round-v2-phase5/npm-run-build.txt              |   8 +
+ .../round-v2-phase5/npm-run-pack-tarball.txt       | 150 +++++
+ .../round-v2-phase5/npm-run-smoke-profile.txt      |  65 ++
+ .../npm-run-smoke-visualization.txt                |   7 +
+ .../round-v2-phase5/npm-run-typecheck.txt          |   4 +
+ .../round-v2-phase5/npm-run-verify-sidebar.txt     |  13 +
+ .../round-v2-phase5/npm-test.txt                   | 676 +++++++++++++++++++++
+ docs/execution-evidence/round-v2-phase5/red.txt    |  15 +
+ .../round-v2-phase5/references.txt                 |   5 +
+ .../round-v2-phase5/source-diff.txt                |   0
+ .../information-boundary/OUTBOUND_CHANNEL_AUDIT.md |   2 +
+ 25 files changed, 1212 insertions(+)

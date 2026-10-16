@@ -82,3 +82,5 @@ V2 阶段 2 公开增量：installSubstrateReadPolicy、defineSubstrateReadPolic
 V2 阶段 3 公开增量：npm 白名单的 conformance/、`dsh-atn/conformance` 类型和 JS 入口、CLI 与宿主接入指南。46 个黑箱 case 对示例策略全绿；两个错误宿主 fixture 必须红灯。16 拒绝码词汇全冻结；8 个协议专属码无通用 custody 触发，按停止条件 4 收窄可携带语义范围，保留 reference-policy 真实协议测试，不增测试后门、不声称通用套件能证明任意宿主协议。
 
 V2 阶段 4 公开增量：ATN_FLEET_READER、fleetNetworkResourceId、AtnFleetSnapshot 与 atnObserver/fleet；不新增模型工具。B-OBSERVE/权限表登记 index 与逐网络资源；默认无授权、owner 拒绝。拒绝桶为观察期易失计数，不追加 journal、不写 NetworkRecord，domain 1、旧记录冷读。FLEET-AUTH/COLD/COUNTERS、UI carrier 生命周期和真实浏览器留档锚定；不声称完整 sidebar provider 激活或外部 IAM 证明。
+
+V2 阶段 5：REFUSAL_LOG_DESIGN 仅设计，无日志代码/存储/端点。B-REFUSAL-LOG 标注“设计未实现”；五字段 JSON Lines、14/16 最终词汇、宿主 ownership、独立未来授权与三种一致性选项均由文档审计锚定。不会把现有易失桶称作合规日志或把未来故障测试称作已通过。

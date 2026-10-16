@@ -1,0 +1,7 @@
+
+> dsh-atn@0.5.0 smoke:visualization
+> node --import tsx/esm tests/smoke/visualization-smoke.ts
+
+visualization smoke: isolated home=D:\PersonalFile\Temp\dsh-atn-visualization-smrtZ5
+ATN_VISUALIZATION_FLEET {"networks":2,"explicitNonOwner":true,"ownerDenied":true,"readOnly":true}
+ATN_VISUALIZATION_SMOKE {"nodes":6,"directedCrossBranch":true,"failedResult":true,"liveChange":true,"strictGateway":true,"readOnly":true,"metadata":true,"clientServed":true,"sessionId":"atn-visualization-entry","origin":"http://127.0.0.1:50738","preview":false,"readyPath":"D:\\PersonalFile\\Temp\\dsh-atn-visualization-smrtZ5\\visualization-ready.json"}

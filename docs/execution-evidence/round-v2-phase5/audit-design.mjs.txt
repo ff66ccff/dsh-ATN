@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
+import { execFileSync } from 'node:child_process'
+import { CHANNELS, REFUSAL_CODES } from '../conformance/index.mjs'
+const design = await readFile('docs/REFUSAL_LOG_DESIGN.md', 'utf8')
+for (const name of [...CHANNELS, ...REFUSAL_CODES]) assert.ok(design.includes('`' + name + '`'), `missing final vocabulary: ${name}`)
+for (const section of ['单存储事务', 'durable sink', '显式丢失', 'JSON Lines', 'principalId', '内容最小化', 'ownership', 'B-REFUSAL-LOG']) assert.ok(design.includes(section), `missing design decision: ${section}`)
+for (const path of ['docs/THREAT_MODEL.md', 'docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md']) assert.ok((await readFile(path, 'utf8')).includes('REFUSAL_LOG_DESIGN.md'), `missing backlink: ${path}`)
+const changed = execFileSync('git', ['diff', '--name-only'], { encoding: 'utf8' }).trim().split(/\r?\n/).filter(Boolean)
+assert.ok(changed.every(path => path.startsWith('docs/') || path === 'README.md'), `phase 5 source diff: ${changed}`)
+console.log('DESIGN: 14 channels, 16 stable codes, consistency/loss/privacy/ownership decisions, bidirectional links; no source diff')
