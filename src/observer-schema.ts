@@ -55,10 +55,31 @@ export const observerSnapshotSchema: z.ZodType<AtnObserverSnapshot> = z.object({
 /** Browser transport's public validation name. */
 export const atnObserverSnapshotSchema = observerSnapshotSchema
 
+/** Counts only: never derive this projection by redacting a content snapshot. */
+export const observerMetadataSchema = z.object({
+  observedAt: timestamp,
+  network: z.object({
+    id, status: z.enum(['open', 'completed', 'stopped']),
+    stepsUsed: count, stepBudget: count, nodes: count, tasks: count,
+    substrate: z.object({ messages: count, maxMessages: count, bytes: count, maxBytes: count }).strict().optional(),
+  }).strict().nullable(),
+}).strict()
+export type AtnObserverMetadata = z.infer<typeof observerMetadataSchema>
+
 /** Public Typert contribution, shared by the host and browser without a code generator. */
 export function createObserverDescriptor(): InvocationDescriptor {
+  return observerDescriptor('snapshot', observerSnapshotSchema, 'AtnObserverSnapshot')
+}
+
+export function createObserverMetadataDescriptor(): InvocationDescriptor {
+  return observerDescriptor('metadata', observerMetadataSchema, 'AtnObserverMetadata')
+}
+
+// Resource readers live on the corresponding @Remote methods, as required by
+// alpha.4; InvocationDescriptor has no resources or principal field.
+function observerDescriptor(method: string, schema: z.ZodType, typeName: string): InvocationDescriptor {
   return {
-    id: 'dsh-atn#atnObserver/snapshot', service: 'atnObserver', namespace: 'atnObserver', method: 'snapshot',
+    id: `dsh-atn#atnObserver/${method}`, service: 'atnObserver', namespace: 'atnObserver', method,
     invocation: { kind: 'direct' },
     parameters: [{
       name: 'sessionId', wire: 'sessionId', source: 'json',
@@ -66,8 +87,8 @@ export function createObserverDescriptor(): InvocationDescriptor {
     }],
     cancellation: { parameter: 'signal' },
     result: {
-      mode: 'strict', typeSymbol: 'dsh-atn#AtnObserverSnapshot', create: () => observerSnapshotSchema,
-      decode: value => observerSnapshotSchema.parse(value),
+      mode: 'strict', typeSymbol: `dsh-atn#${typeName}`, create: () => schema,
+      decode: value => schema.parse(value),
     },
   }
 }

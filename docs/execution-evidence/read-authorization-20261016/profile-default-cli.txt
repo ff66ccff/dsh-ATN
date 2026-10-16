@@ -1,0 +1,27 @@
+
+> dsh-atn@0.5.0 smoke:profile
+> node --import tsx/esm tests/smoke/profile-smoke.ts
+
+profile smoke: home=D:\PersonalFile\Temp\dsh-atn-profile-Gtx6LO installSpec=D:\dsh-ATN\.artifacts\dsh-atn-0.5.0.tgz
+  $ --profile atn-smoke-base --from-default-profile web --dump-config
+  $ --profile atn-smoke-atn --from-default-profile web --dump-config
+  $ --profile atn-smoke-base --dump-config
+  $ plugin --profile atn-smoke-atn add D:\dsh-ATN\.artifacts\dsh-atn-0.5.0.tgz
+D:\dsh-ATN\tests\smoke\profile-smoke.ts:126
+    if (add.exitCode !== 0) throw new Error(`package install failed: ${add.stderr || add.stdout}`)
+                                  ^
+
+Error: package install failed: 
+dsh: installation rejected: Plugin dsh-atn@0.5.0 is incompatible with dsh 0.2.0-rc.2: peerDependencies {"@deepseek-ai/dsh-agent":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-loop":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-preset":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-preset-registry":"0.2.1-alpha.4","@deepseek-ai/dsh-brand":"0.2.1-alpha.4","@deepseek-ai/dsh-llm":"0.2.1-alpha.4","@deepseek-ai/dsh-scope":"0.2.1-alpha.4","@deepseek-ai/dsh-session":"0.2.1-alpha.4","@deepseek-ai/dsh-storage-domain":"0.2.1-alpha.4","@deepseek-ai/dsh-subagent":"0.2.1-alpha.4","@deepseek-ai/dsh-system-prompt":"0.2.1-alpha.4","@deepseek-ai/dsh-tools":"0.2.1-alpha.4","@deepseek-ai/dsh-typert-protocol":"0.2.1-alpha.4","@deepseek-ai/dsh-typert-registry":"0.2.1-alpha.4","@deepseek-ai/dsh-util-values":"0.2.1-alpha.4"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-atn@0.5.0 on dsh 0.2.0-rc.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.
+Plugin dsh-atn@0.5.0 is incompatible with dsh 0.2.0-rc.2: peerDependencies {"@deepseek-ai/dsh-agent":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-loop":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-preset":"0.2.1-alpha.4","@deepseek-ai/dsh-agent-preset-registry":"0.2.1-alpha.4","@deepseek-ai/dsh-brand":"0.2.1-alpha.4","@deepseek-ai/dsh-llm":"0.2.1-alpha.4","@deepseek-ai/dsh-scope":"0.2.1-alpha.4","@deepseek-ai/dsh-session":"0.2.1-alpha.4","@deepseek-ai/dsh-storage-domain":"0.2.1-alpha.4","@deepseek-ai/dsh-subagent":"0.2.1-alpha.4","@deepseek-ai/dsh-system-prompt":"0.2.1-alpha.4","@deepseek-ai/dsh-tools":"0.2.1-alpha.4","@deepseek-ai/dsh-typert-protocol":"0.2.1-alpha.4","@deepseek-ai/dsh-typert-registry":"0.2.1-alpha.4","@deepseek-ai/dsh-util-values":"0.2.1-alpha.4"}. Running it may cause crashes or data loss. Update the plugin or install a plugin version compatible with this dsh runtime. To accept this risk explicitly, grant the exact-version exemption for dsh-atn@0.5.0 on dsh 0.2.0-rc.2 with `dsh plugin allow-version` or the plugin manager, then retry the installation or restart dsh. Exact-version exemption: not active.
+dsh: restored package.json, pnpm-lock.yaml, and node_modules.
+dsh: to accept the risk, run: dsh plugin --profile atn-smoke-atn allow-version dsh-atn@0.5.0 --dsh-version 0.2.0-rc.2 --accept-risk
+dsh: to accept the risk, run: dsh plugin --profile atn-smoke-atn allow-version dsh-atn@0.5.0 --dsh-version 0.2.0-rc.2 --accept-risk
+dsh: plugin command failed; diagnostics: D:\PersonalFile\Temp\dsh-atn-profile-Gtx6LO\profiles\atn-smoke-atn\.plugin-manager\logs\operation-kNhUAy\pnpm.log
+
+    at main (D:\dsh-ATN\tests\smoke\profile-smoke.ts:126:35)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async <anonymous> (D:\dsh-ATN\tests\smoke\profile-smoke.ts:201:1)
+
+Node.js v24.19.0
+exitCode=1

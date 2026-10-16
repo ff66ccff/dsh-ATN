@@ -49,3 +49,12 @@
 | 0.5.0 发布禁令 | **0.5.0 的发布禁令在本轮被有据地、受限地解除**：仅结构化可核验发布 | 不恢复白板、自报知识或编辑／删除；substrate admission + host custody |
 | 权重与发现 | 消息引文权重不是节点声誉；不参与发现或授权 | tokenizer/BM25/weight/replay 测试，knowledge 代码路径未扩展 |
 | 历史实验 | 显式 substrateEnabled=false，五工具固定条件继续保留 | measurement-gate、shiftingConfig、reference-kernel；不重开等预算线 |
+
+## 2026-10-17 读取边界收尾与 V2 开工基线
+
+| 声明 | 核对结果 | 依据 |
+|---|---|---|
+| 观察读取授权 | 非 owner 使用 atn-observation/sessionId 与 snapshot/metadata 独立 action；session 是整网披露别名；宿主 API 仍可信 | READ_BOUNDARY_IMPLEMENTATION_REPORT、READ-AUTH-* |
+| 本轮开工实测 | 593 runtime/集成 + 15 UI，零失败零跳过；八工具 7956 字节，关闭 substrate 为 5910 | execution-evidence/round-v2-preflight/tests.txt、context.txt |
+
+用户已批准 MASTER_EXECUTION_PLAN_V2 §12 三项推荐：读策略缺省关闭、套件随包发布、舰队显式授权且缺省不授予。原有探针记录仅收尾归档，本轮不执行外部模型探针。

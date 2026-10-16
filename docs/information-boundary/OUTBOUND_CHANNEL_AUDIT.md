@@ -27,6 +27,8 @@ installOutboundPolicy、installSendPolicy、refreshCustody、openStore、admitSt
 
 `search` / `visit` 是主动读取与独立读取计量的复合路径，不向其他节点发送查询；终态网络读取不写计量。模型投影只含地址、四字段和最近被引地址，绝不加作者/权重元数据。`exportSubstrate` 是宿主只读审计 API，可导出作者、权重、四字段、引用及任务交付传递闭包，不是工具或发现来源。
 
+读取面另按[威胁模型](../THREAT_MODEL.md)判定：`atnObserver/snapshot`（网络内容）和 `atnObserver/metadata`（纯计数）在 Gateway 使用独立 action 与 `atn-observation` 会话别名资源授权；别名授予对应整网观察能力。`exportSubstrate` 及其他进程内原始读取仍明确依赖宿主插件可信，没有调用者校验。见[接入契约](../OBSERVER_READ_AUTHORIZATION.md)。这些读取权限不由 custody 或消息权重派生。
+
 ## 漂移检测
 
 `tests/integration/information-boundary.test.ts` 手写枚举以上 14 条通道，逐条尝试洗数据，断言策略被调用、网络状态/写次数/Agent 数量/模型请求数不变。不能从运行时列表自动生成测试用例。

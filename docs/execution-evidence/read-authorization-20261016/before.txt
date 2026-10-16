@@ -1,0 +1,68 @@
+✖ READ-AUTH-GLOBAL: a global snapshot grant cannot read a named network (86.9505ms)
+✖ READ-AUTH-SCOPED: two principals read only granted sessions; revocation and spoofing fail closed (55.2805ms)
+✖ READ-AUTH-METADATA: metadata-only operators receive counts without content or snapshot access (40.0501ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 915.5682
+
+✖ failing tests:
+
+test at tests\integration\observer.test.ts:1:1888
+✖ READ-AUTH-GLOBAL: a global snapshot grant cannot read a named network (86.9505ms)
+  AssertionError [ERR_ASSERTION]: Missing expected rejection.
+      at async <anonymous> (D:\dsh-ATN\tests\integration\observer.test.ts:64:5)
+      at async withObserver (D:\dsh-ATN\tests\integration\observer.test.ts:39:5)
+      at async TestContext.<anonymous> (D:\dsh-ATN\tests\integration\observer.test.ts:54:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { code: 'remote-access/denied' },
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at tests\integration\observer.test.ts:1:2780
+✖ READ-AUTH-SCOPED: two principals read only granted sessions; revocation and spoofing fail closed (55.2805ms)
+  Error [RemoteError]: remote access: atnObserver/snapshot: access denied (no-allow)
+      at Proxy.prepareInvocation (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:1186:40)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at Proxy.invoke (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:916:41)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at call (D:\dsh-ATN\tests\integration\observer.test.ts:85:90)
+      at <anonymous> (D:\dsh-ATN\tests\integration\observer.test.ts:88:56)
+      at async withObserver (D:\dsh-ATN\tests\integration\observer.test.ts:39:5)
+      at async TestContext.<anonymous> (D:\dsh-ATN\tests\integration\observer.test.ts:73:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    code: 'remote-access/denied',
+    details: { action: 'atnObserver/snapshot', reason: 'no-allow' },
+    isDSHRemoteError: true
+  }
+
+test at tests\integration\observer.test.ts:1:5029
+✖ READ-AUTH-METADATA: metadata-only operators receive counts without content or snapshot access (40.0501ms)
+  Error [TypertGatewayError]: typert gateway: atnObserver/metadata: no active Remote method exports this endpoint
+      at Proxy.resolveSrcDescriptor (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:1245:38)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at Proxy.resolveDescriptor (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:1228:15)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at Proxy.prepareInvocation (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:1172:27)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at Proxy.invoke (file:///D:/dsh-ATN/node_modules/@deepseek-ai/dsh-api-gateway/lib/index.js:916:41)
+      at Object.apply (file:///D:/dsh-ATN/node_modules/@deepseek-ai/cordis/lib/index.js:120:36)
+      at call (D:\dsh-ATN\tests\integration\observer.test.ts:118:63)
+      at <anonymous> (D:\dsh-ATN\tests\integration\observer.test.ts:124:25) {
+    code: 'gateway/invocation-unavailable',
+    details: { endpoint: 'atnObserver/metadata' },
+    isDSHRemoteError: true,
+    endpoint: 'atnObserver/metadata',
+    field: undefined
+  }
+exitCode=1

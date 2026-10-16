@@ -83,6 +83,8 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ## 📊 Web GUI 结构化网络状态面板
 
+观察读取现使用 Gateway principal/resource 授权：owner 可查看；非 owner 必须获授 `atn-observation` 会话别名上的内容快照或独立元数据 action。快照授权允许观察该会话所属**整个网络**，不能直接复用普通会话阅读权限。`exportSubstrate` 和进程内原始读取 API 仍以宿主插件可信为前提，不校验调用者。见[威胁模型](docs/THREAT_MODEL.md)与[读取授权接入](docs/OBSERVER_READ_AUTHORIZATION.md)。
+
 在 DeepSeek Harness Web GUI 中运行 ATN 预设任务，点击顶栏 **「ATN 网络状态」** 查看节点表、邻接分组与任务详情。浏览器中的 `betterSidebar` 服务可用时，还会注册原生右侧栏 `atn-network` tab；顶栏入口始终可用。
 
 <div align="center">
@@ -213,6 +215,8 @@ node --import tsx/esm examples/information-boundary.ts
 - ❌ **涌现**（不依赖神秘玄学，只相信可复现的代码与宿主规则）
 
 ### 3. 严肃而并列的安全边界限制（非脚注）
+
+以下四项分别对应[威胁模型](docs/THREAT_MODEL.md)的 X-INFERENCE、X-SIDECHANNEL、X-COLLUSION、X-EXTERNAL；网络业务分区不自动构成租户认证。
 宿主策略提供的是“**禁止节点声称持有未被授予的数据**”。遵循负责任的安全披露准则，它明确**不包含**以下防护：
 1. **不防推理衍生**：智能体可从合法数据中提炼推论并传递；策略约束 Artifact 身份标识，不度量语义信息熵。
 2. **不防物理侧信道**：交互延迟、正文字节数、调用频次及错误码反馈等侧信道可能残留信号。
@@ -284,6 +288,12 @@ npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
 - 🧭 [**战略定位与演进白皮书**](docs/STRATEGY_AND_POSITIONING.md)：深度拆解设计哲学与信任轴演进逻辑。
 - 🛡️ [**14 条出站通道审计契约**](docs/information-boundary/OUTBOUND_CHANNEL_AUDIT.md)：查看出站通道与拒绝码定义。
 - 🧪 [**第 11 轮五臂等预算评测报告**](docs/EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md)：查阅 70 次真实运行的原始统计数据。
+- 🔬 [**真实探针可行性前提核验与停止报告**](docs/LIVE_PROBE_FEASIBILITY_IMPLEMENTATION_REPORT.md)：首次零模型核验发现 60/8 不是严格下界，按 brief 第 7.2 条停止；保留该次未执行重跑的历史记录。
+- 🔬 [**严格下界推导与恢复运行条件**](docs/LIVE_PROBE_STRICT_BOUND_DERIVATION.md)：后续授权恢复；区分因果取证下界、参考策略与带延迟假设的规划准入，指定 Gemini medium 仅增加期限。
+- 🔬 [**真实探针恢复实施报告**](docs/LIVE_PROBE_RESUMED_IMPLEMENTATION_REPORT.md)：指定 AGY Gemini medium 新批次的冻结条件、逐 seed 结果、延迟分解和未知 usage 边界。
+- 🔬 [**探针门分位修正与静默定位报告**](docs/PROBE_GATE_AND_QUIESCENCE_IMPLEMENTATION_REPORT.md)：零模型重算 224 个无删失样本的 p50/p75/p90/p95；区分 3 次错误提交与 2 次未提交，并给出任务持有者、具名工具映射和入口步数证据。
+- 🔬 [**静默活性审计前置核验与停止报告**](docs/PROBE_LIVENESS_AUDIT_IMPLEMENTATION_REPORT.md)：零模型核验发现 delivered 是持久输入收据；seed 59 唯一时间候选已在同一步接收邮件，按 brief 第 7.3 条停止，未宣称双向对照或整轮验收通过。[唤醒条件定义](docs/PROBE_WAKE_ELIGIBILITY_DEFINITION.md)。
+- 🔬 [**静默活性审计 V2 实施报告**](docs/PROBE_LIVENESS_AUDIT_V2_IMPLEMENTATION_REPORT.md)：先确立事件语义，再用真实内核故障注入证明两类缺陷可达；60 封正常收据、1 封不可达，五 seed 均无尚欠推送工作。含完整任务/末次动作表、期限口径对照及复现记录；完整历史重算依赖未跟踪持久文件（4.6b）。
 
 ---
 

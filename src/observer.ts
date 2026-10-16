@@ -1,7 +1,7 @@
 /** Operator-only ATN observation. No tools, prompts, wakeups, or network mutations. */
 import { Context, Service } from '@deepseek-ai/cordis'
 import { SessionId, type Session, type SessionEvent } from '@deepseek-ai/dsh-session'
-import { bindTypertRemote } from '@deepseek-ai/dsh-typert-protocol'
+import { bindTypertRemote, Remote } from '@deepseek-ai/dsh-typert-protocol'
 import type TypertRegistry from '@deepseek-ai/dsh-typert-registry'
 import type {} from './runtime.ts'
 import type { NetworkRecord } from './schema.ts'
@@ -9,11 +9,13 @@ import { collaborationPeers, collaborationPeerLimit } from './topology.ts'
 import { taskResultDigest } from './tasks.ts'
 import type { AtnEventView, AtnNetworkView, AtnObserverSnapshot } from './observer-types.ts'
 import {
-  createObserverDescriptor, observerSessionIdSchema, observerSnapshotSchema,
+  createObserverDescriptor, createObserverMetadataDescriptor, observerSessionIdSchema, observerSnapshotSchema,
+  observerMetadataSchema, type AtnObserverMetadata,
   OBSERVER_MAX_EVENTS, OBSERVER_MAX_TASKS, OBSERVER_TEXT_LIMIT, OBSERVER_MAX_SUBSTRATE,
 } from './observer-schema.ts'
 import { citers, evidenceChain, substrateLimits } from './substrate.ts'
 import { weightAt } from './substrate-ranking.ts'
+import { assertObserverReadCapabilities } from './observer-access.ts'
 
 declare module '@deepseek-ai/cordis' {
   interface Context { atnObserver: AtnObserver }
@@ -112,9 +114,11 @@ export class AtnObserver extends Service {
 
   constructor(ctx: Context) {
     super(ctx, 'atnObserver')
+    assertObserverReadCapabilities(ctx.typert, this)
     ;(ctx.typert as TypertRegistry).register({
       package: 'dsh-atn-observer', face: 'host', schemas: [],
-      model: { services: [], events: [], objects: [] }, invocations: [createObserverDescriptor()],
+      model: { services: [], events: [], objects: [] },
+      invocations: [createObserverDescriptor(), createObserverMetadataDescriptor()],
     })
     ctx.on('atn/network-updated', ({ record, at }) => {
       // Observer failures must never turn a committed operation into a tool failure.
@@ -205,7 +209,29 @@ export class AtnObserver extends Service {
     })
   }
 
-  /** Read the network belonging to the viewed session without waking or resuming any agent. */
+  /** Counts-only action; its grant never implies the snapshot action. Direct host calls are trusted. */
+  @Remote({ resources: { 'atn-observation': (sessionId: string) => sessionId } })
+  async metadata(sessionId: string, signal: AbortSignal): Promise<AtnObserverMetadata> {
+    observerSessionIdSchema.parse(sessionId)
+    signal.throwIfAborted()
+    const found = await this.ctx.atn.findBySessionId(sessionId)
+    signal.throwIfAborted()
+    const observedAt = Date.now()
+    if (found === undefined) return { observedAt, network: null }
+    const record = found.record
+    const limits = substrateLimits(record)
+    return observerMetadataSchema.parse({ observedAt, network: {
+      id: record.id, status: record.status, stepsUsed: record.stepsUsed, stepBudget: record.limits.stepBudget,
+      nodes: Object.keys(record.nodes).length, tasks: Object.keys(record.tasks).length,
+      ...(record.substrate === undefined ? {} : { substrate: {
+        messages: record.substrate.messages.length, maxMessages: limits.maxSubstrateMessages,
+        bytes: record.substrate.totalBytes, maxBytes: limits.maxSubstrateTotalBytes,
+      } }),
+    } })
+  }
+
+  /** A grant on this session alias exposes its entire network projection; direct host calls are trusted. */
+  @Remote({ resources: { 'atn-observation': (sessionId: string) => sessionId } })
   async snapshot(sessionId: string, signal: AbortSignal): Promise<AtnObserverSnapshot> {
     observerSessionIdSchema.parse(sessionId)
     signal.throwIfAborted()

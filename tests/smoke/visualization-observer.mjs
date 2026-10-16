@@ -62,10 +62,10 @@ async function run(ctx) {
   assert.match(bundleText, /atnObserver/, 'served bundle contains the observation client')
 
   let requestId = 0
-  async function rpc(args) {
-    const response = await fetch(`${origin}/api/atnObserver/snapshot`, {
+  async function rpc(args, method = 'snapshot') {
+    const response = await fetch(`${origin}/api/atnObserver/${method}`, {
       method: 'POST', headers,
-      body: JSON.stringify({ type: 'client-request', rpcId: `visual-${++requestId}`, method: 'atnObserver/snapshot', payload: { args } }),
+      body: JSON.stringify({ type: 'client-request', rpcId: `visual-${++requestId}`, method: `atnObserver/${method}`, payload: { args } }),
     })
     assert.equal(response.status, 200)
     const envelope = await response.json()
@@ -117,6 +117,12 @@ async function run(ctx) {
       body: '脚本验证：依赖数据不可用，任务失败。', summary: '依赖数据不可用，需要换人重试', evidence: ['smoke:scripted-failure'],
     })
     await settleAgents(ctx)
+    // Driver idle does not join asynchronous durable input receipts. Settle the
+    // real delivery queues before measuring publication/observation side effects.
+    for (const mail of Object.values((await ctx.atn.network(networkId)).mails)) {
+      assert.equal(await ctx.atn.deliverMail(networkId, mail.id), 'delivered')
+    }
+    await settleAgents(ctx)
     const noWakeRequests = adapter.requests
     const noWakeInputs = ctx.agents.list().map(agent => [agent.id, agent.session.snapshotEvents().length])
     await ctx.atn.publish(handle.agent, { sub_task:'解析器中间产物 parser boundary', artifact:'可复用的初步结果', rationale:'本地脚本检查' })
@@ -138,6 +144,12 @@ async function run(ctx) {
     const requestCountBefore = adapter.requests
     const direct = await ctx.typertGateway.invoke({ peer: new Peer(ctx, { principal: { kind: 'owner' } }), namespace: 'atnObserver', method: 'snapshot', args: { sessionId } })
     await rpc({ sessionId })
+    const metadata = await rpc({ sessionId }, 'metadata')
+    assert.equal(metadata.ok, true)
+    assert.equal(metadata.value.network.id, networkId)
+    assert.equal(metadata.value.network.nodes, 6)
+    assert.equal(metadata.value.network.substrate.messages, 2)
+    assert.deepEqual(Object.keys(metadata.value.network).sort(), ['id', 'nodes', 'status', 'stepBudget', 'stepsUsed', 'substrate', 'tasks'])
     assert.equal(direct.network.id, networkId)
     assert.equal(JSON.stringify(await ctx.atn.network(networkId)), durableBefore, 'observation does not mutate network records')
     assert.equal(adapter.requests, requestCountBefore, 'observation never wakes model requests')
@@ -152,7 +164,7 @@ async function run(ctx) {
     await writeFile(readyPath, JSON.stringify({ origin, authenticatedUrl, sessionId, networkId, clientUrl: client.url }, null, 2), 'utf8')
     console.log('ATN_VISUALIZATION_SMOKE ' + JSON.stringify({
       nodes: 6, directedCrossBranch: true, failedResult: true, liveChange: true, strictGateway: true,
-      readOnly: true, clientServed: true, sessionId, origin, preview, readyPath,
+      readOnly: true, metadata: true, clientServed: true, sessionId, origin, preview, readyPath,
     }))
     if (preview) {
       console.log('ATN_VISUALIZATION_READY ' + JSON.stringify({ origin, sessionId, readyPath }))

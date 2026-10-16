@@ -8,12 +8,20 @@
 
 ## 🧭 核心战略与定位白皮书
 
+- [**威胁模型与读取边界**](THREAT_MODEL.md)：B-* 可执行判据、三类读取面与四项排除；V2 §3。
+- [**观察读取授权接入**](OBSERVER_READ_AUTHORIZATION.md)：owner/operator、内容/元数据 action、整网会话别名授权与可信宿主导出决策；V2 §4。
+- [**读取边界实施报告**](READ_BOUNDARY_IMPLEMENTATION_REPORT.md)：V2 §14 推荐范围、先红后绿和最终验证。
+
 - [**战略定位与演进白皮书** (`STRATEGY_AND_POSITIONING.md`)](STRATEGY_AND_POSITIONING.md)
   *必读纲领*。系统阐述“还能叫自适应拓扑网络吗”、“演进轴如何切换至信任轴”以及“怎么宣传与受众定位”。确立**“布线会变，边界不变”**的核心理念。
 - [**0.5.0 信息边界产品化开发方案** (`INFORMATION_BOUNDARY_PRODUCT_PLAN.md`)](INFORMATION_BOUNDARY_PRODUCT_PLAN.md)
   产品化实施方案。阐述为何移除白板、保留宿主派生发现元数据，以及 13 条出站通道的审计与红灯测试要求。
-- [**下一步拓展方向** (`ROADMAP_NEXT_DIRECTIONS.md`)](ROADMAP_NEXT_DIRECTIONS.md)
-  经 A/B/C 实测修订的方向库（非实施说明）。下一轮选定范围、逐条事实修正与五 seed 无翻转结论见 [D 决策记录](NEXT_SCOPE_DECISION_RECORD.md)。
+- [**下一步拓展方向 V2** (`ROADMAP_NEXT_DIRECTIONS_V2.md`)](ROADMAP_NEXT_DIRECTIONS_V2.md)
+  **现行方向库**（非实施说明），取代 V1。按上游适配 + substrate 引入后的实测证据重排，含对 V1/D 记录的十项事实修订：威胁模型与**读取面**边界、观察/导出的读取授权（alpha.4 网关已具备执行机制）、宿主 custody 一致性套件（14 通道）、跨网络地址命名空间补证、拒绝日志设计稿、读侧可见性分区、舰队面、engines.dsh 化发布门。§14 给出建议的下一轮范围（§3+§4，全零模型）与硬闸门，§15 重列不主张红线。
+- [**本轮总纲 V2** (`MASTER_EXECUTION_PLAN_V2.md`)](MASTER_EXECUTION_PLAN_V2.md)
+  把方向库 V2 的 **§5–§9 与 §11 合并为一个轮次**，但**分六个阶段、各自独立提交**（失败信号必须可归因）：0 卫生 → 1 跨网络引用与 `msg:` 地址命名空间补证 → 2 读侧可见性（need-to-know 分区，含**第 8 条论文偏离**；过滤必须宿主侧、对模型透明、"过滤即不存在"）→ 3 宿主 custody 一致性套件（覆盖最终通道与词汇，附**负例实现**证明套件能红灯）→ 4 舰队观测面（新的跨网络读取面，必须沿用既有 principal/resource/action 授权；拒绝计数只做**有界计数**，不得冒充合规日志）→ 5 拒绝日志设计稿（零代码）。含 12 条共享不变式（模型工具面与固定上下文 7,956/5,910 不得变）、六条停止条件与三项**需用户批准**的决策。§10（engines.dsh 发布门与 GitHub 矩阵首次真跑）不在本轮。
+- [**下一步拓展方向 V1** (`ROADMAP_NEXT_DIRECTIONS.md`)](ROADMAP_NEXT_DIRECTIONS.md)
+  历史输入（其基线 551+14/alpha.2 与"不做新协作机制"的表述均需按 V2 §2 的精确化修订阅读）。下一轮选定范围、逐条事实修正与五 seed 无翻转结论见 [D 决策记录](NEXT_SCOPE_DECISION_RECORD.md)。
 
 ---
 
@@ -51,12 +59,50 @@
 
 ---
 
+## 🎯 下一轮实施说明
+
+- [**静默活性审计 V2 实施报告**](PROBE_LIVENESS_AUDIT_V2_IMPLEMENTATION_REPORT.md)
+  [事件语义表](PROBE_LIVENESS_EVENT_SEMANTICS_V2.md)先行；真实内核故障注入覆盖请求缺失、收据缺失，正常同一步延迟及 retired/failed 对照通过。五 seed 均为 no-wake-eligible-work，含 60 封正常收据与 1 封不可达；完整历史审计依赖 40 个未跟踪 session 和 5 个 network 文件，采用 4.6(b)。[完整明细](execution-evidence/probe-liveness-audit-v2-20261015/analysis-tables.md)。
+- [**探针静默活性审计实施说明（V2，锚点修订版）** (`PROBE_LIVENESS_AUDIT_V2_BRIEF.md`)](PROBE_LIVENESS_AUDIT_V2_BRIEF.md)
+  **取代** V1 的方法部分（其 4.2/4.4 判据已被证伪），继承其未完成交付项。结构性变化：**先确立事件语义，再写任何判据**——4.0 事件语义表与 4.1 类别可达性证明均为**阻塞性闸门**，未完成前不得产出任何 seed 级判定。判据锚点从 `delivered` 改为实际造成唤醒的事件（基线显示为 `queued`），并把旧判据混在一起的三类拆开：**(a) 正常同一步收据延迟（非缺陷）**、**(b) 输入已记录但模型请求从未开始**、**(c) 持久收据缺失**；每个缺陷类必须由**故障注入证明可达**，否则删除该类。三类对照含「seed 59 / mail-10 式延迟必须判为非缺陷」这一固定用例——正是 V1 的致命盲点。
+- [**静默活性审计前置核验与停止报告**](PROBE_LIVENESS_AUDIT_IMPLEMENTATION_REPORT.md)
+  按 brief 第 7.3 条停止：delivered 确认发生在输入记录之后，唯一时间候选 seed 59 / mail-10 已在最后一步获得输入。指定正向对照未能在代码定义下建立额外唤醒义务，未签发五 seed 二值判定；后续完整审计和工程回归未冒充完成。[唤醒条件定义](PROBE_WAKE_ELIGIBILITY_DEFINITION.md)。
+- [**探针静默活性审计实施说明** (`PROBE_LIVENESS_AUDIT_BRIEF.md`)](PROBE_LIVENESS_AUDIT_BRIEF.md)
+  V1，方法部分已被 V2 取代，保留为历史输入。上一轮把静默成因**收窄但未识别**：五分之五都是义务未完成的活性静默，但「为什么没有活着、没在跑、还有余步的节点去取下一个动作」仍未回答。本轮把它变成**可判定的二值审计**（`mechanism-gap` / `no-wake-eligible-work`），零模型调用。关键实测依据：`mail.state` 只有 `queued`/`delivered`、**没有「已消费」**，而 `step/start` 与 `model.start` 携带 `session`，故「投递后接收者是否获得过模型输入」可判定。要求**双向构造对照**（只跑出一种结论即判分类器无效），并把预置角色义务与纯拉取式义务明确排除在「应当唤醒」之外。
+- [**探针门分位修正与静默成因定位实施说明** (`PROBE_GATE_AND_QUIESCENCE_BRIEF.md`)](PROBE_GATE_AND_QUIESCENCE_BRIEF.md)
+  要求零模型完成门的分位修正与静默定位，不得以放宽预算重跑。其“全部入口步数耗尽”前提经实施核验修正：仅 17/45/73 耗尽，31/59 分别因 max-tokens/上游错误停止。四个展示的延迟代入值均拒绝 600 秒，完整五 seed 中 73 的均值略低于旧输入，见下方报告。
+- [**探针门分位修正与静默定位实施报告**](PROBE_GATE_AND_QUIESCENCE_IMPLEMENTATION_REPORT.md)
+  224 次 dispatch→finish 全配对、aborted=0；独立 p90 覆盖政策和四档敏感性曲线使 600 秒配置在 p90 下被拒绝。3 次错误提交、2 次未提交，五次均为义务未完成静默；附完整持有者状态、具名工具映射、逐步分类和 37 个未变哈希。totalTokens 从有效预算维度去列，保留其历史不可用后果。
+- [**真实模型探针可行性门实施说明** (`LIVE_PROBE_FEASIBILITY_BRIEF.md`)](LIVE_PROBE_FEASIBILITY_BRIEF.md)
+  输入 brief 提出实测延迟口径与零模型可行性门，要求 4.1–4.3 完成前不得开始任何新的真实模型运行。其“60/8 为严格下界、期限是唯一不足”的前提经核验不成立或未经证明，不能作为现行结论；实施已按第 7.2 条停止，详见下面报告。
+- [**真实探针可行性前提核验与停止报告** (`LIVE_PROBE_FEASIBILITY_IMPLEMENTATION_REPORT.md`)](LIVE_PROBE_FEASIBILITY_IMPLEMENTATION_REPORT.md)
+  5 个原 seed 均在同一运行时与 ACL 下复现原参考 60/8，以及省略策略反馈后的 46/6 答案通过对照；后者不作为替代下界或真实模型成功。37 个固定源码哈希与 AGY 归档全部一致。可行性门、延迟口径实测及 Gemini medium 重跑未执行；逐 seed usage 与工程验证完整留档。
+- [**严格下界推导与恢复运行条件** (`LIVE_PROBE_STRICT_BOUND_DERIVATION.md`)](LIVE_PROBE_STRICT_BOUND_DERIVATION.md)
+  用户后续授权恢复。合法因果取证下至少 10 次模型调用／最大单节点至少 2 步；不加信息来源假设时只能保证至少 1 个响应。实测旧 modelDurationMs 包含排队；规划门采用有来源的服务延迟与明确余量，不能作为数学不可行证明。仅将指定 AGY Gemini medium 的期限改为 600 秒。
+- [**真实探针恢复实施报告** (`LIVE_PROBE_RESUMED_IMPLEMENTATION_REPORT.md`)](LIVE_PROBE_RESUMED_IMPLEMENTATION_REPORT.md)
+  记录用户后续授权下的新批次，保留原 seed 和失败样本；包含模型／档位核对、门输出、逐 seed 延迟及 usage、真实停止原因与规划假设限制。前一份停止报告是恢复之前的历史记录。
+
+---
+
+## 🧱 上游适配与 Substrate 机制引入（2026-10-16 新增）
+
+> 两份相互独立、**不得混做**的实施说明。**顺序闸门**：上游适配必须先完成并全绿，再做 Substrate 引入——后者会把模型工具面由 5 个改为 8 个，混做会让固定上下文字节基线的失败信号无法归因。
+
+- [**上游最新版适配实施说明** (`UPSTREAM_LATEST_ADAPTATION_BRIEF.md`)](UPSTREAM_LATEST_ADAPTATION_BRIEF.md)
+  把全部 `@deepseek-ai/dsh-*` 由 `0.2.1-alpha.2` 提升到 **`dsh-v0.2.1-alpha.4`**，Cordis 到 `4.0.5-alpha.2`、schemastery 到 `3.18.5-alpha.2`、include/loader 到 `-alpha.2`，better-sidebar 精确 optional peer 由 `0.26.0` 改为 **`0.26.1`**。最重要的语义变更：**自 alpha.4 起 `engines.dsh` 单独决定插件兼容性，`@deepseek-ai/dsh-*` peer 范围被忽略**（依据：`docs/upgrade-guide/v0.2.1-alpha.3/plugin-engines-dsh/guide.md` 与 `packages/boot/app-boot/src/plugin-compatibility.ts:57-80`），因此 `engines.dsh` 必须收窄到与验证集合一致。已确证 alpha.4 下槽位 `conversation.session.header.actions`、`ConnectionHandle`、`defineTool`、typert 协议与注册表均未变；`0.26.1` 除版本号外与 `0.26.0` 源码逐字节相同（无公开接入 API 变化）。**完整 provider 联合启动仍受上游已删除的 `webRuntime` 服务阻塞**（alpha.4 全量检索无该服务），只能验证 client Tab API 与真实注册服务，不得宣称已联合验证。
+- [**Substrate 协作面引入实施说明** (`SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md`)](SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md)
+  把 arXiv:2610.16120v1（**ScaleMAS**，substrate-centric coordination）的机制引入本插件：新增 `atn_publish` / `atn_search` / `atn_visit` 三个工具与**第 14 条出站通道**，落地只追加消息、确定性写入准入（引用必须存在／可见／真实持有，理由必须点名每条引用）、整数域 BM25 + 引文权重排序、证据链与跨退休持久性。含对 `STRATEGY_AND_POSITIONING` 两条高压线（"不再加白板公告""不再加声誉算法"）的**逐条对照与有据修订说明**，以及用户已拍板的三项决策：默认同时启用、引文权重可配置关闭、**仅零模型结构验证且不主张任何性能增益**。文中列出三处必须先留红灯的既有闸门测试（固定上下文、边界 inventory、通道枚举）与与论文的七处偏离清单。
+
+实施结果（两阶段已分阶段提交）：[上游适配报告](UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)、[Substrate 实施报告](SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)。该两轮时点为 588 项 runtime/集成 + 15 项 UI；读取边界轮次后为 **593 + 15**（本人独立复跑确认零失败零跳过）。八工具固定上下文 7,956 字节、关闭 substrate 精确回到 5,910；`engines.dsh` 为 `>=0.2.1-alpha.4 <0.3.0`（仅 alpha.4 实测）；完整 provider host 激活仍受 `webRuntime` 缺失阻塞，顶栏回退通过真实浏览器验证。后续范围见 [方向库 V2](ROADMAP_NEXT_DIRECTIONS_V2.md) 与[本轮总纲 V2](MASTER_EXECUTION_PLAN_V2.md)。
+
+---
+
 ## 🛡️ 信息边界与保管模型 (v0.5.0)
 
 0.5.0 版本将信息边界确立为一等公民能力，提供宿主强制的数据隔离机制。
 
-- [**13 条出站通道审计与公开拒绝码契约** (`information-boundary/OUTBOUND_CHANNEL_AUDIT.md`)](information-boundary/OUTBOUND_CHANNEL_AUDIT.md)
-  列出从 `start`、`spawn` 到 `send`、`review`、`claim`、`rewire`、`finish` 等全部 13 条出站通道，固化 `evidence-not-owned` 等公开拒绝码。
+- [**14 条出站通道审计与公开拒绝码契约** (`information-boundary/OUTBOUND_CHANNEL_AUDIT.md`)](information-boundary/OUTBOUND_CHANNEL_AUDIT.md)
+  列出从 `start`、`spawn` 到 `send`、`review`、`claim`、`rewire`、`finish` 以及新增的 `publish` 共 **14 条**出站通道，固化 `evidence-not-owned` 等公开拒绝码，并记录读取面授权与 `exportSubstrate` 的可信宿主前提。
 - [**修复前失败留档** (`information-boundary/PRE_FIX_RECORD.md`)](information-boundary/PRE_FIX_RECORD.md)
   严格执行“先有失败测试留档，后有代码修复”规范，记录 `review.summary` 与虚报发现元数据的修复前拦截日志。
 - [**信息边界实施报告** (`INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md`)](INFORMATION_BOUNDARY_IMPLEMENTATION_REPORT.md)
@@ -133,7 +179,3 @@
 - [最小插件包实施报告 (`MINIMAL_BUNDLE_IMPLEMENTATION_REPORT.md`)](MINIMAL_BUNDLE_IMPLEMENTATION_REPORT.md)
 - [最小插件包验收记录 (`MINIMAL_BUNDLE_ACCEPTANCE.md`)](MINIMAL_BUNDLE_ACCEPTANCE.md)
 - [工程交接文档 (`DEEPSEEK_HANDOFF.md`)](DEEPSEEK_HANDOFF.md)
-
-- [上游最新版适配 brief](UPSTREAM_LATEST_ADAPTATION_BRIEF.md) / [实施报告](UPSTREAM_LATEST_ADAPTATION_IMPLEMENTATION_REPORT.md)：alpha.4 与 sidebar 0.26.1；旧报告为历史基线。
-
-- [Substrate 协作面实施说明](SUBSTRATE_COORDINATION_INTEGRATION_BRIEF.md) / [实施报告](SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)：默认八工具、第 14 通道、只追加消息与零模型结构验证。

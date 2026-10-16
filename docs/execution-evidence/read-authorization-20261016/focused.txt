@@ -1,0 +1,20 @@
+✔ READ-AUTH-GLOBAL: a global snapshot grant cannot read a named network (74.0002ms)
+✔ READ-AUTH-SCOPED: two principals read only granted sessions; revocation and spoofing fail closed (63.5295ms)
+✔ READ-AUTH-METADATA: metadata-only operators receive counts without content or snapshot access (47.5447ms)
+✔ READ-AUTH-COLD: absent or failing policies deny before cold lookup; grants work without live agents (18.1903ms)
+✔ READ-AUTH-CAPABILITY: missing resource APIs or method reader metadata fail before endpoint registration (12.3562ms)
+✔ OBSERVER-01: strict Gateway scopes observation to the viewed session and never changes network or model input (62.7173ms)
+✔ OBSERVER-02: live tool activity is visible during execution and cleared on settlement without exposing arguments (53.4892ms)
+✔ OBSERVER-03: rapid rewiring and failed results survive between snapshots (89.4345ms)
+✔ OBSERVER-04: cold durable records yield bounded useful history without resuming unloaded agents (19.9763ms)
+✔ OBSERVER-05: proposals, votes and commit history are present on first read (13.5192ms)
+✔ OBSERVER-06: cold history distinguishes submission, independent acceptance, exploration and observed regression (13.7517ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1151.8507
+exitCode=0

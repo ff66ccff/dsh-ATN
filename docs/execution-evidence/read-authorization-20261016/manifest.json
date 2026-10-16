@@ -1,0 +1,61 @@
+{
+  "date": "2026-10-16",
+  "scope": "ROADMAP_NEXT_DIRECTIONS_V2 sections 3 and 4, selected by section 14",
+  "baselineCommit": "8c97706cca817d1bf10bab879ef043f7ca62a1a4",
+  "node": "v24.19.0",
+  "harness": "0.2.1-alpha.4",
+  "runtimeIntegrationTests": 593,
+  "uiTests": 15,
+  "failed": 0,
+  "skipped": 0,
+  "externalModelCalls": 0,
+  "redEvidence": "before.txt",
+  "redExitCode": 1,
+  "verification": [
+    "typecheck.txt",
+    "tests.txt",
+    "build.txt",
+    "sidebar.txt",
+    "pack.txt",
+    "profile.txt",
+    "web-observer.txt"
+  ],
+  "resolvedFailures": [
+    "profile-default-cli.txt",
+    "web-before-mail-barrier.txt"
+  ],
+  "hashes": [
+    {
+      "path": "src/index.ts",
+      "sha256": "cd34d1bd976b84cbc79b8cfab0bbf2346826249a9bd13352bcd6f5b3967d4df1"
+    },
+    {
+      "path": "src/observer-access.ts",
+      "sha256": "b120daa4dc416ef3ffc6b7950dd7244130e79ef4a0759ce70c9323d7d2694922"
+    },
+    {
+      "path": "src/observer-schema.ts",
+      "sha256": "e95414593d5fcdccd5ca2011883861e6689c6e35aeef9f6fb608b147ef10ab10"
+    },
+    {
+      "path": "src/observer.ts",
+      "sha256": "642a32c7192c72330662aaf343eff70c4b1dc2396bf8bee44ea32de21c259e96"
+    },
+    {
+      "path": "src/runtime.ts",
+      "sha256": "e702f60ee7c1ae6bd89943c96a120256d4ac9c038b45f3b2dd2419fcb51f80a8"
+    },
+    {
+      "path": "tests/integration/observer.test.ts",
+      "sha256": "8bcafe77144264f24f36a858ab07c8f8568097662e42b0053d46cb7bf46d74f1"
+    },
+    {
+      "path": "tests/smoke/visualization-observer.mjs",
+      "sha256": "b3c9239d0b47b9cf21e97a39e3a86e14e5de7c77f965a9a64e58ad449ed98659"
+    },
+    {
+      "path": ".artifacts/dsh-atn-0.5.0.tgz",
+      "sha256": "286b1a99edfa26aaaa0568e21cee036b0c7ec2ed3f7ada1aaf9195659653c6c5"
+    }
+  ]
+}

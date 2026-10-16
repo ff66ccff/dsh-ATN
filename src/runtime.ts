@@ -558,7 +558,11 @@ export class AtnRuntime extends Service<Config> {
     }
   }
 
-  /** Full operator audit export; this host API is never a model tool or a discovery source. */
+  /**
+   * Trusted-host audit export: NO caller authorization. Every plugin holding ctx.atn
+   * can read any network. External adapters must authorize before calling this API;
+   * see docs/THREAT_MODEL.md B-HOST-EXPORT. Never a model tool or discovery source.
+   */
   async exportSubstrate(networkId: string) {
     const record = await this.inspect(networkId)
     const limits = substrateLimits(record)

@@ -12,6 +12,16 @@ import { SessionId } from '@deepseek-ai/dsh-session'
 import { AtnObserver } from '../../src/observer.ts'
 import { atnObserverSnapshotSchema, OBSERVER_MAX_EVENTS, OBSERVER_MAX_TASKS } from '../../src/observer-schema.ts'
 import type { AtnObserverSnapshot } from '../../src/observer-types.ts'
+import type { RemoteAccessBinding } from '@deepseek-ai/dsh-api-remote-access'
+import { assertObserverReadCapabilities } from '../../src/observer-access.ts'
+import { observerMetadataSchema } from '../../src/observer-schema.ts'
+import type { TypertRegistryContract } from '@deepseek-ai/dsh-typert-protocol'
+
+declare module '@deepseek-ai/dsh-typert-protocol' {
+  interface PrincipalMap {
+    'atn-test-operator': { readonly kind: 'atn-test-operator'; readonly id: string }
+  }
+}
 import { MemoryNetworkStore } from '../../src/domain.ts'
 import { validateTaskResult } from '../../src/tasks.ts'
 import { evaluateRewireEvidence } from '../../src/verified-feedback.ts'
@@ -42,6 +52,149 @@ async function snapshot(kernel: Kernel, sessionId: string): Promise<AtnObserverS
   })
   return atnObserverSnapshotSchema.parse(value)
 }
+
+test('READ-AUTH-GLOBAL: a global snapshot grant cannot read a named network', async () => {
+  await withObserver(async kernel => {
+    const host = await createHostAgent(kernel, 'read-auth-private')
+    await kernel.atn.start(host, testGoal)
+    const peer = new Peer(kernel.ctx, { principal: { kind: 'atn-test-operator', id: 'outsider' } })
+    kernel.ctx.remoteAccess.registerPolicy('atn-test-operator', { bindings: () => [{
+      role: { name: 'global-reader', resource: 'global', actions: ['atnObserver/snapshot'] },
+      resource: { kind: 'global' },
+    }] })
+    const before = await kernel.atn.findBySessionId(host.id)
+    const requests = kernel.model.requests.length
+    await assert.rejects(() => kernel.ctx.typertGateway.invoke({
+      peer, namespace: 'atnObserver', method: 'snapshot', args: { sessionId: host.id },
+    }), { code: 'remote-access/denied' })
+    assert.deepEqual(await kernel.atn.findBySessionId(host.id), before)
+    assert.equal(kernel.model.requests.length, requests)
+  })
+})
+
+test('READ-AUTH-SCOPED: two principals read only granted sessions; revocation and spoofing fail closed', async () => {
+  await withObserver(async kernel => {
+    const a = await createHostAgent(kernel, 'read-auth-a')
+    const b = await createHostAgent(kernel, 'read-auth-b')
+    const na = await kernel.atn.start(a, { ...testGoal, objective: 'A confidential objective' })
+    const nb = await kernel.atn.start(b, { ...testGoal, objective: 'B confidential objective' })
+    let revoked = false
+    kernel.ctx.remoteAccess.registerPolicy('atn-test-operator', { bindings: principal => revoked ? [] : [{
+      role: { name: 'content-reader', resource: 'atn-observation', actions: ['atnObserver/snapshot'] },
+      resource: { kind: 'atn-observation', id: principal.id === 'a' ? a.id : b.id },
+    }] as RemoteAccessBinding[] })
+    const pa = new Peer(kernel.ctx, { principal: { kind: 'atn-test-operator', id: 'a' } })
+    const pb = new Peer(kernel.ctx, { principal: { kind: 'atn-test-operator', id: 'b' } })
+    const call = (peer: Peer, args: Record<string, unknown>) => kernel.ctx.typertGateway.invoke({
+      peer, namespace: 'atnObserver', method: 'snapshot', args, signal: new AbortController().signal,
+    })
+    assert.equal(atnObserverSnapshotSchema.parse(await call(pa, { sessionId: a.id })).network!.id, na.networkId)
+    assert.equal(atnObserverSnapshotSchema.parse(await call(pb, { sessionId: b.id })).network!.id, nb.networkId)
+    const records = await Promise.all([kernel.atn.network(na.networkId), kernel.atn.network(nb.networkId)])
+    const histories = kernel.ctx.agents.list().map(agent => [agent.id, agent.session.snapshotEvents().length])
+    const requests = kernel.model.requests.length
+    for (const [peer, sessionId] of [[pa, b.id], [pb, a.id], [pa, 'unknown-session'], [pa, nb.networkId]] as const) {
+      await assert.rejects(() => call(peer, { sessionId }), { code: 'remote-access/denied' })
+    }
+    for (const extra of [{ principal: { kind: 'owner' } }, { networkId: nb.networkId }, { allNetworks: true }]) {
+      await assert.rejects(() => call(pa, { sessionId: a.id, ...extra }), /unexpected|unknown|argument/i)
+    }
+    revoked = true
+    kernel.ctx.remoteAccess.invalidate()
+    await assert.rejects(() => call(pa, { sessionId: a.id }), { code: 'remote-access/denied' })
+    assert.deepEqual(await Promise.all([kernel.atn.network(na.networkId), kernel.atn.network(nb.networkId)]), records)
+    assert.deepEqual(kernel.ctx.agents.list().map(agent => [agent.id, agent.session.snapshotEvents().length]), histories)
+    assert.equal(kernel.model.requests.length, requests)
+  })
+})
+
+test('READ-AUTH-METADATA: metadata-only operators receive counts without content or snapshot access', async () => {
+  await withObserver(async kernel => {
+    const host = await createHostAgent(kernel, 'read-auth-metadata')
+    const started = await kernel.atn.start(host, { ...testGoal, objective: 'secret objective' })
+    await kernel.atn.publish(host, { sub_task: 'secret subtask', artifact: 'secret artifact', rationale: 'secret rationale' })
+    kernel.ctx.remoteAccess.registerPolicy('atn-test-operator', { bindings: () => [{
+      role: { name: 'health-reader', resource: 'atn-observation', actions: ['atnObserver/metadata'] },
+      resource: { kind: 'atn-observation', id: host.id },
+    }] as RemoteAccessBinding[] })
+    const peer = new Peer(kernel.ctx, { principal: { kind: 'atn-test-operator', id: 'health' } })
+    const call = (method: string) => kernel.ctx.typertGateway.invoke({
+      peer, namespace: 'atnObserver', method, args: { sessionId: host.id }, signal: new AbortController().signal,
+    })
+    const before = await kernel.atn.network(started.networkId)
+    const histories = host.session.snapshotEvents()
+    const requests = kernel.model.requests.length
+    const value = await call('metadata') as { network: { id: string; nodes: number; substrate: { messages: number } } }
+    assert.equal(value.network.id, started.networkId)
+    assert.equal(value.network.nodes, 1)
+    assert.equal(value.network.substrate.messages, 1)
+    assert.throws(() => observerMetadataSchema.parse({ ...value, network: { ...value.network, objective: 'leak' } }))
+    for (const forbidden of ['secret', 'authorId', 'weight', 'citedBy', 'evidenceChains', 'sessionId', 'objective', 'rationale']) {
+      assert.equal(JSON.stringify(value).includes(forbidden), false, forbidden)
+    }
+    await assert.rejects(() => call('snapshot'), { code: 'remote-access/denied' })
+    assert.deepEqual(await kernel.atn.network(started.networkId), before)
+    assert.deepEqual(host.session.snapshotEvents(), histories)
+    assert.equal(kernel.model.requests.length, requests)
+  })
+})
+
+test('READ-AUTH-COLD: absent or failing policies deny before cold lookup; grants work without live agents', async () => {
+  const record = makeChain(['A', 'B'])
+  class ReadBarrierStore extends MemoryNetworkStore {
+    blocked = false
+    override async load(id: string) {
+      assert.equal(this.blocked, false, 'unauthorized requests must not load storage')
+      return super.load(id)
+    }
+    override async list() {
+      assert.equal(this.blocked, false, 'unauthorized requests must not enumerate storage')
+      return super.list()
+    }
+  }
+  const store = new ReadBarrierStore([record])
+  await withObserver(async kernel => {
+    const peer = new Peer(kernel.ctx, { principal: { kind: 'atn-test-operator', id: 'cold' } })
+    const call = (method: string, sessionId = 'session-B') => kernel.ctx.typertGateway.invoke({
+      peer, namespace: 'atnObserver', method, args: { sessionId }, signal: new AbortController().signal,
+    })
+    store.blocked = true
+    for (const method of ['snapshot', 'metadata']) {
+      await assert.rejects(() => call(method), { code: 'remote-access/denied' })
+    }
+    const remove = kernel.ctx.remoteAccess.registerPolicy('atn-test-operator', {
+      bindings: () => { throw new Error('host permission lookup failed') },
+    })
+    await assert.rejects(() => call('snapshot'), {
+      code: 'remote-access/denied', details: { action: 'atnObserver/snapshot', reason: 'policy-failed' },
+    })
+    remove()
+    kernel.ctx.remoteAccess.registerPolicy('atn-test-operator', { bindings: () => [{
+      role: { name: 'cold-reader', resource: 'atn-observation', actions: ['atnObserver/snapshot', 'atnObserver/metadata'] },
+      resource: { kind: 'atn-observation', id: 'session-B' },
+    }] })
+    await assert.rejects(() => call('snapshot', 'session-A'), { code: 'remote-access/denied' })
+    store.blocked = false
+    const snap = atnObserverSnapshotSchema.parse(await call('snapshot'))
+    assert.equal(snap.network!.id, record.id)
+    assert.equal(snap.network!.nodes.length, 2, 'session alias content grant covers the whole network')
+    assert.equal(observerMetadataSchema.parse(await call('metadata')).network!.nodes, 2)
+    assert.equal(kernel.ctx.agents.list().length, 0)
+    assert.equal(kernel.model.requests.length, 0)
+    assert.equal(store.writes, 0)
+    assert.deepEqual(await store.load(record.id), record)
+  }, store)
+})
+
+test('READ-AUTH-CAPABILITY: missing resource APIs or method reader metadata fail before endpoint registration', async () => {
+  assert.throws(() => assertObserverReadCapabilities({} as TypertRegistryContract, {}), /resource access-control capabilities/)
+  await withObserver(async kernel => {
+    assert.doesNotThrow(() => assertObserverReadCapabilities(kernel.ctx.typert, kernel.ctx.atnObserver))
+    assert.throws(() => assertObserverReadCapabilities(kernel.ctx.typert, {}), /resource reader for snapshot/)
+    assert.equal(kernel.ctx.typert.resources.get('atn-observation'), undefined,
+      'no global default field may add ATN resources to unrelated session RPCs')
+  })
+})
 
 test('OBSERVER-01: strict Gateway scopes observation to the viewed session and never changes network or model input', async () => {
   await withObserver(async kernel => {

@@ -28,6 +28,8 @@ export type { NetworkSendPolicy, AtnRuntimeDeps } from './runtime.ts'
 export type { KnowledgeMetadata } from './knowledge.ts'
 export type { PublishInput, SubstrateMessageView } from './substrate.ts'
 export type { SubstrateState, SubstrateMessage } from './schema.ts'
+export { ATN_OBSERVATION_RESOURCE, ATN_CONTENT_READER, ATN_METADATA_READER } from './observer-access.ts'
+export type { AtnObserverMetadata } from './observer-schema.ts'
 
 /**
  * Cordis service plugin for the ATN runtime.
