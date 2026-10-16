@@ -1,0 +1,17 @@
+✔ PROBE-Q1: complete current batch is separate from censored legacy survivors, with provenance (9.2721ms)
+✔ PROBE-Q2: pairing fails closed on censoring, duplicates, mismatched seeds and unmatched finishes (2.3828ms)
+✔ PROBE-Q3: nearest rank and four-scenario arithmetic, deadline-only rejection and exact admission control (5.8986ms)
+✔ PROBE-Q4: completed-obligation quiescence is a genuine negative control (0.1733ms)
+✔ PROBE-Q5: retained events locate every holder and preserve each distinct entry termination (13.1496ms)
+✔ PROBE-Q6: tool identities have per-call session proof and structural corroboration; status is not always discovery (10.7555ms)
+✔ PROBE-Q7: offline recomputation imports no account, provider, runner or network surface (1.9274ms)
+✔ LIVENESS-V2: archived five-seed support, regression and declared replay conditions (6.9612ms)
+✔ LIVENESS-V2: fault categories remain exclusive, including simultaneous missing request/receipt (4.4464ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 176.8384

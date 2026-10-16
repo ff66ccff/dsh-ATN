@@ -1,0 +1,22 @@
+{
+  "coreAutocrlf": true,
+  "files": [
+    {
+      "path": "docs/PROBE_LIVENESS_EVENT_SEMANTICS_V2.md",
+      "workingTreeSha256": "3cb0f036f391d36c43ea44c6dc577154d53c3da197506bf49b2098546cbe5c16",
+      "freshCheckoutSha256": "3cb0f036f391d36c43ea44c6dc577154d53c3da197506bf49b2098546cbe5c16"
+    },
+    {
+      "path": "docs/execution-evidence/live-probe-resumed-20261015/seed-17-events.jsonl",
+      "workingTreeSha256": "461445228cb9ccf9f7d4b87b990f25ddfe5fadd89f28d19303d178718d322553",
+      "freshCheckoutSha256": "461445228cb9ccf9f7d4b87b990f25ddfe5fadd89f28d19303d178718d322553"
+    }
+  ],
+  "regressionTests": {
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actionlint": "1.7.12",
+  "actionlintExitCode": 0
+}

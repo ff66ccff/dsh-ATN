@@ -27,8 +27,19 @@ Better Sidebar 的 `service.ts` 在两个目标间仅修改 `SIDEBAR_SERVICE_VER
 
 宿主 custody 与读侧策略的有效性依赖真实授权映射和提取规则，不保证识别任意自然语言泄漏。舰队拒绝计数为有界易失计数，不是持久合规日志。本轮不调用付费模型，不重跑历史实证实验。
 
+## 托管 CI 修复
+
+首次托管执行暴露两项既有配置问题：job 级 `env` 不支持 `runner.temp`，已将路径计算移到步骤级，并用 actionlint 1.7.12 检查通过；Windows 检出对新增历史探针事件和语义文档执行 LF→CRLF 转换，导致三项原始 SHA-256 校验失败，已仅为相关证据添加 `-text` 属性。未重写历史记录、未修改哈希预期或放宽断言。`core.autocrlf=true` 的新检出与原始文件字节相同，九项定向回归全通过，见 [字节保留证据](execution-evidence/release-0.6.0/windows-checkout.json)。
+
+托管环境没有本机私有 `.artifacts` 历史归档，一项已有测试会按原规则明确跳过；其余离线证据和 NUL 夹具仍执行。该跳过不能算作完整历史归档重放通过。
+
 ## 验证与发布
 
 本地普通 `npm ci`、typecheck、607 项 runtime/集成与 17 项 UI（合计 624，零失败零跳过）、build、pack、真实 alpha.5 profile 安装和 Web 观察 smoke、两个侧栏目标均通过。新增源码契约负例验证类型键漂移、源码编译错误和未审查版本会被拒绝。固定上下文保持启用 7,956 / 关闭 5,910 字节。验证摘要与命令输出见 [证据目录](execution-evidence/release-0.6.0/validation.json)。
 
 GitHub 托管 CI 在 [Actions](https://github.com/ff66ccff/dsh-ATN/actions) 公开；发布产物见 [v0.6.0](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.0)，npm 安装使用 `dsh-atn@0.6.0`。实际远端发布状态以该 Release 与 npm 注册表为准。
+
+
+托管 CI [38951903940](https://github.com/ff66ccff/dsh-ATN/actions/runs/38951903940) 六个 job 全部成功，覆盖 Ubuntu / Windows 的完整检查与两个侧栏目标；每个平台 606 项 runtime 通过、1 项历史私有归档按原规则跳过，另 17 项 UI 全通过。[汇总](execution-evidence/release-0.6.0/hosted-ci.json)。
+
+npm 发布状态：实际 `npm publish` 被注册表以 E404 / 权限不足拒绝，`npm whoami` 同时返回 E401。交付时 npm `latest` 仍为 0.5.0，0.6.0 尚未发布。需维护者重新登录具备该包发布权限的 npm 账号后继续。GitHub Release 和本地 tarball 可用，不把发布预检通过记为 npm 发布成功。

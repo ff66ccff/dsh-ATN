@@ -73,6 +73,21 @@
       "atn_visit": 363
     }
   },
-  "tarballSha256": "a5cf219023d6167a1669abe46721d78cb95ec5f1c05ebf279fab030158111f70",
-  "remoteModelCalls": 0
+  "tarballSha256": "fa43e019fc1d55078e675ad114fadb0b1e1b6b7004d0e7efe313bbe7b36a97e3",
+  "remoteModelCalls": 0,
+  "hostedCi": {
+    "runId": 38951903940,
+    "conclusion": "success",
+    "jobs": 6,
+    "runtimePassed": 606,
+    "clientPassed": 17,
+    "skippedHistoricalPrivateArchive": 1
+  },
+  "npmPublish": {
+    "status": "blocked",
+    "publishError": "E404 permission denied",
+    "whoamiError": "E401",
+    "registryLatest": "0.5.0",
+    "published": false
+  }
 }

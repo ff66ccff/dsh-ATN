@@ -1,0 +1,32 @@
+{
+  "runId": 38951903940,
+  "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/38951903940",
+  "implementationCommit": "b97e7a44e36b36319319a03d375da1b3175647be",
+  "conclusion": "success",
+  "jobs": [
+    {
+      "name": "verify (windows-latest)",
+      "conclusion": "success"
+    },
+    {
+      "name": "sidebar-contract (ubuntu-latest, published)",
+      "conclusion": "success"
+    },
+    {
+      "name": "sidebar-contract (ubuntu-latest, upstream)",
+      "conclusion": "success"
+    },
+    {
+      "name": "sidebar-contract (windows-latest, published)",
+      "conclusion": "success"
+    },
+    {
+      "name": "verify (ubuntu-latest)",
+      "conclusion": "success"
+    },
+    {
+      "name": "sidebar-contract (windows-latest, upstream)",
+      "conclusion": "success"
+    }
+  ]
+}
