@@ -2,6 +2,7 @@
 
 - [V2 合并实施计划](MASTER_EXECUTION_PLAN_V2.md)：用户批准的阶段顺序与停止条件。
 - [V2 阶段 0 证据](execution-evidence/round-v2-phase0/README.md)：依赖处置与命令闸门。
+- [V2 阶段 1 证据](execution-evidence/round-v2-phase1/README.md)：分区与授权两张判定表，结构和 live/RPC 两层。
 
 欢迎查阅 **dsh-ATN（自适应拓扑网络）** 文档库。本项目在经历十一轮严密的科学基准测试后，已完成从“追求协作涌现”到“宿主强制信息边界与可证明隔离”的战略转型。
 

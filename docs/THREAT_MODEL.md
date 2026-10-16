@@ -26,6 +26,7 @@ flowchart LR
 | 契约 | 规则与新增功能判定问题 | 可执行锚点 |
 |---|---|---|
 | B-LIVE | 模型身份来自实际 live Agent；猜测 ID 不授予身份。新入口是否信任输入中的 sender/role？ | `tests/integration/shifting-evidence-access.test.ts` 的 `ACCESS-03`（伪造 Agent 被拒绝）；agent.test.ts 的 `AUTH-04`、`AUTH-06`；knowledge-feedback.test.ts 的 `KNOWLEDGE-01` |
+| B-NAMESPACE | msg/node/task/artifact 重名必须在调用者网络内解析；外网独有不触发外网查找。是否把局部地址当成全局键？ | `NAMESPACE-STRUCTURE` / `NAMESPACE-LIVE`；[分区与授权矩阵](execution-evidence/round-v2-phase1/README.md) |
 | B-OUTBOUND | 14 通道检查完整输入；拒绝在提交前发生。新增字段/方法是否绕过策略？ | `BOUNDARY-CHANNELS`、`BOUNDARY-FIELDS`、`BOUNDARY-SYNC`（information-boundary.test.ts）；`BOUNDARY-INVENTORY` |
 | B-ATOMIC | 拒绝不追加消息、消耗地址、改权重/步数或产生邮件/模型唤醒。失败是否留下业务写入？ | `SUBSTRATE-ATOMIC`（integration/substrate.test.ts）、`SUBSTRATE-CAPACITY`（unit/substrate.test.ts） |
 | B-MODEL-READ | search/visit 仅限实际调用者网络；网络内消息目前全网可读，隐藏作者/权重。新读取是否扩大网络或引入新发现来源？ | `SUBSTRATE-KERNEL`、`SUBSTRATE-ADMISSION`、`SUBSTRATE-RANK` |

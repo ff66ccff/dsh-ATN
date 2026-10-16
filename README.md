@@ -2,6 +2,8 @@
 
 V2 工程卫生：七个零直接引用包按真实宿主依赖图保留并逐项说明，见 [声明审计](docs/DECLARATION_AUDIT.md)。
 
+网络局部 `msg:`、node/task 标识及宿主 custody 的跨网络补证见 [两张判定表](docs/execution-evidence/round-v2-phase1/README.md)；网络仍不等于认证租户。
+
 <div align="center">
 
 ### **布线会变，边界不变。**
