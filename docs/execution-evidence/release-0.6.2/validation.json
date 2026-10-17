@@ -34,7 +34,31 @@
   },
   "externalModelCalls": 0,
   "browserFullSidebarInteraction": "not-run",
-  "hostedCI": "pending",
-  "githubRelease": "pending",
-  "npm": "pending"
+  "hostedCI": {
+    "status": "success",
+    "runs": 3,
+    "jobs": 18,
+    "runtimePerPlatform": {
+      "passed": 606,
+      "failed": 0,
+      "skipped": 1
+    },
+    "clientPerPlatform": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0
+    },
+    "evidence": "hosted-ci.json"
+  },
+  "githubRelease": {
+    "published": true,
+    "url": "https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.2"
+  },
+  "npm": {
+    "published": true,
+    "latest": "0.6.2",
+    "integrityMatches": true,
+    "registryProfileSmoke": true,
+    "evidence": "published.json"
+  }
 }

@@ -26,4 +26,12 @@ Better Sidebar 本地 upstream 仍是 0.28.0，同 0.6.1 的固定提交一致�
 
 证据见 [验证汇总](execution-evidence/release-0.6.2/validation.json)、[Profile](execution-evidence/release-0.6.2/profile.txt)及[侧栏联合启动](execution-evidence/release-0.6.2/visualization-sidebar.txt)。本轮未执行完整浏览器侧栏交互巡检；客户端可见性、取消、卸载与顶栏回退由 UI 测试覆盖。本轮不调用外部模型、不重跑历史性能实验。
 
-GitHub 托管 CI、GitHub Release 与 npm 发布结果待完成后追加。
+## 最终发布结果
+
+**0.6.2 已发布到 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.2) 和 [npm](https://www.npmjs.com/package/dsh-atn/v/0.6.2)，npm `latest` 已指向 0.6.2。** main、工作分支与标签的发布源码提交为 `0b58fb7bc50d47dc56c3426718fa3942c0e13229`；后续提交仅补充发布记录与验证证据。
+
+[main CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/39056144809)、[工作分支 CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/39056144719) 与[标签 CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/39056172432) 各六个 job 全部通过，共 18 个。Ubuntu / Windows 均为 606 项 runtime 通过、1 项本机私有归档按既有规则跳过、17 项 UI 通过；跳过项不计为托管环境重放通过。[托管 CI 明细](execution-evidence/release-0.6.2/hosted-ci.json)与[测试计数](execution-evidence/release-0.6.2/hosted-test-counts.json)。
+
+npm 的登录与本次发布二次验证由维护者完成。服务接受后进入短暂后台处理，随后版本与 `latest` 均可查询。npm SHA-512 integrity 与本地 tarball 一致，GitHub Release 附件 SHA-256 同样一致；三者为同一产物。发布包 SHA-256：`c83946b16ee4cedc0481fc65dcad25e3d27320b223a755731e1a00fa92d02794`。[发布元数据及完整性](execution-evidence/release-0.6.2/published.json)。
+
+最后以 `ATN_INSTALL_SPEC=dsh-atn@0.6.2` 从 npm 注册表安装到全新 rc.2 Profile，八工具、子节点 preset 继承、substrate 读写和 190 条既有配置保持等断言全部通过，零外部模型调用。[正式版注册表安装结果](execution-evidence/release-0.6.2/npm-registry-profile.txt)。

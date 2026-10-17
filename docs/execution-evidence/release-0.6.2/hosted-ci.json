@@ -1,0 +1,119 @@
+[
+  {
+    "id": 39056144809,
+    "branch": "main",
+    "commit": "0b58fb7bc50d47dc56c3426718fa3942c0e13229",
+    "conclusion": "success",
+    "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/39056144809",
+    "jobs": [
+      {
+        "id": 117464402349,
+        "name": "sidebar-contract (windows-latest, published)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402473,
+        "name": "verify (ubuntu-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402505,
+        "name": "sidebar-contract (windows-latest, upstream)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402531,
+        "name": "sidebar-contract (ubuntu-latest, upstream)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402544,
+        "name": "verify (windows-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402551,
+        "name": "sidebar-contract (ubuntu-latest, published)",
+        "conclusion": "success"
+      }
+    ]
+  },
+  {
+    "id": 39056144719,
+    "branch": "codex/release-ready",
+    "commit": "0b58fb7bc50d47dc56c3426718fa3942c0e13229",
+    "conclusion": "success",
+    "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/39056144719",
+    "jobs": [
+      {
+        "id": 117464402156,
+        "name": "verify (windows-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402343,
+        "name": "sidebar-contract (ubuntu-latest, published)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402348,
+        "name": "sidebar-contract (windows-latest, published)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402371,
+        "name": "sidebar-contract (ubuntu-latest, upstream)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402372,
+        "name": "sidebar-contract (windows-latest, upstream)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464402401,
+        "name": "verify (ubuntu-latest)",
+        "conclusion": "success"
+      }
+    ]
+  },
+  {
+    "id": 39056172432,
+    "branch": "v0.6.2",
+    "commit": "0b58fb7bc50d47dc56c3426718fa3942c0e13229",
+    "conclusion": "success",
+    "url": "https://github.com/ff66ccff/dsh-ATN/actions/runs/39056172432",
+    "jobs": [
+      {
+        "id": 117464480895,
+        "name": "verify (windows-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464480974,
+        "name": "sidebar-contract (ubuntu-latest, upstream)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464481009,
+        "name": "sidebar-contract (ubuntu-latest, published)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464481050,
+        "name": "sidebar-contract (windows-latest, published)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464481080,
+        "name": "verify (ubuntu-latest)",
+        "conclusion": "success"
+      },
+      {
+        "id": 117464481840,
+        "name": "sidebar-contract (windows-latest, upstream)",
+        "conclusion": "success"
+      }
+    ]
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "version": "0.6.2",
+  "latest": "0.6.2",
+  "integrity": "sha512-OZ/+HQExFNhMrNmIcc4GzH+0z+2X18QxfWo4l/i+If0c0FJOv/PFqtNVImtu0/LSGQGwgPgmdJU569Ufpj74/g==",
+  "shasum": "f3da0ba4feca4a53848aac99962f8fb15ab404de",
+  "sha256": "c83946b16ee4cedc0481fc65dcad25e3d27320b223a755731e1a00fa92d02794",
+  "npmUrl": "https://www.npmjs.com/package/dsh-atn/v/0.6.2",
+  "gitHubRelease": "https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.2",
+  "releaseId": 415974710,
+  "draft": false,
+  "sourceCommit": "0b58fb7bc50d47dc56c3426718fa3942c0e13229"
+}

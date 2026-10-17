@@ -1,0 +1,65 @@
+
+> dsh-atn@0.6.2 smoke:profile
+> node --import tsx/esm tests/smoke/profile-smoke.ts
+
+profile smoke: home=D:\PersonalFile\Temp\dsh-atn-profile-sdbdDY installSpec=dsh-atn@0.6.2
+  $ --profile atn-smoke-base --from-default-profile web --dump-config
+  $ --profile atn-smoke-atn --from-default-profile web --dump-config
+  $ --profile atn-smoke-base --dump-config
+  $ plugin --profile atn-smoke-atn add dsh-atn@0.6.2
+  $ --profile atn-smoke-atn --dump-config
+  $ --profile atn-smoke-atn --patch D:\PersonalFile\Temp\dsh-atn-profile-sdbdDY\preset-smoke.patch.yml --no-open --port 0
+{
+  "installSpec": "dsh-atn@0.6.2",
+  "home": "D:\\PersonalFile\\Temp\\dsh-atn-profile-sdbdDY",
+  "steps": [
+    {
+      "step": "PROFILE-01 init base profile",
+      "command": "dsh --profile atn-smoke-base --from-default-profile web --dump-config",
+      "exitCode": 0,
+      "detail": "initialized isolated Web profile"
+    },
+    {
+      "step": "PROFILE-01 init target profile",
+      "command": "dsh --profile atn-smoke-atn --from-default-profile web --dump-config",
+      "exitCode": 0,
+      "detail": "initialized isolated Web profile"
+    },
+    {
+      "step": "PROFILE-01 install package",
+      "command": "dsh plugin --profile atn-smoke-atn add dsh-atn@0.6.2",
+      "exitCode": 0,
+      "detail": "Added 1 entry to minimumReleaseAgeExclude in pnpm-workspace.yaml (set minimumReleaseAgeStrict to true to gate these updates with a prompt): |   dsh-atn@0.6.2 | Done in 2.1s using pnpm v11.21.0"
+    },
+    {
+      "step": "PROFILE-01 bundle list",
+      "command": "read profile manifest",
+      "exitCode": 0,
+      "detail": "@deepseek-ai/dsh-base, @deepseek-ai/dsh-web-app, dsh-atn"
+    },
+    {
+      "step": "PROFILE-02 loader composes the bundle layer",
+      "command": "dsh --profile atn-smoke-atn --dump-config",
+      "exitCode": 0,
+      "detail": "host runtime and standalone ATN preset are present"
+    },
+    {
+      "step": "PROFILE-04 bundle does not override existing rows",
+      "command": "diff of --dump-config with and without the bundle",
+      "exitCode": 0,
+      "detail": "190 complete pre-existing rows unchanged; only ATN runtime and preset added"
+    },
+    {
+      "step": "PRESET Web roster, scoped model requests and child creation (partial PROFILE-03)",
+      "command": "dsh --profile atn-smoke-atn --patch <observer> --no-open --port 0",
+      "exitCode": 0,
+      "detail": "ATN_PRESET_SMOKE {\"presets\":[{\"id\":\"standard\",\"isDefault\":true},{\"id\":\"ptc\",\"isDefault\":false},{\"id\":\"minimal\",\"isDefault\":false},{\"id\":\"cordis\",\"isDefault\":false},{\"id\":\"atn\",\"name\":\"ATN\",\"isDefault\":false}],\"tools\":[\"ask_user_question\",\"atn_finish\",\"atn_publish\",\"atn_search\",\"atn_send\",\"atn_spawn\",\"atn_start\",\"atn_status\",\"atn_visit\",\"edit\",\"glob\",\"grep\",\"present\",\"pwsh\",\"read\",\"read_image\",\"skill\",\"todo_write\",\"web_fetch\",\"web_search\",\"working_directory\",\"write\"],\"childPreset\":\"atn\",\"nodes\":2,\"substratePublished\":1,\"substrateReads\":2}"
+    },
+    {
+      "step": "PROFILE-04 user patch untouched",
+      "command": "read profile cordis.patch.yml",
+      "exitCode": 0,
+      "detail": "unchanged"
+    }
+  ]
+}
