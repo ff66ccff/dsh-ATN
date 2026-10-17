@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.2 — 2026-10-18
+
+- 对齐本地 upstream DeepSeek Harness `0.2.1-rc.2`，全部宿主 peer/dev 依赖、实验 provider overrides 与 `engines.dsh` 同步更新，重新正常解析锁文件。
+- 复核 rc.2 的搜索/抓取 API、设置和模型标签变更；ATN 消费的运行接口与 Better Sidebar `0.28.0` Tab API 保持兼容。
+- 保留 Better Sidebar `0.28.0` 可选 peer 与固定 upstream CI 目标，重新验证声明、实际注册生命周期和 rc.2 Web Profile 联合启动。
+- 更新版本号、安装示例、现行兼容说明与文档索引。八工具协议与保管、观察授权行为保持。
+- 修正知识反馈集成测试的收据等待：测量反馈副作用前显式完成既有消息收据，避免 Windows 慢文件系统造成偶发误报。
+
+验证与发布状态见 [0.6.2 发布记录](docs/RELEASE_0_6_2.md)。
+
 ## 0.6.1 — 2026-10-17
 
 - 对齐 upstream DeepSeek Harness `0.2.1-rc.1`，全部宿主依赖、实验 provider overrides 与 `engines.dsh` 同步更新。

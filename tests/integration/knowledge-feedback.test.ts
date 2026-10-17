@@ -46,6 +46,12 @@ async function submit(kernel: Kernel, networkId: string, worker: SpawnResult & {
     body: summary, summary,
   })
   await settle(kernel)
+  // Agent idleness can precede durable receipt settlement on slow filesystems.
+  await kernel.atn.tick()
+  await settle(kernel)
+  const delivered = await kernel.atn.network(networkId)
+  assert.ok(Object.values(delivered.mails).every(mail => mail.status !== 'queued'),
+    'settle existing receipts before measuring feedback side effects')
   return task.id
 }
 

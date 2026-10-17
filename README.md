@@ -7,12 +7,12 @@
 
 **面向高安全、多租户与严格合规场景打造的 DeepSeek Harness 智能体拓扑治理与零信任数据边界基础设施。**
 
-[![Version](https://img.shields.io/badge/version-0.6.1-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.6.2-blue.svg)](package.json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-624%20passed-brightgreen.svg)](tests/)
 [![Zero-Paid-Calls](https://img.shields.io/badge/test%20cost-$0.00-success.svg)](tests/)
 [![Empirical Grounding](https://img.shields.io/badge/empirical-11%20rounds%20archived-orange.svg)](docs/)
-[![Harness Compatibility](https://img.shields.io/badge/dsh-0.2.1--rc.1-purple.svg)](package.json)
+[![Harness Compatibility](https://img.shields.io/badge/dsh-0.2.1--rc.2-purple.svg)](package.json)
 
 [核心优势](#-核心产品优势) • [为什么选择 ATN](#-为什么选择-dsh-atn) • [安全责任模型](#-零信任安全责任共担模型) • [实测数据背书](#-严谨实测背书-显著节省调用开销) • [快速上手](#-快速上手) • [文档中心](docs/README.md)
 
@@ -159,16 +159,18 @@ ATN 提供清晰、紧凑的模型交互工具集（默认启用 8 个核心工�
 
 ### 环境要求
 - **Node.js** >= 24
-- **DeepSeek Harness** `0.2.1-rc.1`（`engines.dsh` 精确适配）
+- **DeepSeek Harness** `0.2.1-rc.2`（`engines.dsh` 精确适配）
 - **Cordis** 4.0.5
+
+已验证组合为 Harness `0.2.1-rc.2` + 可选 Better Sidebar `0.28.0`。Harness `0.2.1-rc.1` 用户请使用 ATN `0.6.1`；本版本精确声明 rc.2 宿主依赖。升级范围及验证结果见 [0.6.2 发布记录](docs/RELEASE_0_6_2.md)。
 
 ### 1. 极简安装
 
-推荐使用已发布的 **0.6.1** 稳定版本（亦可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.1) 获取预构建 tarball）：
+推荐使用已发布的 **0.6.2** 稳定版本（亦可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.2) 获取预构建 tarball）：
 
 ```bash
 # 1. 一键安装 ATN 插件至 Web Profile
-dsh plugin --profile web add dsh-atn@0.6.1
+dsh plugin --profile web add dsh-atn@0.6.2
 
 # 2. 可选：安装无缝协同的原生侧边栏组件
 dsh plugin --profile web add dsh-better-sidebar@0.28.0
@@ -182,7 +184,7 @@ dsh --profile web --dump-config
 git clone https://github.com/ff66ccff/dsh-ATN.git
 cd dsh-ATN && npm ci
 npm run build && npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.1.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.2.tgz
 ```
 
 ### 2. 宿主数据保管策略配置（3 分钟极速接入）
@@ -300,7 +302,7 @@ dsh-ATN 坚决不堆砌虚幻的玩法，而是**沿着确定性的企业信任�
 - 🔑 [**观察读取授权规范**](docs/OBSERVER_READ_AUTHORIZATION.md)：查看 Gateway 观察授权与读取范围定义。
 - 🧪 [**第 11 轮五臂等预算评测报告**](docs/EQUAL_BUDGET_BENCHMARK_IMPLEMENTATION_REPORT_V3.md)：查阅 70 次真实运行的原始统计数据与分析。
 - 📦 [**Substrate 协调层设计与实施报告**](docs/SUBSTRATE_COORDINATION_INTEGRATION_IMPLEMENTATION_REPORT.md)：查看共享底座架构契约与实现细节。
-- 📋 [**声明审计报告**](docs/DECLARATION_AUDIT.md) 与 [**0.6.1 版本发布记录**](docs/RELEASE_0_6_1.md)：查看完整的工程依赖与适配说明。
+- 📋 [**声明审计报告**](docs/DECLARATION_AUDIT.md) 与 [**0.6.2 版本发布记录**](docs/RELEASE_0_6_2.md)：查看完整的工程依赖与适配说明。
 
 ---
 

@@ -1,0 +1,271 @@
+{
+  "base": "1600d8a1e140dcde43a1a0941940a0480712c011",
+  "head": "687f282e8625c6b8d11ff58211a90524be2e4317",
+  "changedFileCount": 456,
+  "consumedPackages": [
+    {
+      "name": "@deepseek-ai/dsh-api-gateway",
+      "path": "packages/api/gateway/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-api-remote-access",
+      "path": "packages/api/remote-access/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-api-session-controller",
+      "path": "packages/api/session-controller/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-attachment",
+      "path": "packages/attachment/attachment/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-connection",
+      "path": "packages/client/connection/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-locale",
+      "path": "packages/client/locale/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-store",
+      "path": "packages/client/store/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-conversation",
+      "path": "packages/client/ui-conversation/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-primitives",
+      "path": "packages/client/ui-primitives/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-renderer",
+      "path": "packages/client/ui-renderer/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-session",
+      "path": "packages/client/ui-session/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-slots",
+      "path": "packages/client/ui-slots/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-loop",
+      "path": "packages/core/agent-loop/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent",
+      "path": "packages/core/agent/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-scope",
+      "path": "packages/core/scope/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session",
+      "path": "packages/core/session/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-system-prompt",
+      "path": "packages/core/system-prompt/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-tools",
+      "path": "packages/core/tools/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-credentials",
+      "path": "packages/credentials/credentials/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-experimental-agent-team",
+      "path": "packages/experimental/agent-team/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-experimental-tool-agent-team",
+      "path": "packages/experimental/tool-agent-team/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-fs-local",
+      "path": "packages/fs/fs-local/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-fs",
+      "path": "packages/fs/fs/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-llm",
+      "path": "packages/llm/llm/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-preset-registry",
+      "path": "packages/preset/agent-preset-registry/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-preset",
+      "path": "packages/preset/agent-preset/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": [
+        "packages/preset/agent-preset/skills/cordis-composition-reference/references/packages.md"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-query",
+      "path": "packages/session-query/session-query/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-persistence-jsonl",
+      "path": "packages/session/session-persistence-jsonl/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-projection",
+      "path": "packages/session/session-projection/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-working-directory",
+      "path": "packages/session/working-directory/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-settings",
+      "path": "packages/settings/settings/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage-domain",
+      "path": "packages/storage/storage-domain/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage-json",
+      "path": "packages/storage/storage-json/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage",
+      "path": "packages/storage/storage/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent-fork-in-process",
+      "path": "packages/subagent/subagent-fork-in-process/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent-spawn-in-process",
+      "path": "packages/subagent/subagent-spawn-in-process/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent",
+      "path": "packages/subagent/subagent/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-typert-protocol",
+      "path": "packages/typert/protocol/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-typert-registry",
+      "path": "packages/typert/registry/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-brand",
+      "path": "packages/util/brand/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-launch-environment",
+      "path": "packages/util/launch-environment/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-timeout",
+      "path": "packages/util/timeout/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-util-values",
+      "path": "packages/util/values/package.json",
+      "version": "0.2.1-rc.2",
+      "changedFiles": []
+    }
+  ],
+  "sidebar": {
+    "head": "83faf70940160e5cd4c5332f5400aa8f4dbbb6d6",
+    "version": "0.28.0"
+  }
+}

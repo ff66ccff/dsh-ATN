@@ -1,0 +1,16 @@
+✔ KNOWLEDGE-01: removed publication cannot forge custody; feedback derives live caller identity (802.6764ms)
+✔ KNOWLEDGE-02: identical assignments become discoverable and requester quality breaks relevance ties (934.7753ms)
+✔ KNOWLEDGE-03: concurrent local updates do not lose writes or wake peers and survive cold recovery (824.9011ms)
+✔ KNOWLEDGE-04: automatic local samples feed both requester and stronger host evaluation (936.3992ms)
+✔ RECOVERY-EDGE-01: genuinely new edges become measurable after two ratings and survive restart (1509.6306ms)
+✔ RECOVERY-EDGE-02: unused feedback and unused new edges have distinct reasons without positive claims (518.3527ms)
+✔ RECOVERY-DISCOVERY: host custody is discoverable without a board; new host assignments replace the index (389.2257ms)
+✔ RECOVERY-STATUS: competing optional writes are refused before either can mutate (435.0297ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6951.7409

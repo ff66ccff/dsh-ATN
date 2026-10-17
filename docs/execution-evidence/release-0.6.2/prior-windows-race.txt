@@ -1,0 +1,47 @@
+2026-10-17T07:29:36.5823421Z ✖ failing tests:
+2026-10-17T07:29:36.5824074Z
+2026-10-17T07:29:36.5824534Z test at tests\integration\knowledge-feedback.test.ts:1:4743
+2026-10-17T07:29:36.5825875Z ✖ KNOWLEDGE-02: identical assignments become discoverable and requester quality breaks relevance ties (1347.9534ms)
+2026-10-17T07:29:36.5826959Z   AssertionError [ERR_ASSERTION]: feedback creates no protocol messages
+2026-10-17T07:29:36.5827706Z   + actual - expected
+2026-10-17T07:29:36.5828465Z   ... Skipped lines
+2026-10-17T07:29:36.5828968Z
+2026-10-17T07:29:36.5829365Z     {
+2026-10-17T07:29:36.5829821Z       'mail-10': {
+2026-10-17T07:29:36.5830282Z         body: 'Local result submitted.',
+2026-10-17T07:29:36.5830793Z         enqueuedAt: 1000000,
+2026-10-17T07:29:36.5831342Z         fromId: 'node-3',
+2026-10-17T07:29:36.5831768Z   ...
+2026-10-17T07:29:36.5832146Z         proposalId: null,
+2026-10-17T07:29:36.5832638Z   +     settledAt: 1000000,
+2026-10-17T07:29:36.5833065Z   +     status: 'delivered',
+2026-10-17T07:29:36.5833521Z   -     settledAt: null,
+2026-10-17T07:29:36.5834022Z   -     status: 'queued',
+2026-10-17T07:29:36.5834485Z         taskId: 'task-4',
+2026-10-17T07:29:36.5834927Z         toId: 'node-1'
+2026-10-17T07:29:36.5835425Z       },
+2026-10-17T07:29:36.5835788Z       'mail-11': {
+2026-10-17T07:29:36.5836206Z         body: 'Local result submitted.',
+2026-10-17T07:29:36.5836711Z   ...
+2026-10-17T07:29:36.5837080Z         proposalId: null,
+2026-10-17T07:29:36.5837530Z   +     settledAt: 1000000,
+2026-10-17T07:29:36.5837992Z   +     status: 'delivered',
+2026-10-17T07:29:36.5838464Z   -     settledAt: null,
+2026-10-17T07:29:36.5838917Z   -     status: 'queued',
+2026-10-17T07:29:36.5839368Z         taskId: 'task-7',
+2026-10-17T07:29:36.5839844Z         toId: 'node-6'
+2026-10-17T07:29:36.5840240Z       }
+2026-10-17T07:29:36.5840576Z     }
+2026-10-17T07:29:36.5840988Z
+2026-10-17T07:29:36.5841690Z       at <anonymous> (D:\a\dsh-ATN\dsh-ATN\tests\integration\knowledge-feedback.test.ts:136:12)
+2026-10-17T07:29:36.5842778Z       at async withKernel (D:\a\dsh-ATN\dsh-ATN\tests\integration\knowledge-feedback.test.ts:24:9)
+2026-10-17T07:29:36.5844245Z       at async TestContext.<anonymous> (D:\a\dsh-ATN\dsh-ATN\tests\integration\knowledge-feedback.test.ts:108:3)
+2026-10-17T07:29:36.5845206Z       at async Test.run (node:internal/test_runner/test:1409:7)
+2026-10-17T07:29:36.5846018Z       at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+2026-10-17T07:29:36.5846756Z     generatedMessage: false,
+2026-10-17T07:29:36.5847230Z     code: 'ERR_ASSERTION',
+2026-10-17T07:29:36.5858519Z     actual: { 'mail-5': { id: 'mail-5', fromId: 'node-1', toId: 'node-3', kind: 'task', taskId: 'task-4', proposalId: null, body: '[ATN task] network=atn-c4d07bc0-be5a-471f-b0f7-823f26cc27f1 task=task-4 goalVersion=1 holder=node-3 requester=node-1\nYou are node node-3. Use atn_status to discover collaborators and its rewire option to adjust your links.\nContribute to the shared objective using your local evidence.\nSettle it with atn_send to=node-1 kind=result taskId=task-4 outcome=completed|failed and concrete evidence, even if your links change. Use outcome=failed when the work fails; describing failure in the body alone does not set the outcome.\ncompleted records your submission; only independent host acceptance makes it a verified result. Inspect acceptance with atn_status.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null }, 'mail-8': { id: 'mail-8', fromId: 'node-1', toId: 'node-6', kind: 'task', taskId: 'task-7', proposalId: null, body: '[ATN task] network=atn-c4d07bc0-be5a-471f-b0f7-823f26cc27f1 task=task-7 goalVersion=1 holder=node-6 requester=node-1\nYou are node node-6. Use atn_status to discover collaborators and its rewire option to adjust your links.\nContribute to the shared objective using your local evidence.\nSettle it with atn_send to=node-1 kind=result taskId=task-7 outcome=completed|failed and concrete evidence, even if your links change. Use outcome=failed when the work fails; describing failure in the body alone does not set the outcome.\ncompleted records your submission; only independent host acceptance makes it a verified result. Inspect acceptance with atn_status.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null }, 'mail-10': { id: 'mail-10', fromId: 'node-3', toId: 'node-1', kind: 'result', taskId: 'task-4', proposalId: null, body: 'Local result submitted.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null }, 'mail-11': { id: 'mail-11', fromId: 'node-6', toId: 'node-1', kind: 'result', taskId: 'task-7', proposalId: null, body: 'Local result submitted.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null } },
+2026-10-17T07:29:36.5881454Z     expected: { 'mail-5': { id: 'mail-5', fromId: 'node-1', toId: 'node-3', kind: 'task', taskId: 'task-4', proposalId: null, body: '[ATN task] network=atn-c4d07bc0-be5a-471f-b0f7-823f26cc27f1 task=task-4 goalVersion=1 holder=node-3 requester=node-1\nYou are node node-3. Use atn_status to discover collaborators and its rewire option to adjust your links.\nContribute to the shared objective using your local evidence.\nSettle it with atn_send to=node-1 kind=result taskId=task-4 outcome=completed|failed and concrete evidence, even if your links change. Use outcome=failed when the work fails; describing failure in the body alone does not set the outcome.\ncompleted records your submission; only independent host acceptance makes it a verified result. Inspect acceptance with atn_status.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null }, 'mail-8': { id: 'mail-8', fromId: 'node-1', toId: 'node-6', kind: 'task', taskId: 'task-7', proposalId: null, body: '[ATN task] network=atn-c4d07bc0-be5a-471f-b0f7-823f26cc27f1 task=task-7 goalVersion=1 holder=node-6 requester=node-1\nYou are node node-6. Use atn_status to discover collaborators and its rewire option to adjust your links.\nContribute to the shared objective using your local evidence.\nSettle it with atn_send to=node-1 kind=result taskId=task-7 outcome=completed|failed and concrete evidence, even if your links change. Use outcome=failed when the work fails; describing failure in the body alone does not set the outcome.\ncompleted records your submission; only independent host acceptance makes it a verified result. Inspect acceptance with atn_status.', status: 'queued', enqueuedAt: 1000000, settledAt: null, note: null }, 'mail-10': { id: 'mail-10', fromId: 'node-3', toId: 'node-1', kind: 'result', taskId: 'task-4', proposalId: null, body: 'Local result submitted.', status: 'queued', enqueuedAt: 1000000, settledAt: null, note: null }, 'mail-11': { id: 'mail-11', fromId: 'node-6', toId: 'node-1', kind: 'result', taskId: 'task-7', proposalId: null, body: 'Local result submitted.', status: 'delivered', enqueuedAt: 1000000, settledAt: 1000000, note: null } },
+2026-10-17T07:29:36.5888248Z     operator: 'deepStrictEqual',
+2026-10-17T07:29:36.5888746Z     diff: 'simple'
+2026-10-17T07:29:36.5889058Z   }

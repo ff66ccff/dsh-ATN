@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-18",
+  "version": "0.6.2",
+  "harness": "0.2.1-rc.2",
+  "sidebar": "0.28.0",
+  "checks": {
+    "normalLockResolution": true,
+    "npmCi": true,
+    "prepublishOnly": {
+      "exitCode": 0,
+      "runtime": {
+        "passed": 607,
+        "failed": 0,
+        "skipped": 0
+      },
+      "client": {
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "sidebarPublished": true,
+    "sidebarUpstream": true,
+    "profile": true,
+    "visualizationWithSidebar": true,
+    "slowFilesystemKnowledgeTests": {
+      "passed": 8,
+      "failed": 0
+    }
+  },
+  "fixedContextBytes": {
+    "enabled": 7956,
+    "disabled": 5910
+  },
+  "externalModelCalls": 0,
+  "browserFullSidebarInteraction": "not-run",
+  "hostedCI": "pending",
+  "githubRelease": "pending",
+  "npm": "pending"
+}

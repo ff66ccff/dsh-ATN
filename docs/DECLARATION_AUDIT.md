@@ -92,3 +92,7 @@ V2 最终复核：606 runtime/集成 + 17 UI，0 fail/skip；九项命令全 exi
 ## 2026-10-17：0.6.1 上游 RC 适配
 
 现行宿主版本更新为 Harness `0.2.1-rc.1`、Cordis `4.0.5`、schemastery `3.18.5`，可选 Better Sidebar 为 `0.28.0`；全部宿主 overrides 同步。主 README、CHANGELOG、文档索引和 CI 目标一并更新，历史报告不改写。侧栏上游现通过 `connection.requestRejection` 执行宿主准入，旧 `webRuntime` 阻塞仅适用于历史版本；具体检查范围和结果以 [0.6.1 发布记录](RELEASE_0_6_1.md)为准。
+
+## 2026-10-18：0.6.2 上游 RC.2 适配
+
+现行宿主版本更新为 Harness `0.2.1-rc.2`，全部直接宿主依赖及 overrides 同步，锁文件重新解析。Better Sidebar 本地 upstream 仍为 `0.28.0`，其 optional peer 与 CI 固定提交保持。ATN 消费的运行接口没有变化，上游 Web provider 设置变化无需 ATN 代码迁移。主 README、CHANGELOG 与索引更新；历史实验和发布记录保留原基线。本次验证及发布结果以 [0.6.2 发布记录](RELEASE_0_6_2.md)为准。

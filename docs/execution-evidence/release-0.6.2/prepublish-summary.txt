@@ -1,0 +1,21 @@
+> dsh-atn@0.6.2 prepublishOnly
+> npm run typecheck && npm test && npm run build
+> dsh-atn@0.6.2 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client-test.json
+> dsh-atn@0.6.2 test
+> node --import tsx/esm --test "tests/**/*.test.ts" && npm run test:client
+ℹ tests 607
+ℹ pass 607
+ℹ fail 0
+ℹ skipped 0
+ℹ duration_ms 45018.543
+> dsh-atn@0.6.2 test:client
+> node scripts/test-client.mjs
+ℹ tests 17
+ℹ pass 17
+ℹ fail 0
+ℹ skipped 0
+ℹ duration_ms 7367.5036
+> dsh-atn@0.6.2 build
+> node scripts/clean-build.mjs && tsc -p tsconfig.build.json && node scripts/build-client.mjs
+Done in 44ms
