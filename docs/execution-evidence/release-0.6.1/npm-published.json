@@ -1,0 +1,30 @@
+{
+  "version": "0.6.1",
+  "dist": {
+    "shasum": "4752f4dfd5382fa9fc186a9481ac6f1874d845b4",
+    "tarball": "https://registry.npmjs.org/dsh-atn/-/dsh-atn-0.6.1.tgz",
+    "fileCount": 133,
+    "integrity": "sha512-lXG+6ooypaJ1qnwdHtQrCyrVzN5O54Wj3KiD5hPegLPAXsbpWEl4eT1HZc7TYe97/jrYsKyyI7IGJWeuevj0WA==",
+    "signatures": [
+      {
+        "sig": "MEQCIBiaql6elY5J9hjjoSd3nwNn6e9W3Hg63p0ZxaJ/5NuEAiApaevMowwrrxTnFIzgKna7sC8VerPRF3vBx5wa1xESkA==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEQCICiXDbgHYphcTYh+YCEPybRb0fFH5Lx+WShCsqD7RfwaAiAaQr9ss1EMMb1cY546M94EjMua99OtSokGzWrwl0DGpw=="
+      }
+    ],
+    "unpackedSize": 1349117
+  },
+  "dist-tags": {
+    "next": "0.3.1",
+    "latest": "0.6.1"
+  },
+  "verified": {
+    "sha256": "3040c7310848c517cb639b67d673df861917391624b34749e4ae4d5537fc20ef",
+    "sha512IntegrityMatches": true,
+    "gitHubAttachmentMatches": true,
+    "githubRelease": "https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.1"
+  }
+}
