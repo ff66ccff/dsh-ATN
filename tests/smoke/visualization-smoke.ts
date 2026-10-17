@@ -65,12 +65,17 @@ async function dsh(home: string, args: string[], live = false): Promise<string> 
 async function main(): Promise<void> {
   if (!existsSync(CLI)) throw new Error(`DSH_CLI not found: ${CLI}`)
   if (!existsSync(TARBALL)) throw new Error('Build and pack the package before running visualization smoke')
+  const sidebarSpec = process.env.ATN_SIDEBAR_SPEC
+  if (sidebarSpec !== undefined && !/^dsh-better-sidebar@\d+\.\d+\.\d+$/.test(sidebarSpec)) {
+    throw new Error('ATN_SIDEBAR_SPEC must be an exact dsh-better-sidebar version')
+  }
   const home = await mkdtemp(join(tmpdir(), 'dsh-atn-visualization-'))
   console.log(`visualization smoke: isolated home=${home}`)
   try {
     const profile = 'atn-visualization'
     await dsh(home, ['--profile', profile, '--from-default-profile', 'web', '--dump-config'])
     await dsh(home, ['plugin', '--profile', profile, 'add', TARBALL])
+    if (sidebarSpec !== undefined) await dsh(home, ['plugin', '--profile', profile, 'add', sidebarSpec])
     const observer = join(home, 'profiles', profile, 'visualization-observer.mjs')
     await copyFile(new URL('./visualization-observer.mjs', import.meta.url), observer)
     const overlay = join(home, 'visualization.patch.yml')

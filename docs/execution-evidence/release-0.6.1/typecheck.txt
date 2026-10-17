@@ -1,0 +1,4 @@
+
+> dsh-atn@0.6.1 typecheck
+> tsc -p tsconfig.json --noEmit && tsc -p tsconfig.client-test.json
+

@@ -19,7 +19,7 @@ V2 的 [拒绝日志设计稿](docs/REFUSAL_LOG_DESIGN.md)仅为后续存储与�
 
 面向高安全、多租户与严格合规场景打造的智能体间拓扑隔离与可控协作基础设施。
 
-[![Version](https://img.shields.io/badge/version-0.6.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.6.1-blue.svg)](package.json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
 [![Tests](https://img.shields.io/badge/tests-624%20passed-brightgreen.svg)](tests/)
 [![Zero-Paid-Calls](https://img.shields.io/badge/test%20cost-$0.00-success.svg)](tests/)
@@ -109,7 +109,7 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 - **节点状态与配额**：展示当前负载、工具、剩余步数/连接额度。历史统计仅为快照窗口内的提交/结算数，不等于验收率；遗留任务候选是否可认领由 `atn_status` 确认。
 - **只读观察**：复用认证 RPC 与严格 schema，可见时串行读取，隐藏/切会话/切预设/卸载取消；不写网络、不唤醒模型、不产生模型 token，仍有普通 RPC 处理开销。
 
-截图由真实展示组件与确定性示例数据生成。可选 peer 范围为 `dsh-better-sidebar@0.26.1 || 0.27.0`：0.26.1 验证 npm 发布包，0.27.0 验证上游提交 `9cb0b9c56dfad2fa64b979f3a044e225110a4860` 的源码（截至 2026-10-17 尚未发布 npm）。两者的客户端 Tab API 与真实注册服务均纳入验证。两个版本的 host 插件仍依赖 Harness alpha.5 已移除的 `webRuntime`，完整 provider 联合启动仍待上游适配；可以直接使用 ATN 顶栏入口。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。详见 [0.6.0 适配与发布记录](docs/RELEASE_0_6_0.md)。
+截图由真实展示组件与确定性示例数据生成。可选 peer 为 `dsh-better-sidebar@0.28.0`，对应上游提交 `83faf70940160e5cd4c5332f5400aa8f4dbbb6d6`；检查 npm 发布包与上游源码的 Tab API 及实际注册服务。该版本通过宿主 `connection` 服务执行请求准入，替换旧版 `webRuntime` 依赖。未安装侧栏时可直接使用 ATN 顶栏入口。非 ATN 会话不渲染/取数，provider 的全局菜单条目会禁用。验证范围见 [0.6.1 适配与发布记录](docs/RELEASE_0_6_1.md)。
 
 ---
 
@@ -134,29 +134,32 @@ dsh-ATN 不迎合虚浮的“通用协同”幻想，而是精准解决对**可�
 
 ### 环境要求
 - Node.js >= 24
-- DeepSeek Harness **0.2.1-alpha.5**（`engines.dsh` 精确限定此实测版本）
-- Cordis 4.0.5-alpha.2（目标 Harness 实际依赖）
+- DeepSeek Harness **0.2.1-rc.1**（`engines.dsh` 精确限定此版本）
+- Cordis 4.0.5（目标 Harness 实际依赖）
 
-0.6.0 汇总此前未发版的动态出度、结构化观察、共享 substrate、读取授权、宿主一致性套件及舰队观察，并更新 Harness 与侧栏契约。完整变更见 [CHANGELOG](CHANGELOG.md)，验证范围与已知限制见 [发布记录](docs/RELEASE_0_6_0.md)。历史阶段报告保留当时的版本与测试结果。
+0.6.1 将宿主依赖和实验 provider overrides 对齐 Harness rc.1、Cordis / schemastery 正式版及 Better Sidebar 0.28.0。0.6.0 引入的动态出度、结构化观察、共享 substrate、读取授权、一致性套件与舰队观察继续提供。完整变更见 [CHANGELOG](CHANGELOG.md)，验证范围见 [发布记录](docs/RELEASE_0_6_1.md)。历史阶段报告保留当时的版本与测试结果。
 
 ### 1. npm 安装与发布状态
-安装目标版本为 **0.6.0**，也可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.0) 下载 tarball。升级前请将 Harness 升至 0.2.1-alpha.5，并同步更新 profile 中的宿主包 overrides。
+安装目标版本为 **0.6.1**，也可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.1) 下载 tarball。升级前请将 Harness 升至 **0.2.1-rc.1**，并同步更新 profile 中的宿主包 overrides。请使用精确宿主版本，避免 npm 的 `latest` 仍指向旧宿主；保留 alpha.5 的用户应固定 ATN 0.6.0。
 ```bash
 # 安装已发布版本至 web profile
-dsh plugin --profile web add dsh-atn@0.6.0
+dsh plugin --profile web add dsh-atn@0.6.1
+
+# 可选：安装兼容的原生侧栏
+dsh plugin --profile web add dsh-better-sidebar@0.28.0
 
 # 检查配置中是否包含 atn 扩展
 dsh --profile web --dump-config
 ```
 
-### 2. 从源码构建安装最新版本 (0.6.0)
+### 2. 从源码构建安装最新版本 (0.6.1)
 ```bash
 git clone https://github.com/ff66ccff/dsh-ATN.git
 cd dsh-ATN
 npm ci
 npm run build
 npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.0.tgz
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.1.tgz
 ```
 
 ### 3. 配置宿主保管策略（最小接入示例）
@@ -281,7 +284,7 @@ node --import tsx/esm examples/information-boundary.ts
 npm install              # 安装依赖
 npm run typecheck        # 严格 TypeScript 类型检查
 npm test                 # 执行全量 550+ 项测试（零真实 API 消耗，毫秒级自愈验证）
-npm run verify:sidebar   # SIDEBAR_PACKAGE_DIR 指向独立安装的 0.26.1 或 0.27.0 源码目录
+npm run verify:sidebar   # SIDEBAR_PACKAGE_DIR 指向 0.28.0 发布包或上游源码目录
 npm run build            # 构建生产分发产物
 npm run pack:tarball     # 打包 tgz 安装包
 npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测

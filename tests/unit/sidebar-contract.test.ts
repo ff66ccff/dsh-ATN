@@ -11,7 +11,7 @@ test('SIDEBAR-PACKAGE: provider is an optional peer with no installation or runt
   const verifiedRange = execFileSync(process.execPath, ['--input-type=module', '-e',
     "import { VERIFIED_SIDEBAR_RANGE } from './scripts/sidebar-compatibility.mjs'; console.log(VERIFIED_SIDEBAR_RANGE)"],
   { cwd: new URL('../../', import.meta.url), encoding: 'utf8' }).trim()
-  assert.equal(verifiedRange, '0.26.1 || 0.27.0')
+  assert.equal(verifiedRange, '0.28.0')
   assert.equal(manifest.peerDependencies['dsh-better-sidebar'], verifiedRange)
   const lock = JSON.parse(readFileSync(new URL('../../package-lock.json', import.meta.url), 'utf8')).packages['']
   assert.equal(lock.peerDependencies['dsh-better-sidebar'], verifiedRange)
@@ -39,7 +39,7 @@ test('SIDEBAR-SOURCE: source-only compatibility rejects drift and unreviewed rel
   }`
   try {
     mkdirSync(join(provider, 'src/client'), { recursive: true })
-    writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.27.0' }))
+    writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.28.0' }))
     writeFileSync(join(provider, 'src/client/service.ts'), service)
     const check = () => spawnSync(process.execPath, ['scripts/verify-sidebar-contract.mjs'], {
       cwd: new URL('../../', import.meta.url), encoding: 'utf8',
@@ -56,7 +56,7 @@ test('SIDEBAR-SOURCE: source-only compatibility rejects drift and unreviewed rel
     const invalid = check()
     assert.equal(invalid.status, 1)
     assert.match(invalid.stderr, /源码声明编译失败/)
-    writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.27.1' }))
+    writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.28.1' }))
     const future = check()
     assert.equal(future.status, 1)
     assert.match(future.stderr, /未被验证/)

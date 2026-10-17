@@ -88,3 +88,7 @@ V2 阶段 4 公开增量：ATN_FLEET_READER、fleetNetworkResourceId、AtnFleetS
 V2 阶段 5：REFUSAL_LOG_DESIGN 仅设计，无日志代码/存储/端点。B-REFUSAL-LOG 标注“设计未实现”；五字段 JSON Lines、14/16 最终词汇、宿主 ownership、独立未来授权与三种一致性选项均由文档审计锚定。不会把现有易失桶称作合规日志或把未来故障测试称作已通过。
 
 V2 最终复核：606 runtime/集成 + 17 UI，0 fail/skip；九项命令全 exit 0；八工具、7956/5910、domain 1、14 通道、16 码保持。最终源码、测试、套件与 tarball SHA-256 见 execution-evidence/round-v2-final/invariants.json；实现/收窄/未验证范围见 ROUND_V2_IMPLEMENTATION_REPORT。
+
+## 2026-10-17：0.6.1 上游 RC 适配
+
+现行宿主版本更新为 Harness `0.2.1-rc.1`、Cordis `4.0.5`、schemastery `3.18.5`，可选 Better Sidebar 为 `0.28.0`；全部宿主 overrides 同步。主 README、CHANGELOG、文档索引和 CI 目标一并更新，历史报告不改写。侧栏上游现通过 `connection.requestRejection` 执行宿主准入，旧 `webRuntime` 阻塞仅适用于历史版本；具体检查范围和结果以 [0.6.1 发布记录](RELEASE_0_6_1.md)为准。

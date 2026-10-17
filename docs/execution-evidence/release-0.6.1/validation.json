@@ -1,0 +1,58 @@
+{
+  "date": "2026-10-17",
+  "timezone": "Asia/Shanghai",
+  "version": "0.6.1",
+  "targets": {
+    "harness": "0.2.1-rc.1",
+    "harnessCommit": "1600d8a1e140dcde43a1a0941940a0480712c011",
+    "sidebar": "0.28.0",
+    "sidebarCommit": "83faf70940160e5cd4c5332f5400aa8f4dbbb6d6",
+    "cordis": "4.0.5",
+    "schemastery": "3.18.5"
+  },
+  "harnessLockVersions": [
+    "0.2.1-rc.1"
+  ],
+  "local": {
+    "npmCi": true,
+    "typecheck": true,
+    "runtimeTests": {
+      "passed": 607,
+      "failed": 0,
+      "skipped": 0
+    },
+    "uiTests": {
+      "passed": 17,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build": true,
+    "pack": true,
+    "publishedSidebarContract": true,
+    "sourceSidebarContract": true,
+    "profileSmoke": true,
+    "webSidebarSmoke": true,
+    "sidebarAuthenticatedStatus": 200,
+    "sidebarUnauthenticatedStatus": 403,
+    "actionlint": true,
+    "externalModelCalls": 0
+  },
+  "context": {
+    "enabled": {
+      "systemPromptBytes": 1837,
+      "toolSchemaBytes": 6119,
+      "fixedContextBytes": 7956
+    },
+    "disabled": {
+      "systemPromptBytes": 1161,
+      "toolSchemaBytes": 4749,
+      "fixedContextBytes": 5910
+    },
+    "addedToolSchemaBytes": {
+      "atn_publish": 699,
+      "atn_search": 305,
+      "atn_visit": 363
+    }
+  },
+  "scope": "Local release verification; hosted CI and npm publication metadata are recorded separately after completion."
+}

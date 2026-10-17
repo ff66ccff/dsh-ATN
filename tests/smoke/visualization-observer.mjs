@@ -61,6 +61,24 @@ async function run(ctx) {
   assert.match(bundleText, /__ModuleLoader__\.load/, 'browser registration handoff is served')
   assert.match(bundleText, /atnObserver/, 'served bundle contains the observation client')
 
+  if (process.env.ATN_SIDEBAR_SPEC !== undefined) {
+    const sidebar = ctx.clientModules.graph().entries.find(entry => entry.id === 'dsh-better-sidebar')
+    assert.ok(sidebar, 'Better Sidebar appears in the real browser boot graph')
+    const sidebarBundle = await fetch(new URL(sidebar.url, `${origin}/`), { headers })
+    assert.equal(sidebarBundle.status, 200)
+    const endpoint = `${origin}/sidebar/api/settings.get`
+    const accepted = await fetch(endpoint, { method: 'POST', headers: { ...headers, origin }, body: '{}' })
+    assert.equal(accepted.status, 200, 'sidebar host mounts with the native connection service')
+    assert.equal((await accepted.json()).ok, true)
+    const denied = await fetch(endpoint, {
+      method: 'POST', headers: { origin, 'content-type': 'application/json' }, body: '{}',
+    })
+    assert.equal(denied.status, 403, 'sidebar rejects an unauthenticated request')
+    console.log('ATN_VISUALIZATION_SIDEBAR ' + JSON.stringify({
+      spec: process.env.ATN_SIDEBAR_SPEC, hostMounted: true, clientServed: true, unauthenticatedDenied: true,
+    }))
+  }
+
   let requestId = 0
   async function rpc(args, method = 'snapshot') {
     const response = await fetch(`${origin}/api/atnObserver/${method}`, {

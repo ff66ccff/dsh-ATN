@@ -1,0 +1,122 @@
+diff --git a/src/client/service.ts b/src/client/service.ts
+index fd87cc0..3ed3312 100644
+--- a/src/client/service.ts
++++ b/src/client/service.ts
+@@ -819,7 +819,7 @@ export function matchUrlTarget(tabs: readonly TabDescriptor[], url: URL): TabDes
+  * The plugin version this service instance reports. Keep in lockstep with
+  * `package.json`'s version — `tests/service.spec.ts` asserts the pair.
+  */
+-export const SIDEBAR_SERVICE_VERSION = '0.27.0'
++export const SIDEBAR_SERVICE_VERSION = '0.28.0'
+ 
+ /**
+  * Monotonic capability list consumers use to gate new API usage (features
+diff --git a/src/index.ts b/src/index.ts
+index c305cdc..e7bb19c 100644
+--- a/src/index.ts
++++ b/src/index.ts
+@@ -2,12 +2,9 @@
+  * dsh-better-sidebar host half: the /sidebar JSON API (explorer listing, file
+  * read/write, git), the /sidebar/file media route (images), the /sidebar/html
+  * preview route, the /sidebar/bundle lazy-chunk route (client code splits),
+- * and the two WebSocket upgrades (sidebar_open pushes). Every route passes the same
+- * browser-trust fence as the /api gateway — Host-header loopback or the
+- * web runtime's `trustedHosts` (LAN IP literals sampled at boot plus
+- * `--trusted-host` authorities), read per request from the live service
+- * value so the fence tracks the same trust source the /api gateway derives
+- * its list from.
++ * and the WebSocket upgrades. Every route delegates admission to the same
++ * public Connection service as the /api gateway (Host/Origin and browser
++ * authentication), read per request.
+  *
+  * All operations are conversation-scoped: requests carry a sessionId and the
+  * session's authoritative cwd comes from the session store.
+@@ -36,7 +33,6 @@ import { ensureWorkspacePath } from './path-security.ts'
+ import { searchFiles } from './fs-search.ts'
+ import { compileExcludePatterns } from './exclude-patterns.ts'
+ import { decodeHtmlUrl } from './html-route.ts'
+-import { isTrustedApiRequest } from './trust-fence.ts'
+ import { registerBundleRoute } from './bundle-route.ts'
+ import { createDirectoryWatchers, type DirectoryWatchers } from './fs-watch.ts'
+ import { createSidechatPushHub } from './sidechat-push.ts'
+@@ -112,8 +108,8 @@ export interface SidebarFsLevel {
+   error?: string
+ }
+ 
+-/** Services required before mounting: the webserver routes, the session store, the web runtime's trusted hosts, and the tool registry. */
+-export const inject = ['webServer', 'sessions', 'webRuntime', 'tools']
++/** Services required before mounting: routes, sessions, native request admission, and tools. */
++export const inject = ['webServer', 'sessions', 'connection', 'tools']
+ 
+ /** Content types for the media route, by extension. */
+ const MEDIA_TYPES: Record<string, string> = {
+@@ -137,24 +133,31 @@ export function mediaTypeForPath(path: string): string {
+ }
+ 
+ /**
+- * Resolve a session's authoritative working directory. The attached session
+- * header wins; while the session is still hydrating from persistence (the
+- * web client attaches the current conversation a moment after page load, so
+- * the very first sidebar requests can arrive detached) the caller's own
+- * list-summary cwd is used; the session-persistence index is queried as a
+- * last resort for cold (not-yet-attached) sessions so a detached first
+- * request still resolves the correct project instead of the host process
+- * cwd (which on Windows is the DSH source root after `dsh.cmd`'s `pushd`,
+- * causing every user-project path to be misclassified as "outside
+- * workspace"). The host process cwd is the FINAL fallback for deployments
+- * without persistence (tests / stripped-down hosts); production always
+- * provides persistence, so the bug-fix path (header → client → persistence)
+- * always resolves the real session cwd before reaching it.
++ * Resolve the committed execution directory before client or original-header
++ * hints. Live reads are synchronous; detached reads use the host observation
++ * lease and its revision-keyed projection cache, never a plugin-owned log fold
++ * or TTL that could hide a working_directory change.
+  */
+ async function sessionCwdOf(ctx: Context, sessionId: string, clientCwd?: string): Promise<string> {
+   const session = ctx.sessions.get(sessionId)
+-  const headerCwd = session?.header.cwd
+-  if (headerCwd !== undefined && headerCwd !== '') return headerCwd
++  // The immutable header is the original project, not the current execution
++  // directory. Read the host's committed value on every request (no TTL).
++  if (session !== undefined) {
++    const cwd = ctx.get('workingDirectory')?.get(session) ?? session.header.cwd
++    if (cwd !== undefined && cwd !== '') return cwd
++  }
++  const query = ctx.get('sessionQuery')
++  if (query !== undefined) {
++    const observation = await query.observeSession(sessionId, { projectionMode: 'all' })
++    try {
++      const cwd = observation.projections?.values.workingDirectory
++        ?? observation.header.cwd
++        ?? ctx.get('workingDirectory')?.defaultDirectory
++      if (cwd !== undefined && cwd !== '') return requireAbsolute(cwd)
++    } finally {
++      observation[Symbol.dispose]()
++    }
++  }
+   if (clientCwd !== undefined && clientCwd !== '') {
+     try {
+       return requireAbsolute(clientCwd)
+@@ -1301,18 +1304,16 @@ async function importLegacyPrefs(
+ 
+ /**
+  * Plugin body: mount the fenced routes and the sidebar_open push socket.
+- * @param ctx - host plugin context (webServer, sessions, webRuntime).
++ * @param ctx - host plugin context (webServer, sessions, connection).
+  * @param config - deployment-provided limits; the Loader validates against
+  * {@link Config} and fills defaults, direct callers get them from
+  * {@link resolveSidebarConfig}.
+  */
+ export function apply(ctx: Context, config?: SidebarConfig): void {
+   const resolved = resolveSidebarConfig(config)
+-  // The web runtime's bind-derived trust list (boot-sampled LAN literals
+-  // plus --trusted-host authorities) — the authoritative source the /api
+-  // gateway fence derives its list from. Read per request from the live
+-  // service value; a replaced list takes effect without a plugin restart.
+-  const fence = (req: SidebarHttpRequest): boolean => isTrustedApiRequest(req, ctx.webRuntime.trustedHosts)
++  // Connection owns both deployment trust and authentication; never infer or
++  // bypass its policy from invocation flags or a copied trust list.
++  const fence = (req: SidebarHttpRequest): boolean => ctx.connection.requestRejection(req) === undefined
+   // The model-facing open-request registry: queues `sidebar_open` requests
+   // per session and pushes them to connected sidebar views over the
+   // `/sidebar/ws/agent-opens` socket.

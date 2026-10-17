@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.1 — 2026-10-17
+
+- 对齐 upstream DeepSeek Harness `0.2.1-rc.1`，全部宿主依赖、实验 provider overrides 与 `engines.dsh` 同步更新。
+- 升级 Cordis `4.0.5`、schemastery `3.18.5`、include `1.0.10` 与 loader `1.0.6` 正式版，并重新生成锁文件。
+- 可选 Better Sidebar peer 更新为 `0.28.0`；分别检查 npm 包与固定 upstream 提交的声明及真实注册、卸载、重挂载。旧版 `webRuntime` 依赖已由上游改为宿主 `connection` 服务。
+- 更新 Ubuntu / Windows 侧栏 CI、版本徽章、安装命令、兼容说明与文档索引；八工具协议与固定上下文不变。
+
+验证与发布状态见 [0.6.1 发布记录](docs/RELEASE_0_6_1.md)。
+
 ## 0.6.0 — 2026-10-17
 
 - 将全部 Harness 依赖及实验 provider overrides 对齐 `0.2.1-alpha.5`，`engines.dsh` 精确限定已验证版本；Node.js 要求为 24 及以上。

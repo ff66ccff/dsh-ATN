@@ -3,7 +3,7 @@ import ts from 'typescript'
 import { access, readFile, mkdir, mkdtemp } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-export const VERIFIED_SIDEBAR_VERSIONS = ['0.26.1', '0.27.0']
+export const VERIFIED_SIDEBAR_VERSIONS = ['0.28.0']
 export const VERIFIED_SIDEBAR_RANGE = VERIFIED_SIDEBAR_VERSIONS.join(' || ')
 
 function reject(details) {
