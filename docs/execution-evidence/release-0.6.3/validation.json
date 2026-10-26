@@ -35,5 +35,12 @@
   },
   "packagedProfile": true,
   "packagedWebWithSidebar": true,
-  "externalModelCalls": 0
+  "externalModelCalls": 0,
+  "postPublish": {
+    "registryDownload": true,
+    "registryProfileInstall": true,
+    "hostedRuns": 3,
+    "hostedJobs": 18,
+    "hostedAllPassed": true
+  }
 }

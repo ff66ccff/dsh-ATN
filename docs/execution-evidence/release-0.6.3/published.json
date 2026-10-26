@@ -1,0 +1,34 @@
+{
+  "name": "dsh-atn",
+  "version": "0.6.3",
+  "latest": "0.6.3",
+  "publishedAt": "2026-10-26T03:23:51.237Z",
+  "dist": {
+    "shasum": "5e5f4ffe3c1a745f33d886e1575792738b0bd24e",
+    "tarball": "https://registry.npmjs.org/dsh-atn/-/dsh-atn-0.6.3.tgz",
+    "fileCount": 133,
+    "integrity": "sha512-vizFTZNxDShvg9zLF/FcI2xyg7xlZKSBSaShjwpCiYDmJrvuKRaUcrvjiHJyoBVbhjNMZaVcwalYkePz6NzcnA==",
+    "signatures": [
+      {
+        "sig": "MEUCIQDxSVKfb2CGGfZm8dnUtynbqYrnY+dWQmo9MGHrsZW1vwIgCOB/9hk2z/cR+tq9v9INS3twlA29QS6/WgtnL5BNKug=",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      },
+      {
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U",
+        "sig": "MEUCIQCttQEqDgGC9O7e4E6wM2Og9gTyYCgvRr5h66Cvh8YyhwIgOaTz4SvTmVNd+FC5dpKNk2qRyTgKYmtGnV3V1E4Fy4Q="
+      }
+    ],
+    "unpackedSize": 1347308
+  },
+  "engines": {
+    "dsh": ">=0.2.1-rc.3",
+    "node": ">=24.9.0"
+  },
+  "sourceCommit": "af4c6ac41625048b7411b6adcf8fa97976e5a9af",
+  "local": {
+    "sha256": "a030260fee633ec7ac0839a47cb9146ca63a76b2d269cf5f4792ce3e123448bb",
+    "shasum": "5e5f4ffe3c1a745f33d886e1575792738b0bd24e",
+    "integrity": "sha512-vizFTZNxDShvg9zLF/FcI2xyg7xlZKSBSaShjwpCiYDmJrvuKRaUcrvjiHJyoBVbhjNMZaVcwalYkePz6NzcnA==",
+    "bytes": 295003
+  }
+}

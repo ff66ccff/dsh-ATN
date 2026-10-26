@@ -1,0 +1,7 @@
+{
+  "status": 200,
+  "bytes": 295003,
+  "sha256": "a030260fee633ec7ac0839a47cb9146ca63a76b2d269cf5f4792ce3e123448bb",
+  "age": null,
+  "cacheControl": "public, immutable, max-age=31557600"
+}

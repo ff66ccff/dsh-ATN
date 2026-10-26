@@ -33,4 +33,10 @@ ATN 启动和创建子节点现在优先读取上游当前模型选择；npm rc.
 
 ## 发布状态
 
-发布产物和远端版本确认后补充。
+**0.6.3 已发布到 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.3) 和 [npm](https://www.npmjs.com/package/dsh-atn/v/0.6.3)，npm `latest` 已指向 0.6.3。** 发布源码提交为 `af4c6ac41625048b7411b6adcf8fa97976e5a9af`，已推送 main、工作分支及标签；后续提交仅补充发布证据。
+
+[main CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/40263622870)、[工作分支 CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/40263622995) 和[标签 CI](https://github.com/ff66ccff/dsh-ATN/actions/runs/40263628715) 各六个 job 全部通过，共 18 个，覆盖 Ubuntu / Windows 和 published / upstream 侧栏矩阵。[远端 CI 与附件详情](execution-evidence/release-0.6.3/github.json)。
+
+npm SHA-512 integrity 与本地 tarball 一致，GitHub 附件 SHA-256 也一致；发布包 SHA-256 为 `a030260fee633ec7ac0839a47cb9146ca63a76b2d269cf5f4792ce3e123448bb`。[注册表元数据与完整性](execution-evidence/release-0.6.3/published.json)。npm 登录及本次发布二次验证由维护者完成。
+
+发布后的首次注册表安装遇到下载 URL 的 404 缓存，响应为 `Cache-Control: public, max-age=300`；带新查询参数获取的包已通过 SHA-256 验证。[初次安装诊断](execution-evidence/release-0.6.3/registry-initial-cache.txt)。缓存刷新后，常规下载地址返回 200，SHA-256 与发布包一致；随后以 `ATN_INSTALL_SPEC=dsh-atn@0.6.3` 从注册表安装到全新 rc.3 Web Profile，八工具、子节点 preset 继承、substrate 发布/读取和用户配置保持等断言全部通过，零外部模型调用。[常规下载校验](execution-evidence/release-0.6.3/registry-download.json)、[正式版注册表安装结果](execution-evidence/release-0.6.3/npm-registry-profile.txt)。
