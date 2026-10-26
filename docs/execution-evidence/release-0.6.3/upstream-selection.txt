@@ -1,0 +1,12 @@
+✔ EFFORT-01: a spawned child records and uses the parent effort (90.6685ms)
+✔ EFFORT-02: recovery resumes on the persisted effort, never a profile default (65.5802ms)
+✔ EFFORT-03: an inherited route with no effort passes no effort through (44.585ms)
+✔ EFFORT-04: upstream model selection overrides stale options and can clear effort (49.0497ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 567.4089

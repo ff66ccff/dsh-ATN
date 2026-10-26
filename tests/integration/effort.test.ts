@@ -143,3 +143,36 @@ test('EFFORT-03: an inherited route with no effort passes no effort through', as
     await rm(b.scratch, { recursive: true, force: true })
   }
 })
+
+test('EFFORT-04: upstream model selection overrides stale options and can clear effort', async () => {
+  const b = await bench()
+  try {
+    const host = (await createHostAgentWithEffort(b.kernel, 'session-host', 'high'))!
+    type Selection = { provider: string; model: string; reasoningEffort?: 'low' }
+    let selection: Selection = {
+      provider: 'atn-script', model: 'selected-root', reasoningEffort: 'low',
+    }
+    const model = (host as typeof host & { model?: { select(value: Selection): void } }).model
+    // Exercise the real durable accessor on upstream; npm rc.3 predates it.
+    if (model) model.select(selection)
+    else Object.defineProperty(host, 'model', { value: { current: () => ({ ...selection }) } })
+    await b.kernel.atn.start(host, goal)
+    const networkId = (await b.kernel.atn.networkIds())[0]!
+    const entry = (await b.kernel.atn.network(networkId)).nodes['node-1']!
+    assert.deepEqual(entry.modelRoute, { provider: 'atn-script', model: 'selected-root', effort: 'low' })
+
+    selection = { provider: 'atn-script', model: 'selected-child' }
+    model?.select(selection)
+    await b.kernel.atn.spawn(host, { task: 'Use the selected route.', context: '' })
+    await settle(b.kernel)
+    const child = Object.values((await b.kernel.atn.network(networkId)).nodes).find(node => !node.isEntry)!
+    assert.deepEqual(child.modelRoute, { provider: 'atn-script', model: 'selected-child', effort: null })
+    const request = b.kernel.model.requests.find(row => row.sessionId === child.sessionId)!
+    assert.equal(request.options.model, 'selected-child')
+    assert.equal(request.options.reasoningEffort, undefined)
+    assert.equal(host.options.reasoningEffort, 'high', 'the stale fallback stays unchanged')
+  } finally {
+    await b.kernel.ctx.fiber.dispose()
+    await rm(b.scratch, { recursive: true, force: true })
+  }
+})

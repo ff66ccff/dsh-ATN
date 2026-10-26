@@ -1,0 +1,478 @@
+{
+  "base": "687f282e8625c6b8d11ff58211a90524be2e4317",
+  "head": "22ddee3792402c3e70ec5f86a63c3e3e895a2f60",
+  "sidebar": "83faf70940160e5cd4c5332f5400aa8f4dbbb6d6",
+  "consumedPackages": [
+    {
+      "name": "@deepseek-ai/dsh-api-gateway",
+      "path": "packages/api/gateway/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/api/gateway/src/access.ts",
+        "packages/api/gateway/src/index.ts",
+        "packages/api/gateway/src/stream-server.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-api-remote-access",
+      "path": "packages/api/remote-access/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/api/remote-access/src/client/index.ts",
+        "packages/api/remote-access/src/client/mount.ts",
+        "packages/api/remote-access/src/client/when-allowed.ts",
+        "packages/api/remote-access/src/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-api-session-controller",
+      "path": "packages/api/session-controller/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/api/session-controller/src/agent.ts",
+        "packages/api/session-controller/src/client/sessions/lineage.ts",
+        "packages/api/session-controller/src/client/sessions/manager.ts",
+        "packages/api/session-controller/src/client/sessions/service.ts",
+        "packages/api/session-controller/src/commands.ts",
+        "packages/api/session-controller/src/index.ts",
+        "packages/api/session-controller/src/list.ts",
+        "packages/api/session-controller/src/media-references.ts",
+        "packages/api/session-controller/src/model-selection-projection.ts",
+        "packages/api/session-controller/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-attachment",
+      "path": "packages/attachment/attachment/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/attachment/attachment/src/index.ts",
+        "packages/attachment/attachment/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-connection",
+      "path": "packages/client/connection/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/client/connection/src/client/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-locale",
+      "path": "packages/client/locale/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/client/locale/src/client/LanguageRow.module.css",
+        "packages/client/locale/src/client/index.ts",
+        "packages/client/locale/src/locale-settings.ts",
+        "packages/client/locale/src/locales/de.ts",
+        "packages/client/locale/src/locales/es.ts",
+        "packages/client/locale/src/locales/fr.ts",
+        "packages/client/locale/src/locales/index.ts",
+        "packages/client/locale/src/locales/ja.ts",
+        "packages/client/locale/src/locales/pt.ts",
+        "packages/client/locale/src/locales/ru.ts",
+        "packages/client/locale/src/locales/settings.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-store",
+      "path": "packages/client/store/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-conversation",
+      "path": "packages/client/ui-conversation/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/client/ui-conversation/src/client/apply.ts",
+        "packages/client/ui-conversation/src/client/contract/composer-submission.ts",
+        "packages/client/ui-conversation/src/client/contract/draft-editor.ts",
+        "packages/client/ui-conversation/src/client/contract/input.ts",
+        "packages/client/ui-conversation/src/client/contract/records.ts",
+        "packages/client/ui-conversation/src/client/contract/slots.ts",
+        "packages/client/ui-conversation/src/client/contract/text-interaction.ts",
+        "packages/client/ui-conversation/src/client/conversation/assembly.ts",
+        "packages/client/ui-conversation/src/client/conversation/interaction-registry.ts",
+        "packages/client/ui-conversation/src/client/draft.ts",
+        "packages/client/ui-conversation/src/client/index.ts",
+        "packages/client/ui-conversation/src/client/input/editor/DraftEditor.tsx",
+        "packages/client/ui-conversation/src/client/input/editor/QuoteNode.tsx",
+        "packages/client/ui-conversation/src/client/input/editor/composer-editor.module.css",
+        "packages/client/ui-conversation/src/client/input/editor/keymap.ts",
+        "packages/client/ui-conversation/src/client/input/editor/projection.ts",
+        "packages/client/ui-conversation/src/client/input/editor/runtime.ts",
+        "packages/client/ui-conversation/src/client/input/editor/view-binding.ts",
+        "packages/client/ui-conversation/src/client/input/facade.ts",
+        "packages/client/ui-conversation/src/client/input/hub.ts",
+        "packages/client/ui-conversation/src/client/input/prompt.ts",
+        "packages/client/ui-conversation/src/client/input/submission-analytics.ts",
+        "packages/client/ui-conversation/src/client/locales.ts",
+        "packages/client/ui-conversation/src/client/queue/QueueDock.module.css",
+        "packages/client/ui-conversation/src/client/queue/QueueDock.tsx",
+        "packages/client/ui-conversation/src/client/service.ts",
+        "packages/client/ui-conversation/src/client/settings/EnterBehaviorRow.module.css",
+        "packages/client/ui-conversation/src/client/skeleton/ContextMeter.module.css",
+        "packages/client/ui-conversation/src/client/skeleton/ConversationRoot.module.css",
+        "packages/client/ui-conversation/src/client/skeleton/ConversationSession.tsx",
+        "packages/client/ui-conversation/src/client/skeleton/EmptyHero.tsx",
+        "packages/client/ui-conversation/src/client/skeleton/HeroShell.module.css",
+        "packages/client/ui-conversation/src/client/skeleton/InputBar.module.css",
+        "packages/client/ui-conversation/src/client/skeleton/InputBar.tsx",
+        "packages/client/ui-conversation/src/client/user-text/UserText.tsx",
+        "packages/client/ui-conversation/src/client/view-pins.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-primitives",
+      "path": "packages/client/ui-primitives/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/client/ui-primitives/src/AnimatedRows.module.css",
+        "packages/client/ui-primitives/src/AnimatedRows.tsx",
+        "packages/client/ui-primitives/src/Button.module.css",
+        "packages/client/ui-primitives/src/Button.tsx",
+        "packages/client/ui-primitives/src/CodeCard.module.css",
+        "packages/client/ui-primitives/src/ConnectionIndicator.module.css",
+        "packages/client/ui-primitives/src/DetailDocument.module.css",
+        "packages/client/ui-primitives/src/DetailDocument.tsx",
+        "packages/client/ui-primitives/src/DiffBlock.module.css",
+        "packages/client/ui-primitives/src/DisclosureRow.module.css",
+        "packages/client/ui-primitives/src/DraggableImage.tsx",
+        "packages/client/ui-primitives/src/HoverCard.module.css",
+        "packages/client/ui-primitives/src/HoverCard.tsx",
+        "packages/client/ui-primitives/src/HoverCardGroup.tsx",
+        "packages/client/ui-primitives/src/JsonTree.module.css",
+        "packages/client/ui-primitives/src/Menu.module.css",
+        "packages/client/ui-primitives/src/Menu.tsx",
+        "packages/client/ui-primitives/src/Modal.module.css",
+        "packages/client/ui-primitives/src/Pill.module.css",
+        "packages/client/ui-primitives/src/QuotePreview.module.css",
+        "packages/client/ui-primitives/src/QuotePreview.tsx",
+        "packages/client/ui-primitives/src/ReadBlock.module.css",
+        "packages/client/ui-primitives/src/RowDragPreview.module.css",
+        "packages/client/ui-primitives/src/SearchBlock.module.css",
+        "packages/client/ui-primitives/src/SearchBlock.tsx",
+        "packages/client/ui-primitives/src/SegmentedControl.module.css",
+        "packages/client/ui-primitives/src/SegmentedTabs.module.css",
+        "packages/client/ui-primitives/src/SegmentedTabs.tsx",
+        "packages/client/ui-primitives/src/TerminalBlock.module.css",
+        "packages/client/ui-primitives/src/TerminalBlock.tsx",
+        "packages/client/ui-primitives/src/Toast.module.css",
+        "packages/client/ui-primitives/src/Tooltip.module.css",
+        "packages/client/ui-primitives/src/Tooltip.tsx",
+        "packages/client/ui-primitives/src/UserMessageBubble.module.css",
+        "packages/client/ui-primitives/src/UserMessageBubble.tsx",
+        "packages/client/ui-primitives/src/WebBlock.module.css",
+        "packages/client/ui-primitives/src/ZoomControls.module.css",
+        "packages/client/ui-primitives/src/ZoomControls.tsx",
+        "packages/client/ui-primitives/src/document-zoom.ts",
+        "packages/client/ui-primitives/src/file-drag-actions.ts",
+        "packages/client/ui-primitives/src/focus.ts",
+        "packages/client/ui-primitives/src/icons/artwork.ts",
+        "packages/client/ui-primitives/src/icons/index.tsx",
+        "packages/client/ui-primitives/src/icons/shared-artwork.tsx",
+        "packages/client/ui-primitives/src/image-drag.ts",
+        "packages/client/ui-primitives/src/index.ts",
+        "packages/client/ui-primitives/src/markdown/CodeBlock.tsx",
+        "packages/client/ui-primitives/src/markdown/JsonBlock.module.css",
+        "packages/client/ui-primitives/src/markdown/MarkdownDelegate.tsx",
+        "packages/client/ui-primitives/src/markdown/MarkdownText.module.css",
+        "packages/client/ui-primitives/src/markdown/MarkdownText.tsx",
+        "packages/client/ui-primitives/src/markdown/highlight.ts",
+        "packages/client/ui-primitives/src/markdown/mathCompatibility.ts",
+        "packages/client/ui-primitives/src/markdown/parse.ts",
+        "packages/client/ui-primitives/src/markdown/quote-text.ts",
+        "packages/client/ui-primitives/src/markdown/render.tsx",
+        "packages/client/ui-primitives/src/overlay-top-margin.ts",
+        "packages/client/ui-primitives/src/settings-form/fields.module.css",
+        "packages/client/ui-primitives/src/tooltip-placement.ts",
+        "packages/client/ui-primitives/src/use-clipboard-copy.ts",
+        "packages/client/ui-primitives/src/use-copy-feedback.ts",
+        "packages/client/ui-primitives/src/useAnchoredPosition.ts",
+        "packages/client/ui-primitives/src/useRowDragPreview.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-renderer",
+      "path": "packages/client/ui-renderer/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-session",
+      "path": "packages/client/ui-session/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/client/ui-session/src/client/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-client-ui-slots",
+      "path": "packages/client/ui-slots/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-loop",
+      "path": "packages/core/agent-loop/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/core/agent-loop/src/agent.ts",
+        "packages/core/agent-loop/src/inbox.ts",
+        "packages/core/agent-loop/src/index.ts",
+        "packages/core/agent-loop/src/runtime-context.ts",
+        "packages/core/agent-loop/src/tool-calls.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent",
+      "path": "packages/core/agent/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/core/agent/src/index.ts",
+        "packages/core/agent/src/model-selection.ts",
+        "packages/core/agent/src/projection.ts",
+        "packages/core/agent/src/runtime-types.ts",
+        "packages/core/agent/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-scope",
+      "path": "packages/core/scope/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session",
+      "path": "packages/core/session/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/core/session/src/index.ts",
+        "packages/core/session/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-system-prompt",
+      "path": "packages/core/system-prompt/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/core/system-prompt/src/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-tools",
+      "path": "packages/core/tools/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/core/tools/src/batch.ts",
+        "packages/core/tools/src/contracts.ts",
+        "packages/core/tools/src/events.ts",
+        "packages/core/tools/src/executor.ts",
+        "packages/core/tools/src/index.ts",
+        "packages/core/tools/src/pipeline.ts",
+        "packages/core/tools/src/ptc-calls.ts",
+        "packages/core/tools/src/ptc.ts",
+        "packages/core/tools/src/py-types.ts",
+        "packages/core/tools/src/schema.ts",
+        "packages/core/tools/src/testing.ts",
+        "packages/core/tools/src/ts-types.ts",
+        "packages/core/tools/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-credentials",
+      "path": "packages/credentials/credentials/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-experimental-agent-team",
+      "path": "packages/experimental/agent-team/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/experimental/agent-team/src/index.ts",
+        "packages/experimental/agent-team/src/journal.ts",
+        "packages/experimental/agent-team/src/projection.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-experimental-tool-agent-team",
+      "path": "packages/experimental/tool-agent-team/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-fs-local",
+      "path": "packages/fs/fs-local/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/fs/fs-local/src/fsio.ts",
+        "packages/fs/fs-local/src/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-fs",
+      "path": "packages/fs/fs/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-llm",
+      "path": "packages/llm/llm/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-preset-registry",
+      "path": "packages/preset/agent-preset-registry/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/preset/agent-preset-registry/src/index.ts",
+        "packages/preset/agent-preset-registry/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-agent-preset",
+      "path": "packages/preset/agent-preset/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-query",
+      "path": "packages/session-query/session-query/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-persistence-jsonl",
+      "path": "packages/session/session-persistence-jsonl/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/session/session-persistence-jsonl/src/index.ts",
+        "packages/session/session-persistence-jsonl/src/zstd-private-decoder.ts",
+        "packages/session/session-persistence-jsonl/src/zstd.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-session-projection",
+      "path": "packages/session/session-projection/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/session/session-projection/src/index.ts",
+        "packages/session/session-projection/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-working-directory",
+      "path": "packages/session/working-directory/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/session/working-directory/src/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-settings",
+      "path": "packages/settings/settings/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/settings/settings/src/index.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage-domain",
+      "path": "packages/storage/storage-domain/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/storage/storage-domain/src/domain.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage-json",
+      "path": "packages/storage/storage-json/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/storage/storage-json/src/per-record-unit.ts",
+        "packages/storage/storage-json/src/single-unit.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-storage",
+      "path": "packages/storage/storage/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/storage/storage/src/backend.ts",
+        "packages/storage/storage/src/error.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent-fork-in-process",
+      "path": "packages/subagent/subagent-fork-in-process/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent-spawn-in-process",
+      "path": "packages/subagent/subagent-spawn-in-process/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-subagent",
+      "path": "packages/subagent/subagent/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/subagent/subagent/src/activation.ts",
+        "packages/subagent/subagent/src/catalog.ts",
+        "packages/subagent/subagent/src/child-agent.ts",
+        "packages/subagent/subagent/src/continuation-messages.ts",
+        "packages/subagent/subagent/src/index.ts",
+        "packages/subagent/subagent/src/manager.ts",
+        "packages/subagent/subagent/src/projection.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-typert-protocol",
+      "path": "packages/typert/protocol/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/typert/protocol/src/index.ts",
+        "packages/typert/protocol/src/types.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-typert-registry",
+      "path": "packages/typert/registry/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": [
+        "packages/typert/registry/src/service.ts"
+      ]
+    },
+    {
+      "name": "@deepseek-ai/dsh-brand",
+      "path": "packages/util/brand/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-launch-environment",
+      "path": "packages/util/launch-environment/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-timeout",
+      "path": "packages/util/timeout/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    },
+    {
+      "name": "@deepseek-ai/dsh-util-values",
+      "path": "packages/util/values/package.json",
+      "version": "0.2.1-rc.3",
+      "changedFiles": []
+    }
+  ]
+}

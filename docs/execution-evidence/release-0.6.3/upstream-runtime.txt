@@ -1,0 +1,143 @@
+✔ M2: the bundle rows load into a real kernel and register the ATN tools (24.7341ms)
+✔ AGENT-01: releasing a creator leaves its independent descendant alive and runnable (128.8914ms)
+✔ AGENT-02: every node advertises the same ATN tool set (70.4486ms)
+✔ AGENT-03: the child inherits the route the parent actually used (55.7576ms)
+✔ AUTH-04: a node cannot settle a task it does not hold (70.1156ms)
+✔ AGENT-05: completing a network releases ATN nodes but not the host entry agent (64.1267ms)
+✔ AGENT-06: network finish needs explicit scope and complete delivery fields (47.5926ms)
+✔ AUTH-05: peer text is never turned into a human approval (73.8576ms)
+✔ AUTH-06: a session outside the network gets no ATN state and no extra model request (45.1693ms)
+✔ CONTEXT-01: the goal revision a node actually read is replayable from its session (59.8391ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 942.581
+✔ SPAWN-01: with the task quota already used, a spawn is refused before any Agent exists (70.3364ms)
+✔ SPAWN-02: a failed publish records a failed node and releases the created Agent (34.9091ms)
+✔ SPAWN-03: a successful spawn still commits its task, goal snapshot and assignment (48.5128ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 460.8307
+✔ RECOVER-CONTEXT-01: a revision committed without a live Agent is replayed once (141.8482ms)
+✔ RECOVER-CONTEXT-02: a node that already read the revision is not appended twice (51.3189ms)
+✔ RECOVER-GOVERNANCE: an already-read legacy revision receives the initial contract once after cold recovery (87.574ms)
+✔ RECOVER-CONTEXT-03: recovery never reopens a terminal network (32.036ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 628.1783
+✔ PRESET-01: bundle declares a standalone ATN card and scopes all model-facing rows (6.9408ms)
+✔ PRESET-02: the UI roster exposes ATN; Standard has no ATN tools or prompt (150.1518ms)
+✔ PRESET-03: a live preset selection is inherited by child and grandchild, including cwd (104.2535ms)
+✔ PRESET-04: spawn retains the creator revision after its declaration is replaced (75.2066ms)
+✔ PRESET-RECOVER: cold restart restores the recorded preset, not the default (108.8908ms)
+✔ PRESET-RECOVER: missing preset fails without falling back to Standard (87.8543ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 848.8287
+✔ BOUNDARY-RED-REVIEW: review.summary cannot launder an unowned artifact (106.9938ms)
+▶ BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic
+  ✔ start (15.8847ms)
+  ✔ spawn (11.8236ms)
+  ✔ send.task (12.67ms)
+  ✔ send.note (16.0542ms)
+  ✔ send.result (12.8809ms)
+  ✔ status.review (13.1937ms)
+  ✔ status.claim (12.3658ms)
+  ✔ status.rewire (15.9865ms)
+  ✔ finish.node (13.9812ms)
+  ✔ finish.network (12.8223ms)
+  ✔ propose (16.8206ms)
+  ✔ vote (30.4619ms)
+  ✔ renew (13.8867ms)
+  ✔ publish (13.3361ms)
+✔ BOUNDARY-CHANNELS: every outbound channel invokes policy and every laundering attempt is atomic (214.6563ms)
+▶ BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts
+  ✔ review.evidence (61.7271ms)
+  ✔ result.evidence (52.2653ms)
+  ✔ spawn.context (58.1096ms)
+  ✔ messageId (56.0992ms)
+  ✔ dependsOn (55.3879ms)
+  ✔ retryOf (63.0664ms)
+✔ BOUNDARY-FIELDS: evidence, spawn context and optional transport fields cannot launder artifacts (347.6649ms)
+✔ BOUNDARY-REPAIR: a newly repaired topology edge does not change custody (75.2303ms)
+✔ BOUNDARY-ADMISSION: owned requests/results succeed and revoked custody cannot bypass policy via an idempotent retry (78.7747ms)
+✔ BOUNDARY-SYNC: asynchronous checks cannot silently authorize a persistent write (33.8999ms)
+✔ BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody (75.3519ms)
+ℹ tests 27
+ℹ suites 0
+ℹ pass 27
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1239.6258
+✔ READ-AUTH-GLOBAL: a global snapshot grant cannot read a named network (74.9758ms)
+✔ READ-AUTH-SCOPED: two principals read only granted sessions; revocation and spoofing fail closed (64.539ms)
+✔ READ-AUTH-METADATA: metadata-only operators receive counts without content or snapshot access (47.3834ms)
+✔ READ-AUTH-COLD: absent or failing policies deny before cold lookup; grants work without live agents (14.0389ms)
+✔ READ-AUTH-CAPABILITY: missing resource APIs or method reader metadata fail before endpoint registration (13.4425ms)
+✔ OBSERVER-01: strict Gateway scopes observation to the viewed session and never changes network or model input (75.767ms)
+✔ OBSERVER-02: live tool activity is visible during execution and cleared on settlement without exposing arguments (54.2369ms)
+✔ OBSERVER-03: rapid rewiring and failed results survive between snapshots (93.8482ms)
+✔ OBSERVER-04: cold durable records yield bounded useful history without resuming unloaded agents (18.8301ms)
+✔ OBSERVER-05: proposals, votes and commit history are present on first read (12.6029ms)
+✔ OBSERVER-06: cold history distinguishes submission, independent acceptance, exploration and observed regression (15.2688ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 800.8113
+✔ FLEET-AUTH: default deny, independent index/network grants, two principals, strict schema, no owner bypass or side effects (100.0669ms)
+✔ FLEET-COLD: no unauthorized storage access; bounded authorized cold rows, unknown names and revocation fail closed (18.9866ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 436.704
+✔ READ-POLICY: filter before ranking/k, hide citers/ancestors/weights and indistinguishably refuse visit/refs (38.5516ms)
+✔ READ-POLICY-K: invisible matches take no result slots and hidden citation weights cannot change visible ordering (11.1349ms)
+✔ READ-POLICY-TASKS: status evidence and review cannot tunnel a hidden message root (16.332ms)
+✔ READ-POLICY-FAILURE: throw/async fail closed, cold replay matches and missing policy preserves bytes (22.2747ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 394.5907
+✔ RECOVERY-CONTEXT: eight tools, eight behavioral rules and bounded fixed bytes (26.4179ms)
+✔ SUBSTRATE-OFF: tools and prompt bytes return to the alpha.4 baseline (12.8061ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 346.9229

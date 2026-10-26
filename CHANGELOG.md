@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.3 — 2026-10-26
+
+- 对齐本地 upstream DeepSeek Harness `0.2.1-rc.3`；`engines.dsh` 与全部 Harness peer 依赖改为 `>=0.2.1-rc.3`，开发依赖及实验 provider overrides 固定 rc.3。Node.js 最低版本与上游对齐为 24.9.0。
+- 适配 upstream `Agent.model.current()`：启动与创建子节点读取当前模型选择，避免使用过时 options，并允许显式省略 reasoning effort；npm rc.3 使用既有 options 路径。
+- 复核 Better Sidebar `0.28.0` 的声明与注册生命周期，保留可选 peer 和顶栏入口。
+- 更新锁文件、最低版本契约、安装说明、兼容范围和文档索引。
+
+验证与发布状态见 [0.6.3 发布记录](docs/RELEASE_0_6_3.md)。
+
 ## 0.6.2 — 2026-10-18
 
 - 对齐本地 upstream DeepSeek Harness `0.2.1-rc.2`，全部宿主 peer/dev 依赖、实验 provider overrides 与 `engines.dsh` 同步更新，重新正常解析锁文件。

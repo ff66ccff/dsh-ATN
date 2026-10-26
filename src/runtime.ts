@@ -65,6 +65,18 @@ import { appendSubstrate, searchSubstrate, visitSubstrate, recordSubstrateRead, 
 import { weightAt } from './substrate-ranking.ts'
 import { substrateReadView, type SubstrateReadPolicy } from './substrate-read-policy.ts'
 
+/** rc.3 options fallback and the upstream durable model-selection accessor. */
+function currentModelRoute(agent: Agent): NodeRecord['modelRoute'] {
+  const model = (agent as Agent & {
+    model?: { current(): Readonly<{ provider: string; model: string; reasoningEffort?: ReasoningEffortId }> | undefined }
+  }).model
+  const selection = model === undefined ? agent.options : model.current()
+  return {
+    provider: selection?.provider ?? 'inherit',
+    model: selection?.model ?? 'inherit',
+    effort: selection?.reasoningEffort ?? null,
+  }
+}
 /** Abort the store transform without a write when a queued read reaches an archived network. */
 class ArchivedSubstrateRead extends Error {
   constructor(readonly messages: SubstrateMessageView[]) { super('archived substrate read') }
@@ -975,7 +987,7 @@ export class AtnRuntime extends Service<Config> {
           peerIds: [],
           lifecycle: 'active',
           leaseDeadlineAt: null,
-          modelRoute: { provider: agent.options.provider ?? 'inherit', model: agent.options.model ?? 'inherit', effort: agent.options.reasoningEffort ?? null },
+          modelRoute: currentModelRoute(agent),
           presetId: agent.ctx.get('agentPresets')?.composedPreset(agent.ctx) ?? null,
           permissionSeed: null,
           isEntry: true,
@@ -1052,11 +1064,7 @@ export class AtnRuntime extends Service<Config> {
     const inherited = captureDelegatedPolicyOverrides(agent)
     const presets = agent.ctx.get('agentPresets')
     const presetId = presets?.composedPreset(agent.ctx) ?? null
-    const route = {
-      provider: agent.options.provider ?? creator.modelRoute.provider,
-      model: agent.options.model ?? creator.modelRoute.model,
-      effort: agent.options.reasoningEffort ?? creator.modelRoute.effort,
-    }
+    const route = currentModelRoute(agent)
 
     const now = this.now()
     // Creation intent first: the identity is durable before an Agent exists, so

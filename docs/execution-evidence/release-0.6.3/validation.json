@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-26",
+  "node": "v24.19.0",
+  "harnessMinimum": ">=0.2.1-rc.3",
+  "harnessNpmBaseline": "0.2.1-rc.3",
+  "sidebar": "0.28.0",
+  "npmPrepublish": {
+    "typecheck": true,
+    "runtimePassed": 608,
+    "uiPassed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "build": true
+  },
+  "upstreamSource": {
+    "passed": 73,
+    "failed": 0,
+    "suites": [
+      "agent",
+      "spawn",
+      "recover",
+      "preset",
+      "information-boundary",
+      "observer",
+      "fleet-observer",
+      "substrate-read-policy",
+      "fixed-context",
+      "effort"
+    ],
+    "composition": "Actual upstream DSH and vendored Cordis sources; test kernel mounts upstream native tool executor. Only external npm dependencies use installed artifacts. Not a full upstream CLI/Web build."
+  },
+  "sidebarContract": {
+    "published": true,
+    "upstream": true
+  },
+  "packagedProfile": true,
+  "packagedWebWithSidebar": true,
+  "externalModelCalls": 0
+}

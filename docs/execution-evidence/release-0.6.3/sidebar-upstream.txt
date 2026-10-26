@@ -1,0 +1,14 @@
+
+> dsh-atn@0.6.3 verify:sidebar
+> node scripts/verify-sidebar-contract.mjs && node scripts/verify-sidebar-registry.mjs
+
+{
+  "package": "dsh-better-sidebar",
+  "version": "0.28.0",
+  "declarationBasis": "compiled-upstream-source",
+  "declarationSha256": "e49c026e599e38d4f47a78418dc1edd6977979d4b68bdfc13ca61b74b99099cf",
+  "consumerDescriptorAssignableToPublished": true,
+  "consumerKeysExistInPublished": true,
+  "scope": "Public TabDescriptor shape only; not whole-provider activation."
+}
+SIDEBAR_REAL_REGISTRY {"version":"0.28.0","registered":true,"duplicateRejected":true,"disposed":true,"remounted":true,"modelCalls":0,"hostActivation":"not-tested-by-this-check"}
