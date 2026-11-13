@@ -22,9 +22,17 @@ test('SUBSTRATE-KERNEL: A publish, B search/visit/cite is bounded, sender-authen
     const a=await createHostAgent(kernel,'substrate-A')
     const started=await kernel.atn.start(a,testGoal)
     const b=await kernel.atn.spawn(a,{task:'Read findings',context:''})
-    await settle(kernel)
+    // Drain setup input, then reconcile its durable receipt before the purity baseline.
+    // whenIdle also awaits driver maintenance after the public status becomes idle.
+    await kernel.atn.tick()
+    await Promise.all(kernel.ctx.agents.list().map(agent=>agent.whenIdle()))
+    await kernel.atn.tick()
+    await Promise.all(kernel.ctx.agents.list().map(agent=>agent.whenIdle()))
     const agent=kernel.ctx.agents.get(SessionId(b.sessionId))!
     const before=await kernel.atn.network(started.networkId)
+    const assignment=Object.values(before.mails).find(mail=>mail.taskId===b.taskId&&mail.toId===b.nodeId&&mail.kind==='task')
+    assert.ok(assignment)
+    assert.equal(assignment.status,'delivered')
     const requests=kernel.model.requests.length
     const events=kernel.ctx.agents.list().map(a=>[a.id,a.session.snapshotEvents().length])
     const first=await kernel.atn.publish(a,{sub_task:'parser boundary',artifact:'partial parser',rationale:'local test'})
