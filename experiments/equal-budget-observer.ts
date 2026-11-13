@@ -1,6 +1,8 @@
 /** Read-only experiment hooks; never add model instructions or alter an ATN mutation. */
 import type { Context } from '@deepseek-ai/cordis'
-import type {} from '@deepseek-ai/dsh-experimental-agent-team'
+import type {} from '@deepseek-ai/dsh-agent-team'
+import type {} from '@deepseek-ai/dsh-subagent'
+import { NATIVE_TEAM_PROTOCOL } from './native-team-runtime.ts'
 import type {} from '../src/observer.ts'
 import type {} from '../src/runtime.ts'
 import type { NetworkRecord } from '../src/schema.ts'
@@ -16,6 +18,12 @@ export function installEqualBudgetObserver(ctx: Context, task: EqualBudgetTask, 
   const mails = new Map<string, Publication>()
   const delivered = new Set<string>()
   const taskResults = new Map<string, Publication>()
+  const nativeCalls = new Map<symbol, Publication>()
+  const nativePublications = new Map<string, Publication>()
+  const nativeReceipts = new Map<string, { from: string; to: string; seq: number; content: string }>()
+  const nativeOutputs = new Map<string, Publication>()
+  const nativeDelivered = new Set<string>()
+  let ignoredLegacyTeamEvents = 0
   const networks = new Map<string, NetworkRecord>()
   const sessionNetworks = new Map<string, string>()
   let seq = 0, submission: EqualBudgetSubmission | null = null
@@ -53,19 +61,68 @@ export function installEqualBudgetObserver(ctx: Context, task: EqualBudgetTask, 
       if (sender && !taskResults.has(key)) taskResults.set(key, { from: alias(sender), sentSeq: next(), content: JSON.stringify(item.result) })
     }
   }
-  const removeNetwork = ctx.on('atn/network-updated', ({ record }) => observe(() => observeNetwork(record)), { global: true })
-  const removeSession = ctx.on('session/event', (_session, event) => observe(() => {
-    if (event.type === 'team/message/queued') {
-      const { message, teamId } = event.data
-      const key = `native:${teamId}:${message.id}`
-      if (!mails.has(key)) mails.set(key, { from: alias(message.senderId), sentSeq: next(),
-        content: message.content.flatMap(block => block.type === 'text' ? [block.text] : []).join('\n') })
-    } else if (event.type === 'team/message/delivered') {
-      const key = `native:${event.data.teamId}:${event.data.messageId}`
-      if (!delivered.has(key)) {
-        delivered.add(key)
-        transport(mails.get(key), event.data.targetId, 'native')
+  const deliverNativeRelay = (id: string) => {
+    const publication = nativePublications.get(id), receipt = nativeReceipts.get(id)
+    if (!publication || !receipt) return
+    if (publication.from !== receipt.from || !receipt.content.includes(publication.content)) {
+      errors.push('native-publication-receipt-mismatch'); return
+    }
+    events.push({ kind: 'transport', seq: receipt.seq, sentSeq: publication.sentSeq, from: receipt.from,
+      to: receipt.to, transport: 'native', content: receipt.content, delivered: true })
+    nativeReceipts.delete(id); nativePublications.delete(id)
+  }
+  // Capture before official dispatch, then correlate with the exact accepted
+  // inbox identity. A tool success alone is never a delivered-content witness.
+  const removeNativeCall = ctx.on('tools/pre-execute', (execution, nextStep) => {
+    observe(() => {
+      const args = execution.arguments
+      if (execution.name === 'send_message' && execution.agent && args && typeof args === 'object'
+        && 'message' in args && typeof args.message === 'string') {
+        nativeCalls.set(execution.token, { from: alias(execution.agent.id), sentSeq: next(), content: args.message })
       }
+    })
+    return nextStep()
+  }, { global: true })
+  const removeNativeResult = ctx.on('tools/result', (execution, result) => {
+    observe(() => {
+      const publication = nativeCalls.get(execution.token)
+      nativeCalls.delete(execution.token)
+      if (!publication || result.isError) return
+      const value = result.value
+      if (!value || typeof value !== 'object' || !('messageId' in value) || typeof value.messageId !== 'string') {
+        errors.push('native-message-identity-missing'); return
+      }
+      nativePublications.set(value.messageId, publication)
+      deliverNativeRelay(value.messageId)
+    })
+    return undefined
+  }, { global: true })
+  const removeNetwork = ctx.on('atn/network-updated', ({ record }) => observe(() => observeNetwork(record)), { global: true })
+  const removeSession = ctx.on('session/event', (session, event) => observe(() => {
+    if (event.type === 'assistant/message') {
+      const content = event.data.message.content.flatMap(block => block.type === 'text' ? [block.text] : []).join('\n')
+      if (content) nativeOutputs.set(session.id, { from: alias(session.id), sentSeq: next(), content })
+    } else if (event.type === 'user/message' && (event.data.source.kind === 'agent-message'
+      || event.data.source.kind === 'subagent-settled')) {
+      const id = event.data.id
+      if (nativeDelivered.has(id)) return
+      nativeDelivered.add(id)
+      const from = alias(event.data.source.senderSessionId)
+      const content = event.data.content.flatMap(block => block.type === 'text' ? [block.text] : []).join('\n')
+      const receipt = { from, to: alias(session.id), seq: next(), content }
+      if (event.data.source.kind === 'agent-message') {
+        nativeReceipts.set(id, receipt)
+        deliverNativeRelay(id)
+      } else {
+        // The actual notice, not subagent/end output, proves receipt. Closing
+        // text is sometimes deliberately suppressed after a send_message.
+        const output = nativeOutputs.get(event.data.source.senderSessionId)
+        events.push({ kind: 'transport', ...receipt, transport: 'native', delivered: true,
+          ...(output && content.includes(output.content) ? { sentSeq: output.sentSeq } : {}) })
+      }
+    } else if (event.type === 'team/message/queued' || event.type === 'team/message/delivered'
+      || event.type === 'team/member') {
+      ignoredLegacyTeamEvents++
     }
   }), { global: true })
   const atn = ctx.get('atn')
@@ -105,20 +162,25 @@ export function installEqualBudgetObserver(ctx: Context, task: EqualBudgetTask, 
       const submitted = submission as EqualBudgetSubmission | null
       if (submitted && answer !== undefined && answer !== null && submitted.answer !== answer) errors.push('submission-answer-mismatch')
       const facts = buildEqualBudgetAuditFacts(task, submitted?.answer ?? '')
-      const audit = auditEqualBudgetFactFlow({ documents: task.documents, facts, events, submission: submitted })
-      const observerErrors = [...new Set(errors)]
-      return { audit: { ...audit, observerErrors,
+      const observedEvents: EqualBudgetFactEvent[] = [...events, ...[...nativeReceipts.values()].map(receipt => ({
+        kind: 'transport' as const, ...receipt, transport: 'native' as const, delivered: true,
+      }))].sort((a, b) => a.seq - b.seq)
+      const audit = auditEqualBudgetFactFlow({ documents: task.documents, facts, events: observedEvents, submission: submitted })
+      const observerErrors = [...new Set([...errors, ...(nativeReceipts.size ? ['unobserved-native-publication-boundary'] : [])])]
+      return { nativeProtocolVersion: NATIVE_TEAM_PROTOCOL, audit: { ...audit, observerErrors,
         passed: audit.passed && observerErrors.length === 0,
         positiveCompletionEvidence: audit.positiveCompletionEvidence && observerErrors.length === 0 },
-        events: structuredClone(events), submission: submitted, facts,
-        coverage: { forwardingAllowed: true, oracleValuesUsed: false, aclInference: false,
-          sources: ['successful-document-reads', 'delivered-atn-mail', 'delivered-native-mail', 'independent-candidate-input', 'successful-atn-status-task-result'],
-          limitation: 'Unstructured prose, native shared task/fork context and ATN peer-summary or assignment-context transfers are not reconstructed. Missing witnesses remain audit gaps.' } }
+        events: structuredClone(observedEvents), submission: submitted, facts,
+        coverage: { forwardingAllowed: true, oracleValuesUsed: false, aclInference: false, ignoredLegacyTeamEvents,
+          nativeAcceptedSendsWithoutRecordedReceipt: nativePublications.size,
+          sources: ['successful-document-reads', 'delivered-atn-mail', 'recorded-agent-relay-with-exact-send-identity',
+            'recorded-subagent-settlement-with-observed-closing-text', 'independent-candidate-input', 'successful-atn-status-task-result'],
+          limitation: 'Unstructured prose, shared task-board content, initial delegation prompts, fork history and ATN peer-summary or assignment-context transfers are not reconstructed. A settlement notice with suppressed or unobserved closing text has no source publication witness. Legacy Team mailbox events are excluded from current live fact paths. Missing witnesses remain audit gaps.' } }
     },
     dispose() {
-      removeNetwork(); removeSession()
+      removeNetwork(); removeSession(); removeNativeCall(); removeNativeResult()
       if (atn && originalStatus) atn.status = originalStatus
-      networks.clear()
+      networks.clear(); nativeCalls.clear(); nativePublications.clear(); nativeReceipts.clear(); nativeOutputs.clear()
     },
   }
 }

@@ -8,6 +8,7 @@ import { SessionId } from '@deepseek-ai/dsh-session'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { RewireResult, SendResult } from '../../src/runtime.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 import { networkRecordSchema, type TaskRecord } from '../../src/schema.ts'
 import type { TaskValidator } from '../../src/tasks.ts'
 
@@ -109,8 +110,14 @@ test('VERIFIED-WORKFLOW-02: rewires remain open while optional host evidence rec
     assert.equal(unknown.evaluation.verdict, 'insufficient-evidence')
     assert.ok(unknown.evaluation.reasons.includes('baseline-unknown-task'))
     const discovery = await kernel.atn.peers(host, '*')
-    assert.equal(discovery.nodes[0]!.verifiedFeedback.passed, 1)
-    assert.equal(discovery.candidateNodes!.find(node => node.id === candidate.nodeId)!.verifiedFeedback.passed, 1)
+    const connected = discovery.nodes[0]
+    assert.ok(connected)
+    assert.ok(isFullPeerSummary(connected), 'Verified-workflow fixture requires full peer disclosure')
+    assert.equal(connected.verifiedFeedback.passed, 1)
+    const discoveredCandidate = discovery.candidateNodes?.find(node => node.id === candidate.nodeId)
+    assert.ok(discoveredCandidate)
+    assert.ok(isFullPeerSummary(discoveredCandidate), 'Verified-workflow fixture requires full peer disclosure')
+    assert.equal(discoveredCandidate.verifiedFeedback.passed, 1)
     const { rewire: noChange } = await call<{ rewire: RewireResult }>(kernel, host, 'atn_status', { rewire: { peers: [baseline.nodeId] } })
     assert.ok(noChange.rewireId)
     const accepted = await kernel.atn.network(started.networkId)

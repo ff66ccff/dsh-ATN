@@ -3,8 +3,10 @@ import test from 'node:test'
 import { readFile, mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { stream as completionStream } from 'opencode-go-pi-ai/api/openai-completions'
-import { normalizeContext } from 'opencode-go-pi-ai/utils/transcript'
+import { createServer } from 'node:http'
+import { once } from 'node:events'
+import { OpencodeGoAdapter, OpencodeGoCatalog, PlainConfig, PROVIDER_ID, type OpencodeGoConfig } from 'dsh-opencode-go'
+import type { StreamChunk, ToolSchema } from '@deepseek-ai/dsh-llm'
 import { bootKernel, createHostAgent, drive } from '../fixtures/kernel.ts'
 import { auditHistoricalErrors, classifyFinishError, classifyToolError } from '../../experiments/tool-error-audit.ts'
 
@@ -24,34 +26,122 @@ test('error audit covers all 35 finish failures without treating tool failures a
   assert.throws(() => classifyToolError({ message: 'new unknown failure', errorCode: null, toolName: 'atn_status' }), /unclassified/i)
 })
 
-test('installed provider parser preserves both valid and NUL names from synthetic HTTP responses', async () => {
-  const fixture = JSON.parse(await readFile(new URL('../fixtures/tool-error-nul.json', import.meta.url), 'utf8'))
-  const names = ['read_evidence', 'atn_status', ...fixture.incidents.map((incident: { call: { name: string } }) => incident.call.name)]
-  for (const name of names) {
-    let requests = 0
-    const response = completionStream({ id: 'audit-fixture', name: 'Audit fixture', api: 'openai-completions',
-      provider: 'openai', baseUrl: 'https://audit.invalid/v1', reasoning: false, input: ['text'],
-      cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 }, contextWindow: 8192, maxTokens: 256,
-    }, normalizeContext({ messages: [{ role: 'user', content: 'Replay fixture', timestamp: 0 }], tools: fixture.advertisedTools }), {
-      apiKey: 'test-only-not-a-credential', maxRetries: 0,
-      fetch: async (_input, init) => {
-        requests++
-        const body = JSON.parse(String(init!.body))
-        assert.ok(body.tools.every((tool: { function: { name: string } }) => !tool.function.name.includes('\0')))
-        const frames = [
-          { id: 'audit-response', choices: [{ index: 0, delta: { role: 'assistant', tool_calls: [{ index: 0, id: 'audit-call', type: 'function', function: { name, arguments: '{}' } }] }, finish_reason: null }] },
-          { id: 'audit-response', choices: [{ index: 0, delta: {}, finish_reason: 'tool_calls' }] },
-        ].map(frame => `data: ${JSON.stringify(frame)}\n\n`).join('') + 'data: [DONE]\n\n'
-        return new Response(frames, { headers: { 'Content-Type': 'text/event-stream' } })
-      },
-    })
-    const seen: string[] = []
-    for await (const event of response) {
-      if (event.type === 'toolcall_end') seen.push(event.toolCall.name)
-      if (event.type === 'error') assert.fail(event.error.errorMessage)
+test('public adapter keeps valid tool names and cannot repair incoming NUL names into advertised tools', async () => {
+  const fixture = JSON.parse(await readFile(new URL('../fixtures/tool-error-nul.json', import.meta.url), 'utf8')) as {
+    advertisedTools: ToolSchema[]
+    incidents: { call: { name: string; arguments: string } }[]
+  }
+  const calls = [
+    { name: 'read_evidence', arguments: '{"id":"mine"}' },
+    { name: 'atn_status', arguments: '{}' },
+    ...fixture.incidents.map(incident => incident.call),
+    // Unlike the recorded names, stripping this synthetic NUL would select a real tool.
+    { name: 'atn_status\0', arguments: '{}' },
+  ]
+  const requests: { tools: { type: string; function: ToolSchema }[]; model: string; stream: boolean }[] = []
+  let discoveries = 0
+  const scratch = await mkdtemp(join(tmpdir(), 'dsh-atn-adapter-audit-'))
+  const server = createServer(async (request, response) => {
+    try {
+      if (request.method === 'GET' && request.url === '/v1/models') {
+        discoveries++
+        response.writeHead(200, { 'Content-Type': 'application/json' })
+        response.end(JSON.stringify({ data: [{
+          id: 'audit-fixture', type: 'chat', name: 'Audit fixture',
+          api: { 'chat-completions': {} }, modalities: { input: ['text'] },
+          limit: { context: 8192, output: 256 },
+        }] }))
+        return
+      }
+      if (request.method !== 'POST' || request.url !== '/v1/chat/completions') {
+        response.writeHead(404).end()
+        return
+      }
+      const body: Buffer[] = []
+      for await (const chunk of request) body.push(Buffer.from(chunk))
+      const index = requests.length
+      requests.push(JSON.parse(Buffer.concat(body).toString('utf8')))
+      const call = calls[index]
+      if (!call) throw new Error('unexpected extra inference request')
+      const frames = [
+        { id: 'audit-response', choices: [{ index: 0, delta: { role: 'assistant', tool_calls: [{ index: 0, id: `audit-call-${index}`, type: 'function', function: call }] }, finish_reason: null }] },
+        { id: 'audit-response', choices: [{ index: 0, delta: {}, finish_reason: 'tool_calls' }] },
+      ].map(frame => `data: ${JSON.stringify(frame)}\n\n`).join('') + 'data: [DONE]\n\n'
+      response.writeHead(200, { 'Content-Type': 'text/event-stream' })
+      response.end(frames)
+    } catch (error) {
+      response.writeHead(500, { 'Content-Type': 'application/json' })
+      response.end(JSON.stringify({ error: { message: String(error) } }))
     }
-    assert.equal(requests, 1)
-    assert.deepEqual(seen, [name], 'the parser copies the response name; it neither injects nor repairs NUL')
+  })
+  let adapter: OpencodeGoAdapter | undefined
+  try {
+    server.listen(0, '127.0.0.1')
+    await once(server, 'listening')
+    const address = server.address()
+    assert.ok(address && typeof address !== 'string')
+    const baseURL = `http://127.0.0.1:${address.port}/v1`
+    const config = PlainConfig({
+      baseURL, freeBaseURL: baseURL, freeEnabled: false, proxyURL: '',
+      apiKeyEnv: 'ATN_AUDIT_TEST_ONLY', autoSwitch: false,
+      requestTimeoutMs: 5000, requestPreparationTimeoutMs: 5000, streamIdleTimeoutMs: 5000,
+    } as OpencodeGoConfig)
+    // The public catalog captures its cache path at construction. Never read/write the user's cache.
+    const previousHome = process.env.DSH_HOME
+    let catalog: OpencodeGoCatalog
+    try {
+      process.env.DSH_HOME = scratch
+      catalog = new OpencodeGoCatalog(baseURL, 60_000)
+    } finally {
+      if (previousHome === undefined) delete process.env.DSH_HOME
+      else process.env.DSH_HOME = previousHome
+    }
+    adapter = new OpencodeGoAdapter({
+      config: () => config, catalog: () => catalog,
+      resolveApiKey: async () => 'test-only-not-a-credential',
+    })
+    const advertisedNames = fixture.advertisedTools.map(tool => tool.name)
+    for (const [index, call] of calls.entries()) {
+      const chunks: StreamChunk[] = []
+      for await (const chunk of adapter.stream({
+        provider: PROVIDER_ID, model: 'audit-fixture', maxTokens: 256,
+        messages: [{ role: 'user', content: [{ type: 'text', text: 'Replay fixture' }] }],
+        tools: fixture.advertisedTools,
+      })) chunks.push(chunk)
+      assert.equal(requests.length, index + 1, 'one adapter call makes one local inference request')
+      assert.equal(requests[index]!.model, 'audit-fixture')
+      assert.equal(requests[index]!.stream, true)
+      assert.deepEqual(requests[index]!.tools.map(tool => ({
+        name: tool.function.name, description: tool.function.description, parameters: tool.function.parameters,
+      })), fixture.advertisedTools, 'outgoing schemas retain the advertised names and arguments')
+      assert.ok(requests[index]!.tools.every(tool => tool.type === 'function' && !tool.function.name.includes('\0')))
+      const completed = chunks.flatMap(chunk => chunk.type === 'block-end' && chunk.block.type === 'tool-call' ? [chunk.block] : [])
+      assert.deepEqual(completed.map(block => block.name), [call.name], 'the current public adapter preserves the incoming name exactly')
+      assert.equal(completed[0]!.id, `audit-call-${index}`)
+      assert.deepEqual(JSON.parse(completed[0]!.arguments), JSON.parse(call.arguments))
+      if (call.name.includes('\0')) {
+        assert.ok(completed.every(block => !advertisedNames.includes(block.name)), 'corrupt names must never select an advertised tool')
+      }
+      const finishes = chunks.filter(chunk => chunk.type === 'finish')
+      assert.equal(finishes.length, 1, 'the adapter emits exactly one terminal state')
+      assert.equal(finishes[0]!.reason.kind, 'tool-calls')
+      assert.equal(chunks.at(-1)?.type, 'finish', 'no output follows the terminal state')
+    }
+    assert.equal(discoveries, 1, 'all inference requests use the owned local catalog')
+  } finally {
+    try {
+      await adapter?.dispose()
+    } finally {
+      try {
+        if (server.listening) {
+          const closed = new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()))
+          server.closeAllConnections()
+          await closed
+        }
+      } finally {
+        await rm(scratch, { recursive: true, force: true })
+      }
+    }
   }
 })
 

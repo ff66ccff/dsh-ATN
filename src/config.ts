@@ -14,6 +14,8 @@ import { SUBSTRATE_DEFAULTS, type SubstrateOptions } from './substrate-options.t
 
 /** Plugin configuration of the ATN runtime service. */
 export interface Config extends Partial<SubstrateOptions> {
+  /** Host-only incidental collaborator disclosure, frozen per network; defaults to full. */
+  peerDisclosure?: NonNullable<NetworkLimits['peerDisclosure']>
   /** Outgoing degree ceiling, 1–8; defaults to eight, above the default 32-node curve value six. */
   maxCollaborationPeers?: number
   /** Minimum terminal requester ratings on each compared edge. Defaults to two. */
@@ -49,33 +51,47 @@ export interface Config extends Partial<SubstrateOptions> {
 }
 
 /** Validated plugin configuration. */
-export const Config: z<Config> = z.object({
-  substrateEnabled: z.boolean().default(SUBSTRATE_DEFAULTS.substrateEnabled),
-  maxSubstrateMessages: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessages),
-  maxSubstrateMessageBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessageBytes),
-  maxSubstrateTotalBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateTotalBytes),
-  substrateSearchResults: z.natural().default(SUBSTRATE_DEFAULTS.substrateSearchResults),
-  substrateVisitLimit: z.natural().default(SUBSTRATE_DEFAULTS.substrateVisitLimit),
-  substrateRefsPerMessage: z.natural().default(SUBSTRATE_DEFAULTS.substrateRefsPerMessage),
-  substrateCitationWeight: z.boolean().default(SUBSTRATE_DEFAULTS.substrateCitationWeight),
-  substrateCitersShown: z.natural().default(SUBSTRATE_DEFAULTS.substrateCitersShown),
-  maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),
-  requesterMinSamples: z.natural().default(2),
-  maxResidentNodes: z.natural().default(8),
-  maxTotalNodes: z.natural().default(32),
-  maxTasks: z.natural().default(256),
-  maxProposals: z.natural().default(64),
-  maxPendingMailPerNode: z.natural().default(64),
-  maxRetainedMail: z.natural().default(1024),
-  maxMessageBytes: z.natural().default(8192),
-  maxDocumentBytes: z.natural().default(8192),
-  defaultLeaseMs: z.natural().default(5 * 60 * 1000),
-  maxLeaseExtensionMs: z.natural().default(30 * 60 * 1000),
-  networkDeadlineMs: z.natural().default(60 * 60 * 1000),
-  proposalDeadlineMs: z.natural().default(2 * 60 * 1000),
-  stepBudget: z.natural().default(64),
-  domainName: z.string().default(ATN_DOMAIN_NAME),
-})
+export const Config: z<Config> = z.intersect([
+  // Schemastery treats null as absence; host mode selection must reject explicit null.
+  z.transform(z.any<Config>(), value => {
+    assertPeerDisclosure(value.peerDisclosure)
+    return {}
+  }),
+  z.object({
+    peerDisclosure: z.union(['full', 'coarse', 'minimal']).default('full'),
+    substrateEnabled: z.boolean().default(SUBSTRATE_DEFAULTS.substrateEnabled),
+    maxSubstrateMessages: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessages),
+    maxSubstrateMessageBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateMessageBytes),
+    maxSubstrateTotalBytes: z.natural().default(SUBSTRATE_DEFAULTS.maxSubstrateTotalBytes),
+    substrateSearchResults: z.natural().default(SUBSTRATE_DEFAULTS.substrateSearchResults),
+    substrateVisitLimit: z.natural().default(SUBSTRATE_DEFAULTS.substrateVisitLimit),
+    substrateRefsPerMessage: z.natural().default(SUBSTRATE_DEFAULTS.substrateRefsPerMessage),
+    substrateCitationWeight: z.boolean().default(SUBSTRATE_DEFAULTS.substrateCitationWeight),
+    substrateCitersShown: z.natural().default(SUBSTRATE_DEFAULTS.substrateCitersShown),
+    maxCollaborationPeers: z.natural().default(MAX_COLLABORATION_PEERS),
+    requesterMinSamples: z.natural().default(2),
+    maxResidentNodes: z.natural().default(8),
+    maxTotalNodes: z.natural().default(32),
+    maxTasks: z.natural().default(256),
+    maxProposals: z.natural().default(64),
+    maxPendingMailPerNode: z.natural().default(64),
+    maxRetainedMail: z.natural().default(1024),
+    maxMessageBytes: z.natural().default(8192),
+    maxDocumentBytes: z.natural().default(8192),
+    defaultLeaseMs: z.natural().default(5 * 60 * 1000),
+    maxLeaseExtensionMs: z.natural().default(30 * 60 * 1000),
+    networkDeadlineMs: z.natural().default(60 * 60 * 1000),
+    proposalDeadlineMs: z.natural().default(2 * 60 * 1000),
+    stepBudget: z.natural().default(64),
+    domainName: z.string().default(ATN_DOMAIN_NAME),
+  }),
+]).default({})
+
+function assertPeerDisclosure(value: unknown): void {
+  if (value !== undefined && value !== 'full' && value !== 'coarse' && value !== 'minimal') {
+    throw new Error('peerDisclosure must be full, coarse or minimal')
+  }
+}
 
 /**
  * Reject a configuration whose individual fields are valid but whose relations
@@ -91,6 +107,7 @@ export const Config: z<Config> = z.object({
  */
 export function assertConfigRelations(config: Config): void {
   const problems: string[] = []
+  assertPeerDisclosure(config.peerDisclosure)
   const substrate = { ...SUBSTRATE_DEFAULTS, ...config }
   for (const field of ['maxSubstrateMessages', 'maxSubstrateMessageBytes', 'maxSubstrateTotalBytes',
     'substrateSearchResults', 'substrateVisitLimit', 'substrateRefsPerMessage', 'substrateCitersShown'] as const) {
@@ -161,6 +178,7 @@ export function assertConfigRelations(config: Config): void {
 export function limitsFromConfig(config: Config): NetworkLimits {
   return {
     ...Object.fromEntries(Object.entries(SUBSTRATE_DEFAULTS).map(([field, fallback]) => [field, config[field as keyof SubstrateOptions] ?? fallback])),
+    peerDisclosure: config.peerDisclosure ?? 'full',
     maxCollaborationPeers: config.maxCollaborationPeers ?? MAX_COLLABORATION_PEERS,
     requesterMinSamples: config.requesterMinSamples ?? 2,
     maxResidentNodes: config.maxResidentNodes,

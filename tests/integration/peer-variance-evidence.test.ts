@@ -10,6 +10,7 @@ import { installShiftingEvidenceAccess } from '../../experiments/shifting-eviden
 import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
 import { ShiftingMailScript } from '../../experiments/shifting-evidence-script.ts'
 import * as AtnTools from '../../src/tools.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 
 test('PEER-03: identical capabilities expose both copy holders; real same-query reviews persist rejected and accepted', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'peer-variance-'))
@@ -37,7 +38,10 @@ test('PEER-03: identical capabilities expose both copy holders; real same-query 
     const requester = network.agents[0]
     const staleSlot = task.phases[0].staleHolders[task.rootKey], goodSlot = task.phases[0].holders[task.rootKey]
     const discovered = await kernel.ctx.atn.status(requester, { query: task.rootKey })
-    const visible = [...discovered.nodes, ...(discovered.candidateNodes ?? [])].filter(peer => peer.knowledgeFingerprint.topics.includes(task.rootKey))
+    const visible = [...discovered.nodes, ...(discovered.candidateNodes ?? [])].filter(peer => {
+      assert.ok(isFullPeerSummary(peer), 'Peer-variance fixture requires full peer disclosure')
+      return peer.knowledgeFingerprint.topics.includes(task.rootKey)
+    })
     assert.ok(visible.some(peer => peer.id === network.ids[staleSlot]))
     assert.ok(visible.some(peer => peer.id === network.ids[goodSlot]))
     assert.ok('rewireHint' in discovered, 'status makes the atomic rewire入口 explicit')

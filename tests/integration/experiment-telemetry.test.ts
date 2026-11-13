@@ -2,21 +2,31 @@ import { setHostKnowledge } from '../fixtures/host-custody.ts'
 /** Experiment accounting is observed through real Harness events; no provider calls. */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { installTeamDirectory } from '../../experiments/native-team-runtime.ts'
+import { installTeamDirectory, installNativeTeamBirthLimit, NATIVE_TEAM_PROTOCOL } from '../../experiments/native-team-runtime.ts'
 import { mkdtemp, readFile, rm } from 'node:fs/promises'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
 import { SessionId } from '@deepseek-ai/dsh-session'
-import type { StreamChunk, TokenUsage } from '@deepseek-ai/dsh-llm'
+import { createUserMessage, type StreamChunk, type TokenUsage } from '@deepseek-ai/dsh-llm'
 import SubagentRuntime from '@deepseek-ai/dsh-subagent'
 import * as Spawn from '@deepseek-ai/dsh-subagent-spawn-in-process'
-import TeamService from '@deepseek-ai/dsh-experimental-agent-team'
+import * as Fork from '@deepseek-ai/dsh-subagent-fork-in-process'
+import * as SubagentTools from '@deepseek-ai/dsh-tool-subagent'
+import * as SubagentControl from '@deepseek-ai/dsh-tool-subagent-control'
+import TeamService from '@deepseek-ai/dsh-agent-team'
+import * as TeamTools from '@deepseek-ai/dsh-tool-agent-team'
 import { installTelemetry, normalizeUsage, type PriceTable } from '../../experiments/telemetry.ts'
 import { ExperimentSessionQuery } from '../../experiments/session-query.ts'
 import { createExperimentBudget, installExperimentOutputCap } from '../../experiments/budget.ts'
 import { bootKernel, createHostAgent, drive, settle } from '../fixtures/kernel.ts'
 import { makeChain, makeTask } from '../fixtures/network.ts'
 import { enqueueMail, mailBytes } from '../../src/mailbox.ts'
+
+// This scripted auxiliary-call producer owns its request-purpose declaration.
+// Do not depend on a transitive compaction plugin to augment the LLM contract.
+declare module '@deepseek-ai/dsh-llm/types' {
+  interface LlmRequestPurposeMap { compaction: true }
+}
 
 const usage: TokenUsage = { inputTokens: 100, outputTokens: 20, cacheReadTokens: 40, cacheWriteTokens: 5, reasoningTokens: 10, totalTokens: 165 }
 const prices: PriceTable = {
@@ -269,7 +279,7 @@ test('TELEMETRY-04: closing an active observation marks incomplete coverage and 
   }
 })
 
-test('TELEMETRY-05: native Team task revisions, dependencies and mail export only structural facts', async () => {
+test('TELEMETRY-05: native task board and continuable inbox export distinct structural facts', async () => {
   const scratch = await mkdtemp(join(tmpdir(), 'atn-experiment-team-'))
   const kernel = await bootKernel(scratch)
   const telemetry = await installTelemetry(kernel.ctx, { directory: join(scratch, 'experiment'), runId: 'native-team' })
@@ -279,11 +289,14 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
     await kernel.ctx.plugin(ExperimentSessionQuery)
     await kernel.ctx.plugin(Spawn, { providerName: 'spawn' })
     await kernel.ctx.plugin(TeamService)
+    await kernel.ctx.plugin(TeamTools)
     const host = await createHostAgent(kernel, 'SECRET_TEAM_ROOT')
-    const child = await kernel.ctx.agentTeams.spawnTeammate(host, {
-      name: 'secret-team-name', description: 'SECRET_TEAM_DESCRIPTION', context: 'fresh', provider: 'spawn',
-      prompt: [{ type: 'text', text: 'SECRET_TEAM_PROMPT' }], signal: new AbortController().signal,
+    await kernel.ctx.agentTeams.setEnabled(host, true)
+    const child = await kernel.ctx.subagents.startActivation({ parent: host,
+      name: 'secret-team-name', label: 'SECRET_TEAM_DESCRIPTION', provider: 'spawn', delivery: 'parent',
+      prompt: [{ type: 'text', text: 'SECRET_TEAM_PROMPT' }], signal: new AbortController().signal, maxDepth: 1,
     })
+    await child.result
     await settle(kernel)
     const first = await kernel.ctx.agentTeams.createTask(host, {
       subject: 'SECRET_TASK_SUBJECT', description: 'SECRET_TASK_BODY', writeScopes: ['SECRET_DIRECTORY/SECRET_FILE'],
@@ -294,19 +307,35 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
     const claimed = await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: first.revision, action: 'claim' })
     const completed = await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: claimed.revision, action: 'complete' })
     await kernel.ctx.agentTeams.updateTask(host, { taskId: first.id, expectedRevision: completed.revision, action: 'reopen' })
-    const sent = await kernel.ctx.agentTeams.sendMessage(host, { target: child.member.name,
-      content: [{ type: 'text', text: 'SECRET_TEAM_MAIL' }], signal: new AbortController().signal })
-    assert.ok(sent.messageId, 'the service returns the accepted Agent inbox identity')
+    const boardOnly = telemetry.snapshot().nativeTeam!
+    assert.equal(boardOnly.board.writes, 5)
+    assert.equal(boardOnly.inbox.relays, 0, 'board revisions never become mailbox receipts')
+    const receipts: string[] = []
+    kernel.ctx.on('session/event', (session, event) => {
+      if (session.id === child.childId && event.type === 'user/message' && event.data.source.kind === 'agent-message') receipts.push(event.data.id)
+    }, { global: true })
+    const sent = await kernel.ctx.subagents.sendMessage(host, child.childId,
+      [{ type: 'text', text: 'SECRET_TEAM_MAIL' }], { signal: new AbortController().signal })
+    while (await kernel.ctx.subagents.waitForTreeWork(host)) await host.whenIdle()
     await settle(kernel)
-    const target = kernel.ctx.agents.get(child.member.id)!
-    assert.ok(target.session.snapshotEvents().some(event => event.type === 'user/message'
-      && event.data.id === sent.messageId && event.data.source.kind === 'agent-message'),
-    'the target log contains the exact accepted relay')
+    assert.ok(receipts.includes(sent), 'the resumed target records the exact accepted relay')
+    kernel.model.enqueue(host.id, [{ tool: 'team_task_list', args: {} }, { tool: 'team_task_get', args: { task_id: first.id } }])
+    await drive(host, 'Read the actual task board.')
     const final = await telemetry.close()
     assert.equal(final.coverage.observationErrors, 0)
+    const native = final.nativeTeam!
+    assert.equal(native.protocolVersion, NATIVE_TEAM_PROTOCOL)
+    assert.equal(native.subagents.uniqueChildren, 1, 'cold resume is not a new agent birth')
+    assert.equal(native.subagents.starts, 2)
+    assert.equal(native.subagents.ends, 2)
+    assert.equal(native.board.reads, 2)
+    assert.equal(native.inbox.relays, 1)
+    assert.equal(native.inbox.settlementNotices, 2)
+    assert.equal(native.totalInteractions, 10, 'five board writes, two reads, one relay and two notices')
+    assert.ok(native.totalTransferBytes > native.inbox.relayBytes)
     const raw = await readFile(telemetry.paths.events, 'utf8')
     const rows = raw.trim().split('\n').map(line => JSON.parse(line))
-    assert.ok(rows.some(row => row.kind === 'team.member' && row.phase === 'active'))
+    assert.ok(rows.some(row => row.kind === 'subagent.start' && row.local && row.nativeTeam))
     const tasks = rows.filter(row => row.kind === 'team.task')
     assert.equal(tasks.length, 5)
     const linked = tasks.find(row => row.blockedBy.length === 1)!
@@ -314,17 +343,72 @@ test('TELEMETRY-05: native Team task revisions, dependencies and mail export onl
     assert.ok(tasks.some(row => row.task === linked.blockedBy[0] && row.status === 'completed' && row.revision === completed.revision))
     assert.ok(tasks.some(row => row.owner !== null))
     assert.ok(tasks.some(row => row.writeScopes.length === 1 && row.writeScopes[0].startsWith('write-scope-')))
-    const delivered = rows.filter(row => row.kind === 'team.mail' && row.status === 'delivered')
-    assert.equal(delivered.length, 1, 'direct inbox delivery produces one structural observation')
-    assert.ok(delivered[0].from && delivered[0].to && delivered[0].mail)
-    assert.equal(rows.some(row => row.kind === 'team.mail' && row.status === 'queued'), false,
-      'the removed Team mailbox must not be fabricated')
+    assert.equal(rows.filter(row => row.kind === 'agent.relay' && row.status === 'recorded').length, 1)
+    assert.equal(rows.some(row => row.kind === 'team.mail' || row.kind === 'team.member' || row.kind.startsWith('legacy.team.')), false,
+      'current tools do not fabricate the historical Team spawn/mail protocol')
     assert.equal(raw.includes('SECRET_'), false)
     assert.equal(raw.includes('secret-team-name'), false)
-    assert.equal(raw.includes(child.member.id), false)
+    assert.equal(raw.includes(child.childId), false)
     assert.equal(raw.includes(`\"${second.id}\"`), false)
   } finally {
     await telemetry.close()
+    await kernel.ctx.fiber.dispose()
+    await rm(scratch, { recursive: true, force: true })
+  }
+})
+
+test('TELEMETRY-TEAM-BOUND: native spawn/fork tools share a cumulative birth cap after children settle', async () => {
+  const scratch = await mkdtemp(join(tmpdir(), 'atn-experiment-team-bound-'))
+  const kernel = await bootKernel(scratch)
+  try {
+    await installTeamDirectory(kernel.ctx, scratch)
+    await kernel.ctx.plugin(SubagentRuntime, { maxActiveSubagents: 1, maxDepth: 1 })
+    await kernel.ctx.plugin(ExperimentSessionQuery)
+    await kernel.ctx.plugin(Spawn, { providerName: 'spawn' })
+    await kernel.ctx.plugin(Fork, { providerName: 'fork' })
+    const births = installNativeTeamBirthLimit(kernel.ctx, 2)
+    await kernel.ctx.plugin(SubagentTools, { provider: births.providers.spawn, toolName: 'subagent', maxDepth: 1 })
+    await kernel.ctx.plugin(SubagentTools, { provider: births.providers.fork, toolName: 'subagent_fork', maxDepth: 1 })
+    await kernel.ctx.plugin(SubagentControl)
+    await kernel.ctx.plugin(TeamService, { defaultEnabled: true })
+    await kernel.ctx.plugin(TeamTools)
+    const host = await createHostAgent(kernel, 'native-bound-root')
+    assert.equal(kernel.ctx.agentTeams.isEnabled(host), true)
+    kernel.model.enqueue(host.id, [{ tool: 'subagent', args: { name: 'worker', description: 'First worker', prompt: 'Return a short result.' } }])
+    await drive(host, 'Create one worker.')
+    while (await kernel.ctx.subagents.waitForTreeWork(host)) await host.whenIdle()
+    await settle(kernel)
+    assert.equal(births.snapshot().admittedChildIdentities, 1)
+    assert.equal((await kernel.ctx.subagents.listDescendants(host.id)).filter(row => row.kind === 'child').length, 1)
+    kernel.model.enqueue(host.id, [{ tool: 'subagent_fork', args: { name: 'extra', description: 'Forbidden extra worker', prompt: 'No additional birth permitted.' } }])
+    await drive(host, 'Attempt a new fork after the first worker has been released.')
+    const failures = host.session.snapshotEvents().filter(event => event.type === 'tool/result' && event.data.message.isError)
+    assert.equal(failures.length, 1)
+    assert.equal(births.snapshot().rejectedCreations, 1)
+    const descendants = (await kernel.ctx.subagents.listDescendants(host.id)).filter(row => row.kind === 'child')
+    assert.equal(descendants.length, 1)
+    const childId = descendants[0].id
+    const requestsBefore = kernel.model.requests.filter(row => row.sessionId === childId).length
+    kernel.ctx.on('tools/pre-execute', (execution, next) => {
+      if (execution.agent === host && execution.name === 'wait_agent') {
+        // wait_agent waits on the caller's next-step inbox, not a target list.
+        // Supply a real Host steering input so the test needs no timeout wait.
+        host.steer(createUserMessage({ source: { kind: 'user' }, content: [{ type: 'text', text: 'Continue after inbox wait.' }] }))
+      }
+      return next()
+    }, { global: true })
+    kernel.model.enqueue(host.id, [{ tool: 'send_message', args: { agent: 'worker', message: 'Continue the same worker.' } },
+      { tool: 'list_agents', args: {} }, { tool: 'wait_agent', args: { timeout_ms: 10_000 } }])
+    await drive(host, 'Continue the existing conversation.')
+    while (await kernel.ctx.subagents.waitForTreeWork(host)) await host.whenIdle()
+    assert.equal(host.session.snapshotEvents().filter(event => event.type === 'tool/result' && event.data.message.isError).length, 1,
+      'only the deliberately rejected extra birth failed; all current control tools execute successfully')
+    assert.equal(births.snapshot().admittedChildIdentities, 1, 'resume reuses the birth and allocation identity')
+    assert.ok(kernel.model.requests.filter(row => row.sessionId === childId).length > requestsBefore)
+    const advertised = kernel.model.toolSets.find(row => row.sessionId === host.id)!.tools
+    for (const tool of ['subagent', 'subagent_fork', 'send_message', 'list_agents', 'wait_agent', 'team_task_create', 'team_task_update']) assert.ok(advertised.includes(tool))
+    for (const removed of ['team_spawn', 'team_send', 'team_wait', 'team_list']) assert.equal(advertised.includes(removed), false)
+  } finally {
     await kernel.ctx.fiber.dispose()
     await rm(scratch, { recursive: true, force: true })
   }

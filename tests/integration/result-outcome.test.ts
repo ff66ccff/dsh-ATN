@@ -7,6 +7,7 @@ import { join } from 'node:path'
 import type { AgentHandle } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { MemoryNetworkStore } from '../../src/domain.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 import type { SendInput } from '../../src/runtime.ts'
 import { atnMessages, bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 
@@ -62,7 +63,10 @@ test('RESULT-OUTCOME-01: a model can settle failed work and inform its disconnec
     assert.equal(record.tasks[child.taskId]!.settledBy, child.nodeId)
     assert.equal(record.nodes[child.nodeId]!.lifecycle, 'active', 'a failed task does not retire its holder')
     const discovered = await kernel.atn.peers(host)
-    assert.deepEqual(discovered.nodes.find(node => node.id === child.nodeId)!.recentResults, ['[failed] Dependency unavailable.'])
+    const peer = discovered.nodes.find(node => node.id === child.nodeId)
+    assert.ok(peer)
+    assert.ok(isFullPeerSummary(peer), 'Result-outcome fixture requires full peer disclosure')
+    assert.deepEqual(peer.recentResults, ['[failed] Dependency unavailable.'])
     const received = atnMessages(host).filter(text => text.includes('mail=model-failed-result'))
     assert.equal(received.length, 1)
     assert.match(received[0]!, /\nOutcome: failed\n/)

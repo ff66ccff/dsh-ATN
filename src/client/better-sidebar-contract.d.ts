@@ -1,6 +1,8 @@
-/** Narrow, type-only projection of dsh-better-sidebar 0.28.0's Tab API.
+/** Narrow, type-only projection of dsh-better-sidebar 0.32.0's Tab API.
  * Consumer-owned to keep an optional provider out of the development dependency graph.
- * Source: src/client/service.ts:149-167 (TabComponentProps), 168-292 (TabDescriptor); no runtime provider or compatibility shim.
+ * Source: src/client/service.ts:165-181 (TabComponentProps), 184-308 (TabDescriptor)
+ * at main / v0.32.0 commit 53e08cec61f1a3cfe32b86e6429876fff1ef0504.
+ * Only the ATN-consumed surface is projected; no runtime provider or compatibility shim.
  */
 import type { Context } from '@deepseek-ai/cordis'
 import type { ReactNode } from 'react'

@@ -395,6 +395,8 @@ export type SubstrateState = z.infer<typeof substrateStateSchema>
 /** Effective bounds of one network. Every bound is a positive integer count or a duration. */
 export const networkLimitsSchema = z
   .object({
+    /** Host-frozen incidental peer metadata; absent legacy records disclose full summaries. */
+    peerDisclosure: z.enum(['full', 'coarse', 'minimal']).optional(),
     /** Frozen ceiling of the cumulative-node degree curve; absent legacy ceilings remain four. */
     maxCollaborationPeers: z.number().int().min(1).max(MAX_COLLABORATION_PEERS).optional(),
     /** Terminal requester ratings required on each compared edge; legacy default is two. */

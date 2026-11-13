@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { installShiftingEvidenceAccess } from '../../experiments/shifting-evidence-access.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 import type { KnowledgeMetadata } from '../../src/knowledge.ts'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 
@@ -57,7 +58,10 @@ test('ACCESS-01: third parties cannot read result/context through tasks, discove
     const discovered = await kernel.atn.status(observer.agent, { query: 'key-0' })
     assert.equal(discovered.candidates?.[0], holder.nodeId)
     assert.equal(JSON.stringify(discovered).includes(proof), false)
-    assert.ok(discovered.candidateNodes?.every(peer => peer.taskSummaries.length === 0 && peer.recentResults.length === 0))
+    assert.ok(discovered.candidateNodes?.every(peer => {
+      assert.ok(isFullPeerSummary(peer), 'Shifting-evidence access fixture requires full peer disclosure')
+      return peer.taskSummaries.length === 0 && peer.recentResults.length === 0
+    }))
     assert.deepEqual((await kernel.atn.peers(observer.agent, proof)).candidates, [])
     assert.deepEqual((await kernel.atn.peers(observer.agent, 'PRIVATE_CONTEXT_0')).candidates, [])
     assert.deepEqual((await kernel.atn.peers(observer.agent, 'Lookup request')).candidates, [])
@@ -119,7 +123,10 @@ test('ACCESS-04: no board can reveal proof bodies; host discovery still returns 
     assert.deepEqual(discovered.candidates, [holder.nodeId])
     assert.equal(JSON.stringify(discovered).includes(proof), false)
     assert.deepEqual((await kernel.atn.peers(observer.agent, proof)).candidates, [])
-    assert.deepEqual(discovered.candidateNodes?.[0].knowledgeFingerprint.documents, hints.get(holder.sessionId)!.documents)
+    const candidate = discovered.candidateNodes?.[0]
+    assert.ok(candidate)
+    assert.ok(isFullPeerSummary(candidate), 'Shifting-evidence access fixture requires full peer disclosure')
+    assert.deepEqual(candidate.knowledgeFingerprint.documents, hints.get(holder.sessionId)!.documents)
     assert.equal('board' in kernel.atn, false)
     assert.equal('whiteboard' in await kernel.atn.network(started.networkId), false)
   })

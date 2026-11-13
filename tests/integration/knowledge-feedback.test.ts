@@ -10,6 +10,7 @@ import { SessionId } from '@deepseek-ai/dsh-session'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import type { SpawnResult } from '../../src/runtime.ts'
 import type { TaskValidator } from '../../src/tasks.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 
 const goal = {
   objective: 'Discover local evidence and use requester feedback.',
@@ -134,9 +135,11 @@ test('KNOWLEDGE-02: identical assignments become discoverable and requester qual
     await settle(kernel)
     const after = await kernel.atn.status(host, { query: 'slot 5' })
     assert.deepEqual(after.candidates, [second.nodeId, first.nodeId])
-    assert.equal(after.candidateNodes?.[0].requesterFeedback.accepted, 1)
-    assert.equal(after.candidateNodes?.[0].verifiedFeedback.passed, 0)
-    assert.equal(after.candidateNodes?.[0].knowledgeFingerprint.requesterAcceptanceRate, 1)
+    const best = after.candidateNodes?.[0]
+    assert.ok(best && isFullPeerSummary(best))
+    assert.equal(best.requesterFeedback.accepted, 1)
+    assert.equal(best.verifiedFeedback.passed, 0)
+    assert.equal(best.knowledgeFingerprint.requesterAcceptanceRate, 1)
     assert.equal(kernel.model.requests.length, requestCount, 'rating and reading discovery never wake idle peers')
     const updated = await kernel.atn.network(started.networkId)
     assert.deepEqual(updated.mails, prior.mails, 'feedback creates no protocol messages')

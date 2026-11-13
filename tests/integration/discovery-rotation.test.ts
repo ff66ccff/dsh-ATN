@@ -11,6 +11,7 @@ import { markTaskUnreachable, settleTask } from '../../src/tasks.ts'
 import { bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import { testGoal } from '../fixtures/network.ts'
 import type { PeersResult, SpawnResult } from '../../src/runtime.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 
 async function withKernel(run: (kernel: Kernel, store: MemoryNetworkStore) => Promise<void>): Promise<void> {
   const scratch = await mkdtemp(join(tmpdir(), 'dsh-atn-discovery-'))
@@ -112,9 +113,13 @@ test('DISCOVERY-03: neighbourhood and candidate summaries distinguish completed,
     })
 
     const feedback = await discover(kernel, host, '*')
-    assert.deepEqual(feedback.nodes.find(node => node.id === completed.nodeId)!.recentResults, ['[completed] Verified parser.'])
-    assert.deepEqual(feedback.candidateNodes!.find(node => node.id === failed.nodeId)!.recentResults, ['[failed] Missing input fixture.'])
-    assert.deepEqual(feedback.candidateNodes!.find(node => node.id === unreachable.nodeId)!.recentResults, ['[unreachable] Unreachable investigation.'])
-    assert.ok(feedback.candidateNodes!.every(node => node.openTasks === 0))
+    const done = feedback.nodes.find(node => node.id === completed.nodeId)!
+    const failure = feedback.candidateNodes!.find(node => node.id === failed.nodeId)!
+    const lost = feedback.candidateNodes!.find(node => node.id === unreachable.nodeId)!
+    assert.ok(isFullPeerSummary(done) && isFullPeerSummary(failure) && isFullPeerSummary(lost))
+    assert.deepEqual(done.recentResults, ['[completed] Verified parser.'])
+    assert.deepEqual(failure.recentResults, ['[failed] Missing input fixture.'])
+    assert.deepEqual(lost.recentResults, ['[unreachable] Unreachable investigation.'])
+    assert.ok(feedback.candidateNodes!.every(node => isFullPeerSummary(node) && node.openTasks === 0))
   })
 })

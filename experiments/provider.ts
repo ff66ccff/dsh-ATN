@@ -29,8 +29,11 @@ export async function discoverPilotModels(): Promise<{ checkedAt: string; provid
     () => { warnings.push('catalog-refresh-failed') },
     () => { warnings.push('unconfigured-models') })
   const snapshot = await catalog.snapshot(true, AbortSignal.timeout(45_000))
-  if (!snapshot.live || !snapshot.metadataLive) throw new Error('A live gateway catalog and live pricing metadata are required for pilot selection')
+  if (!snapshot.live) throw new Error('A live gateway catalog is required for pilot selection')
   const models = [...snapshot.models.values()]
+    // Current catalogs carry pricing with each model; unknown costs can be
+    // represented as numeric zero and must never authorize a supposedly free run.
+    .filter(model => snapshot.details.has(model.id) && snapshot.details.get(model.id)?.costKnown !== false)
     .filter(model => REQUESTED_MODELS.includes(model.id as typeof REQUESTED_MODELS[number]) || Object.values(model.cost).every(value => value === 0))
     .map(model => ({ id: model.id, name: model.name, api: model.api, contextWindow: model.contextWindow,
       catalogFree: model.cost.input === 0 && model.cost.output === 0 && model.cost.cacheRead === 0 && model.cost.cacheWrite === 0,

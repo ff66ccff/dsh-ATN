@@ -5,6 +5,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { execFile } from 'node:child_process'
 import { promisify } from 'node:util'
+import { createHash } from 'node:crypto'
 import type { GenerateOptions, StreamChunk } from '@deepseek-ai/dsh-llm'
 import { runShiftingReference } from '../../experiments/shifting-evidence-reference.ts'
 import { runShiftingEvidence } from '../../experiments/shifting-evidence-run.ts'
@@ -33,6 +34,9 @@ test('explicit observed-token thresholds support 4m, reject above 8m, and leave 
     assert.equal(report.stopReason, 'phase-1-quiescence')
     const manifest = JSON.parse(await readFile(join(options.directory, 'manifest.json'), 'utf8'))
     assert.equal(manifest.limits.observedTokenLimit, 4_000_000)
+    const disclosureHash = createHash('sha256').update(await readFile(new URL('../../src/peer-disclosure.ts', import.meta.url))).digest('hex')
+    assert.equal(manifest.sourceHashes['../src/peer-disclosure.ts'], disclosureHash)
+    assert.equal(report.sourceHashes['../src/peer-disclosure.ts'], disclosureHash)
     await assert.rejects(() => runShiftingEvidence({ ...options, directory: join(scratch, 'invalid'), observedTokenLimit: 8_000_001 },
       { adapter: new ScriptedModel() }), /Invalid bounded observedTokenLimit/)
   } finally { await rm(scratch, { recursive: true, force: true }) }

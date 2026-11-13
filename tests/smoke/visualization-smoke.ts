@@ -5,11 +5,22 @@ import { copyFile, mkdtemp, rm, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
+import { parseArgs } from 'node:util'
 
-const CLI = process.env.DSH_CLI ?? 'D:\\DeepSeekDesktop\\resources\\runtime\\cli\\bin\\dsh.cmd'
+const { values } = parseArgs({ options: {
+  cli: { type: 'string' }, sidebar: { type: 'string' }, port: { type: 'string' }, preview: { type: 'boolean' },
+} })
+const CLI = values.cli === undefined
+  ? process.env.DSH_CLI ?? 'D:\\DeepSeekDesktop\\resources\\runtime\\cli\\bin\\dsh.cmd'
+  : resolve(values.cli)
+const portText = values.port ?? process.env.ATN_VISUAL_PORT ?? '0'
+if (!/^\d+$/.test(portText) || !Number.isSafeInteger(Number(portText)) || Number(portText) > 65535) {
+  throw new Error('Visualization port must be an integer from 0 through 65535')
+}
 const version = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8')).version
 const TARBALL = resolve('.artifacts', `dsh-atn-${version}.tgz`)
-const preview = process.env.ATN_VISUAL_PREVIEW === '1'
+const preview = values.preview ?? process.env.ATN_VISUAL_PREVIEW === '1'
+const sidebarSpec = values.sidebar ?? process.env.ATN_SIDEBAR_SPEC
 const redact = (text: string): string => text.replace(/([?&]token=)[^\s&"'<>]+/g, '$1<redacted>')
 
 async function dsh(home: string, args: string[], live = false): Promise<string> {
@@ -23,6 +34,8 @@ async function dsh(home: string, args: string[], live = false): Promise<string> 
       env: {
         ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !/KEY|TOKEN|SECRET|CREDENTIAL|PASSWORD|^DSH_/i.test(key))),
         DSH_HOME: home,
+        ATN_VISUAL_PREVIEW: preview ? '1' : '0',
+        ...(sidebarSpec === undefined ? {} : { ATN_SIDEBAR_SPEC: sidebarSpec }),
       },
     })
     let output = ''
@@ -65,7 +78,6 @@ async function dsh(home: string, args: string[], live = false): Promise<string> 
 async function main(): Promise<void> {
   if (!existsSync(CLI)) throw new Error(`DSH_CLI not found: ${CLI}`)
   if (!existsSync(TARBALL)) throw new Error('Build and pack the package before running visualization smoke')
-  const sidebarSpec = process.env.ATN_SIDEBAR_SPEC
   if (sidebarSpec !== undefined && !/^dsh-better-sidebar@\d+\.\d+\.\d+$/.test(sidebarSpec)) {
     throw new Error('ATN_SIDEBAR_SPEC must be an exact dsh-better-sidebar version')
   }
@@ -80,7 +92,7 @@ async function main(): Promise<void> {
     await copyFile(new URL('./visualization-observer.mjs', import.meta.url), observer)
     const overlay = join(home, 'visualization.patch.yml')
     await writeFile(overlay, `- insert:\n    - id: atn-visualization-observer\n      name: ${JSON.stringify(pathToFileURL(observer).href)}\n`, 'utf8')
-    const output = await dsh(home, ['--profile', profile, '--patch', overlay, '--no-open', '--port', '0'], true)
+    const output = await dsh(home, ['--profile', profile, '--patch', overlay, '--no-open', '--port', portText], true)
     if (!output.includes('ATN_VISUALIZATION_SMOKE ')) throw new Error(`Observer did not finish:\n${redact(output).slice(-12_000)}`)
   } finally {
     // A fixed mkdtemp prefix and exact parent check fence every recursive removal.

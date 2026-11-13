@@ -3,6 +3,7 @@ import { strict as assert } from 'node:assert'
 import test from 'node:test'
 import { defineCustodyPolicy, OUTBOUND_CHANNELS, type OutboundChannel } from '../../src/information-boundary.ts'
 import { MemoryNetworkStore } from '../../src/domain.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 import { makeChain, makeTask } from '../fixtures/network.ts'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { SpawnInput } from '../../src/runtime.ts'
@@ -219,7 +220,10 @@ test('BOUNDARY-RED-DISCOVERY: an agent cannot forge its discovery custody', asyn
     await kernel.atn.rewire(host, { peers: [] })
     const discovered = await kernel.atn.status(host, { query: 'owned' })
     assert.deepEqual(discovered.candidates, [worker.nodeId])
-    assert.equal(discovered.candidateNodes?.[0].knowledgeFingerprint.source, 'host-custody')
+    const candidate = discovered.candidateNodes?.[0]
+    assert.ok(candidate)
+    assert.ok(isFullPeerSummary(candidate), 'Information-boundary discovery fixture requires full peer disclosure')
+    assert.equal(candidate.knowledgeFingerprint.source, 'host-custody')
     assert.deepEqual((await kernel.atn.status(host, { query: 'foreign' })).candidates, [])
   })
 })

@@ -8,6 +8,7 @@ import type { Agent } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { atnMessages, bootKernel, createHostAgent, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import type { SpawnResult } from '../../src/runtime.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 
 const goal = {
   objective: 'Keep useful local collaborators after peers leave.',
@@ -234,6 +235,7 @@ test('LOCAL-FEEDBACK-04: peer steps stay queryable without injecting snapshots; 
     assert.equal(notices.length, 0, 'peer admission must not replay feedback')
     const status = await kernel.atn.status(host, {})
     const peer = status.nodes.find(node => node.id === worker.nodeId)!
+    assert.ok(isFullPeerSummary(peer))
     assert.equal(peer.telemetry.stepsUsed, workerBefore + 1)
     assert.equal(peer.telemetry.stepsRemaining, after.limits.stepBudget - workerBefore - 1)
     assert.doesNotMatch(feedback(host).join('\n'), /steps=|remaining=/)

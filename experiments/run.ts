@@ -15,8 +15,11 @@ import * as StorageDomain from '@deepseek-ai/dsh-storage-domain'
 import SubagentRuntime from '@deepseek-ai/dsh-subagent'
 import * as Spawn from '@deepseek-ai/dsh-subagent-spawn-in-process'
 import * as Fork from '@deepseek-ai/dsh-subagent-fork-in-process'
-import TeamService from '@deepseek-ai/dsh-experimental-agent-team'
-import * as TeamTools from '@deepseek-ai/dsh-experimental-tool-agent-team'
+import * as NativeExecutor from '@deepseek-ai/dsh-tool-executor-native'
+import * as SubagentTools from '@deepseek-ai/dsh-tool-subagent'
+import * as SubagentControl from '@deepseek-ai/dsh-tool-subagent-control'
+import TeamService from '@deepseek-ai/dsh-agent-team'
+import * as TeamTools from '@deepseek-ai/dsh-tool-agent-team'
 import * as OpenCodeGo from 'dsh-opencode-go'
 import { mkdir, writeFile, readFile } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
@@ -34,7 +37,7 @@ import { isTaskAccepted, taskResultDigest } from '../src/tasks.ts'
 import { observeRequesterTask, summarizeRequesterFeedback } from '../src/requester-feedback.ts'
 import { createExperimentBudget, installExperimentOutputCap } from './budget.ts'
 import { ExperimentSessionQuery } from './session-query.ts'
-import { installTeamDirectory } from './native-team-runtime.ts'
+import { installTeamDirectory, installNativeTeamBirthLimit, NATIVE_TEAM_PROTOCOL, NATIVE_TEAM_BASELINE } from './native-team-runtime.ts'
 import { extractFinalTextSubmission, installAtnSubmissionBridge } from './submission.ts'
 import { getTopologyTask, isTopologyTask, renderTopologyPrompt, TOPOLOGY_TASK_IDS, TopologyScenario, type TopologyTaskId } from './topology-task.ts'
 import { evaluateTopologyTask } from './topology-evaluation.ts'
@@ -48,10 +51,11 @@ import { installEqualBudgetObserver } from './equal-budget-observer.ts'
 
 // Capture once per process, before a batch starts. Do not edit source during runs.
 const sourceFiles = ['run.ts', 'budget.ts', 'submission.ts', 'tasks.ts', 'evaluation.ts', 'topology-task.ts', 'topology-evaluation.ts', 'topology-host.ts', 'provider.ts', 'telemetry.ts', 'session-query.ts',
+  'native-team-runtime.ts', 'equal-budget.ts', 'equal-budget-task.ts', 'equal-budget-observer.ts', 'equal-budget-audit.ts',
   'reference-run.ts', 'reference-policy.ts', 'reference-kernel.ts', 'measurement-gate.ts', 'measurement-summary.ts', 'calibration.ts', 'atn-cost.ts',
   '../src/runtime.ts', '../src/mailbox.ts', '../src/messages.ts', '../src/topology.ts', '../src/topology-feedback.ts',
   '../src/tasks.ts', '../src/governance.ts', '../src/proposals.ts', '../src/verified-feedback.ts', '../src/local-feedback.ts',
-  '../src/requester-feedback.ts', '../src/knowledge.ts',
+  '../src/requester-feedback.ts', '../src/knowledge.ts', '../src/peer-disclosure.ts',
   '../src/config.ts', '../src/schema.ts', '../src/tools.ts', '../package.json', '../package-lock.json']
 const diskSourceHashesAtModuleLoad = Object.fromEntries(await Promise.all(sourceFiles.map(async path =>
   [path, createHash('sha256').update(await readFile(new URL(path, import.meta.url))).digest('hex')])))
@@ -79,6 +83,7 @@ function codeOf(error: unknown): string {
 export async function runPilot(options: RunOptions, mount?: { liveProviderMount(ctx: Context): Promise<void> }) {
   assertAllowedPilotModel(options.model)
   const equal = options.equalBudget
+  const nativeMaxTasks = equal ? 128 : 32
   if (options.mode === 'single-scaffolded' && !equal) throw new Error('single-scaffolded requires an equal-budget ledger task')
   const singleAgentMode = options.mode === 'single' || options.mode === 'single-scaffolded'
   const allocation = equal ? equalBudgetAllocations(equal.agents, equal.steps, EQUAL_BUDGET_V3_MODES).find(row => row.mode === options.mode) : undefined
@@ -131,9 +136,7 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
   let maxTokenTruncations = 0
   const agentSessions = new Set<string>()
   const equalSessionAliases = new Map<string, string>()
-  let nativeInteractions = 0
-  let nativeTransferBytes = 0
-  const nativeMessageIds = new Set<string>()
+  let nativeBirthAdmission: ReturnType<typeof installNativeTeamBirthLimit> | undefined
   let independentTransferBytes = 0
   let ended = false
   const requestFailures: Array<{ code: string; status?: number }> = []
@@ -162,14 +165,8 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
   const independentCandidates: Array<ReturnType<typeof extractFinalTextSubmission>> = []
   const candidateCalls = new Map<string, number>()
   const candidateCallLimit = equal?.steps ?? Math.floor((options.maxCalls - 1) / (options.maxAgents - 1))
-  const nativeQueuedMail = (): number => {
-    const pending = new Set<string>()
-    for (const event of entry?.session.snapshotEvents() ?? []) {
-      if (event.type === 'team/message/queued') pending.add(event.data.message.id)
-      if (event.type === 'team/message/delivered') pending.delete(event.data.messageId)
-    }
-    return pending.size
-  }
+  const nativeTeamVersion = options.mode === 'native-team'
+    ? { protocol: NATIVE_TEAM_PROTOCOL, baseline: NATIVE_TEAM_BASELINE, historicalComparability: 'not-equivalent-to-legacy-team-mailbox' } : null
   let signalEnd!: () => void
   const endSignal = new Promise<void>(resolveEnd => { signalEnd = resolveEnd })
   const prices: PriceTable = {
@@ -192,6 +189,7 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
     await ctx.plugin(SessionProjectionRegistry)
     await ctx.plugin(SystemPrompt)
     await ctx.plugin(ToolRuntime)
+    await ctx.plugin(NativeExecutor)
     await ctx.plugin(AgentRegistry)
     await ctx.plugin(JsonlSessionPersistence, { root: join(directory, 'sessions'), compression: 'none' })
     await ctx.plugin(AgentLoop, { agents: [], maxParallelToolCalls: 1 })
@@ -202,13 +200,8 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
     })
     if (!ctx.llm.listProviders().some(provider => provider.id === OpenCodeGo.PROVIDER_ID)) throw new Error('OpenCode plugin route is unavailable')
     telemetry = await installTelemetry(ctx, { directory, runId, prices })
-    if (equal) ctx.on('session/event', (session, event) => {
+    if (equal) ctx.on('session/event', (session) => {
       if (!equalSessionAliases.has(session.id)) equalSessionAliases.set(session.id, `session-${equalSessionAliases.size + 1}`)
-      if (event.type === 'team/message/queued' && !nativeMessageIds.has(`${event.data.teamId}:${event.data.message.id}`)) {
-        nativeMessageIds.add(`${event.data.teamId}:${event.data.message.id}`)
-        nativeInteractions++
-        nativeTransferBytes += Buffer.byteLength(JSON.stringify(event.data.message), 'utf8')
-      }
     }, { global: true })
     ctx.on('session/event', (_session, event) => {
       if (event.type === 'turn/end' && event.data.reason.kind === 'max-tokens') maxTokenTruncations++
@@ -267,7 +260,7 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
       `Run bounds: at most ${options.maxAgents} total agents including the entry, ${options.maxCalls} model calls across all agents, ${options.maxOutputTokens} output tokens per call. Keep coordination concise.`,
       equal ? `Your individual allocation is ${allocation!.perAgentSteps[0]} model calls${singleAgentMode ? '' : ' (every worker and the entry have the same allocation)'}. Total allocated calls across the arm: ${allocation!.totalSteps}. Unused allocations cannot be borrowed. These are model-step limits, not token, HTTP-request or monetary limits.`
         : options.mode.startsWith('atn-') ? `Each node, including the entry, has ${perNodeSteps} admitted model steps. Exhausted nodes retire; the global call cap is a separate experiment safety limit.` : '',
-      options.mode === 'native-team' ? 'The user explicitly requests use of Agent Teams. Choose your own collaborators and task strategy using the native Team tools.' : '',
+      options.mode === 'native-team' ? 'This experiment selects native Agent Teams: a shared task board over continuable subagents. Create collaborators with subagent or subagent_fork, discover them with list_agents, and communicate with send_message or wait_agent. Use team_task_create/list/get/update for task coordination. Board changes never send messages or wake idle workers. The Lead must wait for required collaborators before submitting.' : '',
       options.mode.includes('no-rewire') ? 'Experimental ablation: voluntary atn_status rewire is disabled. Birth connections and inactive-neighbour repair still operate. All other ATN rules apply.' : '',
     ].filter(Boolean).join('\n')
     ctx.systemPrompt.section({ name: 'pilot-common', order: 10, text: policy })
@@ -339,8 +332,12 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
       await ctx.plugin(SubagentRuntime, { maxActiveSubagents: options.maxAgents - 1, maxDepth: 1 })
       await ctx.plugin(Spawn, { providerName: 'spawn' })
       await ctx.plugin(Fork, { providerName: 'fork' })
-      await ctx.plugin(TeamService, { maxMembers: options.maxAgents - 1, maxTasks: equal ? 128 : 32, maxMessageBytes: 8192 })
-      await ctx.plugin(TeamTools, { freshProvider: 'spawn', forkProvider: 'fork' })
+      nativeBirthAdmission = installNativeTeamBirthLimit(ctx, options.maxAgents, () => { agentCapacityRejections++ })
+      await ctx.plugin(SubagentTools, { provider: nativeBirthAdmission.providers.spawn, toolName: 'subagent', maxDepth: 1 })
+      await ctx.plugin(SubagentTools, { provider: nativeBirthAdmission.providers.fork, toolName: 'subagent_fork', maxDepth: 1 })
+      await ctx.plugin(SubagentControl)
+      await ctx.plugin(TeamService, { maxTasks: nativeMaxTasks, defaultEnabled: true })
+      await ctx.plugin(TeamTools)
     }
     if (equalTask) factObserver = installEqualBudgetObserver(ctx, equalTask, session => allocated!.alias(session))
     const handle = await ctx.agents.create({ sessionId: SessionId(`pilot-${runId}`),
@@ -349,10 +346,10 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
     entry = handle.agent
     await mkdir(join(directory, 'workspace'), { recursive: true })
     await writeFile(join(directory, 'input.json'), JSON.stringify(topologyTask ?? task, null, 2) + '\n')
-    await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, mode: options.mode, task: taskId, taskRevision,
+    await writeFile(join(directory, 'manifest.json'), JSON.stringify({ runId, mode: options.mode, task: taskId, taskRevision, nativeTeamVersion,
       taskSha256: createHash('sha256').update(JSON.stringify(topologyTask ?? task)).digest('hex'), taskPrompt, provider: OpenCodeGo.PROVIDER_ID, model: options.model,
       limits: { calls: options.maxCalls, perCallOutputTokens: options.maxOutputTokens, observedTokens: observedTokenLimit,
-        tokenLimitIsAdmissionThreshold: true, timeoutMs: options.timeoutMs, agents: options.maxAgents, perNodeSteps, maxTasks: 128 },
+        tokenLimitIsAdmissionThreshold: true, timeoutMs: options.timeoutMs, agents: options.maxAgents, perNodeSteps, maxTasks: options.mode === 'native-team' ? nativeMaxTasks : 128 },
       calibration: !!options.calibration, tokenCalibration, primaryMetrics: PRIMARY_METRICS, reference,
       equalBudget: equal ? { seed: equal.seed, allocation, shards: equalTask!.shardIds.length, ordersPerShard: equalTask!.ordersPerShard,
         compactAnswer: equalTask!.compactAnswer === true, documentAccess: 'all documents readable by every agent; forwarding allowed; no topology ACL' } : null,
@@ -360,7 +357,7 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
         evidenceAccess: 'creation-slot ACL; no shard text in shared prompt', phaseTrigger: 'all initial shards read',
         failedSlot: topologyTask.failedSlot, recoveryMode, backupSlot: recoveryMode === 'preassigned-backup' ? topologyTask.backupSlot : null, oracle: 'final only',
         comparison: 'same task hash, seed, initial graph, phase/failure policy and budgets for both ATN modes' } : null,
-      packages: { harness: '0.2.0-rc.2', provider: '0.1.20' },
+      packages: { harness: '0.2.2-rc.2', provider: '0.4.0' },
       diskSourceHashesAtModuleLoad, finalTextRule: 'latest-completed-turn-final-step-visible-text-v1',
       control: 'live Harness kernel composition; no UI/CLI profile; no filesystem/shell/network tools; host-only oracle',
       costMeaning: 'Reference catalog estimate, not subscription billing. Hidden HTTP retries may be unobservable.',
@@ -411,8 +408,9 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
           const record = networkId ? await (await ctx.atn.openStore()).load(networkId) : undefined
           if (record && (Object.values(record.mails).some(mail => mail.status === 'queued')
             || Object.values(record.nodes).some(node => node.lifecycle === 'provisioning'))) continue
-          if (options.mode === 'native-team' && (nativeQueuedMail() > 0
-            || ctx.agentTeams.listMembers(entry).some(member => member.status === 'provisioning'))) continue
+          // Join the official manager's pending starts, execution, notification
+          // and teardown. Shared board revisions are not queued inbox work.
+          if (options.mode === 'native-team' && await ctx.subagents.waitForTreeWork(entry)) continue
           break
         }
       }
@@ -478,9 +476,15 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
       }
     } else if (options.mode === 'native-team') {
       const tasks = ctx.agentTeams.listTasks(entry)
-      protocol = { members: ctx.agentTeams.listMembers(entry).length, queuedMail: nativeQueuedMail(),
+      const descendants = await ctx.subagents.listDescendants(entry.id)
+      protocol = { ...nativeTeamVersion, descendants: descendants.filter(item => item.kind === 'child').length,
+        discoveryDiagnostics: descendants.filter(item => item.kind === 'diagnostic').length,
+        residentSubagents: descendants.filter(item => item.kind === 'child' && ctx.agents.get(item.id) !== undefined).length,
+        birthAdmission: nativeBirthAdmission?.snapshot(),
         openTasks: tasks.filter(task => task.status === 'pending' || task.status === 'in_progress').length,
-        tasks: tasks.map(item => ({ status: item.status })) }
+        tasks: tasks.map(item => ({ revision: item.revision, status: item.status, ready: item.ready })),
+        inbox: 'direct accepted Agent messages and runtime settlement notices; no Team mailbox',
+        taskCompletion: 'self-reported board state; not result acceptance or message delivery' }
     }
     if (protocol && typeof protocol === 'object') protocol = { ...protocol, activeAgentsAtStop: ctx.agents.list().filter(agent => agent.status === 'running').length }
   } catch (error) {
@@ -506,12 +510,12 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
   const consumption = allocated?.snapshot()
   const factFlow = factObserver?.finish(answer, entry?.id)
   if (factFlow) await writeFile(join(directory, 'fact-flow.json'), JSON.stringify(factFlow, null, 2) + '\n')
-  const report = { runId, mode: options.mode, model: options.model.id, task: taskId, stopReason,
+  const report = { runId, mode: options.mode, model: options.model.id, task: taskId, stopReason, nativeTeamVersion,
     startedAt: started, completedAt, elapsedMs: completedAt - started, issuedModelCalls: budget.snapshot().issued, budget: budget.snapshot(), peakAgents, totalAgents, agentCreationEvents,
     requestFailures, maxTokenTruncations, protocol, evaluation, metrics, submissionMetrics, submissionMethod, finalTextExtraction,
     independentCandidates, cleanup, answer: answer ?? null, manipulation: scenario?.snapshot() ?? null,
     calibration: !!options.calibration, tokenCalibration,
-    limits: { ...calibrationKey, observedTokenLimit, maxCalls: options.maxCalls, maxTasks: 128, timeoutMs: options.timeoutMs },
+    limits: { ...calibrationKey, observedTokenLimit, maxCalls: options.maxCalls, maxTasks: options.mode === 'native-team' ? nativeMaxTasks : 128, timeoutMs: options.timeoutMs },
     primaryMetrics: PRIMARY_METRICS, reference,
     atnMessages: metrics?.atnMessages ?? 0, atnPayloadBytes: metrics?.atnPayloadBytes ?? 0,
     fixedContextBytes: metrics?.fixedContextBytes ?? null, meanInputTokensPerCall: metrics?.meanInputTokensPerCall ?? null,
@@ -521,8 +525,8 @@ export async function runPilot(options: RunOptions, mount?: { liveProviderMount(
       agentSessions: Object.fromEntries([...agentSessions].map(id => [allocated!.alias(id), [equalSessionAliases.get(id) ?? 'unknown']])),
       allocatedConsumption: consumption, uncreatedAgentSlots: allocation!.agents - (consumption?.length ?? 0), agentCapacityRejections,
       factFlowAudit: factFlow?.audit ?? { passed: false, unknown: true },
-      protocolInteractions: options.mode.startsWith('atn-') ? metrics?.atnTotalInteractions ?? null : options.mode === 'native-team' ? nativeInteractions : options.mode === 'independent-pool' ? independentCandidates.length : 0,
-      protocolTransferBytes: options.mode.startsWith('atn-') ? metrics?.atnTotalTransferBytes ?? null : options.mode === 'native-team' ? nativeTransferBytes : options.mode === 'independent-pool' ? independentTransferBytes : 0,
+      protocolInteractions: options.mode.startsWith('atn-') ? metrics?.atnTotalInteractions ?? null : options.mode === 'native-team' ? metrics?.nativeTeam?.totalInteractions ?? null : options.mode === 'independent-pool' ? independentCandidates.length : 0,
+      protocolTransferBytes: options.mode.startsWith('atn-') ? metrics?.atnTotalTransferBytes ?? null : options.mode === 'native-team' ? metrics?.nativeTeam?.totalTransferBytes ?? null : options.mode === 'independent-pool' ? independentTransferBytes : 0,
     } : {}) }
   await writeFile(join(directory, 'report.json'), JSON.stringify(report, null, 2) + '\n')
   return report

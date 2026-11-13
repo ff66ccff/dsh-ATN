@@ -6,6 +6,7 @@ import { join, dirname, resolve } from 'node:path'
 import type { Context } from '@deepseek-ai/cordis'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import { Config } from '../src/config.ts'
+import { isFullPeerSummary } from '../src/peer-disclosure.ts'
 import { collaborationPeers } from '../src/topology.ts'
 import { createAtnCostMeter } from './atn-cost.ts'
 import { referenceKernel } from './reference-kernel.ts'
@@ -120,7 +121,11 @@ export async function runShiftingReference(options: ShiftingReferenceOptions = {
         while (key !== null) {
           await step(0)
           const discovery = await kernel.ctx.atn.peers(kernel.entry, key)
-          const advertised = [...discovery.nodes, ...(discovery.candidateNodes ?? [])].filter(peer =>
+          const peers = [...discovery.nodes, ...(discovery.candidateNodes ?? [])].map(peer => {
+            assert.ok(isFullPeerSummary(peer), 'Shifting-evidence reference requires full peer disclosure')
+            return peer
+          })
+          const advertised = peers.filter(peer =>
             peer.knowledgeFingerprint.documents.some(id => id.endsWith(`:${key}`)))
           const wanted = advertised.filter(peer => peer.knowledgeFingerprint.documents.includes(`phase-${phase}:${key}`))
           const stale = key === task.rootKey ? advertised.filter(peer => peer.knowledgeFingerprint.documents.some(id => id.startsWith('copy-for-phase-'))) : []

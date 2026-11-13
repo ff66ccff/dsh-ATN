@@ -1,6 +1,7 @@
 /** Experiment-only information channels: discovery carries metadata, proofs use metered transport. */
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import type { AtnRuntime, PeerSummary, PeersResult } from '../src/runtime.ts'
+import { isFullPeerSummary, type FullPeerSummary } from '../src/peer-disclosure.ts'
 import type { KnowledgeMetadata } from '../src/knowledge.ts'
 import { defineCustodyPolicy } from '../src/information-boundary.ts'
 import { knowledgeFingerprintSchema } from '../src/schema.ts'
@@ -48,7 +49,8 @@ export function installShiftingEvidenceAccess(
 
   atn.peers = async (agent, query) => {
     const { record, node } = await context(agent)
-    const sanitize = (peer: PeerSummary): PeerSummary => {
+    const sanitize = (peer: PeerSummary): FullPeerSummary => {
+      if (!isFullPeerSummary(peer)) throw new Error('Shifting-evidence access requires full peer disclosure')
       const allowed = canonical(metadata(record.nodes[peer.id].sessionId))
       const knowledge = peer.knowledgeFingerprint
       return { ...peer, taskSummaries: [], recentResults: [],
@@ -69,13 +71,13 @@ export function installShiftingEvidenceAccess(
     // API. Do not call its text search: that also indexes private task results.
     const count = Object.values(record.nodes).filter(candidate => candidate.id !== node.id &&
       !base.neighbours.includes(candidate.id) && candidate.lifecycle === 'active' && candidate.creationState === 'published').length
-    const discovered = new Map<string, PeerSummary>()
+    const discovered = new Map<string, FullPeerSummary>()
     for (let page = 0; page < Math.ceil(count / 3); page++) {
       const batch = await original.peers(agent, '*')
       for (const candidate of batch.candidateNodes ?? []) discovered.set(candidate.id, sanitize(candidate))
     }
     const terms = [...new Set(needle.split(' '))]
-    const score = (peer: PeerSummary) => {
+    const score = (peer: FullPeerSummary) => {
       if (needle === '*') return 1
       const index = fields.flatMap(field => peer.knowledgeFingerprint[field]).map(normalize)
       return 2 * terms.filter(term => index.some(text => text.includes(term))).length +

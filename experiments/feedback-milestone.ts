@@ -9,6 +9,7 @@ import { parseArgs } from 'node:util'
 import { pathToFileURL } from 'node:url'
 import type { Agent } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
+import { isFullPeerSummary } from '../src/peer-disclosure.ts'
 import { createExactJsonValidator, isTaskAccepted } from '../src/tasks.ts'
 import { bootKernel, createHostAgent, settle, type Kernel } from '../tests/fixtures/kernel.ts'
 
@@ -57,7 +58,9 @@ export async function runFeedbackMilestoneArm(withFeedback: boolean) {
     const afterPublication = await kernel.atn.status(requester, { query })
     assert.equal(afterPublication.candidates?.[0], candidate.nodeId, 'fingerprint locates a sibling with the same generic assignment')
     const discovered = afterPublication.candidateNodes?.find(peer => peer.id === candidate.nodeId)
-    assert.ok(discovered?.knowledgeFingerprint)
+    assert.ok(discovered)
+    assert.ok(isFullPeerSummary(discovered), 'Feedback milestone requires full peer disclosure')
+    assert.ok(discovered.knowledgeFingerprint)
 
     // Exploration is explicitly paid in real directed topology changes and task mail.
     // Keeping the old peer for one probe permits results from both candidates.
@@ -95,10 +98,15 @@ export async function runFeedbackMilestoneArm(withFeedback: boolean) {
     const decisionInput = await kernel.atn.status(requester, { query })
     const discoveredCandidate = decisionInput.candidateNodes?.find(peer => peer.id === candidate.nodeId)
     assert.ok(discoveredCandidate)
+    assert.ok(isFullPeerSummary(discoveredCandidate), 'Feedback milestone requires full peer disclosure')
     const currentPeer = decisionInput.nodes.find(peer => peer.id === previous.nodeId)
     assert.ok(currentPeer)
+    assert.ok(isFullPeerSummary(currentPeer), 'Feedback milestone requires full peer disclosure')
     const choice = withFeedback
-      ? decisionInput.candidateNodes?.find(peer => peer.requesterFeedback.accepted > currentPeer.requesterFeedback.accepted)?.id
+      ? decisionInput.candidateNodes?.find(peer => {
+        assert.ok(isFullPeerSummary(peer), 'Feedback milestone requires full peer disclosure')
+        return peer.requesterFeedback.accepted > currentPeer.requesterFeedback.accepted
+      })?.id
       : decisionInput.candidates?.[0]
     assert.equal(choice, candidate.nodeId, 'the policy uses the returned local acceptance record; control uses exploration')
     const decision = await kernel.atn.rewire(requester, { peers: [choice!] })

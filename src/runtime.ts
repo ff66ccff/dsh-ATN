@@ -50,6 +50,8 @@ import { cancelPendingProposals, castVote, expireProposals, openProposal, type C
 import { assertTaskReferences, createTask, deliveryHolderOf, markTaskUnreachable, materializeDeliveryTask, openTasks, orphanTasks, settleTask, validateTaskResult, type TaskValidator } from './tasks.ts'
 import { goalSnapshotMessage, mailMessage, proposalMessage, taskMessage } from './messages.ts'
 import { topologyFeedbackMessage } from './topology-feedback.ts'
+import { peerDisclosureMode, projectPeerSummary, type PeerDisclosure, type PeerSummary } from './peer-disclosure.ts'
+export type { PeerSummary, FullPeerSummary, CoarsePeerSummary, MinimalPeerSummary, PeerDisclosure } from './peer-disclosure.ts'
 import { summarizeLocalFeedback, captureRewireObservations, refreshRewireObservations } from './local-feedback.ts'
 import { evaluateRewireEvidence, summarizeVerifiedFeedback, type RewireEvaluation } from './verified-feedback.ts'
 import { recordRequesterFeedback, summarizeRequesterFeedback, evaluateRequesterRewireEvidence, evaluateCumulativeRequesterRewire, refreshRequesterRewireEvidence, selectRequesterRewireSamples, type RequesterFeedbackInput } from './requester-feedback.ts'
@@ -65,12 +67,8 @@ import { appendSubstrate, searchSubstrate, visitSubstrate, recordSubstrateRead, 
 import { weightAt } from './substrate-ranking.ts'
 import { substrateReadView, type SubstrateReadPolicy } from './substrate-read-policy.ts'
 
-/** rc.3 options fallback and the upstream durable model-selection accessor. */
 function currentModelRoute(agent: Agent): NodeRecord['modelRoute'] {
-  const model = (agent as Agent & {
-    model?: { current(): Readonly<{ provider: string; model: string; reasoningEffort?: ReasoningEffortId }> | undefined }
-  }).model
-  const selection = model === undefined ? agent.options : model.current()
+  const selection = agent.model.current()
   return {
     provider: selection?.provider ?? 'inherit',
     model: selection?.model ?? 'inherit',
@@ -190,25 +188,10 @@ export interface SendResult {
   readonly outcome?: 'completed' | 'failed'
 }
 
-/** Bounded observations a node can use to choose collaborators. */
-export interface PeerSummary {
-  readonly id: string
-  readonly lifecycle: string
-  readonly openTasks: number
-  readonly pendingVotes: number
-  readonly taskSummaries: readonly string[]
-  /** Recent terminal task summaries prefixed with their explicit status. */
-  readonly recentResults: readonly string[]
-  /** Independent validation observations, kept separate from self-reported outcomes. */
-  readonly verifiedFeedback: ReturnType<typeof summarizeVerifiedFeedback>
-  /** Requester judgements are local signals, not independent verification. */
-  readonly requesterFeedback: ReturnType<typeof summarizeRequesterFeedback>
-  readonly knowledgeFingerprint: ReturnType<typeof summarizeKnowledge>
-  readonly telemetry: ReturnType<typeof summarizeLocalFeedback>
-}
-
 /** Public result of `atn_peers`. */
 export interface PeersResult {
+  /** Absent for unchanged full responses; restricted modes still expose identities and ordering. */
+  readonly peerDisclosure?: PeerDisclosure
   /** Calling node. */
   readonly self: string
   /** Active collaborators bounded by the current cumulative-node degree limit. */
@@ -742,7 +725,7 @@ export class AtnRuntime extends Service<Config> {
     const record = await this.inspect(networkId)
     const node = findBySession(record, payload.agent.id)
     if (record.status !== 'open' || node === undefined) return decision
-    const feedback = topologyFeedbackMessage(record, node.id, payload.agent.session.snapshotEvents(), this.now())
+    const feedback = topologyFeedbackMessage(record, node.id, payload.agent.session.snapshotEvents(), this.now(), this.knowledgePolicy(record))
     if (feedback !== undefined) return { ...decision, messages: [...decision.messages, feedback] }
     return decision
   }
@@ -1632,29 +1615,12 @@ export class AtnRuntime extends Service<Config> {
     const { record, node } = await this.callerContext(agent)
     const ids = collaborationPeers(record.nodes, node.id, collaborationPeerLimit(record))
     const tasks = Object.values(record.tasks)
-    const summarize = (id: string): PeerSummary => {
-      const peer = record.nodes[id]!
-      const held = tasks.filter(task => task.holderId === id)
-      const ongoing = held.filter(task => task.status === 'open')
-      const recent = held.filter(task => task.status !== 'open')
-        .sort((left, right) => (right.settledAt ?? 0) - (left.settledAt ?? 0) || right.id.localeCompare(left.id))
-      return {
-        id: peer.id,
-        lifecycle: peer.lifecycle,
-        openTasks: ongoing.length,
-        pendingVotes: Object.values(record.proposals).filter(
-          (proposal) => proposal.status === 'pending' && proposal.voters.includes(id) && !proposal.votes.some((vote) => vote.voterId === id),
-        ).length,
-        taskSummaries: [...ongoing, ...recent].slice(0, 3).map(task => task.description.slice(0, 240)),
-        recentResults: recent.slice(0, 2).map(task => `[${task.status}] ${task.result?.summary ?? task.description}`.slice(0, 240)),
-        verifiedFeedback: summarizeVerifiedFeedback(record, id, { observerId: node.id }),
-        requesterFeedback: summarizeRequesterFeedback(record, id, { observerId: node.id }),
-        knowledgeFingerprint: summarizeKnowledge(record, id, this.knowledgePolicy(record)),
-        telemetry: summarizeLocalFeedback(record, id, { observerId: node.id, now: this.now() }),
-      }
-    }
+    const mode = peerDisclosureMode(record)
+    const policy = this.knowledgePolicy(record)
+    const summarize = (id: string): PeerSummary => projectPeerSummary(record, id, node.id, policy, this.now())
 
     const result: PeersResult = {
+      ...(mode === 'full' ? {} : { peerDisclosure: mode }),
       self: node.id,
       neighbours: ids,
       nodes: ids.map(summarize),

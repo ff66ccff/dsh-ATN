@@ -8,6 +8,7 @@ import type { Agent } from '@deepseek-ai/dsh-agent'
 import { SessionId } from '@deepseek-ai/dsh-session'
 import { bootKernel, createHostAgent, drive, settle, atnMessages, type Kernel } from '../fixtures/kernel.ts'
 import { MemoryNetworkStore } from '../../src/domain.ts'
+import { isFullPeerSummary } from '../../src/peer-disclosure.ts'
 import type { PeersResult, SendResult, SpawnResult, StartResult } from '../../src/runtime.ts'
 
 const goal = {
@@ -65,7 +66,10 @@ test('ADAPTIVE-01: real tools discover a sibling branch, collaborate, then rewir
 
     const discovery = await call<PeersResult>(kernel, parser.agent, 'atn_status', { query: '*' })
     assert.ok(discovery.candidates?.includes(benchmark.nodeId), 'exploration reaches the sibling branch')
-    assert.ok(discovery.candidateNodes?.find(node => node.id === benchmark.nodeId)?.taskSummaries.some(text => text.includes('Benchmark packet validation')))
+    const discoveredBenchmark = discovery.candidateNodes?.find(node => node.id === benchmark.nodeId)
+    assert.ok(discoveredBenchmark)
+    assert.ok(isFullPeerSummary(discoveredBenchmark), 'Adaptive topology fixture requires full peer disclosure')
+    assert.ok(discoveredBenchmark.taskSummaries.some(text => text.includes('Benchmark packet validation')))
     await call(kernel, parser.agent, 'atn_status', { rewire: { peers: [benchmark.nodeId] } })
     const assigned = await call<SendResult>(kernel, parser.agent, 'atn_send', {
       to: benchmark.nodeId, kind: 'task', body: 'Compare the checksum failure with the packet benchmark.', messageId: 'cross-branch-task',
@@ -77,8 +81,14 @@ test('ADAPTIVE-01: real tools discover a sibling branch, collaborate, then rewir
     })
 
     const feedback = await call<PeersResult>(kernel, parser.agent, 'atn_status', { query: 'routing' })
-    assert.ok(feedback.nodes.find(node => node.id === benchmark.nodeId)?.recentResults.some(text => text.includes('isolates a routing regression')))
-    assert.ok(feedback.candidateNodes?.find(node => node.id === right.nodeId)?.taskSummaries.some(text => text.includes('routing regressions')))
+    const feedbackBenchmark = feedback.nodes.find(node => node.id === benchmark.nodeId)
+    assert.ok(feedbackBenchmark)
+    assert.ok(isFullPeerSummary(feedbackBenchmark), 'Adaptive topology fixture requires full peer disclosure')
+    assert.ok(feedbackBenchmark.recentResults.some(text => text.includes('isolates a routing regression')))
+    const discoveredRight = feedback.candidateNodes?.find(node => node.id === right.nodeId)
+    assert.ok(discoveredRight)
+    assert.ok(isFullPeerSummary(discoveredRight), 'Adaptive topology fixture requires full peer disclosure')
+    assert.ok(discoveredRight.taskSummaries.some(text => text.includes('routing regressions')))
     await call(kernel, parser.agent, 'atn_status', { rewire: { peers: [right.nodeId] } })
     const followup = await call<SendResult>(kernel, parser.agent, 'atn_send', {
       to: right.nodeId, kind: 'task', body: 'Trace the routing regression identified by the benchmark.',

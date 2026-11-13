@@ -9,6 +9,7 @@ import { mkdtemp, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { SessionId } from '@deepseek-ai/dsh-session'
+import { ReasoningEffortId } from '@deepseek-ai/dsh-llm'
 import type { AgentHandle } from '@deepseek-ai/dsh-agent'
 import { bootKernel, drive, settle, type Kernel } from '../fixtures/kernel.ts'
 import { MemoryNetworkStore } from '../../src/domain.ts'
@@ -148,21 +149,17 @@ test('EFFORT-04: upstream model selection overrides stale options and can clear 
   const b = await bench()
   try {
     const host = (await createHostAgentWithEffort(b.kernel, 'session-host', 'high'))!
-    type Selection = { provider: string; model: string; reasoningEffort?: 'low' }
-    let selection: Selection = {
-      provider: 'atn-script', model: 'selected-root', reasoningEffort: 'low',
+    let selection: Parameters<typeof host.model.select>[0] = {
+      provider: 'atn-script', model: 'selected-root', reasoningEffort: ReasoningEffortId('low'),
     }
-    const model = (host as typeof host & { model?: { select(value: Selection): void } }).model
-    // Exercise the real durable accessor on upstream; npm rc.3 predates it.
-    if (model) model.select(selection)
-    else Object.defineProperty(host, 'model', { value: { current: () => ({ ...selection }) } })
+    host.model.select(selection)
     await b.kernel.atn.start(host, goal)
     const networkId = (await b.kernel.atn.networkIds())[0]!
     const entry = (await b.kernel.atn.network(networkId)).nodes['node-1']!
     assert.deepEqual(entry.modelRoute, { provider: 'atn-script', model: 'selected-root', effort: 'low' })
 
     selection = { provider: 'atn-script', model: 'selected-child' }
-    model?.select(selection)
+    host.model.select(selection)
     await b.kernel.atn.spawn(host, { task: 'Use the selected route.', context: '' })
     await settle(b.kernel)
     const child = Object.values((await b.kernel.atn.network(networkId)).nodes).find(node => !node.isEntry)!

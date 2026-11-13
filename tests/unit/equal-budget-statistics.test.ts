@@ -47,6 +47,15 @@ function observation(mode = 'single', seed = 17): EqualBudgetRunObservation {
 }
 const fullMatrix = () => design.modes.flatMap(mode => design.seeds.map(seed => observation(mode, seed)))
 
+test('EQUAL-BUDGET-NATIVE-BASELINE: legacy mailbox and current task-board observations cannot be pooled', () => {
+  const current = observation('native-team', 17), legacy = observation('native-team', 31)
+  current.nativeTeamVersion = { protocol: 'task-board-continuable-subagents-v1', baseline: 'harness-0.2.2-rc.2-native-team-v1' }
+  assert.throws(() => summarizeEqualBudgetRuns([current, legacy], design), /Mixed native-team protocol baselines/)
+  const second = { ...legacy, nativeTeamVersion: current.nativeTeamVersion }
+  assert.equal(summarizeEqualBudgetRuns([current, second], design).nativeTeamBaseline, current.nativeTeamVersion.baseline)
+  assert.equal(summarizeEqualBudgetRuns([legacy], design).nativeTeamBaseline, 'legacy-unversioned-team')
+})
+
 test('EQUAL-BUDGET-LIVE-COVERAGE: configuration alone never certifies dispatch; zero and missing attempts remain retained', () => {
   const dispatched = observation(), zero = observation('single', 31), missing = observation('single', 45)
   zero.issuedModelCalls = 0

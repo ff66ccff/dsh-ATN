@@ -5,7 +5,9 @@
  */
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { assertConfigRelations, limitsFromConfig, type Config } from '../../src/config.ts'
+import { Context } from '@deepseek-ai/cordis'
+import { assertConfigRelations, limitsFromConfig, Config as configSchema, type Config } from '../../src/config.ts'
+import { networkLimitsSchema } from '../../src/schema.ts'
 import { testConfig } from '../fixtures/network.ts'
 
 test('CONFIG-01: a zero count or duration is rejected at load time', () => {
@@ -78,4 +80,44 @@ test('CONFIG-02: outgoing ceiling accepts 1–8, persists two, and defaults new 
   assert.doesNotThrow(() => assertConfigRelations(legacy))
   assert.equal(limitsFromConfig(legacy).maxCollaborationPeers, 8)
   assert.equal(limitsFromConfig(testConfig()).maxCollaborationPeers, 8)
+})
+
+test('CONFIG-03: omitted host configuration resolves complete defaults', () => {
+  const config = configSchema(undefined)
+  assert.deepEqual(config, configSchema({} as Config))
+  assert.doesNotThrow(() => assertConfigRelations(config))
+  assert.equal(limitsFromConfig(config).peerDisclosure, 'full')
+})
+
+test('CONFIG-03: Cordis loads the plugin when the host omits config', async () => {
+  const ctx = new Context()
+  let loaded: Config | undefined
+  try {
+    await ctx.plugin({
+      Config: configSchema,
+      apply: (_ctx: Context, config: Config) => {
+        assertConfigRelations(config)
+        loaded = config
+      },
+    })
+    assert.deepEqual(loaded, configSchema({} as Config))
+  } finally {
+    await ctx.fiber.dispose()
+  }
+})
+
+test('CONFIG-03: host disclosure defaults full, freezes valid modes, and rejects invalid config or records', () => {
+  assert.equal(limitsFromConfig(testConfig()).peerDisclosure, 'full')
+  for (const peerDisclosure of ['full', 'coarse', 'minimal'] as const) {
+    const config = testConfig({ peerDisclosure })
+    assert.doesNotThrow(() => assertConfigRelations(config))
+    assert.equal(networkLimitsSchema.parse(limitsFromConfig(config)).peerDisclosure, peerDisclosure)
+  }
+  for (const peerDisclosure of ['', 'secret', null, 3]) {
+    assert.throws(() => configSchema({ ...testConfig(), peerDisclosure } as Config), /peerDisclosure/)
+    assert.throws(() => assertConfigRelations({ ...testConfig(), peerDisclosure } as Config), /peerDisclosure/)
+    assert.throws(() => networkLimitsSchema.parse({ ...limitsFromConfig(testConfig()), peerDisclosure }), /peerDisclosure/)
+  }
+  const { peerDisclosure: _mode, ...legacy } = limitsFromConfig(testConfig())
+  assert.equal(networkLimitsSchema.parse(legacy).peerDisclosure, undefined)
 })

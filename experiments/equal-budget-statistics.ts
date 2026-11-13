@@ -39,6 +39,8 @@ export interface EqualBudgetRunObservation {
   mode: string
   seed: number
   execution?: string
+  /** Missing only for archived pre-task-board native-team runs. */
+  nativeTeamVersion?: { protocol: string; baseline: string; historicalComparability?: string } | null
   model: string
   startedAt: number | null
   completedAt: number | null
@@ -321,6 +323,9 @@ export function summarizeEqualBudgetRuns(runs: readonly EqualBudgetRunObservatio
     if (keys.has(key) || ids.has(run.runId)) throw new Error('Duplicate arm/seed or run identity; no replacement sampling')
     keys.add(key); ids.add(run.runId)
   }
+  const nativeBaselines = [...new Set(runs.filter(run => run.mode === 'native-team').map(run =>
+    run.nativeTeamVersion?.baseline ?? run.metrics?.nativeTeam?.protocolVersion ?? 'legacy-unversioned-team'))]
+  if (nativeBaselines.length > 1) throw new Error('Mixed native-team protocol baselines cannot be pooled; separate legacy mailbox and current task-board runs')
   const validAllocation = (allocation: EqualBudgetAllocation | undefined) => !!allocation && Number.isSafeInteger(allocation.agents) &&
     allocation.agents > 0 && allocation.perAgentSteps.length === allocation.agents &&
     allocation.perAgentSteps.every(step => Number.isSafeInteger(step) && step > 0) &&
@@ -345,7 +350,7 @@ export function summarizeEqualBudgetRuns(runs: readonly EqualBudgetRunObservatio
       completedConsumption: consumption(successful), failedConsumption: consumption(rows.filter(run => !run.evaluation.passed)),
       failures: rows.filter(run => !run.evaluation.passed).map(run => ({ seed: run.seed, runId: run.runId, stopReason: run.stopReason })),
       runs: rows.map(run => ({ runId: run.runId, seed: run.seed, passed: run.evaluation.passed, stopReason: run.stopReason,
-        allocation: run.allocation, totalAgents: run.totalAgents, uncreatedAgentSlots: run.totalAgents === null ? null : Math.max(0, run.allocation.agents - run.totalAgents),
+        allocation: run.allocation, nativeTeamVersion: run.nativeTeamVersion ?? null, totalAgents: run.totalAgents, uncreatedAgentSlots: run.totalAgents === null ? null : Math.max(0, run.allocation.agents - run.totalAgents),
         agentSteps: run.agentSteps ?? null, output: equalBudgetOutputDiagnostics(run, outputLimit),
         ...(isV3 ? { factFlowAudit: run.factFlowAudit ?? null } : {}), ...equalBudgetRunMetrics(run) })) }
   })
@@ -419,6 +424,7 @@ export function summarizeEqualBudgetRuns(runs: readonly EqualBudgetRunObservatio
   const v3Interpretations = isV3 ? round11Interpretations(pairs, evidenceReady) : undefined
   return { version: isV3 ? 3 : isV2 ? 2 : 1, round: isV3 ? 11 : isV2 ? 10 : 9, causalClaim: false, benefitClaim: 'not-claimed', plannedRuns: design.seeds.length * design.modes.length,
     observedRuns: runs.length, failedRunsRetained: runs.filter(run => !run.evaluation.passed).length,
+    nativeTeamBaseline: nativeBaselines[0] ?? null,
     completeMatrix, budgetEqual, allocationMatched, liveRuns, liveCoverage, auditsPassed, modelsMatch, evidenceReady,
     arms, pairs, sizeEvidence, allCorrectnessIndistinguishable,
     preflight: preflight ?? null, stoppedPerRule, studyScope: isV3 ? 'distributed-structure-under-matched-decomposition-instructions; final-round' : isV2 ? 'coordination-overhead-versus-parallelism; not-context-pressure' : 'legacy-input-scale-diagnostic',

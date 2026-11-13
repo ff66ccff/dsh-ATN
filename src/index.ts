@@ -24,7 +24,9 @@ export { defineCustodyPolicy, OUTBOUND_CHANNELS } from './information-boundary.t
 export type { InformationBoundaryRefusalCode } from './refusal.ts'
 export type { NetworkOutboundPolicy, OutboundOperation, OutboundChannel, CustodyResolver,
   CustodyPolicyOptions, ArtifactDescriptor, ArtifactIds } from './information-boundary.ts'
-export type { NetworkSendPolicy, AtnRuntimeDeps } from './runtime.ts'
+export type { NetworkSendPolicy, AtnRuntimeDeps, PeersResult } from './runtime.ts'
+export { isFullPeerSummary } from './peer-disclosure.ts'
+export type { PeerSummary, FullPeerSummary, CoarsePeerSummary, MinimalPeerSummary, PeerDisclosure, OutcomeCategory } from './peer-disclosure.ts'
 export type { KnowledgeMetadata } from './knowledge.ts'
 export type { PublishInput, SubstrateMessageView } from './substrate.ts'
 export type { SubstrateState, SubstrateMessage } from './schema.ts'

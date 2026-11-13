@@ -6,6 +6,8 @@ import { materialFingerprint, summarizeLocalFeedback } from './local-feedback.ts
 import { summarizeRequesterFeedback } from './requester-feedback.ts'
 import { summarizeVerifiedFeedback } from './verified-feedback.ts'
 import { createHash } from 'node:crypto'
+import { peerDisclosureMode, projectPeerSummary } from './peer-disclosure.ts'
+import type { NetworkOutboundPolicy } from './information-boundary.ts'
 
 const SNAPSHOT_SECTION = 'atn/topology-snapshot'
 export const MIN_FEEDBACK_STEP_INTERVAL = 3
@@ -60,6 +62,38 @@ function previousSnapshot(
   return undefined
 }
 
+function restrictedFeedback(record: NetworkRecord, nodeId: string,
+  events: readonly { type: string; data?: unknown }[], now: number, policy?: NetworkOutboundPolicy): UserMessage | undefined {
+  const mode = peerDisclosureMode(record)
+  const limit = collaborationPeerLimit(record)
+  const peers = collaborationPeers(record.nodes, nodeId, limit)
+  const cards = peers.map(id => projectPeerSummary(record, id, nodeId, policy, now))
+  const fingerprint = createHash('sha256').update(JSON.stringify({ mode, cards })).digest('hex')
+  const previous = previousSnapshot(events, record.id, nodeId, limit)
+  if (previous?.telemetryFingerprint === fingerprint) return undefined
+  const admittedStep = record.nodes[nodeId]?.stepsUsed ?? 0
+  if (previous?.admittedStep !== undefined && Number.isSafeInteger(previous.admittedStep) && previous.admittedStep >= 0 &&
+    admittedStep - previous.admittedStep < MIN_FEEDBACK_STEP_INTERVAL) return undefined
+  const lines = [`[ATN local changes] network=${record.id} node=${nodeId}`,
+    `peerDisclosure=${mode}; collaborator identities and ordering remain visible.`]
+  if (previous === undefined) lines.push(`Initial neighbours: ${peers.join(', ') || '(none)'}`)
+  else {
+    const removed = previous.peers.filter(id => !peers.includes(id))
+    const added = peers.filter(id => !previous.peers.includes(id))
+    if (removed.length > 0) lines.push(`Removed: ${removed.map(id => `${id} (${record.nodes[id]?.lifecycle ?? 'unavailable'})`).join('; ')}`)
+    if (added.length > 0) lines.push(`Added: ${added.join(', ')}`)
+    lines.push(`Current neighbours: ${peers.join(', ') || '(none)'}`)
+  }
+  lines.push(`Peer cards: ${JSON.stringify(cards)}`)
+  const core = lines.join('\n')
+  if (Buffer.byteLength(core) > MAX_TOPOLOGY_FEEDBACK_BYTES) return undefined
+  return createUserMessage({
+    content: [{ type: 'text', text: core }],
+    source: { kind: 'atn', form: 'snapshot', sections: [{ name: SNAPSHOT_SECTION,
+      text: JSON.stringify({ networkId: record.id, nodeId, peers, telemetryFingerprint: fingerprint, admittedStep }) }] },
+  })
+}
+
 /**
  * Coalesce graph changes since the last normal input. The bounded snapshot is
  * stored with the message itself, so a rejected/cancelled input cannot consume
@@ -70,7 +104,9 @@ export function topologyFeedbackMessage(
   nodeId: string,
   events: readonly { type: string; data?: unknown }[],
   now: number = Date.now(),
+  policy?: NetworkOutboundPolicy,
 ): UserMessage | undefined {
+  if (peerDisclosureMode(record) !== 'full') return restrictedFeedback(record, nodeId, events, now, policy)
   const limit = collaborationPeerLimit(record)
   const peers = collaborationPeers(record.nodes, nodeId, limit).toSorted()
   const previous = previousSnapshot(events, record.id, nodeId, limit)

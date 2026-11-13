@@ -1,6 +1,6 @@
 # dsh-ATN 文档库索引指南
 
-当前版本 **0.6.3**（[npm](https://www.npmjs.com/package/dsh-atn/v/0.6.3)）：Harness **>=0.2.1-rc.3**（验证基准 rc.3）；Better Sidebar **0.28.0 发布包与上游源码**；Node.js **>=24.9.0**。安装与能力说明以[主 README](../README.md)、[CHANGELOG](../CHANGELOG.md)和[0.6.3 发布记录](RELEASE_0_6_3.md)为准。以下阶段报告保留各自执行时的版本、计数及发布边界；[0.6.2 发布记录](RELEASE_0_6_2.md)适用于 rc.2 历史宿主。
+本版 **0.7.0**：Harness **>=0.2.2-rc.2**（验证基准 rc.2）；Better Sidebar **0.32.0 发布包与固定上游源码**；Node.js **>=24.9.0**。新增宿主侧 `full` / `coarse` / `minimal` 协作者披露配置，默认完整响应不变。安装与能力说明以[主 README](../README.md)和[CHANGELOG](../CHANGELOG.md)为准。以下阶段报告保留各自执行时的版本、计数及发布边界；[0.6.3 发布记录](RELEASE_0_6_3.md)对应旧 Harness `0.2.1-rc.3` 基线，[0.6.2 发布记录](RELEASE_0_6_2.md)适用于 `0.2.1-rc.2` 历史宿主。
 
 - [V2 合并实施计划](MASTER_EXECUTION_PLAN_V2.md)：用户批准的阶段顺序与停止条件。
 - [V2 阶段 0 证据](execution-evidence/round-v2-phase0/README.md)：依赖处置与命令闸门。

@@ -9,7 +9,9 @@ import { collaborationPeers, collaborationPeerLimit } from '../src/topology.ts'
 import { taskResultDigest } from '../src/tasks.ts'
 import { observeRequesterTask } from '../src/requester-feedback.ts'
 import type {} from '../src/observer.ts'
-import type {} from '@deepseek-ai/dsh-experimental-agent-team'
+import type {} from '@deepseek-ai/dsh-agent-team'
+import type {} from '@deepseek-ai/dsh-subagent'
+import { NATIVE_TEAM_PROTOCOL } from './native-team-runtime.ts'
 import { createAtnCostMeter } from './atn-cost.ts'
 import { measureAtnFixedContext } from '../src/tools.ts'
 
@@ -58,8 +60,19 @@ export interface TelemetryTotals {
   tokens: Record<TokenKey, TokenTotal>
   cost: { amount: number | null; knownAmount: number; unknownCalls: number; currency: string | null }
 }
+export interface NativeTeamMetrics {
+  protocolVersion: typeof NATIVE_TEAM_PROTOCOL
+  board: { reads: number; writes: number; readBytes: number; writeBytes: number }
+  inbox: { relays: number; settlementNotices: number; relayBytes: number; settlementBytes: number }
+  subagents: { starts: number; ends: number; uniqueChildren: number }
+  totalInteractions: number
+  totalTransferBytes: number
+  coverage: 'live board revisions and successful list/get results; recorded Agent relay and settlement inputs; excludes initial delegation prompts and fork history; board completion is not verified acceptance'
+}
 export interface TelemetrySnapshot {
   version: 1
+  /** Absent in archived pre-task-board observations; never infer zero for them. */
+  nativeTeam?: NativeTeamMetrics
   runId: string
   startedAt: number
   observedAt: number
@@ -188,6 +201,25 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
   const networks = new Map<string, Map<string, string>>()
   const atnCost = createAtnCostMeter()
   const callCosts: TelemetrySnapshot['callCosts'] = []
+  const nativeTeam: NativeTeamMetrics = { protocolVersion: NATIVE_TEAM_PROTOCOL,
+    board: { reads: 0, writes: 0, readBytes: 0, writeBytes: 0 },
+    inbox: { relays: 0, settlementNotices: 0, relayBytes: 0, settlementBytes: 0 },
+    subagents: { starts: 0, ends: 0, uniqueChildren: 0 }, totalInteractions: 0, totalTransferBytes: 0,
+    coverage: 'live board revisions and successful list/get results; recorded Agent relay and settlement inputs; excludes initial delegation prompts and fork history; board completion is not verified acceptance' }
+  const nativeChildren = new Set<string>()
+  const nativeRuns = new Set<string>()
+  const nativeReceipts = new Set<string>()
+  const nativeRevisions = new Set<string>()
+  const teamOfSession = new Map<string, string>()
+  const teamFor = (id: string): string | undefined => {
+    const known = teamOfSession.get(id)
+    if (known !== undefined) return known
+    const agent = ctx.get('agents')?.list().find(agent => agent.id === id)
+    if (!agent || !ctx.get('agentTeams')?.isEnabled(agent)) return undefined
+    const root = ctx.subagents.rootOf(agent).id
+    teamOfSession.set(id, root)
+    return root
+  }
   const alias = (type: string, raw: string): string => {
     let entries = aliases.get(type)
     if (!entries) { entries = new Map(); aliases.set(type, entries) }
@@ -269,40 +301,94 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     }
   }
 
-  const teamOfSession = new Map<string, string>()
+  const removeSubagentStart = ctx.on('subagent/start', info => {
+    if (closed || (!include(info.id) && !include(info.parentSessionId))) return
+    try {
+      const team = teamFor(info.parentSessionId)
+      if (team !== undefined) {
+        teamOfSession.set(info.id, team)
+        nativeRuns.add(info.runId); nativeChildren.add(info.id)
+        nativeTeam.subagents.starts++; nativeTeam.subagents.uniqueChildren = nativeChildren.size
+      }
+      emit('subagent.start', { activation: alias('activation', info.runId), session: sessionName(info.id),
+        parent: sessionName(info.parentSessionId), provider: alias('subagent-provider', info.provider),
+        local: info.local, nativeTeam: team !== undefined })
+    } catch { observationErrors++ }
+  }, { global: true })
+  const removeSubagentEnd = ctx.on('subagent/end', info => {
+    if (closed || (!include(info.id) && !include(info.parentSessionId))) return
+    if (nativeRuns.delete(info.runId)) nativeTeam.subagents.ends++
+    emit('subagent.end', { activation: alias('activation', info.runId), session: sessionName(info.id),
+      parent: sessionName(info.parentSessionId), local: info.local,
+      stopReason: ['completed', 'aborted', 'error', 'max-tokens', 'refusal'].includes(info.stopReason) ? info.stopReason : 'other' })
+  }, { global: true })
+  const removeBoardRead = ctx.on('tools/result', (execution, result) => {
+    if (closed || !execution.agent || !include(execution.agent.id) || result.isError
+      || !['team_task_list', 'team_task_get'].includes(execution.name)) return undefined
+    try {
+      const team = teamFor(execution.agent.id)
+      if (team === undefined) return undefined
+      const bytes = Buffer.byteLength(JSON.stringify(result.value), 'utf8')
+      nativeTeam.board.reads++; nativeTeam.board.readBytes += bytes
+      emit('team.board-read', { team: alias('team', team), session: sessionName(execution.agent.id),
+        operation: execution.name === 'team_task_list' ? 'list' : 'get', bytes, protocolVersion: NATIVE_TEAM_PROTOCOL })
+    } catch { observationErrors++ }
+    return undefined
+  }, { global: true })
   const observeSession = (session: Session, event: SessionEvent): void => {
     if (closed || !include(session.id)) return
     const name = sessionName(session.id)
     const counters = [all, group(name)]
-    if (event.type === 'team/member') {
-      teamOfSession.set(session.id, event.data.teamId)
-      teamOfSession.set(event.data.member.id, event.data.teamId)
-      emit('team.member', { team: alias('team', event.data.teamId), session: name,
-        member: sessionName(event.data.member.id), phase: event.data.member.phase, context: event.data.member.context }, event.time)
+    if (event.type === 'team/mode') {
+      if (event.data.enabled) teamOfSession.set(session.id, session.id)
+      else for (const [member, root] of teamOfSession) if (root === session.id) teamOfSession.delete(member)
+      emit('team.mode', { session: name, enabled: event.data.enabled, protocolVersion: NATIVE_TEAM_PROTOCOL }, event.time)
+    } else if (event.type === 'team/member') {
+      emit('legacy.team.member', { team: alias('team', event.data.teamId), session: name,
+        member: sessionName(event.data.member.id), phase: event.data.member.phase, context: event.data.member.context,
+        protocolVersion: 'legacy-team-mailbox' }, event.time)
     } else if (event.type === 'team/task') {
       const { task, teamId } = event.data
-      emit('team.task', { team: alias('team', teamId), session: name,
+      const current = teamFor(session.id) !== undefined
+      const key = `${teamId}:${task.id}:${task.revision}`
+      if (current && !nativeRevisions.has(key)) {
+        nativeRevisions.add(key)
+        nativeTeam.board.writes++; nativeTeam.board.writeBytes += Buffer.byteLength(JSON.stringify(event.data), 'utf8')
+      }
+      emit(current ? 'team.task' : 'legacy.team.task', { team: alias('team', teamId), session: name,
         task: alias('team-task', `${teamId}:${task.id}`), revision: task.revision, status: task.status,
         owner: task.ownerId === undefined ? null : sessionName(task.ownerId),
         blockedBy: task.blockedBy.map(id => alias('team-task', `${teamId}:${id}`)),
         writeScopes: task.writeScopes.map(scope => alias('write-scope', `${teamId}:${scope}`)),
+        protocolVersion: current ? NATIVE_TEAM_PROTOCOL : 'legacy-team-mailbox',
       }, event.time)
-    } else if (event.type === 'user/message' && event.data.source.kind === 'agent-message'
-      && event.data.source.form === 'relay') {
+    } else if (event.type === 'user/message' && (event.data.source.kind === 'agent-message'
+      || event.data.source.kind === 'subagent-settled')) {
       const sender = event.data.source.senderSessionId
-      const teamId = teamOfSession.get(session.id)
-      if (teamId !== undefined && teamOfSession.get(sender) === teamId) {
-        emit('team.mail', { team: alias('team', teamId), session: name,
-          mail: alias('team-mail', `${teamId}:${event.data.id}`), from: sessionName(sender),
-          to: name, status: 'delivered' }, event.time)
+      const team = teamFor(session.id)
+      const current = team !== undefined && teamOfSession.get(sender) === team
+      const key = `${session.id}:${event.data.id}`
+      if (nativeReceipts.has(key)) return
+      nativeReceipts.add(key)
+      const settlement = event.data.source.kind === 'subagent-settled'
+      const bytes = Buffer.byteLength(JSON.stringify(event.data), 'utf8')
+      if (current) {
+        if (settlement) { nativeTeam.inbox.settlementNotices++; nativeTeam.inbox.settlementBytes += bytes }
+        else { nativeTeam.inbox.relays++; nativeTeam.inbox.relayBytes += bytes }
       }
+      emit(settlement ? 'subagent.settlement-notice' : 'agent.relay', { session: name,
+        message: alias('agent-message', key), from: sessionName(sender), to: name,
+        status: 'recorded', nativeTeam: current, bytes,
+        ...(event.data.source.kind === 'subagent-settled' ? { stopReason: event.data.source.stopReason ?? null } : {}),
+      }, event.time)
     } else if (event.type === 'team/message/queued') {
       const { message, teamId } = event.data
-      emit('team.mail', { team: alias('team', teamId), session: name, mail: alias('team-mail', `${teamId}:${message.id}`),
-        from: sessionName(message.senderId), to: sessionName(message.targetId), status: 'queued' }, event.time)
+      emit('legacy.team.mail', { team: alias('team', teamId), session: name, mail: alias('team-mail', `${teamId}:${message.id}`),
+        from: sessionName(message.senderId), to: sessionName(message.targetId), status: 'queued', protocolVersion: 'legacy-team-mailbox' }, event.time)
     } else if (event.type === 'team/message/delivered') {
-      emit('team.mail', { team: alias('team', event.data.teamId), session: name,
-        mail: alias('team-mail', `${event.data.teamId}:${event.data.messageId}`), to: sessionName(event.data.targetId), status: 'delivered' }, event.time)
+      emit('legacy.team.mail', { team: alias('team', event.data.teamId), session: name,
+        mail: alias('team-mail', `${event.data.teamId}:${event.data.messageId}`), to: sessionName(event.data.targetId),
+        status: 'delivered', protocolVersion: 'legacy-team-mailbox' }, event.time)
     } else if (event.type === 'tool/call') {
       const call = alias('toolcall', `${session.id}:${event.data.callId}`)
       const tool = alias('tool', event.data.name)
@@ -483,6 +569,9 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     const result: TelemetrySnapshot = structuredClone({
       version: 1, runId: options.runId, startedAt, observedAt, elapsedMs: Math.max(0, observedAt - startedAt),
       events: sequence, totals: all, sessions: Object.fromEntries(sessionTotals),
+      nativeTeam: { ...nativeTeam,
+        totalInteractions: nativeTeam.board.reads + nativeTeam.board.writes + nativeTeam.inbox.relays + nativeTeam.inbox.settlementNotices,
+        totalTransferBytes: nativeTeam.board.readBytes + nativeTeam.board.writeBytes + nativeTeam.inbox.relayBytes + nativeTeam.inbox.settlementBytes },
       atnMessages: cost.messages, atnPayloadBytes: cost.payloadBytes, atnMaxContextBytes: cost.maxContextBytes,
       atnBoard: cost.board, atnTotalInteractions: cost.totalInteractions, atnTotalTransferBytes: cost.totalTransferBytes,
       fixedContextBytes: callCosts.some(row => row.fixedContextBytes > 0) ? Math.max(...callCosts.map(row => row.fixedContextBytes)) : null,
@@ -513,7 +602,7 @@ export async function installTelemetry(ctx: Context, options: TelemetryOptions):
     emit('experiment.end', { inFlight: all.inFlight, unfinishedTools: pendingTools.size })
     closedAt = now()
     closed = true
-    removeStream(); removeSession(); removeNetwork()
+    removeStream(); removeSession(); removeNetwork(); removeBoardRead(); removeSubagentStart(); removeSubagentEnd()
     closing = (async () => {
       try {
         await flush()

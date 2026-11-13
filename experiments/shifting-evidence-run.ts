@@ -8,6 +8,7 @@ import * as JsonlSessionPersistence from '@deepseek-ai/dsh-session-persistence-j
 import SessionProjectionRegistry from '@deepseek-ai/dsh-session-projection'
 import SystemPrompt from '@deepseek-ai/dsh-system-prompt'
 import ToolRuntime, { defineTool } from '@deepseek-ai/dsh-tools'
+import * as NativeExecutor from '@deepseek-ai/dsh-tool-executor-native'
 import Storage from '@deepseek-ai/dsh-storage'
 import * as JsonStorageBackend from '@deepseek-ai/dsh-storage-json'
 import * as StorageDomain from '@deepseek-ai/dsh-storage-domain'
@@ -99,7 +100,7 @@ const sourceFiles = ['shifting-evidence-run.ts', 'shifting-evidence-task.ts', 's
   'static-wide-topology.ts', 'comparison-statistics.ts',
   'reference-kernel.ts', 'provider.ts', 'budget.ts', 'telemetry.ts', 'atn-cost.ts',
   '../src/runtime.ts', '../src/schema.ts', '../src/config.ts', '../src/tools.ts', '../src/tasks.ts', '../src/messages.ts',
-  '../src/knowledge.ts', '../src/requester-feedback.ts', '../src/topology.ts', '../src/topology-feedback.ts', '../src/information-boundary.ts', '../src/refusal.ts',
+  '../src/knowledge.ts', '../src/requester-feedback.ts', '../src/peer-disclosure.ts', '../src/topology.ts', '../src/topology-feedback.ts', '../src/information-boundary.ts', '../src/refusal.ts',
   '../package.json', '../package-lock.json']
 
 export async function shiftingSourceHashes() {
@@ -216,7 +217,7 @@ export async function runShiftingEvidence(options: ShiftingOptions, testSeam?: {
   }
   try {
     await ctx.plugin(LlmRuntime); await ctx.plugin(SessionStore); await ctx.plugin(SessionProjectionRegistry)
-    await ctx.plugin(SystemPrompt); await ctx.plugin(ToolRuntime); await ctx.plugin(AgentRegistry)
+    await ctx.plugin(SystemPrompt); await ctx.plugin(ToolRuntime); await ctx.plugin(NativeExecutor); await ctx.plugin(AgentRegistry)
     ctx.on('tools/pre-execute', (execution, next) => {
       if (execution.name === 'atn_status' && execution.agent && statusArguments(execution.arguments).rewire !== undefined) {
         const attempt: typeof rewireAttempts[number] = { callId: String(execution.callId), sessionId: String(execution.agent.id),

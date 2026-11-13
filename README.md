@@ -7,12 +7,14 @@
 
 **面向高安全、多租户与严格合规场景打造的 DeepSeek Harness 智能体拓扑治理与零信任数据边界基础设施。**
 
-[![Version](https://img.shields.io/badge/version-0.6.3-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-0.7.0-blue.svg)](package.json)
 [![License](https://img.shields.io/badge/license-Apache--2.0-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-625%20passed-brightgreen.svg)](tests/)
+[![Tests](https://img.shields.io/badge/tests-646%20passed-brightgreen.svg)](tests/)
 [![Zero-Paid-Calls](https://img.shields.io/badge/test%20cost-$0.00-success.svg)](tests/)
 [![Empirical Grounding](https://img.shields.io/badge/empirical-11%20rounds%20archived-orange.svg)](docs/)
-[![Harness Compatibility](https://img.shields.io/badge/dsh-%3E%3D0.2.1--rc.3-purple.svg)](package.json)
+[![Harness Compatibility](https://img.shields.io/badge/dsh-%3E%3D0.2.2--rc.2-purple.svg)](package.json)
+
+**0.7.0：适配 Harness `0.2.2-rc.2` 与 Better Sidebar `0.32.0`，增加宿主侧 `full` / `coarse` / `minimal` 协作者信息披露控制；默认行为不变，不宣称真实模型编码收益。**
 
 [核心优势](#-核心产品优势) • [为什么选择 ATN](#-为什么选择-dsh-atn) • [安全责任模型](#-零信任安全责任共担模型) • [实测数据背书](#-严谨实测背书-显著节省调用开销) • [快速上手](#-快速上手) • [文档中心](docs/README.md)
 
@@ -83,7 +85,7 @@ dsh-ATN 专为对**数据边界可证明性**、**调用经济性**与**系统�
 - **两阶段平滑下线**：节点按 `Draining`（处理在途义务、停收新任务）→ `Retired`（注销资源）两阶段优雅离线，保障复杂链路有序收拢。
 
 ### 6. 📊 原生 Web GUI 全景可视化与舰队态势感知（Observability）
-- **原生深度集成**：在 DeepSeek Harness Web GUI 中点击顶栏 **「ATN 网络状态」**，即可实时查看节点拓扑、出边谱系与任务流；并原生集成 `dsh-better-sidebar@0.28.0` 侧边栏 Tab。
+- **原生深度集成**：在 DeepSeek Harness Web GUI 中点击顶栏 **「ATN 网络状态」**，即可实时查看节点拓扑、出边谱系与任务流；并原生集成 `dsh-better-sidebar@0.32.0` 侧边栏 Tab。
 - **只读轻量观察**：观察端复用严格 RPC 机制，串行读取、零网络写入、不唤醒模型、不产生额外模型 Token。
 - **多网络舰队观察（Fleet Observation）**：在获得授权的前提下，支持跨网络统一监控各执行网络的健康状态、步数吞吐、容量及有界拒绝遥测。
 
@@ -134,7 +136,7 @@ ATN 深度融合 DeepSeek Harness Web GUI，提供直观的可视化网络拓扑
 
 - **拓扑邻接与谱系分组**：清晰区分实时协作出边与节点出生谱系，联动查看上下文邻居与实时活动流。
 - **节点状态与配额监控**：直观展示节点当前负载、已挂载工具、剩余步数配额与连接额度。
-- **双重入口随心切换**：支持原生顶栏入口快速呼出，若安装了 `dsh-better-sidebar@0.28.0` 则自动挂载为右侧原生 Tab 页面。
+- **双重入口随心切换**：支持原生顶栏入口快速呼出，若安装了 `dsh-better-sidebar@0.32.0` 则自动挂载为右侧原生 Tab 页面。
 
 ---
 
@@ -157,34 +159,50 @@ ATN 提供清晰、紧凑的模型交互工具集（默认启用 8 个核心工�
 
 ## 🚀 快速上手
 
-### 环境要求
+### 源码环境要求
 - **Node.js** >= 24.9.0
-- **DeepSeek Harness** `>=0.2.1-rc.3`（最低版本要求）
-- **Cordis** 4.0.5
+- **DeepSeek Harness** `>=0.2.2-rc.2`
+- **Cordis** 4.1.0；schemastery 3.19.0；Zod 4.6.6
+- **可选 Better Sidebar** 0.32.0
 
-已验证组合为 Harness `0.2.1-rc.3` + 可选 Better Sidebar `0.28.0`。`engines.dsh` 与宿主 peer 依赖均声明 `>=0.2.1-rc.3`；开发依赖和测试基准固定 rc.3，后续版本仍需验证。Harness rc.2 用户请使用 ATN `0.6.2`，rc.1 用户请使用 ATN `0.6.1`。升级范围及验证结果见 [0.6.3 发布记录](docs/RELEASE_0_6_3.md)。
+开发依赖固定 Harness `0.2.2-rc.2`，也是本版验证基准；最低版本声明不代表所有未来版本均已实测。该发布线当前位于 npm 的 `next` 标签，不应把较旧的 `latest` 当作本次目标。Sidebar 发布声明与固定源码分别检查，完整验证范围见下方工程验证。
 
-### 1. 极简安装
+旧版 ATN `0.6.3` 对应 Harness `0.2.1-rc.3` / Cordis `4.0.5` / Sidebar `0.28.0`，旧宿主用户可继续使用该版本，详见 [0.6.3 发布记录](docs/RELEASE_0_6_3.md)。
 
-推荐使用已发布的 **0.6.3** 稳定版本（亦可从 [GitHub Release](https://github.com/ff66ccff/dsh-ATN/releases/tag/v0.6.3) 获取预构建 tarball）：
+### 1. 安装 0.7.0
+
+在兼容的 Harness Web Profile 中安装发布版本：
 
 ```bash
-# 1. 一键安装 ATN 插件至 Web Profile
-dsh plugin --profile web add dsh-atn@0.6.3
-
-# 2. 可选：安装无缝协同的原生侧边栏组件
-dsh plugin --profile web add dsh-better-sidebar@0.28.0
-
-# 3. 验证配置就绪状态
-dsh --profile web --dump-config
+dsh plugin --profile web add dsh-atn@0.7.0
 ```
 
-亦支持从源码构建打包：
+也可在源码目录中安装、构建并打包：
+
 ```bash
-git clone https://github.com/ff66ccff/dsh-ATN.git
-cd dsh-ATN && npm ci
-npm run build && npm run pack:tarball
-dsh plugin --profile web add ./.artifacts/dsh-atn-0.6.3.tgz
+npm ci --ignore-scripts
+```
+
+```bash
+npm run build
+```
+
+```bash
+npm run pack:tarball
+```
+
+将本地 tarball 安装到新版 Harness 的目标 Profile：
+
+```bash
+dsh plugin --profile web add ./.artifacts/dsh-atn-0.7.0.tgz
+```
+
+```bash
+dsh plugin --profile web add dsh-better-sidebar@0.32.0
+```
+
+```bash
+dsh --profile web --dump-config
 ```
 
 ### 2. 宿主数据保管策略配置（3 分钟极速接入）
@@ -199,6 +217,11 @@ const custodyTable = new Map<string, Set<string>>([
   ['node-finance', new Set(['finance-report-2026', 'tax-record'])],
   ['node-dev', new Set(['system-architecture-spec'])],
 ])
+const artifactTopics = new Map([
+  ['finance-report-2026', ['finance']],
+  ['tax-record', ['tax']],
+  ['system-architecture-spec', ['architecture']],
+])
 
 // 2. 声明出站安全审查策略
 const policy = defineCustodyPolicy({
@@ -211,7 +234,7 @@ const policy = defineCustodyPolicy({
   ].map(m => m[1]),
 
   // 由宿主提供结构化元数据，驱动 atn_status 安全发现
-  describeArtifact: (id) => ({ topics: [id] }),
+  describeArtifact: (id) => ({ topics: artifactTopics.get(id) ?? [] }),
 })
 
 // 3. 将策略挂载至全局网络，获取管理释放句柄
@@ -241,6 +264,7 @@ node --import tsx/esm examples/information-boundary.ts
 
 | 配置参数 | 默认值 | 作用说明 |
 |---|:---:|---|
+| `peerDisclosure` | `full` | 宿主设置协作者元数据精度，可选 `full` / `coarse` / `minimal`，创建网络时固化。 |
 | `maxCollaborationPeers` | `8` | 有效出度天花板（硬约束 1–8），status 返回当前规模对数值。 |
 | `maxResidentNodes` | `8` | 单网络内最大并发驻留活跃工作节点数 |
 | `maxTotalNodes` | `32` | 单网络生命周期内累计允许创建的最大节点总数 |
@@ -260,17 +284,47 @@ node --import tsx/esm examples/information-boundary.ts
 | `substrateCitersShown` | `8` | 模型最多回看最近被引地址数（1–8） |
 | `domainName` | `atn_networks` | 隔离存储域命名空间 |
 
+### 协作者信息披露
+
+在宿主 ATN 行的 `config` 中设置 `peerDisclosure`。默认 `full` 保持原有响应；`coarse` 和 `minimal` 会在响应顶层标明模式。该值随新网络持久化，修改宿主配置不会改变既有网络；历史记录缺少该字段时保持 `full`。模型工具参数不能修改它。
+
+| 模式 | 邻居和发现候选卡片 |
+|---|---|
+| `full` | 原有有界任务摘要、custody 元数据、来源区分的反馈与精确遥测。 |
+| `coarse` | 节点身份/生命周期、宿主 catalog 明确描述的 topics、`occupied` / `no-current-obligations`，以及独立的 requester/host 定性结果。 |
+| `minimal` | 仅节点身份与生命周期。 |
+
+定性结果为 `unobserved`、`pending`、`positive-only`、`negative-only`、`mixed`；待补充、未评价或未独立验证不代表成功。`no-current-obligations` 只说明没有当前任务/投票义务，不保证健康、空闲容量或免费成本。没有可信 catalog 主题时省略 topics，不从资产名称或任务正文补造。
+
+同一投影用于 `atn_status` 的协作者卡片和已有的拓扑反馈捎带。隐藏的精确数值变化不额外触发反馈；可见变化仍受三步间隔和 4096 UTF-8 字节上限约束，不新增工具或独立模型唤醒。
+
+**这控制的是偶然暴露的协作者元数据，不是读权限或全通道秘密保护。** 自己的预算、显式任务/证据/消息/substrate 读取、内部候选排序及授权运维观察保持原协议；候选身份与排序仍携带相对信息。资产 custody、宿主读取 ACL 和自然语言 DLP 仍须独立实施，catalog 也不应把敏感资产 ID 当作公开主题。
+
+该设计受 [Who Should Know What?（arXiv:2611.07667）](https://arxiv.org/abs/2611.07667) 启发。论文研究经济博弈而非编码，更多信息的效果随模型与机制改变；这里是可验证的工程假设，不是论文复现或已证明的编码收益。
+
+[配对脚本控制](tests/integration/peer-disclosure.test.ts) 使用相同任务、脚本和预算，测量实际响应与日志：
+
+| 模式 | 协作者卡片字节 | 整体工具响应字节 | 拓扑反馈字节 | 脚本模型调用 | 任务提交 | 宿主独立验收 |
+|---|---:|---:|---:|---:|---:|---:|
+| `full` | 3342 | 4753 | 610 | 12 | 2 | 2 |
+| `coarse` | 356 | 1793 | 385 | 12 | 2 | 2 |
+| `minimal` | 104 | 1542 | 260 | 12 | 2 | 2 |
+
+这只表明确定性控制中的上下文精度差异，不表明真实 LLM 质量提升。新版原生 Team 已改用可继续的 subagent 与共享任务板；当前实验输出记录新基线，不能与保留的旧 Team 实验自动混合比较。
+
 ---
 
-## 🧪 卓越工程质量：620+ 测试 100% 通过
+## 🧪 工程验证
 
 dsh-ATN 恪守极致严苛的工程交付标准，配备全方位的自动化静态分析与单元/集成测试：
+
+0.7.0 发布检查在干净源码副本中通过：正常解析锁文件、类型检查、内核/单元测试 630 项（629 通过、1 项可选历史归档审计跳过）、客户端 17 项全部通过及生产构建。保留的本地旧归档在修改前审计代码下也存在计数不一致；不改写历史文件来满足测试。发布 tarball 已在隔离 Harness `0.2.2-rc.2` Web Profile 中通过安装、八工具及子节点 preset 继承、substrate 发布/读取和原配置保持；Sidebar `0.32.0` 联合启动通过挂载、未认证请求拒绝、只读观察和舰队授权烟测。浏览器登录仍被本地自动权限策略阻止，交互式 Web GUI 联合验证未完成。
 
 ```bash
 npm install              # 安装依赖
 npm run typecheck        # 严格 TypeScript 类型检查
-npm test                 # 执行全量 620+ 项自动化测试（零真实 API 消耗，毫秒级快速运行）
-npm run verify:sidebar   # 验证与 Better Sidebar 0.28.0 的双向兼容性
+npm test                 # 执行当前自动化回归（隔离脚本与本地 HTTP 夹具，不调用付费模型）
+npm run verify:sidebar   # 验证与 Better Sidebar 0.32.0 的声明和实际注册生命周期
 npm run build            # 构建生产分发产物
 npm run pack:tarball     # 构建生产 tgz 发布包
 npm run smoke:profile    # 运行真实 DSH Profile 完整集成烟测
