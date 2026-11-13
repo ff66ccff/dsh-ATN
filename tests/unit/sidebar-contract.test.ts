@@ -8,9 +8,12 @@ import { join, dirname, resolve, basename } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 // Synthetic verifier fixtures, not evidence of a real provider or host mount.
+// Temp-directory providers cannot inherit the consumer's node_modules. Like the
+// published package, they import React types without shipping @types/react.
 const fixtureScope = 'export interface SessionScope { sessionId: string; cwd?: string }'
 const cordisTypes = fileURLToPath(new URL('../../node_modules/@deepseek-ai/cordis/lib/types/index.d.ts', import.meta.url)).replaceAll('\\', '/')
 const fixtureService = `import type { SessionScope } from './scope.ts'
+  import type { ReactNode } from 'react'
   import type { Context } from ${JSON.stringify(cordisTypes)}
   export interface TabComponentProps {
     ctx: Context; store: unknown; scope: SessionScope
@@ -21,8 +24,15 @@ const fixtureService = `import type { SessionScope } from './scope.ts'
     id: string; title: string | (() => string); description?: string | (() => string)
     order?: number; single?: boolean; bottomOnly?: boolean
     available?: (ctx: Context, scope: SessionScope, state: unknown) => boolean
-    component: (props: TabComponentProps) => unknown
+    component: (props: TabComponentProps) => ReactNode
   }`
+
+function installReactRuntimeFixture(provider: string) {
+  const directory = join(provider, 'node_modules/react')
+  mkdirSync(directory, { recursive: true })
+  writeFileSync(join(directory, 'package.json'), JSON.stringify({ name: 'react', main: 'index.js' }))
+  writeFileSync(join(directory, 'index.js'), 'module.exports = {}')
+}
 
 test('SIDEBAR-PACKAGE: provider is an optional peer with no installation or runtime value dependency', () => {
   const manifest = JSON.parse(readFileSync(new URL('../../package.json', import.meta.url), 'utf8'))
@@ -54,6 +64,7 @@ test('SIDEBAR-SOURCE: source-only compatibility rejects drift and unreviewed rel
   const provider = join(scratch, 'provider')
   const service = fixtureService
   try {
+    installReactRuntimeFixture(provider)
     mkdirSync(join(provider, 'src/client'), { recursive: true })
     writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.32.0' }))
     writeFileSync(join(provider, 'src/client/scope.ts'), fixtureScope)
@@ -102,6 +113,7 @@ test('SIDEBAR-PUBLISHED: shipped declarations override source and reject transit
   const provider = join(scratch, 'provider')
   const service = fixtureService.replace("'./scope.ts'", "'./scope.js'")
   try {
+    installReactRuntimeFixture(provider)
     mkdirSync(join(provider, 'lib/types/client'), { recursive: true })
     mkdirSync(join(provider, 'src/client'), { recursive: true })
     writeFileSync(join(provider, 'package.json'), JSON.stringify({ name: 'dsh-better-sidebar', version: '0.32.0', type: 'module' }))

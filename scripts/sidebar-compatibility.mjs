@@ -45,6 +45,8 @@ export async function verifiedSidebarPackage() {
       allowImportingTsExtensions: true, target: ts.ScriptTarget.ES2023,
       module: ts.ModuleKind.ESNext, moduleResolution: ts.ModuleResolutionKind.Bundler,
       jsx: ts.JsxEmit.ReactJSX, rootDir: resolve(directory, 'src'),
+      // Match the declaration checker's locked React types for isolated providers.
+      paths: { react: [resolve('node_modules/@types/react/index.d.ts')] },
       outDir: resolve(declarationDirectory, 'lib/types'),
     })
     const diagnostics = ts.getPreEmitDiagnostics(program)

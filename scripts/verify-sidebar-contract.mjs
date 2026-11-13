@@ -35,7 +35,9 @@ void received
 const program = ts.createProgram([fixture, projection], {
   strict: true, skipLibCheck: true, noEmit: true, module: ts.ModuleKind.NodeNext,
   moduleResolution: ts.ModuleResolutionKind.NodeNext, jsx: ts.JsxEmit.ReactJSX, target: ts.ScriptTarget.ES2023,
-  paths: { 'dsh-better-sidebar': [projection] },
+  // The isolated provider ships React's runtime, not its dev-only typings. Use the
+  // consumer's locked types even when the provider is outside the workspace.
+  paths: { 'dsh-better-sidebar': [projection], react: [resolve('node_modules/@types/react/index.d.ts')] },
 })
 const diagnostics = ts.getPreEmitDiagnostics(program)
 const checker = program.getTypeChecker()
